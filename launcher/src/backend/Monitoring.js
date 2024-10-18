@@ -1966,68 +1966,73 @@ export class Monitoring {
     });
 
     // Make sure there are enough ports available
-    if (localPorts.length != rpcstatus.data.length) {
+    if (localPorts.length !== rpcstatus.data.length) {
       return {
         code: 1,
-        info: "error: not enough local ports availbe for all RPC services",
+        info: "error: not enough local ports available for all RPC services",
         data: "",
       };
     }
 
-    // Create a tunnel for each service
-    for (let i = 0; i < rpcstatus.data.length; i++) {
-      // Setup details for this service
-      let sid = rpcstatus.data[i].sid;
-      let rpc = rpcstatus.data[i].rpc;
-      let addr = rpc.destinationIp;
-      let port = rpc.destinationPort;
+    // Helper function to open a tunnel
+    const openTunnel = async (service) => {
+      const { sid, rpc } = service;
+      const { destinationIp: addr, destinationPort: port } = rpc;
 
       // Check if the tunnel is already open
       if (this.rpcTunnel[sid] > 0 && !force_fresh) {
-        continue;
+        return;
       }
 
       // Open the tunnel
       try {
-        var localPort = localPorts.shift();
-        if (args !== undefined) {
-          await this.nodeConnection.openTunnels([
-            {
-              dstHost: addr,
-              dstPort: port,
-              localPort: localPort,
-            },
-          ]);
-          // Update tunnel with opened port
-          this.rpcTunnel[sid] = localPort;
-          break;
-        } else {
-          await this.nodeConnection.openTunnels([
-            {
-              dstHost: addr,
-              dstPort: port,
-              localPort: localPort,
-            },
-          ]);
-          // Update tunnel with opened port
-          this.rpcTunnel[sid] = localPort;
-        }
+        const localPort = localPorts.shift();
+        await this.nodeConnection.openTunnels([
+          {
+            dstHost: addr,
+            dstPort: port,
+            localPort: localPort,
+          },
+        ]);
+        // Update tunnel with opened port
+        this.rpcTunnel[sid] = localPort;
       } catch (e) {
         // On any error stop opening further tunnels and close all already opened
         await this.closeRpcTunnel();
         const freshrpcstatus = await this.getRpcStatus();
-        freshrpcstatus.info = freshrpcstatus.info + "(fresh after failed attempt to open rpc tunnels)";
+        freshrpcstatus.info += "(fresh after failed attempt to open rpc tunnels)";
         return {
           code: 2,
-          info: "error: failed to open tunnels (" + e + ")",
+          info: `error: failed to open tunnels (${e})`,
           data: freshrpcstatus,
         };
+      }
+    };
+
+    if (args) {
+      // Create a tunnel for a single service
+      const service = rpcstatus.data.find((service) => service.sid === args);
+      if (!service) {
+        return {
+          code: 1,
+          info: "error: service not found",
+          data: "",
+        };
+      }
+      return openTunnel(service);
+    } else {
+      // Create a tunnel for each service
+      for (const service of rpcstatus.data) {
+        const result = await openTunnel(service);
+        if (result && result.code === 2) {
+          return result;
+        }
       }
     }
 
     // Respond success with fresh RPC status data
     const freshrpcstatus = await this.getRpcStatus();
-    freshrpcstatus.info = freshrpcstatus.info + "(fresh after opening rpc tunnels)";
+    freshrpcstatus.info += "(fresh after opening rpc tunnels)";
     return {
       code: 0,
       info: "success: tunnels successfully opened",
@@ -2162,30 +2167,27 @@ export class Monitoring {
     });
 
     // Make sure there are enough ports available
-    if (localPorts.length != wsstatus.data.length) {
+    if (localPorts.length !== wsstatus.data.length) {
       return {
         code: 1,
-        info: "error: not enough local ports availbe for all WS services",
+        info: "error: not enough local ports available for all WS services",
         data: "",
       };
     }
 
-    // Create a tunnel for each service
-    for (let i = 0; i < wsstatus.data.length; i++) {
-      // Setup details for this service
-      let sid = wsstatus.data[i].sid;
-      let ws = wsstatus.data[i].ws;
-      let addr = ws.destinationIp;
-      let port = ws.destinationPort;
+    // Helper function to open a tunnel
+    const openTunnel = async (service) => {
+      const { sid, ws } = service;
+      const { destinationIp: addr, destinationPort: port } = ws;
 
       // Check if the tunnel is already open
       if (this.wsTunnel[sid] > 0 && !force_fresh) {
-        continue;
+        return;
       }
 
       // Open the tunnel
       try {
-        var localPort = localPorts.shift();
+        const localPort = localPorts.shift();
         await this.nodeConnection.openTunnels([
           {
             dstHost: addr,
@@ -2193,25 +2195,44 @@ export class Monitoring {
             localPort: localPort,
           },
         ]);
+        // Update tunnel with opened port
+        this.wsTunnel[sid] = localPort;
       } catch (e) {
         // On any error stop opening further tunnels and close all already opened
         await this.closeWsTunnel();
         const freshwsstatus = await this.getWsStatus();
-        freshwsstatus.info = freshwsstatus.info + "(fresh after failed attempt to open ws tunnels)";
+        freshwsstatus.info += "(fresh after failed attempt to open ws tunnels)";
         return {
           code: 2,
-          info: "error: failed to open tunnels (" + e + ")",
+          info: `error: failed to open tunnels (${e})`,
           data: freshwsstatus,
         };
       }
+    };
 
-      // Update tunnel with opened port
-      this.wsTunnel[sid] = localPort;
+    if (args) {
+      const service = wsstatus.data.find((service) => service.sid === args);
+      if (!service) {
+        return {
+          code: 1,
+          info: "error: service not found",
+          data: "",
+        };
+      }
+      return openTunnel(service);
+    } else {
+      // Create a tunnel for each service
+      for (const service of wsstatus.data) {
+        const result = await openTunnel(service);
+        if (result && result.code === 2) {
+          return result;
+        }
+      }
     }
 
     // Respond success with fresh WS status data
     const freshwsstatus = await this.getWsStatus();
-    freshwsstatus.info = freshwsstatus.info + "(fresh after opening ws tunnels)";
+    freshwsstatus.info += "(fresh after opening ws tunnels)";
     return {
       code: 0,
       info: "success: tunnels successfully opened",
@@ -2418,30 +2439,27 @@ export class Monitoring {
     });
 
     // Make sure there are enough ports available
-    if (localPorts.length != beaconstatus.data.length) {
+    if (localPorts.length !== beaconstatus.data.length) {
       return {
         code: 1,
-        info: "error: not enough local ports availbe for all BEACON services",
+        info: "error: not enough local ports available for all BEACON services",
         data: "",
       };
     }
 
-    // Create a tunnel for each service
-    for (let i = 0; i < beaconstatus.data.length; i++) {
-      // Setup details for this service
-      let sid = beaconstatus.data[i].sid;
-      let beacon = beaconstatus.data[i].beacon;
-      let addr = beacon.destinationIp;
-      let port = beacon.destinationPort;
+    // Helper function to open a tunnel
+    const openTunnel = async (service) => {
+      const { sid, beacon } = service;
+      const { destinationIp: addr, destinationPort: port } = beacon;
 
       // Check if the tunnel is already open
       if (this.beaconTunnel[sid] > 0 && !force_fresh) {
-        continue;
+        return;
       }
 
       // Open the tunnel
       try {
-        var localPort = localPorts.shift();
+        const localPort = localPorts.shift();
         await this.nodeConnection.openTunnels([
           {
             dstHost: addr,
@@ -2449,25 +2467,44 @@ export class Monitoring {
             localPort: localPort,
           },
         ]);
+        // Update tunnel with opened port
+        this.beaconTunnel[sid] = localPort;
       } catch (e) {
         // On any error stop opening further tunnels and close all already opened
         await this.closeBeaconTunnel();
         const freshbeaconstatus = await this.getBeaconStatus();
-        freshbeaconstatus.info = freshbeaconstatus.info + "(fresh after failed attempt to open beacon tunnels)";
+        freshbeaconstatus.info += "(fresh after failed attempt to open beacon tunnels)";
         return {
           code: 2,
-          info: "error: failed to open tunnels (" + e + ")",
+          info: `error: failed to open tunnels (${e})`,
           data: freshbeaconstatus,
         };
       }
+    };
 
-      // Update tunnel with opened port
-      this.beaconTunnel[sid] = localPort;
+    if (args) {
+      const service = beaconstatus.data.find((service) => service.sid === args);
+      if (!service) {
+        return {
+          code: 1,
+          info: "error: service not found",
+          data: "",
+        };
+      }
+      return openTunnel(service);
+    } else {
+      // Create a tunnel for each service
+      for (const service of beaconstatus.data) {
+        const result = await openTunnel(service);
+        if (result && result.code === 2) {
+          return result;
+        }
+      }
     }
 
     // Respond success with fresh BEACON status data
     const freshbeaconstatus = await this.getBeaconStatus();
-    freshbeaconstatus.info = freshbeaconstatus.info + "(fresh after opening beacon tunnels)";
+    freshbeaconstatus.info += "(fresh after opening beacon tunnels)";
     return {
       code: 0,
       info: "success: tunnels successfully opened",
