@@ -17,9 +17,7 @@
         />
       </div>
 
-      <div
-        class="widget-name flex w-full h-1/6 justify-center items-center uppercase text-gray-200 text-[50%] font-semibold"
-      >
+      <div class="widget-name flex w-full h-1/6 justify-center items-center uppercase text-gray-200 text-[50%] font-semibold">
         {{ t("controlPage.connectValWidg") }}
       </div>
     </template>
@@ -47,8 +45,7 @@ const getKeyCount = (validator) => {
   if (!validator || stakingStore.keys.length === 0) {
     return 0;
   }
-  return stakingStore.keys.filter((key) => key.validatorID === validator.config.serviceID)
-    .length;
+  return stakingStore.keys.filter((key) => key.validatorID === validator.config.serviceID).length;
 };
 
 const setCursor = (info) => {

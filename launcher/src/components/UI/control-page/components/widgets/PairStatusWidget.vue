@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="pair-state-parent w-full h-full flex flex-col justify-center items-center relative"
-  >
+  <div class="pair-state-parent w-full h-full flex flex-col justify-center items-center relative">
     <NoData v-if="!setupStore?.selectedSetup" />
     <template v-else>
       <ServiceState
