@@ -149,7 +149,7 @@
     "machineNameIs": "Machine Name is {name}",
     "machineIp": "Machine IP is {ip}",
     "utcTime": "UTC Time is {time}",
-    "cpuUsageIs": "CPU Usage is {usage}%",
+    "cpuUsageIs": "CPU Usage is {usage}% at {time}",
     "ramUsageIs": "RAM Usage is {usage} MB",
     "ramTotalis": "Total RAM is {total} MB",
     "receiveDataIs": "Receiving Data is {data} KB/s",
@@ -161,13 +161,14 @@
     "portIs": "{name} port is {port} and protocol is {prot}",
     "servicePort": "Service Ports",
     "connectedPairsTo": "connected pairs to {client} is {peer}%",
-    "connectedPairs": "now there {isAre} {connected} connected pairs",
+    "connectedPairs": "now there {isAre} {connected} connected pairs at {time}",
     "peerNetwork": "PEER NETWORK",
     "pOverTime": "Peers Over Time",
     "currentEpochIs": "Current Epoch is {epoch}",
     "currentSlotIs": "Current Slot is {slot}",
     "connectedSubnets": "now there {isAre} {count} connected subnets",
-    "subscribedSubnets": "SUBSCRIBED SUBNETS"
+    "subscribedSubnets": "SUBSCRIBED SUBNETS",
+    "rpcDataReciv": "Data received via RPC averages {value} KB over time at {time}"
   },
   "taskManager": {
     "clickDisplay": "Click on tasks to display"

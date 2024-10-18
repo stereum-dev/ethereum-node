@@ -1,17 +1,17 @@
 <template>
-  <div
-    class="theCpuParent flex w-full h-full justify-center items-center"
-    @mouseenter="footerStore.cursorLocation = t('controlPage.cpuUsageIs', { usage: cpu })"
-    @mouseleave="footerStore.cursorLocation = ''"
-  >
+  <div class="theCpuParent flex w-full h-full justify-center items-center">
     <div class="cpuIco w-1/3 h-full flex flex-col justify-center items-center">
-      <div class="cpuIco-container flex justify-center items-center w-full h-4/5 relative p-2">
+      <div
+        class="cpuIco-container flex justify-center items-center w-full h-4/5 relative p-2"
+      >
         <img
           class="w-3/4"
           src="/img/icon/control-page-icons/cpuIcon.svg"
           :style="{
             filter:
-              controlStore.tempCPU === null || controlStore.tempCPU === undefined || controlStore.tempCPU === ''
+              controlStore.tempCPU === null ||
+              controlStore.tempCPU === undefined ||
+              controlStore.tempCPU === ''
                 ? ''
                 : tempCPU === 'green'
                 ? 'invert(40%) sepia(90%) saturate(500%) hue-rotate(90deg)'
@@ -28,10 +28,21 @@
           >{{ controlStore.tempCPU }}</span
         >
       </div>
-      <span class="w-full h-1/5 flex justify-center items-center text-gray-200 text-2xs font-semibold uppercase">cpu</span>
+      <span
+        class="w-full h-1/5 flex justify-center items-center text-gray-200 text-2xs font-semibold uppercase"
+        >cpu</span
+      >
     </div>
-    <div v-if="chartSeries && chartOptions" class="cpuCountPart w-2/3 h-full flex justify-start items-center pr-1">
-      <VueApexCharts v-if="chartSeries" :options="chartOptions" :series="chartSeries" class="full-size-chart" />
+    <div
+      v-if="chartSeries && chartOptions"
+      class="cpuCountPart w-2/3 h-full flex justify-start items-center pr-1"
+    >
+      <VueApexCharts
+        v-if="chartSeries"
+        :options="chartOptions"
+        :series="chartSeries"
+        class="full-size-chart"
+      />
     </div>
   </div>
 </template>
@@ -63,11 +74,12 @@ const chartOptions = {
     width: "100%",
     height: "100%",
     toolbar: { show: false },
+
     zoom: { enabled: false },
     animations: {
-      enabled: true,
+      enabled: false,
       easing: "linear",
-      dynamicAnimation: { speed: 1000 },
+      dynamicAnimation: { speed: 0 },
     },
   },
   xaxis: {
@@ -90,12 +102,30 @@ const chartOptions = {
     strokeDashArray: 5,
     xaxis: { lines: { show: true } },
     yaxis: { lines: { show: true } },
-    padding: { top: -5, bottom: -5, left: -5, right: -5 },
+    padding: { top: -8, bottom: -8, left: -5, right: -5 },
   },
   stroke: { width: 1, colors: ["#00ff00"] },
+  fill: {
+    type: "solid",
+    opacity: 0.1,
+    colors: ["#00ff00"],
+  },
   markers: { size: 0 },
+  tooltip: {
+    enabled: true,
+    custom: function ({ seriesIndex, dataPointIndex, w }) {
+      const hoveredData = w.config.series[seriesIndex].data[dataPointIndex];
+      const value = hoveredData[1];
+      const time = hoveredData[0];
+
+      footerStore.cursorLocation = `${t("controlPage.cpuUsageIs", {
+        usage: value,
+        time: new Date(time).toLocaleTimeString(),
+      })}`;
+      return ``;
+    },
+  },
   dataLabels: { enabled: false },
-  tooltip: { enabled: false },
 };
 
 const tempCPU = computed(() => {
@@ -111,7 +141,7 @@ const updateChartData = () => {
   const currentTime = Date.now();
   chartData.value.push([currentTime, cpu.value]);
 
-  if (chartData.value.length > 10) {
+  if (chartData.value.length > 200) {
     chartData.value.shift();
   }
 };
