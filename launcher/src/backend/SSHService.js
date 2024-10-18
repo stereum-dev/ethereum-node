@@ -323,7 +323,7 @@ export class SSHService {
     try {
       const receivedData = {
         receivedDataLength: dataLength,
-        dstPort: srcPort,
+        srcPort: srcPort,
       };
       this.rpcReceivedDatas.push(receivedData);
     } catch (error) {

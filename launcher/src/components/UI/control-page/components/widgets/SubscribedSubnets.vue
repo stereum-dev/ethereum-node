@@ -1,31 +1,17 @@
 <template>
   <div class="peers-over-time_parent flex w-full h-full justify-center items-center">
-    <div
-      class="peers-over-time_ico w-1/3 h-full flex flex-col justify-center items-center"
-    >
-      <div
-        class="peers-over-time_ico_container flex justify-center items-center w-full h-4/5"
-      >
+    <div class="peers-over-time_ico w-1/3 h-full flex flex-col justify-center items-center">
+      <div class="peers-over-time_ico_container flex justify-center items-center w-full h-4/5">
         <img class="w-3/4" src="/img/icon/control-page-icons/SubnetSubscriptions.png" />
       </div>
-      <span
-        class="w-full h-1/5 flex justify-center items-center text-center text-gray-200 text-[40%] font-semibold uppercase"
-      >
+      <span class="w-full h-1/5 flex justify-center items-center text-center text-gray-200 text-[40%] font-semibold uppercase">
         {{ t("controlPage.subscribedSubnets") }}
       </span>
     </div>
 
-    <div
-      v-if="chartOptions && chartSeries"
-      class="peers-over-time_part w-2/3 h-full flex justify-start items-start relative"
-    >
+    <div v-if="chartOptions && chartSeries" class="peers-over-time_part w-2/3 h-full flex justify-start items-start relative">
       <NoData v-if="setupStore.selectedServicePairs === null" />
-      <VueApexCharts
-        v-else
-        :options="chartOptions"
-        :series="chartSeries"
-        class="fullSizeChart"
-      />
+      <VueApexCharts v-else :options="chartOptions" :series="chartSeries" class="fullSizeChart" />
     </div>
   </div>
 </template>

@@ -1,21 +1,10 @@
 <template>
-  <div
-    class="rpc-recieved-parent w-full h-full flex justify-center items-center flex-col relative"
-  >
-    <div
-      class="widget-name w-full h-1/5 flex justify-center items-center text-gray-200 uppercase font-semibold text-[55%]"
-    >
+  <div class="rpc-recieved-parent w-full h-full flex justify-center items-center flex-col relative">
+    <div class="widget-name w-full h-1/5 flex justify-center items-center text-gray-200 uppercase font-semibold text-[55%]">
       RPC RECEIVED OVER TIME
     </div>
-    <div
-      v-if="chartOptions && chartSeries"
-      class="widget-box w-full h-4/5 justify-center items-center flex flex-col"
-    >
-      <VueApexCharts
-        :options="chartOptions"
-        :series="chartSeries"
-        class="fullSizeChart"
-      ></VueApexCharts>
+    <div v-if="chartOptions && chartSeries" class="widget-box w-full h-4/5 justify-center items-center flex flex-col">
+      <VueApexCharts :options="chartOptions" :series="chartSeries" class="fullSizeChart"></VueApexCharts>
     </div>
   </div>
 </template>
