@@ -73,14 +73,19 @@ const rpcToggle = async () => {
 const dataToggle = async () => {
   nodeHeaderStore.dataState = !nodeHeaderStore.dataState;
   await (nodeHeaderStore.dataState
-    ? ControlService.openBeaconTunnel()
+    ? ControlService.openBeaconTunnel(
+        setupStore?.selectedServicePairs?.consensusService?.id
+      )
     : ControlService.closeBeaconTunnel());
+  console.log(setupStore?.selectedServicePairs?.consensusService?.id);
 };
 
 const wsToggle = async () => {
   nodeHeaderStore.wsState = !nodeHeaderStore.wsState;
   await (nodeHeaderStore.wsState
-    ? ControlService.openWsTunnel()
+    ? ControlService.openWsTunnel(
+        setupStore?.selectedServicePairs?.executionService?.config?.serviceID
+      )
     : ControlService.closeWsTunnel());
 };
 
