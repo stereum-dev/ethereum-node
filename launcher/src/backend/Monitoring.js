@@ -2120,8 +2120,6 @@ export class Monitoring {
       };
     }
 
-    // console.log("hahadata----------------------------------------", data);
-
     // Respond success
     return {
       code: 0,
