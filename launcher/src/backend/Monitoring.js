@@ -3237,6 +3237,10 @@ rm -rf diskoutput
   async getCurrentEpochSlot(currBeaconService) {
     try {
       let beaconStatus = await this.getBeaconStatus();
+      // Ensure beaconStatus.data is an array
+      if (!Array.isArray(beaconStatus.data)) {
+        beaconStatus.data = [beaconStatus.data];
+      }
       beaconStatus.data = beaconStatus.data.filter((obj) => obj.clt === currBeaconService);
       let currentEpochSlotStatus = {};
       if (beaconStatus.code === 0) {
