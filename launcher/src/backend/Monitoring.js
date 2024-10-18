@@ -1990,7 +1990,7 @@ export class Monitoring {
       // Open the tunnel
       try {
         var localPort = localPorts.shift();
-        if (args !== undefined && args === rpcstatus.data[i].sid) {
+        if (args !== undefined) {
           await this.nodeConnection.openTunnels([
             {
               dstHost: addr,
