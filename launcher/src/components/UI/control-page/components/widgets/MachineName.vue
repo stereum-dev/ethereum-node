@@ -1,5 +1,9 @@
 <template>
-  <div class="MachineNameParent" @mouseenter="footerStore.cursorLocation = `${machine}`" @mouseleave="footerStore.cursorLocation = ''">
+  <div
+    class="MachineNameParent bg-[#151618] rounded-md w-full h-full relative flex justify-start items-center"
+    @mouseenter="footerStore.cursorLocation = `${machine}`"
+    @mouseleave="footerStore.cursorLocation = ''"
+  >
     <div class="ubuntuIcon">
       <img src="/img/icon/control-page-icons/ubuntuIco.svg" />
     </div>
@@ -22,23 +26,6 @@ const machine = t("serverDetail.machine", { machineName: controlStore.ServerName
 </script>
 
 <style scoped>
-.MachineNameParent {
-  display: flex;
-  width: 100%;
-  justify-content: center;
-  align-items: center;
-  box-sizing: border-box;
-  height: 100%;
-  color: #c1c1c1;
-  position: relative;
-  border: 1px solid #343434;
-  box-shadow: 1px 1px 10px 1px #171717;
-  border-radius: 10px;
-  background: #2a2a2a;
-}
-.MachineNameParent:hover {
-  background: #313131;
-}
 .machineNam {
   width: 90%;
   height: 75%;

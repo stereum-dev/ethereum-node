@@ -399,6 +399,10 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("getQRCode");
   }
 
+  async getCPUTemperature() {
+    return await this.promiseIpc.send("getCPUTemperature");
+  }
+
   async importRemoteKeys(args) {
     return await this.promiseIpc.send("importRemoteKeys", args);
   }
@@ -697,6 +701,10 @@ class ControlService extends EventEmitter {
 
   async getNewLauncherVersion() {
     return this.promiseIpc.send("getNewLauncherVersion");
+  }
+
+  async getSubnetSubs() {
+    return this.promiseIpc.send("getSubnetSubs");
   }
 
   async deleteSlasherVolume(args) {

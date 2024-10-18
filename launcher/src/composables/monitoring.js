@@ -47,6 +47,8 @@ export async function useRefreshNodeStats() {
           controlStore.wsstatus = nodeStats.data.wsstatus;
           controlStore.beaconstatus = nodeStats.data.beaconstatus;
           controlStore.portstatus = nodeStats.data.portstatus;
+          controlStore.rpcReceivedData = nodeStats.data.rpcReceivedData;
+          controlStore.subnetSubs = nodeStats.data.subnetSubs;
         } catch (e) {}
       }
     });
@@ -84,7 +86,10 @@ export async function useRefreshMetrics() {
           controlStore.wsstatus = nodeStats.data.wsstatus;
           controlStore.beaconstatus = nodeStats.data.beaconstatus;
           controlStore.portstatus = nodeStats.data.portstatus;
+          controlStore.rpcReceivedData = nodeStats.data.rpcReceivedData;
+          controlStore.subnetSubs = nodeStats.data.subnetSubs;
         } catch (e) {}
+        // console.log("nodeStats ===>", nodeStats);
       }
     });
     // Get Storage Status
@@ -117,6 +122,7 @@ export async function useRefreshMetrics() {
         controlStore.tx = response.tx;
         controlStore.readValue = response.readValue;
         controlStore.writeValue = response.writeValue;
+        controlStore.tempCPU = response.tempCPU;
       }
     });
   } catch (err) {

@@ -134,7 +134,7 @@ import LogsSection from "../node-page/sections/LogsSection.vue";
 import { useStateHandler } from "@/composables/services";
 import ControlDashboard from "./ControlDashboard.vue";
 import ControlPlugins from "./ControlPlugins.vue";
-import ControlAlert from "./ControlAlert.vue";
+import ControlAlert from "../control-page/components/alert/ControlAlert.vue";
 import { saveAs } from "file-saver";
 import ExpertWindow from "../node-page/sections/ExpertWindow.vue";
 import { useServices } from "@/store/services";

@@ -144,7 +144,31 @@
     "p2pNet": "Peer to peer network",
     "selConcensus": "Select the consensus client",
     "selExecution": "Select the execution client",
-    "subsribeSubnet": "subscribed subnets"
+    "subsribeSubnet": "subscribed subnets",
+    "info": "INFO",
+    "machineNameIs": "Machine Name is {name}",
+    "machineIp": "Machine IP is {ip}",
+    "utcTime": "UTC Time is {time}",
+    "cpuUsageIs": "CPU Usage is {usage}% at {time}",
+    "ramUsageIs": "RAM Usage is {usage} MB",
+    "ramTotalis": "Total RAM is {total} MB",
+    "receiveDataIs": "Receiving Data is {data} KB/s",
+    "transmitDataIs": "Transmitting Data is {data} KB/s",
+    "clientPairIndexIs": "Client Pair Index is {index}",
+    "totalClientPairs": "Total Client Pairs is {total}",
+    "connectValWidg": "CONNECTED VALIDATOR CLIENTS",
+    "keyImported": "in this validator client {imported} {key} {isAre} imported",
+    "portIs": "{name} port is {port} and protocol is {prot}",
+    "servicePort": "Service Ports",
+    "connectedPairsTo": "connected pairs to {client} is {peer}%",
+    "connectedPairs": "now there {isAre} {connected} connected pairs at {time}",
+    "peerNetwork": "PEER NETWORK",
+    "pOverTime": "Peers Over Time",
+    "currentEpochIs": "Current Epoch is {epoch}",
+    "currentSlotIs": "Current Slot is {slot}",
+    "connectedSubnets": "now there {isAre} {count} connected subnets",
+    "subscribedSubnets": "SUBSCRIBED SUBNETS",
+    "rpcDataReciv": "Data received via RPC averages {value} KB over time at {time}"
   },
   "taskManager": {
     "clickDisplay": "Click on tasks to display"
@@ -1065,5 +1089,8 @@
     "acc": "accept",
     "deny": "deny",
     "updateTo": "Updating Stereum Launcher to {version}"
+  },
+  "setupServicesWidget": {
+    "text": "total services on setup"
   }
 }

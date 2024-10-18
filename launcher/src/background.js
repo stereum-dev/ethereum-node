@@ -445,6 +445,10 @@ ipcMain.handle("writePrometheusConfig", async (event, args) => {
   return await nodeConnection.writePrometheusConfig(args.serviceID, args.config);
 });
 
+ipcMain.handle("getCPUTemperature", async () => {
+  return await monitoring.getCPUTemperature();
+});
+
 ipcMain.handle("getValidatorStats", async (event, args) => {
   return await monitoring.getValidatorStats(args);
 });
@@ -746,6 +750,10 @@ ipcMain.handle("handleOTPChange", async (event, args) => {
 
 ipcMain.handle("fetchObolCharonAlerts", async () => {
   return await monitoring.fetchObolCharonAlerts();
+});
+
+ipcMain.handle("getSubnetSubs", async () => {
+  return await monitoring.getSubnetSubs();
 });
 
 ipcMain.handle("fetchCsmAlerts", async () => {
