@@ -1,22 +1,36 @@
 <template>
-  <div class="rpc-recieved-parent w-full h-full flex justify-center items-center flex-col relative">
-    <div class="widget-name w-full h-1/5 flex justify-center items-center text-gray-200 uppercase font-semibold text-[55%]">
-      RPC RECEIVED OVER TIME
-    </div>
-    <div v-if="chartOptions && chartSeries" class="widget-box w-full h-4/5 justify-center items-center flex flex-col">
-      <VueApexCharts :options="chartOptions" :series="chartSeries" class="fullSizeChart"></VueApexCharts>
-    </div>
+  <div
+    class="rpc-recieved-parent w-full h-full flex justify-center items-center flex-col relative"
+  >
+    <NoData v-if="!setupStore?.selectedSetup" />
+    <template v-else>
+      <div
+        class="widget-name w-full h-1/5 flex justify-center items-center text-gray-200 uppercase font-semibold text-[55%]"
+      >
+        RPC RECEIVED OVER TIME
+      </div>
+      <div
+        v-if="chartOptions && chartSeries"
+        class="widget-box w-full h-4/5 justify-center items-center flex flex-col"
+      >
+        <VueApexCharts
+          :options="chartOptions"
+          :series="chartSeries"
+          class="fullSizeChart"
+        ></VueApexCharts>
+      </div>
+    </template>
   </div>
 </template>
 
 <script setup>
+import NoData from "./NoData.vue";
 import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 import VueApexCharts from "vue3-apexcharts";
 import { useSetups } from "@/store/setups";
 import { useControlStore } from "@/store/theControl";
 import { useFooter } from "@/store/theFooter";
 import i18n from "@/includes/i18n";
-// import NoData from "./NoData.vue";
 
 const t = i18n.global.t;
 
@@ -75,10 +89,11 @@ const chartOptions = {
     custom: function ({ seriesIndex, dataPointIndex, w }) {
       const hoveredData = w.config.series[seriesIndex].data[dataPointIndex];
       const value = hoveredData[1];
+      const time = hoveredData[0];
 
-      footerStore.cursorLocation = `${t("controlPage.connectedSubnets", {
-        isAre: value === 1 || value === 0 ? "is" : "are",
-        count: value,
+      footerStore.cursorLocation = `${t("controlPage.rpcDataReciv", {
+        value: value / 1000,
+        time: new Date(time).toLocaleTimeString(),
       })}`;
       return ``;
     },
@@ -86,30 +101,32 @@ const chartOptions = {
   dataLabels: { enabled: false },
 };
 
-const subnetData = async () => {
-  const serviceId = setupStore.selectedServicePairs?.consensusService?.id;
+const rpcOverTimeData = async () => {
+  const rpcPort = controlStore.rpcPort;
 
-  if (!serviceId) return;
+  if (!rpcPort) return;
 
-  const subnetSubs = Array.isArray(controlStore.subnetSubs?.data)
-    ? controlStore.subnetSubs.data // Use subnetSubs.data instead of subnetSubs
+  const rpcReceivedData = Array.isArray(controlStore?.rpcReceivedData)
+    ? controlStore.rpcReceivedData
     : [];
 
-  const customerDetails = subnetSubs.find((item) => item.serviceId === serviceId);
+  const rpcDetails = rpcReceivedData.find(
+    (item) => Number(item.srcPort) === Number(rpcPort)
+  );
 
-  const subnetCount = customerDetails?.subnetCount || 0;
+  const rpcDataCount = rpcDetails?.receivedDataLength || 0;
 
   const currentTime = new Date().getTime();
 
-  chartData.value.push([currentTime, subnetCount]);
+  chartData.value.push([currentTime, rpcDataCount]);
 
-  if (chartData.value.length > 5) {
+  if (chartData.value.length > 200) {
     chartData.value.shift();
   }
 };
 
 onMounted(() => {
-  pollingInterval = setInterval(subnetData, 1000);
+  pollingInterval = setInterval(rpcOverTimeData, 1000);
 });
 
 onBeforeUnmount(() => {

@@ -110,7 +110,7 @@ const subnetData = async () => {
 
   chartData.value.push([currentTime, subnetCount]);
 
-  if (chartData.value.length > 10) {
+  if (chartData.value.length > 100) {
     chartData.value.shift();
   }
 };

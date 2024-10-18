@@ -90,7 +90,7 @@ export async function useRefreshMetrics() {
           controlStore.rpcReceivedData = nodeStats.data.rpcReceivedData;
           controlStore.subnetSubs = nodeStats.data.subnetSubs;
         } catch (e) {}
-        console.log("nodeStats ===>", nodeStats);
+        // console.log("nodeStats ===>", nodeStats);
       }
     });
     // Get Storage Status
