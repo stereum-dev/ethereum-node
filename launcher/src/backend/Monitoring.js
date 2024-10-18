@@ -1990,13 +1990,28 @@ export class Monitoring {
       // Open the tunnel
       try {
         var localPort = localPorts.shift();
-        await this.nodeConnection.openTunnels([
-          {
-            dstHost: addr,
-            dstPort: port,
-            localPort: localPort,
-          },
-        ]);
+        if (args !== undefined && args === rpcstatus.data[i].sid) {
+          await this.nodeConnection.openTunnels([
+            {
+              dstHost: addr,
+              dstPort: port,
+              localPort: localPort,
+            },
+          ]);
+          // Update tunnel with opened port
+          this.rpcTunnel[sid] = localPort;
+          break;
+        } else {
+          await this.nodeConnection.openTunnels([
+            {
+              dstHost: addr,
+              dstPort: port,
+              localPort: localPort,
+            },
+          ]);
+          // Update tunnel with opened port
+          this.rpcTunnel[sid] = localPort;
+        }
       } catch (e) {
         // On any error stop opening further tunnels and close all already opened
         await this.closeRpcTunnel();
@@ -2008,9 +2023,6 @@ export class Monitoring {
           data: freshrpcstatus,
         };
       }
-
-      // Update tunnel with opened port
-      this.rpcTunnel[sid] = localPort;
     }
 
     // Respond success with fresh RPC status data
