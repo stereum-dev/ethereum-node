@@ -1976,7 +1976,7 @@ export class Monitoring {
 
     // Helper function to open a tunnel
     const openTunnel = async (service) => {
-      const { sid, rpc } = service;
+      const { sName, sid, rpc } = service;
       const { destinationIp: addr, destinationPort: port } = rpc;
 
       // Check if the tunnel is already open
@@ -1989,6 +1989,7 @@ export class Monitoring {
         const localPort = localPorts.shift();
         await this.nodeConnection.openTunnels([
           {
+            sName: sName,
             dstHost: addr,
             dstPort: port,
             localPort: localPort,
@@ -2102,6 +2103,7 @@ export class Monitoring {
 
       // Filter the RPC port configuration and get addr/port that is mapped on docker host
       const sid = execution.config.serviceID;
+      const sName = execution.service;
       const rpc = execution.config.ports
         .filter((p) => p.servicePort == services[execution.service])
         .slice(-1)
@@ -2121,6 +2123,7 @@ export class Monitoring {
       // Add valid client to final result
       data.push({
         now: now,
+        sName: sName,
         sid: sid,
         rpc: rpc,
         url: this.rpcTunnel[sid] > 0 ? "http://" + addr + ":" + this.rpcTunnel[sid] : "",

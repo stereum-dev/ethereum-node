@@ -288,28 +288,36 @@ export class SSHService {
           log.error("Tunnel SSH Connection error: ", error);
         });
 
-        server.on("connection", (connection) => {
-          // Forward the connection to the destination address and port
-          conn.forwardOut(forwardOptions.srcAddr, forwardOptions.srcPort, forwardOptions.dstAddr, forwardOptions.dstPort, (err, stream) => {
-            if (err) {
-              log.error("Forwarding error: ", err);
-              return;
-            }
-
-            // Pipe the connection to the stream and vice versa
-            connection.pipe(stream).pipe(connection);
-
-            // Listen for data on the stream
-            stream.on("data", (data) => {
-              // Call the handleReceivedData method to handle the received data
-              this.handleReceivedData(data.length, forwardOptions.srcPort);
-            });
-          });
-        });
-
         server.on("error", function (error) {
           log.error("Tunnel connection error: ", error);
         });
+
+        if (tunnelConfig && tunnelConfig.sName) {
+          server.on("connection", (connection) => {
+            // Forward the connection to the destination address and port
+            conn.forwardOut(
+              forwardOptions.srcAddr,
+              forwardOptions.srcPort,
+              forwardOptions.dstAddr,
+              forwardOptions.dstPort,
+              (err, stream) => {
+                if (err) {
+                  log.error("Forwarding error: ", err);
+                  return;
+                }
+
+                // Pipe the connection to the stream and vice versa
+                connection.pipe(stream).pipe(connection);
+
+                // Listen for data on the stream
+                stream.on("data", (data) => {
+                  // Call the handleReceivedData method to handle the received data
+                  this.handleReceivedData(data.length, forwardOptions.srcPort);
+                });
+              }
+            );
+          });
+        }
       });
     });
   }
