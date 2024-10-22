@@ -1,17 +1,32 @@
 <template>
   <div class="peers-over-time_parent flex w-full h-full justify-center items-center">
-    <div class="peers-over-time_ico w-1/3 h-full flex flex-col justify-center items-center">
-      <div class="peers-over-time_ico_container flex justify-center items-center w-full h-4/5">
+    <div
+      class="peers-over-time_ico w-1/3 h-full flex flex-col justify-center items-center"
+    >
+      <div
+        class="peers-over-time_ico_container flex justify-center items-center w-full h-4/5"
+      >
         <img class="w-3/4" src="/img/icon/control-page-icons/SubnetSubscriptions.png" />
       </div>
-      <span class="w-full h-1/5 flex justify-center items-center text-center text-gray-200 text-[40%] font-semibold uppercase">
+      <span
+        class="w-full h-1/5 flex justify-center items-center text-center text-gray-200 text-[40%] font-semibold uppercase"
+      >
         {{ t("controlPage.subscribedSubnets") }}
       </span>
     </div>
 
-    <div v-if="chartOptions && chartSeries" class="peers-over-time_part w-2/3 h-full flex justify-start items-start relative">
+    <div
+      v-if="chartOptions && chartSeries"
+      class="peers-over-time_part w-2/3 h-full flex justify-start items-start relative"
+      @mouseleave="footerStore.cursorLocation = ''"
+    >
       <NoData v-if="setupStore.selectedServicePairs === null" />
-      <VueApexCharts v-else :options="chartOptions" :series="chartSeries" class="fullSizeChart" />
+      <VueApexCharts
+        v-else
+        :options="chartOptions"
+        :series="chartSeries"
+        class="fullSizeChart"
+      />
     </div>
   </div>
 </template>
@@ -42,13 +57,13 @@ const chartSeries = computed(() => [
 
 const chartOptions = {
   chart: {
-    type: "line",
+    type: "area",
     width: "100%",
     height: "100%",
     zoom: { enabled: false },
     toolbar: { show: false },
     animations: {
-      enabled: true,
+      enabled: false,
       easing: "linear",
       dynamicAnimation: { speed: 1000 },
     },
@@ -64,6 +79,8 @@ const chartOptions = {
     },
   },
   yaxis: {
+    min: 0,
+    max: 100,
     labels: { show: false },
     axisTicks: { show: false },
     axisBorder: { show: false },
@@ -76,6 +93,11 @@ const chartOptions = {
     padding: { top: -25, bottom: 15, left: -5, right: 5 },
   },
   stroke: { width: 1, colors: ["#00ff00"] },
+  fill: {
+    type: "solid",
+    opacity: 0.1,
+    colors: ["#00ff00"],
+  },
   markers: { size: 0 },
   tooltip: {
     enabled: true,

@@ -168,7 +168,7 @@
     "currentSlotIs": "Current Slot is {slot}",
     "connectedSubnets": "now there {isAre} {count} connected subnets",
     "subscribedSubnets": "SUBSCRIBED SUBNETS",
-    "rpcDataReciv": "Data received via RPC averages {value} KB over time at {time}"
+    "rpcDataReciv": "Data received via RPC averages {value} over time at {time}"
   },
   "taskManager": {
     "clickDisplay": "Click on tasks to display"

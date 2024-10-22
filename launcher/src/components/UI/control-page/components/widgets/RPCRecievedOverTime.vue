@@ -1,12 +1,23 @@
 <template>
-  <div class="rpc-recieved-parent w-full h-full flex justify-center items-center flex-col relative">
+  <div
+    class="rpc-recieved-parent w-full h-full flex justify-center items-center flex-col relative"
+  >
     <NoData v-if="!setupStore?.selectedSetup" />
     <template v-else>
-      <div class="widget-name w-full h-1/5 flex justify-center items-center text-gray-200 uppercase font-semibold text-[55%]">
+      <div
+        class="widget-name w-full h-1/5 flex justify-center items-center text-gray-200 uppercase font-semibold text-[55%]"
+      >
         RPC RECEIVED OVER TIME
       </div>
-      <div v-if="chartOptions && chartSeries" class="widget-box w-full h-4/5 justify-center items-center flex flex-col">
-        <VueApexCharts :options="chartOptions" :series="chartSeries" class="fullSizeChart"></VueApexCharts>
+      <div
+        v-if="chartOptions && chartSeries"
+        class="widget-box w-full h-4/5 justify-center items-center flex flex-col"
+      >
+        <VueApexCharts
+          :options="chartOptions"
+          :series="chartSeries"
+          class="fullSizeChart"
+        ></VueApexCharts>
       </div>
     </template>
   </div>
@@ -38,13 +49,13 @@ const chartSeries = computed(() => [
 
 const chartOptions = {
   chart: {
-    type: "line",
+    type: "area",
     width: "100%",
     height: "100%",
     zoom: { enabled: false },
     toolbar: { show: false },
     animations: {
-      enabled: true,
+      enabled: false,
       easing: "linear",
       dynamicAnimation: { speed: 1000 },
     },
@@ -72,6 +83,11 @@ const chartOptions = {
     padding: { top: -10, bottom: -10, left: -5, right: 5 },
   },
   stroke: { width: 1, colors: ["#00ff00"] },
+  fill: {
+    type: "solid",
+    opacity: 0.1,
+    colors: ["#00ff00"],
+  },
   markers: { size: 0 },
   tooltip: {
     enabled: true,
@@ -81,7 +97,7 @@ const chartOptions = {
       const time = hoveredData[0];
 
       footerStore.cursorLocation = `${t("controlPage.rpcDataReciv", {
-        value: value / 1000,
+        value: formattedValue(value),
         time: new Date(time).toLocaleTimeString(),
       })}`;
       return ``;
@@ -90,14 +106,24 @@ const chartOptions = {
   dataLabels: { enabled: false },
 };
 
+const formattedValue = (value) => {
+  return value >= 1000000
+    ? (value / 1000000000).toFixed(2) + " GB"
+    : (value / 1000).toFixed(2) + " KB";
+};
+
 const rpcOverTimeData = async () => {
   const rpcPort = controlStore.rpcPort;
 
   if (!rpcPort) return;
 
-  const rpcReceivedData = Array.isArray(controlStore?.rpcReceivedData) ? controlStore.rpcReceivedData : [];
+  const rpcReceivedData = Array.isArray(controlStore?.rpcReceivedData)
+    ? controlStore.rpcReceivedData
+    : [];
 
-  const rpcDetails = rpcReceivedData.find((item) => Number(item.srcPort) === Number(rpcPort));
+  const rpcDetails = rpcReceivedData.find(
+    (item) => Number(item.srcPort) === Number(rpcPort)
+  );
 
   const rpcDataCount = rpcDetails?.receivedDataLength || 0;
 

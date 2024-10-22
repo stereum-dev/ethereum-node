@@ -1,10 +1,16 @@
 <template>
   <div class="peers-over-time_parent flex w-full h-full justify-center items-center">
-    <div class="peers-over-time_ico w-1/3 h-full flex flex-col justify-center items-center">
-      <div class="peers-over-time_ico_container flex justify-center items-center w-full h-4/5">
+    <div
+      class="peers-over-time_ico w-1/3 h-full flex flex-col justify-center items-center"
+    >
+      <div
+        class="peers-over-time_ico_container flex justify-center items-center w-full h-4/5"
+      >
         <img class="w-3/4" src="/img/icon/control-page-icons/PeertoPeerIcon.png" />
       </div>
-      <span class="w-full h-1/5 flex justify-center items-center text-center text-gray-200 text-[40%] font-semibold uppercase">
+      <span
+        class="w-full h-1/5 flex justify-center items-center text-center text-gray-200 text-[40%] font-semibold uppercase"
+      >
         {{ t("controlPage.pOverTime") }}
       </span>
     </div>
@@ -15,16 +21,28 @@
       @mouseleave="footerStore.cursorLocation = ''"
     >
       <NoData v-if="setupStore.selectedServicePairs === null" />
-      <VueApexCharts v-else :options="chartOptions" :series="chartSeries" class="full-size-chart" />
+      <VueApexCharts
+        v-else
+        :options="chartOptions"
+        :series="chartSeries"
+        class="full-size-chart"
+      />
     </div>
 
-    <div v-if="setupStore.selectedServicePairs !== null" class="iconss w-1/5 h-full flex justify-center items-center flex-col gap-1">
+    <div
+      v-if="setupStore.selectedServicePairs !== null"
+      class="iconss w-1/5 h-full flex justify-center items-center flex-col gap-1"
+    >
       <div
         class="service-icon flex justify-center items-center w-8 p-1 rounded-md"
         :style="{ background: selectedService === 'consensus' ? '#94DEFF' : '' }"
         @click="selectService('consensus')"
       >
-        <img :class="isServiceLoading('consensus') ? 'animate-spin' : ''" :src="getServiceIcon('consensus')" alt="consensus" />
+        <img
+          :class="isServiceLoading('consensus') ? 'animate-spin' : ''"
+          :src="getServiceIcon('consensus')"
+          alt="consensus"
+        />
       </div>
 
       <div
@@ -32,7 +50,12 @@
         :style="{ background: selectedService === 'execution' ? '#94DEFF' : '' }"
         @click="selectService('execution')"
       >
-        <img class="w-10" :class="isServiceLoading('execution') ? 'animate-spin' : ''" :src="getServiceIcon('execution')" alt="execution" />
+        <img
+          class="w-10"
+          :class="isServiceLoading('execution') ? 'animate-spin' : ''"
+          :src="getServiceIcon('execution')"
+          alt="execution"
+        />
       </div>
     </div>
   </div>
@@ -55,6 +78,7 @@ const footerStore = useFooter();
 const selectedService = ref("consensus");
 const chartData = ref([]);
 let pollingInterval = null;
+const maxPeer = ref(100);
 
 const chartSeries = computed(() => [
   {
@@ -65,7 +89,7 @@ const chartSeries = computed(() => [
 
 const chartOptions = {
   chart: {
-    type: "line",
+    type: "area",
     width: "100%",
     height: "100%",
     zoom: { enabled: false },
@@ -87,7 +111,11 @@ const chartOptions = {
     },
   },
   yaxis: {
-    labels: { show: false },
+    min: 0,
+    max: maxPeer.value,
+    labels: {
+      show: false,
+    },
     axisTicks: { show: false },
     axisBorder: { show: false },
   },
@@ -99,17 +127,23 @@ const chartOptions = {
     padding: { top: -25, bottom: -5, left: -5, right: -2 },
   },
   stroke: { width: 1, colors: ["#00ff00"], curve: "smooth" },
+  fill: {
+    type: "solid",
+    opacity: 0.1,
+    colors: ["#00ff00"],
+  },
   markers: { size: 0 },
 
   tooltip: {
     enabled: true,
     custom: function ({ seriesIndex, dataPointIndex, w }) {
       const hoveredData = w.config.series[seriesIndex].data[dataPointIndex];
-      const value = hoveredData[1];
+
+      const numPeer = hoveredData[2];
 
       footerStore.cursorLocation = `${t("controlPage.connectedPairs", {
-        isAre: value === 1 || value === 0 ? "is" : "are",
-        connected: value,
+        isAre: numPeer === 1 || numPeer === 0 ? "is" : "are",
+        connected: numPeer,
         time: new Date(hoveredData[0]).toLocaleTimeString(),
       })}`;
       return "";
@@ -124,14 +158,21 @@ const updateChartData = () => {
 
   if (!serviceId) return;
 
-  const p2pData = Array.isArray(controlStore.p2pstatus?.data) ? controlStore.p2pstatus.data : [];
+  const p2pData = Array.isArray(controlStore.p2pstatus?.data)
+    ? controlStore.p2pstatus.data
+    : [];
 
-  const peerDetails = p2pData.find((pair) => pair.details[serviceType]?.serviceID === serviceId)?.details[serviceType];
+  const peerDetails = p2pData.find(
+    (pair) => pair.details[serviceType]?.serviceID === serviceId
+  )?.details[serviceType];
 
-  const newPeerData = peerDetails ? peerDetails.numPeer : 0;
+  const maxPeerValue = peerDetails?.maxPeer || 100;
+  const valPeer = peerDetails ? peerDetails.valPeer : 0;
+  const numPeer = peerDetails?.numPeer || 0;
   const currentTime = new Date().getTime();
 
-  chartData.value.push([currentTime, newPeerData]);
+  maxPeer.value = maxPeerValue;
+  chartData.value.push([currentTime, valPeer, numPeer]);
 
   if (chartData.value.length > 600) {
     chartData.value.shift();
@@ -151,7 +192,8 @@ const selectService = (service) => {
   chartData.value = [];
 };
 
-const isServiceLoading = (service) => !setupStore.selectedServicePairs?.[`${service}Service`]?.icon;
+const isServiceLoading = (service) =>
+  !setupStore.selectedServicePairs?.[`${service}Service`]?.icon;
 
 const getServiceIcon = (service) =>
   isServiceLoading(service)

@@ -1,6 +1,8 @@
 <template>
   <div class="service-line w-full h-1/3 flex justify-start items-center">
-    <div class="service-name w-1/4 h-full text-gray-200 uppercase text-[45%] font-semibold flex justify-start items-center">
+    <div
+      class="service-name w-1/4 h-full text-gray-200 uppercase text-[45%] font-semibold flex justify-start items-center"
+    >
       {{ name }}
     </div>
     <div
@@ -26,6 +28,7 @@
       @mouseleave="clearCursorLocation"
     >
       <span v-if="isLoading">loading...</span>
+      <span v-else-if="isActive && url === ''">{{ loadingAnimation }}</span>
       <span v-else-if="!isActive || url === ''">Click to Copy!</span>
       <span v-else>{{ copied ? "copied!" : url }}</span>
     </div>
@@ -33,7 +36,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted, onBeforeUnmount, computed } from "vue";
 import { useFooter } from "@/store/theFooter";
 
 const footerStore = useFooter();
@@ -48,6 +51,26 @@ const props = defineProps({
 
 const emit = defineEmits(["toggle", "copy"]);
 const copied = ref(false);
+const loadingState = ref([".", "..", "..."]);
+const loadingIndex = ref(0);
+
+const interval = ref(null);
+
+const updateLoadingIndex = () => {
+  loadingIndex.value = (loadingIndex.value + 1) % loadingState.value.length;
+};
+
+onMounted(() => {
+  interval.value = setInterval(updateLoadingIndex, 500);
+});
+
+onBeforeUnmount(() => {
+  clearInterval(interval.value);
+});
+
+const loadingAnimation = computed(() => {
+  return loadingState.value[loadingIndex.value];
+});
 
 const emitCopy = () => {
   if (props.url) {

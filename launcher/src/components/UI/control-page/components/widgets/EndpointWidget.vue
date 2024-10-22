@@ -80,6 +80,15 @@ const wsToggle = async () => {
     : ControlService.closeWsTunnel());
 };
 
+const changeService = async () => {
+  nodeHeaderStore.wsState = false;
+  nodeHeaderStore.rpcState = false;
+  nodeHeaderStore.dataState = false;
+  await ControlService.closeBeaconTunnel();
+  await ControlService.closeRpcTunnel();
+  await ControlService.closeWsTunnel();
+};
+
 const getServiceUrl = (serviceType, statusData) => {
   const serviceId =
     setupStore?.selectedServicePairs?.[serviceType]?.config?.serviceID || setupStore?.selectedServicePairs?.[serviceType]?.id;
@@ -121,4 +130,18 @@ const copyToClipboard = async (url) => {
     }
   }
 };
+
+watch(
+  () => setupStore.selectedServicePairs,
+  () => {
+    changeService();
+  }
+);
+
+watch(
+  () => setupStore.selectedSetup,
+  () => {
+    changeService();
+  }
+);
 </script>
