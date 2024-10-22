@@ -2,7 +2,7 @@
   <div
     class="rpc-recieved-parent w-full h-full flex justify-center items-center flex-col relative"
   >
-    <NoData v-if="!setupStore?.selectedSetup" />
+    <NoData v-if="loading" />
     <template v-else>
       <div
         class="widget-name w-full h-1/5 flex justify-center items-center text-gray-200 uppercase font-semibold text-[55%]"
@@ -25,12 +25,14 @@
 
 <script setup>
 import NoData from "./NoData.vue";
-import { ref, computed, onMounted, onBeforeUnmount } from "vue";
+import { ref, computed, onMounted, onBeforeUnmount, watch } from "vue";
 import VueApexCharts from "vue3-apexcharts";
 import { useSetups } from "@/store/setups";
 import { useControlStore } from "@/store/theControl";
 import { useFooter } from "@/store/theFooter";
 import i18n from "@/includes/i18n";
+
+const loading = ref(true);
 
 const t = i18n.global.t;
 
@@ -136,8 +138,22 @@ const rpcOverTimeData = async () => {
   }
 };
 
+const checkSelectedSetup = () => {
+  setTimeout(() => {
+    setupStore.selectedSetup ? (loading.value = false) : (loading.value = true);
+  }, 1000);
+};
+
+watch(
+  () => setupStore.selectedSetup,
+  () => {
+    setupStore.selectedSetup ? (loading.value = false) : (loading.value = true);
+  }
+);
+
 onMounted(() => {
   pollingInterval = setInterval(rpcOverTimeData, 1000);
+  checkSelectedSetup();
 });
 
 onBeforeUnmount(() => {

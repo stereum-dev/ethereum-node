@@ -1,68 +1,71 @@
 <template>
-  <div class="peers-over-time_parent flex w-full h-full justify-center items-center">
-    <div
-      class="peers-over-time_ico w-1/3 h-full flex flex-col justify-center items-center"
-    >
+  <div
+    class="peers-over-time_parent flex w-full h-full justify-center items-center relative"
+  >
+    <NoData v-if="loading" />
+    <template v-else>
       <div
-        class="peers-over-time_ico_container flex justify-center items-center w-full h-4/5"
+        class="peers-over-time_ico w-1/3 h-full flex flex-col justify-center items-center"
       >
-        <img class="w-3/4" src="/img/icon/control-page-icons/PeertoPeerIcon.png" />
+        <div
+          class="peers-over-time_ico_container flex justify-center items-center w-full h-4/5"
+        >
+          <img class="w-3/4" src="/img/icon/control-page-icons/PeertoPeerIcon.png" />
+        </div>
+        <span
+          class="w-full h-1/5 flex justify-center items-center text-center text-gray-200 text-[40%] font-semibold uppercase"
+        >
+          {{ t("controlPage.pOverTime") }}
+        </span>
       </div>
-      <span
-        class="w-full h-1/5 flex justify-center items-center text-center text-gray-200 text-[40%] font-semibold uppercase"
-      >
-        {{ t("controlPage.pOverTime") }}
-      </span>
-    </div>
 
-    <div
-      v-if="chartOptions && chartSeries"
-      class="peers-over-time_part w-3/4 h-full flex justify-start items-start relative"
-      @mouseleave="footerStore.cursorLocation = ''"
-    >
-      <NoData v-if="setupStore.selectedServicePairs === null" />
-      <VueApexCharts
-        v-else
-        :options="chartOptions"
-        :series="chartSeries"
-        class="full-size-chart"
-      />
-    </div>
-
-    <div
-      v-if="setupStore.selectedServicePairs !== null"
-      class="iconss w-1/5 h-full flex justify-center items-center flex-col gap-1"
-    >
       <div
-        class="service-icon flex justify-center items-center w-8 p-1 rounded-md"
-        :style="{ background: selectedService === 'consensus' ? '#94DEFF' : '' }"
-        @click="selectService('consensus')"
+        v-if="chartOptions && chartSeries"
+        class="peers-over-time_part w-3/4 h-full flex justify-start items-start"
+        @mouseleave="footerStore.cursorLocation = ''"
       >
-        <img
-          :class="isServiceLoading('consensus') ? 'animate-spin' : ''"
-          :src="getServiceIcon('consensus')"
-          alt="consensus"
+        <VueApexCharts
+          :options="chartOptions"
+          :series="chartSeries"
+          class="full-size-chart"
         />
       </div>
 
       <div
-        class="service-icon flex justify-center items-center w-8 p-1 rounded-md"
-        :style="{ background: selectedService === 'execution' ? '#94DEFF' : '' }"
-        @click="selectService('execution')"
+        v-if="setupStore.selectedServicePairs !== null"
+        class="iconss w-1/5 h-full flex justify-center items-center flex-col gap-1"
       >
-        <img
-          class="w-10"
-          :class="isServiceLoading('execution') ? 'animate-spin' : ''"
-          :src="getServiceIcon('execution')"
-          alt="execution"
-        />
+        <div
+          class="service-icon flex justify-center items-center w-8 p-1 rounded-md"
+          :style="{ background: selectedService === 'consensus' ? '#94DEFF' : '' }"
+          @click="selectService('consensus')"
+        >
+          <img
+            :class="isServiceLoading('consensus') ? 'animate-spin' : ''"
+            :src="getServiceIcon('consensus')"
+            alt="consensus"
+          />
+        </div>
+
+        <div
+          class="service-icon flex justify-center items-center w-8 p-1 rounded-md"
+          :style="{ background: selectedService === 'execution' ? '#94DEFF' : '' }"
+          @click="selectService('execution')"
+        >
+          <img
+            class="w-10"
+            :class="isServiceLoading('execution') ? 'animate-spin' : ''"
+            :src="getServiceIcon('execution')"
+            alt="execution"
+          />
+        </div>
       </div>
-    </div>
+    </template>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount } from "vue";
+import { ref, computed, onMounted, onBeforeUnmount, watch } from "vue";
 import VueApexCharts from "vue3-apexcharts";
 import { useControlStore } from "@/store/theControl";
 import { useSetups } from "@/store/setups";
@@ -79,6 +82,7 @@ const selectedService = ref("consensus");
 const chartData = ref([]);
 let pollingInterval = null;
 const maxPeer = ref(100);
+const loading = ref(true);
 
 const chartSeries = computed(() => [
   {
@@ -152,6 +156,19 @@ const chartOptions = {
   dataLabels: { enabled: false },
 };
 
+const checkSelectedSetup = () => {
+  setTimeout(() => {
+    setupStore.selectedSetup ? (loading.value = false) : (loading.value = true);
+  }, 1000);
+};
+
+watch(
+  () => setupStore.selectedSetup,
+  () => {
+    setupStore.selectedSetup ? (loading.value = false) : (loading.value = true);
+  }
+);
+
 const updateChartData = () => {
   const serviceType = selectedService.value;
   const serviceId = setupStore.selectedServicePairs?.[`${serviceType}Service`]?.id;
@@ -181,6 +198,7 @@ const updateChartData = () => {
 
 onMounted(() => {
   pollingInterval = setInterval(updateChartData, 1000);
+  checkSelectedSetup();
 });
 
 onBeforeUnmount(() => {

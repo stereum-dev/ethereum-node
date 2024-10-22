@@ -1,5 +1,5 @@
 <template>
-  <div class="theCpuParent flex w-full h-full justify-center items-center">
+  <div class="theCpuParent flex w-full h-full justify-center items-center relative">
     <div class="cpuIco w-1/3 h-full flex flex-col justify-center items-center">
       <div
         class="cpuIco-container flex justify-center items-center w-full h-4/5 relative p-2"

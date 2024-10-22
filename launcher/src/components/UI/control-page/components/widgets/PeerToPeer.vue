@@ -1,49 +1,51 @@
 <template>
   <div class="peer2peerParent">
-    <div class="p2pBox">
-      <div class="p2pIco">
-        <div class="p2pIco-container">
-          <img
-            src="/img/icon/control-page-icons/PeerToPeerIcon.svg"
-            alt="Peer to Peer Icon"
-          />
+    <no-data
+      v-if="isConsensusMissing || !footerStore.isConsensusRunning"
+      @mouseenter="footerStore.cursorLocation = footerStore.nodataMessage"
+      @mouseleave="footerStore.cursorLocation = ''"
+    />
+    <template v-else>
+      <div class="p2pBox">
+        <div class="p2pIco">
+          <div class="p2pIco-container">
+            <img
+              src="/img/icon/control-page-icons/PeerToPeerIcon.svg"
+              alt="Peer to Peer Icon"
+            />
+          </div>
+          <span>{{ t("controlPage.peerNetwork") }}</span>
         </div>
-        <span>{{ t("controlPage.peerNetwork") }}</span>
-      </div>
-      <div class="wrapper">
-        <no-data
-          v-if="isConsensusMissing || !footerStore.isConsensusRunning"
-          @mouseenter="footerStore.cursorLocation = footerStore.nodataMessage"
-          @mouseleave="footerStore.cursorLocation = ''"
-        />
-        <div v-else class="p2pBarBox">
-          <ClientStatus
-            :client-name="consensusClient"
-            :client-val="consensusValPeer"
-            :client-num="consensusNumPeer"
-            @mouseenter="
-              footerStore.cursorLocation = `${t('controlPage.connectedPairsTo', {
-                client: consensusClient,
-                peer: consensusValPeer,
-              })} `
-            "
-            @mouseleave="footerStore.cursorLocation = ''"
-          />
-          <ClientStatus
-            :client-name="executionClient"
-            :client-val="executionValPeer"
-            :client-num="executionNumPeer"
-            @mouseenter="
-              footerStore.cursorLocation = `${t('controlPage.connectedPairsTo', {
-                client: executionClient,
-                peer: executionValPeer,
-              })} `
-            "
-            @mouseleave="footerStore.cursorLocation = ''"
-          />
+        <div class="wrapper">
+          <div class="p2pBarBox">
+            <ClientStatus
+              :client-name="consensusClient"
+              :client-val="consensusValPeer"
+              :client-num="consensusNumPeer"
+              @mouseenter="
+                footerStore.cursorLocation = `${t('controlPage.connectedPairsTo', {
+                  client: consensusClient,
+                  peer: consensusValPeer,
+                })} `
+              "
+              @mouseleave="footerStore.cursorLocation = ''"
+            />
+            <ClientStatus
+              :client-name="executionClient"
+              :client-val="executionValPeer"
+              :client-num="executionNumPeer"
+              @mouseenter="
+                footerStore.cursorLocation = `${t('controlPage.connectedPairsTo', {
+                  client: executionClient,
+                  peer: executionValPeer,
+                })} `
+              "
+              @mouseleave="footerStore.cursorLocation = ''"
+            />
+          </div>
         </div>
       </div>
-    </div>
+    </template>
   </div>
 </template>
 
