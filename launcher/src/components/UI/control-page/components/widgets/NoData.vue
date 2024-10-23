@@ -1,5 +1,5 @@
 <template>
-  <div class="no-data_box text-blue-300 bg-red-500">
+  <div class="no-data_box text-blue-300">
     <span
       class="big-sign flex justify-center items-center w-full h-full uppercase text-xl font-semibold"
     >
@@ -18,7 +18,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(255, 0, 0, 0.5); /* Adjust transparency */
+
   z-index: 1; /* Ensure it’s not too high */
 }
 .big-sign {

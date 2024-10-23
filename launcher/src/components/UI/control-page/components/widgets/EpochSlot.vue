@@ -1,7 +1,7 @@
 <template>
   <!-- || !footerStore.isConsensusRunning || isConsensusMissing -->
   <div
-    v-if="false"
+    v-if="!setupStore?.selectedServicePairs"
     class="NoDataParent flex w-full h-full justify-center items-center relative"
     @mouseenter="cursorLocation = `${footerStore.nodataMessage}`"
     @mouseleave="cursorLocation = ''"
