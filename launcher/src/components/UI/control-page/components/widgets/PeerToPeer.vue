@@ -1,7 +1,8 @@
 <template>
   <div class="peer2peerParent">
+    <!-- isConsensusMissing || !footerStore.isConsensusRunning -->
     <no-data
-      v-if="isConsensusMissing || !footerStore.isConsensusRunning"
+      v-if="!setupStore?.selectedServicePairs"
       @mouseenter="footerStore.cursorLocation = footerStore.nodataMessage"
       @mouseleave="footerStore.cursorLocation = ''"
     />
@@ -9,7 +10,10 @@
       <div class="p2pBox">
         <div class="p2pIco">
           <div class="p2pIco-container">
-            <img src="/img/icon/control-page-icons/PeerToPeerIcon.svg" alt="Peer to Peer Icon" />
+            <img
+              src="/img/icon/control-page-icons/PeerToPeerIcon.svg"
+              alt="Peer to Peer Icon"
+            />
           </div>
           <span>{{ t("controlPage.peerNetwork") }}</span>
         </div>
@@ -62,22 +66,50 @@ const controlStore = useControlStore();
 const setupStore = useSetups();
 const footerStore = useFooter();
 
-const consensusClient = computed(() => setupStore.selectedServicePairs?.consensusService?.name || "Unknown");
-const executionClient = computed(() => setupStore.selectedServicePairs?.executionService?.name || "Unknown");
+const consensusClient = computed(
+  () => setupStore.selectedServicePairs?.consensusService?.name || "Unknown"
+);
+const executionClient = computed(
+  () => setupStore.selectedServicePairs?.executionService?.name || "Unknown"
+);
 
 const findPeerDetails = (serviceType, id) => {
-  const p2pData = Array.isArray(controlStore.p2pstatus?.data) ? controlStore.p2pstatus.data : [];
+  const p2pData = Array.isArray(controlStore.p2pstatus?.data)
+    ? controlStore.p2pstatus.data
+    : [];
 
-  return p2pData.find((pair) => pair.details[serviceType]?.serviceID === id)?.details[serviceType] || {};
+  return (
+    p2pData.find((pair) => pair.details[serviceType]?.serviceID === id)?.details[
+      serviceType
+    ] || {}
+  );
 };
 
-const consensusValPeer = computed(() => findPeerDetails("consensus", setupStore.selectedServicePairs?.consensusService?.id).valPeer || 0);
-const consensusNumPeer = computed(() => findPeerDetails("consensus", setupStore.selectedServicePairs?.consensusService?.id).numPeer || 0);
+const consensusValPeer = computed(
+  () =>
+    findPeerDetails("consensus", setupStore.selectedServicePairs?.consensusService?.id)
+      .valPeer || 0
+);
+const consensusNumPeer = computed(
+  () =>
+    findPeerDetails("consensus", setupStore.selectedServicePairs?.consensusService?.id)
+      .numPeer || 0
+);
 
-const executionValPeer = computed(() => findPeerDetails("execution", setupStore.selectedServicePairs?.executionService?.id).valPeer || 0);
-const executionNumPeer = computed(() => findPeerDetails("execution", setupStore.selectedServicePairs?.executionService?.id).numPeer || 0);
+const executionValPeer = computed(
+  () =>
+    findPeerDetails("execution", setupStore.selectedServicePairs?.executionService?.id)
+      .valPeer || 0
+);
+const executionNumPeer = computed(
+  () =>
+    findPeerDetails("execution", setupStore.selectedServicePairs?.executionService?.id)
+      .numPeer || 0
+);
 
-const isConsensusMissing = computed(() => footerStore.missingServices?.includes("consensus"));
+const isConsensusMissing = computed(() =>
+  footerStore.missingServices?.includes("consensus")
+);
 </script>
 
 <style scoped>

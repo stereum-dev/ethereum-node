@@ -1,6 +1,7 @@
 <template>
+  <!-- || !footerStore.isConsensusRunning || isConsensusMissing -->
   <div
-    v-if="!footerStore.isConsensusRunning || isConsensusMissing"
+    v-if="false"
     class="NoDataParent flex w-full h-full justify-center items-center relative"
     @mouseenter="cursorLocation = `${footerStore.nodataMessage}`"
     @mouseleave="cursorLocation = ''"
@@ -8,7 +9,10 @@
     <NoData />
   </div>
 
-  <div v-else class="volume-Parent flex w-full h-full justify-center items-center flex-col p-1 gap-1">
+  <div
+    v-else
+    class="volume-Parent flex w-full h-full justify-center items-center flex-col p-1 gap-1"
+  >
     <ServiceLine
       :label="t('controlPage.currentEpoch')"
       :value="flag ? beaconControler : controlStore?.currentResult?.currentEpoch"
@@ -44,11 +48,18 @@ const controlStore = useControlStore();
 const footerStore = useFooter();
 
 const beaconControler = computed(() => {
-  if (!controlStore.currentResult || controlStore.currentResult.beaconStatus === undefined) {
+  if (
+    !controlStore.currentResult ||
+    controlStore.currentResult.beaconStatus === undefined
+  ) {
     return "Checking Beacon Status...";
   }
-  return controlStore.currentResult.beaconStatus !== 0 ? "No Running Beacon Node!" : "Loading...";
+  return controlStore.currentResult.beaconStatus !== 0
+    ? "No Running Beacon Node!"
+    : "Loading...";
 });
 
-const flag = computed(() => !controlStore.currentResult || controlStore.currentResult.beaconStatus !== 0);
+const flag = computed(
+  () => !controlStore.currentResult || controlStore.currentResult.beaconStatus !== 0
+);
 </script>

@@ -2,11 +2,17 @@
   <div class="peers-over-time_parent flex w-full h-full justify-center items-center">
     <NoData v-if="loading" />
     <template v-else>
-      <div class="peers-over-time_ico w-1/3 h-full flex flex-col justify-center items-center">
-        <div class="peers-over-time_ico_container flex justify-center items-center w-full h-4/5">
+      <div
+        class="peers-over-time_ico w-1/3 h-full flex flex-col justify-center items-center"
+      >
+        <div
+          class="peers-over-time_ico_container flex justify-center items-center w-full h-4/5"
+        >
           <img class="w-3/4" src="/img/icon/control-page-icons/SubnetSubscriptions.png" />
         </div>
-        <span class="w-full h-1/5 flex justify-center items-center text-center text-gray-200 text-[40%] font-semibold uppercase">
+        <span
+          class="w-full h-1/5 flex justify-center items-center text-center text-gray-200 text-[40%] font-semibold uppercase"
+        >
           {{ t("controlPage.subscribedSubnets") }}
         </span>
       </div>
@@ -16,7 +22,11 @@
         class="peers-over-time_part w-2/3 h-full flex justify-start items-start relative"
         @mouseleave="footerStore.cursorLocation = ''"
       >
-        <VueApexCharts :options="chartOptions" :series="chartSeries" class="fullSizeChart" />
+        <VueApexCharts
+          :options="chartOptions"
+          :series="chartSeries"
+          class="fullSizeChart"
+        />
       </div>
     </template>
   </div>
@@ -130,14 +140,14 @@ const subnetData = async () => {
 };
 const checkSelectedSetup = () => {
   setTimeout(() => {
-    setupStore.selectedSetup ? (loading.value = false) : (loading.value = true);
+    setupStore?.selectedServicePairs ? (loading.value = false) : (loading.value = true);
   }, 1000);
 };
 
 watch(
-  () => setupStore.selectedSetup,
+  () => setupStore?.selectedServicePairs,
   () => {
-    setupStore.selectedSetup ? (loading.value = false) : (loading.value = true);
+    setupStore?.selectedServicePairs ? (loading.value = false) : (loading.value = true);
   }
 );
 

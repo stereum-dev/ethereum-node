@@ -1,6 +1,8 @@
 <template>
-  <div class="pair-state-parent w-full h-full flex flex-col justify-center items-center relative">
-    <NoData v-if="!setupStore?.selectedSetup" />
+  <div
+    class="pair-state-parent w-full h-full flex flex-col justify-center items-center relative"
+  >
+    <NoData v-if="!setupStore?.selectedServicePairs" />
     <template v-else>
       <ServiceState
         v-for="(service, type) in reactiveServiceStates"

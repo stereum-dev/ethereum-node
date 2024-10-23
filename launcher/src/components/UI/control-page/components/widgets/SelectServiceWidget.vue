@@ -1,6 +1,6 @@
 <template>
   <div class="select-service-widget-parent flex flex-col w-full h-full justify-center items-center">
-    <div v-if="!setupStore.selectedSetup" class="wrapper flex w-full h-full justify-center items-center relative">
+    <div v-if="servicePairs.length === 0" class="wrapper flex w-full h-full justify-center items-center relative">
       <NoData />
     </div>
 
@@ -34,7 +34,7 @@
         </transition>
       </div>
 
-      <div v-if="controlStore.pickeedService === 'vld'" class="h-1/2 w-full flex justify-center items-center">
+      <div v-if="controlStore.pickedService === 'vld'" class="h-1/2 w-full flex justify-center items-center">
         <ServiceArrow v-if="filteredValidatorServices.length > 1" direction="prev" @prev="prevValidator" />
         <div class="validator-info w-4/5 h-full flex justify-center items-center">
           <ServiceIcon
@@ -56,14 +56,13 @@
         </div>
         <ServiceArrow v-if="filteredValidatorServices.length > 1" direction="next" @next="nextValidator" />
       </div>
+
       <div v-else class="h-1/2 w-full flex justify-center items-center">
         <ServiceArrow v-if="servicePairs.length > 1" direction="prev" @prev="prevPair" />
-
         <div class="pairs-info w-4/5 h-full flex justify-center items-center">
           <ServiceDetails :service="selectedPair?.executionService" service-type="exec" />
           <ServiceDetails :service="selectedPair?.consensusService" service-type="cons" />
         </div>
-
         <ServiceArrow v-if="servicePairs.length > 1" direction="next" @next="nextPair" />
       </div>
     </template>
@@ -89,11 +88,25 @@ const stakingStore = useStakingStore();
 const isOpen = ref(false);
 const currentIndex = ref(0);
 
-const selectedServiceLabel = computed(() =>
-  controlStore.pickeedService === "exeCons" ? "EXECUTION & CONSENSUS CLIENTS" : "VALIDATOR CLIENT"
-);
+const selectedServiceLabel = computed(() => {
+  return controlStore.pickedService === "exeCons" ? "EXECUTION & CONSENSUS CLIENTS" : "VALIDATOR CLIENT";
+});
 
 const servicePairs = computed(() => {
+  if (!setupStore.selectedSetup || !setupStore.selectedSetup.services) {
+    return setupStore.allSetups
+      .filter((setup) => setup.services && setup.services.length > 0)
+      .flatMap((setup) =>
+        setup.services
+          .filter((service) => service.category === "consensus")
+          .flatMap((consensusService) =>
+            (consensusService.config?.dependencies?.executionClients || []).map((executionClient) =>
+              createServicePair(consensusService, executionClient, setup.services, setup.network)
+            )
+          )
+      );
+  }
+
   const setup = setupStore.selectedSetup;
   if (!setup || !setup.services) return [];
 
@@ -101,12 +114,12 @@ const servicePairs = computed(() => {
     .filter((service) => service.category === "consensus")
     .flatMap((consensusService) =>
       (consensusService.config?.dependencies?.executionClients || []).map((executionClient) =>
-        createServicePair(consensusService, executionClient, setup.services)
+        createServicePair(consensusService, executionClient, setup.services, setup.network)
       )
     );
 });
 
-const createServicePair = (consensusService, executionClient, services) => {
+const createServicePair = (consensusService, executionClient, services, network) => {
   const executionDetails = services.find(
     (service) => service.service === executionClient.service && service.config?.serviceID === executionClient.id
   ) || { name: executionClient.service, config: { serviceID: executionClient.id } };
@@ -119,6 +132,7 @@ const createServicePair = (consensusService, executionClient, services) => {
   return {
     consensusService: formatServiceDetails(consensusService, consensusDetails),
     executionService: { ...executionDetails, id: executionClient.id },
+    network,
   };
 };
 
@@ -163,7 +177,7 @@ const toggleDropdown = () => {
 };
 
 const servicePicker = (type) => {
-  controlStore.pickeedService = type === "vld" ? "vld" : "exeCons";
+  controlStore.pickedService = type === "vld" ? "vld" : "exeCons";
   toggleDropdown();
 };
 

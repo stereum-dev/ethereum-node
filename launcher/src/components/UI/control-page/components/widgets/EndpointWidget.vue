@@ -1,6 +1,8 @@
 <template>
-  <div class="volume-Parent flex w-full h-full justify-center items-center flex-col p-1 gap-1 relative">
-    <NoData v-if="!setupStore.selectedSetup" />
+  <div
+    class="volume-Parent flex w-full h-full justify-center items-center flex-col p-1 gap-1 relative"
+  >
+    <NoData v-if="!setupStore.selectedServicePairs" />
     <template v-else>
       <EndpointServiceLine
         v-if="setupStore?.selectedServicePairs?.executionService"
@@ -62,21 +64,27 @@ const extractPort = (url) => {
 const rpcToggle = async () => {
   nodeHeaderStore.rpcState = !nodeHeaderStore.rpcState;
   await (nodeHeaderStore.rpcState
-    ? ControlService.openRpcTunnel(setupStore?.selectedServicePairs?.executionService?.config?.serviceID)
+    ? ControlService.openRpcTunnel(
+        setupStore?.selectedServicePairs?.executionService?.config?.serviceID
+      )
     : ControlService.closeRpcTunnel());
 };
 
 const dataToggle = async () => {
   nodeHeaderStore.dataState = !nodeHeaderStore.dataState;
   await (nodeHeaderStore.dataState
-    ? ControlService.openBeaconTunnel(setupStore?.selectedServicePairs?.consensusService?.id)
+    ? ControlService.openBeaconTunnel(
+        setupStore?.selectedServicePairs?.consensusService?.id
+      )
     : ControlService.closeBeaconTunnel());
 };
 
 const wsToggle = async () => {
   nodeHeaderStore.wsState = !nodeHeaderStore.wsState;
   await (nodeHeaderStore.wsState
-    ? ControlService.openWsTunnel(setupStore?.selectedServicePairs?.executionService?.config?.serviceID)
+    ? ControlService.openWsTunnel(
+        setupStore?.selectedServicePairs?.executionService?.config?.serviceID
+      )
     : ControlService.closeWsTunnel());
 };
 
@@ -91,13 +99,16 @@ const changeService = async () => {
 
 const getServiceUrl = (serviceType, statusData) => {
   const serviceId =
-    setupStore?.selectedServicePairs?.[serviceType]?.config?.serviceID || setupStore?.selectedServicePairs?.[serviceType]?.id;
+    setupStore?.selectedServicePairs?.[serviceType]?.config?.serviceID ||
+    setupStore?.selectedServicePairs?.[serviceType]?.id;
   const matchedService = statusData?.find((service) => service.sid === serviceId);
   return matchedService ? matchedService.url : "";
 };
 
 const executionRpcUrl = computed(() => {
-  return controlStore.rpcstatus?.data ? getServiceUrl("executionService", controlStore.rpcstatus.data) : "";
+  return controlStore.rpcstatus?.data
+    ? getServiceUrl("executionService", controlStore.rpcstatus.data)
+    : "";
 });
 
 watch(executionRpcUrl, (newUrl) => {
@@ -106,16 +117,26 @@ watch(executionRpcUrl, (newUrl) => {
 });
 
 const beaconDataUrl = computed(() => {
-  return controlStore.beaconstatus?.data ? getServiceUrl("consensusService", controlStore.beaconstatus.data) : "";
+  return controlStore.beaconstatus?.data
+    ? getServiceUrl("consensusService", controlStore.beaconstatus.data)
+    : "";
 });
 
 const wsDataUrl = computed(() => {
-  return controlStore.wsstatus?.data ? getServiceUrl("executionService", controlStore.wsstatus.data) : "";
+  return controlStore.wsstatus?.data
+    ? getServiceUrl("executionService", controlStore.wsstatus.data)
+    : "";
 });
 
-const rpcIsLoading = computed(() => controlStore.rpcstatus.info !== "success: rpcstatus successfully retrieved");
-const beaconstatusIsLoading = computed(() => controlStore.beaconstatus.info !== "success: beaconstatus successfully retrieved");
-const wsIsLoading = computed(() => controlStore.wsstatus.info !== "success: wsstatus successfully retrieved");
+const rpcIsLoading = computed(
+  () => controlStore.rpcstatus.info !== "success: rpcstatus successfully retrieved"
+);
+const beaconstatusIsLoading = computed(
+  () => controlStore.beaconstatus.info !== "success: beaconstatus successfully retrieved"
+);
+const wsIsLoading = computed(
+  () => controlStore.wsstatus.info !== "success: wsstatus successfully retrieved"
+);
 
 // Function to copy URL to clipboard
 const copied = ref(false);

@@ -1,6 +1,9 @@
 <template>
   <div class="connected-val-parent flex w-full h-full flex-col p-1 relative">
-    <NoData v-if="!setupStore.selectedSetup" />
+    <div v-if="!setupStore.selectedServicePairs" class="wrapper relative w-full h-full">
+      <NoData />
+    </div>
+
     <template v-else>
       <div class="val-box flex w-full h-5/6 justify-start items-center gap-1">
         <ValidatorItem
@@ -17,7 +20,9 @@
         />
       </div>
 
-      <div class="widget-name flex w-full h-1/6 justify-center items-center uppercase text-gray-200 text-[50%] font-semibold">
+      <div
+        class="widget-name flex w-full h-1/6 justify-center items-center uppercase text-gray-200 text-[50%] font-semibold"
+      >
         {{ t("controlPage.connectValWidg") }}
       </div>
     </template>
@@ -45,7 +50,8 @@ const getKeyCount = (validator) => {
   if (!validator || stakingStore.keys.length === 0) {
     return 0;
   }
-  return stakingStore.keys.filter((key) => key.validatorID === validator.config.serviceID).length;
+  return stakingStore.keys.filter((key) => key.validatorID === validator.config.serviceID)
+    .length;
 };
 
 const setCursor = (info) => {
