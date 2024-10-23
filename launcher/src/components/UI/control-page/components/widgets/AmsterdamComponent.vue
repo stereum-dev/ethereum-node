@@ -1,21 +1,10 @@
 <template>
   <div class="amsterdam-parent">
-    <no-data
-      v-if="
-        !setupsStore.selectedSetup ||
-        isConsensusMissing ||
-        !footerStore.isConsensusRunning ||
-        footerStore.prometheusIsOff
-      "
-    />
+    <no-data v-if="!setupsStore.selectedSetup || isConsensusMissing || !footerStore.isConsensusRunning || footerStore.prometheusIsOff" />
     <template v-else>
       <div
         class="icoTitle"
-        @mouseenter="
-          footerStore.cursorLocation = `${t('controlPage.netSel')} ${
-            getSetupNetwork?.name
-          }`
-        "
+        @mouseenter="footerStore.cursorLocation = `${t('controlPage.netSel')} ${getSetupNetwork?.name}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
         <div class="icoContainer">
@@ -74,8 +63,7 @@
             </div>
             <div class="Finalized-row">
               <div
-                v-for="n in controlStore.currentResult?.preJustifiedEpochStatus?.[0] ||
-                []"
+                v-for="n in controlStore.currentResult?.preJustifiedEpochStatus?.[0] || []"
                 :key="n"
                 class="Finalized-square"
                 :class="{
@@ -155,9 +143,7 @@ const getSetupNetwork = computed(() => {
   }
   return defaultIcon;
 });
-const isConsensusMissing = computed(() =>
-  footerStore.missingServices?.includes("consensus")
-);
+const isConsensusMissing = computed(() => footerStore.missingServices?.includes("consensus"));
 
 const proposedBlock = computed(() => {
   if (setupsStore.selectedSetup?.network === "gnosis") {
@@ -175,9 +161,7 @@ const proposedBlock = computed(() => {
 
 const flag = computed(() => {
   if (
-    ["consensus", "Prometheus", "consensus and Prometheus"].includes(
-      footerStore.installedServicesController
-    ) ||
+    ["consensus", "Prometheus", "consensus and Prometheus"].includes(footerStore.installedServicesController) ||
     footerStore.consensusClientIsOff ||
     footerStore.prometheusIsOff ||
     controlStore.currentResult === undefined ||
@@ -230,32 +214,25 @@ const serviceController = (args, setup) => {
   }
 
   const requiredCategories = ["consensus", "execution"];
-  const missingCategories = requiredCategories.filter(
-    (category) => !foundCategories.has(category)
-  );
+  const missingCategories = requiredCategories.filter((category) => !foundCategories.has(category));
 
   if (!hasPrometheus) {
     missingCategories.push("Prometheus");
   }
 
-  footerStore.installedServicesController = missingCategories
-    .join(", ")
-    .replace(/, (?=[^,]*$)/, " and ");
+  footerStore.installedServicesController = missingCategories.join(", ").replace(/, (?=[^,]*$)/, " and ");
 };
 
 watch(servicesStore.installedServices, (newVal) => {
   const selectedSetup = setupsStore.selectedSetup ? setupsStore.selectedSetup : [];
   serviceController(newVal, selectedSetup);
-  const consensusServiceName =
-    setupsStore?.selectedServicePairs?.consensusService?.name || null;
+  const consensusServiceName = setupsStore?.selectedServicePairs?.consensusService?.name || null;
 
   if (consensusServiceName) {
     serviceStateController(consensusServiceName, "consensusClientIsOff");
   }
   serviceStateController("prometheus", "prometheusIsOff");
-  currentEpochSlot(
-    setupsStore?.selectedServicePairs?.consensusService?.name?.toUpperCase()
-  );
+  currentEpochSlot(setupsStore?.selectedServicePairs?.consensusService?.name?.toUpperCase());
 });
 
 watch(setupsStore.selectedSetup, (newVal, oldVal) => {
@@ -264,9 +241,7 @@ watch(setupsStore.selectedSetup, (newVal, oldVal) => {
       networkFlag.value = true;
     }
 
-    currentEpochSlot(
-      setupsStore?.selectedServicePairs?.consensusService?.name?.toUpperCase()
-    );
+    currentEpochSlot(setupsStore?.selectedServicePairs?.consensusService?.name?.toUpperCase());
   }
 });
 
@@ -304,12 +279,10 @@ watch(
   () => controlStore.currentResult,
   (newResult) => {
     if (newResult && newResult.currentEpochStatus && newResult?.currentEpochStatus[0]) {
-      const newArray = newResult?.currentEpochStatus[0]
-        .slice(0, proposedBlock.value.length)
-        .map((slot) => ({
-          slotNumber: slot.slotNumber,
-          slotStatus: slot.slotStatus,
-        }));
+      const newArray = newResult?.currentEpochStatus[0].slice(0, proposedBlock.value.length).map((slot) => ({
+        slotNumber: slot.slotNumber,
+        slotStatus: slot.slotStatus,
+      }));
 
       while (newArray.length < proposedBlock.value.length) {
         newArray.push({ slotNumber: 0, slotStatus: "pending" });
@@ -320,16 +293,10 @@ watch(
 
     if (networkFlag.value) {
       changeCounter.value++;
-      if (
-        setupsStore.selectedSetup?.network === "gnosis" &&
-        controlStore.changeCounter === 4
-      ) {
+      if (setupsStore.selectedSetup?.network === "gnosis" && controlStore.changeCounter === 4) {
         networkFlag.value = false;
         changeCounter.value = 0;
-      } else if (
-        setupsStore.selectedSetup?.network !== "gnosis" &&
-        controlStore.changeCounter === 2
-      ) {
+      } else if (setupsStore.selectedSetup?.network !== "gnosis" && controlStore.changeCounter === 2) {
         networkFlag.value = false;
         changeCounter.value = 0;
       }
@@ -341,9 +308,7 @@ watch(
 const refreshHandling = () => {
   controlStore.currentResult = {};
   clearInterval(polling.value);
-  currentEpochSlot(
-    setupsStore?.selectedServicePairs?.consensusService?.name?.toUpperCase()
-  );
+  currentEpochSlot(setupsStore?.selectedServicePairs?.consensusService?.name?.toUpperCase());
 };
 
 watch(
