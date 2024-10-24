@@ -73,6 +73,19 @@ import { computed } from 'vue';
     <div class="h-full col-start-17 col-span-full bg-[#151618] rounded-full grid grid-cols-6 items-center" @mousedown.prevent>
       <div
         class="col-start-1 col-span-1 w-full h-full rounded-md justify-self-center flex justify-center items-center"
+        @mouseenter="footerStore.cursorLocation = `Beaconcha.in`"
+        @mouseleave="footerStore.cursorLocation = ''"
+      >
+        <img
+          class="w-5 h-5 hover:scale-105 active:scale-95 cursor-pointer transition-all duration-150"
+          src="/img/icon/staking-page-icons/beaconcha.png"
+          alt="Icon"
+          @mousedown.prevent
+          @click="navToBeaconcha(props.item.network)"
+        />
+      </div>
+      <div
+        class="col-start-2 col-span-1 w-full h-full rounded-md justify-self-center flex justify-center items-center"
         @mouseenter="footerStore.cursorLocation = `${copyPub}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
@@ -85,7 +98,7 @@ import { computed } from 'vue';
         />
       </div>
       <div
-        class="col-start-2 col-span-1 w-full h-full rounded-md justify-self-center flex justify-center items-center"
+        class="col-start-3 col-span-1 w-full h-full rounded-md justify-self-center flex justify-center items-center"
         @mouseenter="footerStore.cursorLocation = `${renameVal}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
@@ -98,7 +111,7 @@ import { computed } from 'vue';
         />
       </div>
       <div
-        class="col-start-3 col-span-1 w-full h-full rounded-md justify-self-center flex justify-center items-center"
+        class="col-start-4 col-span-1 w-full h-full rounded-md justify-self-center flex justify-center items-center"
         @mouseenter="footerStore.cursorLocation = `${setFee}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
@@ -111,7 +124,7 @@ import { computed } from 'vue';
         />
       </div>
       <div
-        class="col-start-4 col-span-1 w-full h-full rounded-md justify-self-center flex justify-center items-center"
+        class="col-start-5 col-span-1 w-full h-full rounded-md justify-self-center flex justify-center items-center"
         @mouseenter="footerStore.cursorLocation = `${removVal}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
@@ -124,7 +137,7 @@ import { computed } from 'vue';
         />
       </div>
       <div
-        class="col-start-5 col-span-1 w-full h-full rounded-md justify-self-center flex justify-center items-center"
+        class="col-start-6 col-span-1 w-full h-full rounded-md justify-self-center flex justify-center items-center"
         @mouseenter="footerStore.cursorLocation = `${exitChain}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
@@ -134,19 +147,6 @@ import { computed } from 'vue';
           alt="Icon"
           @mousedown.prevent
           @click="withdrawHandler"
-        />
-      </div>
-      <div
-        class="col-start-6 col-span-1 w-full h-full rounded-md justify-self-center flex justify-center items-center"
-        @mouseenter="footerStore.cursorLocation = `Beaconcha.in`"
-        @mouseleave="footerStore.cursorLocation = ''"
-      >
-        <img
-          class="w-5 h-5 hover:scale-105 active:scale-95 cursor-pointer transition-all duration-150"
-          src="/img/icon/staking-page-icons/beaconcha.png"
-          alt="Icon"
-          @mousedown.prevent
-          @click="navToBeaconcha(props.item.network)"
         />
       </div>
     </div>
@@ -309,7 +309,7 @@ const navToBeaconcha = (network) => {
     holesky: "https://holesky.beaconcha.in/",
   };
 
-  const url = urls[network];
+  const url = urls[network] + "validator/" + props.item.key;
   if (url) {
     window.open(url, "_blank");
   } else {

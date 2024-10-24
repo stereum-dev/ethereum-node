@@ -68,7 +68,7 @@ import { useServices } from "@/store/services";
 import { useFooter } from "@/store/theFooter";
 import i18n from "@/includes/i18n";
 import { computed, onUnmounted, ref } from "vue";
-import { useSetups } from "../../../../../store/setups";
+import { useSetups } from "@/store/setups";
 
 const t = i18n.global.t;
 
