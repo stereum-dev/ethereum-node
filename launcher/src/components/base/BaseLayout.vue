@@ -91,6 +91,7 @@ const getLoadingAnime = computed(() => {
 
 onMounted(() => {
   useUpdateCheck();
+  checkSettings();
 });
 
 const closeServiceBrowser = () => {
@@ -169,6 +170,19 @@ const reconnect = async () => {
   }
   headerStore.reconnecting = false;
   headerStore.refresh = true;
+};
+
+const checkSettings = async () => {
+  try {
+    const savedConfig = await ControlService.readConfig();
+    if (typeof savedConfig.idleTimer.enabled !== "undefined") {
+      if (savedConfig.idleTimer.enabled) {
+        await ControlService.idleTimerCheck(false);
+      }
+    }
+  } catch (error) {
+    console.error("Failed to load saved settings:", error);
+  }
 };
 </script>
 

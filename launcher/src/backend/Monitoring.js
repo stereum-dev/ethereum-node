@@ -9,6 +9,7 @@ import * as crypto from "crypto";
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
+const { powerMonitor } = require("electron");
 
 const globalMonitoringCache = {
   intervalHandler: null,
@@ -16,6 +17,8 @@ const globalMonitoringCache = {
   refreshIntervalSeconds: 5,
   nodestatsInitialized: false,
   storagestatus: {},
+  idleTimerRunning: false,
+  idleTimerStop: false,
 };
 
 export class Monitoring {
@@ -39,6 +42,8 @@ export class Monitoring {
   async cleanup() {
     this.isLoggedIn = false;
     this.triedCurlInstall = false;
+    this.idleTimerRunning = false;
+    this.idleTimerStop = false;
     this.rpcTunnel = {};
     this.wsTunnel = {};
     this.beaconTunnel = {};
@@ -3513,5 +3518,24 @@ rm -rf diskoutput
       };
     }
     return [];
+  }
+
+  async idleTimerCheck(timerStop) {
+    if (!this.globalMonitoringCache.idleTimerRunning) {
+      this.globalMonitoringCache.idleTimerRunning = true;
+      await this.idleTimerLoop();
+    }
+    if (timerStop) {
+      this.globalMonitoringCache.idleTimerStop = true;
+    }
+  }
+
+  async idleTimerLoop() {
+    if (powerMonitor.getSystemIdleTime() > 300) {
+      //loggout
+    } else if (this.isLoggedIn && !this.globalMonitoringCache.idleTimerStop) {
+      await new Promise((resolve) => setTimeout(resolve, 60000));
+      await this.idleTimerLoop();
+    }
   }
 }

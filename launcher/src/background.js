@@ -103,6 +103,10 @@ ipcMain.handle("logout", async () => {
   return await nodeConnection.logout();
 });
 
+ipcMain.handle("idleTimerCheck", async (event, arg) => {
+  return await monitoring.idleTimerCheck(arg);
+});
+
 // userData storage
 ipcMain.handle("readConfig", async () => {
   return storageService.readConfig();
