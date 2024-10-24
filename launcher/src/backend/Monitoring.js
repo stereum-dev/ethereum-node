@@ -3171,7 +3171,7 @@ rm -rf diskoutput
     }
 
     try {
-      const beaconAPIPort = beaconStatus.data[0].beacon.destinationPort;
+      const beaconAPIPort = beaconStatus.data[0].beacon.servicePort;
       const serviceId = beaconStatus.data[0].sid;
       if (!Array.isArray(pubkey)) {
         pubkey = [pubkey];
@@ -3182,7 +3182,7 @@ rm -rf diskoutput
         if (!output.includes("{") || !output.includes("}")) {
           return {
             pubkey: pubkey,
-            code: null,
+            code: /20[0-8] OK/.test(output) ? 200 : null,
             msg: output,
           };
         }
@@ -3228,6 +3228,8 @@ rm -rf diskoutput
           if (SSHService.checkExecError(runExitCommand) && runExitCommand.stderr) {
             throw new Error(SSHService.extractExecError(runExitCommand));
           }
+          if (!runExitCommand.stdout)
+            throw `ReturnCode: ${runExitCommand.rc}\nStderr: ${runExitCommand.stderr}\nStdout: ${runExitCommand.stdout}\nIs Your Consensus Client Running?`;
 
           const response = parseRunExitCommandOutput(runExitCommand.stdout, pubkey);
 

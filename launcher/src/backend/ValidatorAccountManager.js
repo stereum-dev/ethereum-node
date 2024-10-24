@@ -225,6 +225,9 @@ export class ValidatorAccountManager {
 
       //Error handling
       if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
+      if (!result.stdout)
+        throw `ReturnCode: ${result.rc}\nStderr: ${result.stderr}\nStdout: ${result.stdout}\nIs Your Consensus Client Running?`;
+
       const data = JSON.parse(result.stdout);
       if (data.data === undefined) {
         if (data.code === undefined || data.message === undefined) {
@@ -703,7 +706,18 @@ export class ValidatorAccountManager {
 
       this.nodeConnection.taskManager.otherTasksHandler(ref, `Get Remote Keys`, true, result.stdout);
 
+      //Error handling
+      if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
+      if (!result.stdout)
+        throw `ReturnCode: ${result.rc}\nStderr: ${result.stderr}\nStdout: ${result.stdout}\nIs Your Consensus Client Running?`;
+
       const data = JSON.parse(result.stdout);
+      if (data.data === undefined) {
+        if (data.code === undefined || data.message === undefined) {
+          throw "Undexpected Error: " + result;
+        }
+        throw data.code + " " + data.message;
+      }
       if (!data.data) data.data = [];
 
       this.nodeConnection.taskManager.otherTasksHandler(ref);
