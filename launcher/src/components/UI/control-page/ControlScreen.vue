@@ -27,28 +27,42 @@ const setupStore = useSetups();
 const footerStore = useFooter();
 const serviceStore = useServices();
 
-const selecteConfigServices = computed(() => {
-  let test = [];
+const selectedConfigServices = computed(() => {
+  let services = [];
   const selectedSetup = setupStore.selectedSetup;
+  const allSetups = setupStore.allSetups;
+
   if (selectedSetup && selectedSetup.services) {
     const selectedServiceIds = selectedSetup.services.map((service) => service.config.serviceID);
+
     serviceStore.installedServices.forEach((service) => {
       if (
         (["execution", "validator", "consensus"].includes(service.category) && selectedServiceIds.includes(service.config.serviceID)) ||
         service.category === "service"
       ) {
-        test.push({
+        services.push({
           isServicePending: false,
           ...service,
         });
       }
     });
+  } else {
+    allSetups.forEach((setup) => {
+      setup.services.forEach((service) => {
+        if (["execution", "validator", "consensus", "service"].includes(service.category)) {
+          services.push({
+            isServicePending: false,
+            ...service,
+          });
+        }
+      });
+    });
   }
-  return test;
+  return services;
 });
 
 const missingServices = computed(() => {
-  const selectedServices = selecteConfigServices.value;
+  const selectedServices = selectedConfigServices.value;
   const hasValidator = selectedServices.some((service) => service.category === "validator");
   const hasConsensus = selectedServices.some((service) => service.category === "consensus");
 
@@ -67,7 +81,7 @@ watch(
   { immediate: true }
 );
 const isAnyConsensusRunning = computed(() => {
-  const consensusServices = selecteConfigServices.value.filter((service) => service.category === "consensus");
+  const consensusServices = selectedConfigServices.value.filter((service) => service.category === "consensus");
   return consensusServices.length > 0 && consensusServices.some((service) => service.state === "running");
 });
 
@@ -80,7 +94,7 @@ watch(
 );
 
 const isPrometheusOff = computed(() => {
-  const prometheusService = selecteConfigServices.value.find((service) => service.name === "Prometheus");
+  const prometheusService = selectedConfigServices.value.find((service) => service.name === "Prometheus");
   return prometheusService?.state === "running" ? false : true;
 });
 
