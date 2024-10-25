@@ -10,17 +10,14 @@ export async function useListKeys(forceRefresh) {
   const stakingStore = useStakingStore();
 
   let keyStats = [];
-  let clients = serviceStore.installedServices.filter(
-    (s) => s.category == "validator" && s.service != "CharonService" && s.service != "SSVNetworkService"
-  );
+  let clients = serviceStore.installedServices.filter((s) => s.category == "validator");
   if ((clients && clients.length > 0 && nodeManageStore.currentNetwork?.network != "") || forceRefresh) {
     for (let client of clients) {
       //if there is already a list of keys ()
       if ((client.config.keys === undefined || client.config.keys.length === 0 || forceRefresh) && client.state === "running") {
         //refresh validaotr list
         let result = await ControlService.listValidators(client.config.serviceID);
-
-        if (!client.service.includes("Web3Signer")) {
+        if (!/Web3Signer|CharonService|SSVNetwork/.test(client.service)) {
           let resultRemote = await ControlService.listRemoteKeys(client.config.serviceID);
           let remoteKeys = resultRemote.data
             ? resultRemote.data.map((e) => {
