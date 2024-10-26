@@ -17,47 +17,31 @@
         <div class="activeWidget">
           <div class="consensusContainer">
             <div class="consensusName">
-              <span class="text-gray-200 mt-2">{{
-                setupsStore?.selectedServicePairs?.consensusService?.name
-              }}</span>
+              <span class="text-gray-200 mt-2">{{ setupsStore?.selectedServicePairs?.consensusService?.name }}</span>
             </div>
             <div class="progressBox">
-              <sync-circular-progress
-                :color="consensusColor"
-                :sync-percent="consensusCyrcle"
-              />
+              <sync-circular-progress :color="consensusColor" :sync-percent="consensusCyrcle" />
             </div>
             <div class="syncStatusStatus">
               <span :style="{ color: consensusColor }">{{ consensusState }}</span>
             </div>
             <div class="consensusIconCons">
-              <img
-                :src="setupsStore?.selectedServicePairs?.consensusService?.icon"
-                alt="consensus"
-              />
+              <img :src="setupsStore?.selectedServicePairs?.consensusService?.icon" alt="consensus" />
             </div>
           </div>
 
           <div class="executionContainer">
             <div class="executionName">
-              <span class="text-gray-200 mt-2">{{
-                setupsStore?.selectedServicePairs?.executionService?.name
-              }}</span>
+              <span class="text-gray-200 mt-2">{{ setupsStore?.selectedServicePairs?.executionService?.name }}</span>
             </div>
             <div class="progressBox">
-              <sync-circular-progress
-                :color="executionColor"
-                :sync-percent="executionCyrcle"
-              />
+              <sync-circular-progress :color="executionColor" :sync-percent="executionCyrcle" />
             </div>
             <div class="syncStatusStatus">
               <span :style="{ color: executionColor }">{{ executionState }}</span>
             </div>
             <div class="executionIconCons">
-              <img
-                :src="setupsStore?.selectedServicePairs?.executionService?.icon"
-                alt="execution"
-              />
+              <img :src="setupsStore?.selectedServicePairs?.executionService?.icon" alt="execution" />
             </div>
           </div>
         </div>
@@ -78,9 +62,7 @@ const controlStore = useControlStore();
 const footerStore = useFooter();
 const setupsStore = useSetups();
 
-const isConsensusMissing = computed(() =>
-  footerStore.missingServices?.includes("consensus")
-);
+const isConsensusMissing = computed(() => footerStore.missingServices?.includes("consensus"));
 const consensusColor = ref("grey");
 const consensusCyrcle = ref(0);
 const executionColor = ref("grey");
@@ -112,23 +94,9 @@ const handleSyncStatus = (client, colorRef, cyrcleRef, stateRef) => {
   } else if (lo < 1 && hi < 1) {
     setSyncValues("grey", 100, "on-hold", colorRef, cyrcleRef, stateRef);
   } else if (lo < hi) {
-    setSyncValues(
-      "lightblue",
-      getSyncPercentage(lo, hi),
-      "syncing",
-      colorRef,
-      cyrcleRef,
-      stateRef
-    );
+    setSyncValues("lightblue", getSyncPercentage(lo, hi), "syncing", colorRef, cyrcleRef, stateRef);
   } else {
-    setSyncValues(
-      "green",
-      getSyncPercentage(lo, hi),
-      "synced",
-      colorRef,
-      cyrcleRef,
-      stateRef
-    );
+    setSyncValues("green", getSyncPercentage(lo, hi), "synced", colorRef, cyrcleRef, stateRef);
   }
 };
 
@@ -138,8 +106,7 @@ const setSyncValues = (color, percent, state, colorRef, cyrcleRef, stateRef) => 
   stateRef.value = state;
 };
 
-const getSyncPercentage = (firstVal, secondVal) =>
-  ((firstVal / secondVal) * 100).toFixed(2);
+const getSyncPercentage = (firstVal, secondVal) => ((firstVal / secondVal) * 100).toFixed(2);
 
 // Sync Icon update
 const updateSyncIcon = () => {
@@ -160,19 +127,14 @@ watch([consensusState, executionState], updateSyncIcon);
 
 const getServiceSyncStatus = (serviceType, syncData) => {
   const serviceId =
-    setupsStore?.selectedServicePairs?.[serviceType]?.config?.serviceID ||
-    setupsStore?.selectedServicePairs?.[serviceType]?.id;
+    setupsStore?.selectedServicePairs?.[serviceType]?.config?.serviceID || setupsStore?.selectedServicePairs?.[serviceType]?.id;
 
   if (!Array.isArray(syncData)) return null;
   return syncData.flat().find((data) => data.serviceID === serviceId) || null;
 };
 
-const consensusSyncData = computed(() =>
-  getServiceSyncStatus("consensusService", controlStore.syncstatus.data)
-);
-const executionSyncData = computed(() =>
-  getServiceSyncStatus("executionService", controlStore.syncstatus.data)
-);
+const consensusSyncData = computed(() => getServiceSyncStatus("consensusService", controlStore.syncstatus.data));
+const executionSyncData = computed(() => getServiceSyncStatus("executionService", controlStore.syncstatus.data));
 
 watch(
   () => consensusSyncData.value,
