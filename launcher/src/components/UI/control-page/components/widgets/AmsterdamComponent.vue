@@ -1,10 +1,13 @@
 <template>
   <div class="amsterdam-parent">
-    <!-- ||
+    <no-data
+      v-if="
+        !setupsStore.selectedServicePairs ||
         isConsensusMissing ||
         !footerStore.isConsensusRunning ||
-        footerStore.prometheusIsOff -->
-    <no-data v-if="!setupsStore.selectedServicePairs" />
+        footerStore.prometheusIsOff
+      "
+    />
     <template v-else>
       <div
         class="icoTitle"
@@ -159,7 +162,7 @@ const isConsensusMissing = computed(() =>
 );
 
 const proposedBlock = computed(() => {
-  if (setupsStore.selectedSetup?.network === "gnosis") {
+  if (setupsStore.selectedServicePairs?.network === "gnosis") {
     return Array.from({ length: 16 }, () => ({
       slotNumber: 0,
       slotStatus: "pending",
@@ -198,6 +201,8 @@ const serviceStateController = (serviceName, stateProperty) => {
     servicesToCheck = servicesStore.installedServices;
   } else if (setupsStore.selectedSetup && setupsStore.selectedSetup.services) {
     servicesToCheck = setupsStore.selectedSetup.services;
+  } else {
+    servicesToCheck = setupsStore.allSetups.flatMap((setup) => setup.services || []);
   }
 
   for (let service of servicesToCheck) {
@@ -214,16 +219,22 @@ const serviceController = (args, setup) => {
   const foundCategories = new Set();
   let hasPrometheus = false;
 
-  for (let obj of args) {
-    if (obj.name.toLowerCase().includes("prometheus")) {
-      hasPrometheus = true;
+  if (Array.isArray(args)) {
+    for (let obj of args) {
+      if (obj?.name?.toLowerCase().includes("prometheus")) {
+        hasPrometheus = true;
+      }
     }
   }
 
-  if (setup && setup.services) {
-    for (let service of setup.services) {
-      if (service.category === "consensus" || service.category === "execution") {
-        foundCategories.add(service.category);
+  const setupsToCheck = Array.isArray(setup) ? setup : [setup];
+
+  for (const singleSetup of setupsToCheck) {
+    if (singleSetup?.services && Array.isArray(singleSetup.services)) {
+      for (let service of singleSetup.services) {
+        if (service.category === "consensus" || service.category === "execution") {
+          foundCategories.add(service.category);
+        }
       }
     }
   }
@@ -243,8 +254,10 @@ const serviceController = (args, setup) => {
 };
 
 watch(servicesStore.installedServices, (newVal) => {
-  const selectedSetup = setupsStore.selectedSetup ? setupsStore.selectedSetup : [];
-  serviceController(newVal, selectedSetup);
+  const setupToCheck = setupsStore.selectedSetup?.services?.length
+    ? setupsStore.selectedSetup
+    : setupsStore.allSetups;
+  serviceController(newVal, setupToCheck);
   const consensusServiceName =
     setupsStore?.selectedServicePairs?.consensusService?.name || null;
 
@@ -255,18 +268,6 @@ watch(servicesStore.installedServices, (newVal) => {
   currentEpochSlot(
     setupsStore?.selectedServicePairs?.consensusService?.name?.toUpperCase()
   );
-});
-
-watch(setupsStore.selectedSetup, (newVal, oldVal) => {
-  if (newVal?.network !== oldVal?.network) {
-    if (newVal?.network === "gnosis" || oldVal?.network === "gnosis") {
-      networkFlag.value = true;
-    }
-
-    currentEpochSlot(
-      setupsStore?.selectedServicePairs?.consensusService?.name?.toUpperCase()
-    );
-  }
 });
 
 const currentEpochSlot = async (consensusName) => {
@@ -282,7 +283,8 @@ const currentEpochSlot = async (consensusName) => {
 };
 
 const refreshTimer = () => {
-  const intervalTime = setupsStore.selectedSetup?.network === "gnosis" ? 5000 : 11000;
+  const intervalTime =
+    setupsStore.selectedServicePairs?.network === "gnosis" ? 5000 : 11000;
 
   polling.value = setInterval(() => {
     if (controlStore.currentSlotData && controlStore.currentEpochData) {
@@ -320,13 +322,13 @@ watch(
     if (networkFlag.value) {
       changeCounter.value++;
       if (
-        setupsStore.selectedSetup?.network === "gnosis" &&
+        setupsStore.selectedServicePairs?.network === "gnosis" &&
         controlStore.changeCounter === 4
       ) {
         networkFlag.value = false;
         changeCounter.value = 0;
       } else if (
-        setupsStore.selectedSetup?.network !== "gnosis" &&
+        setupsStore.selectedServicePairs?.network !== "gnosis" &&
         controlStore.changeCounter === 2
       ) {
         networkFlag.value = false;
