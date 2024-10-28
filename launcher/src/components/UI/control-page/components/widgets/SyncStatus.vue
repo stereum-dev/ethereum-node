@@ -1,8 +1,7 @@
 <template>
   <div class="Sync-parent relative">
-    <!-- isConsensusMissing || footerStore.prometheusIsOff ||  -->
     <no-data
-      v-if="!setupsStore?.selectedServicePairs || !controlStore.syncstatus.data"
+      v-if="!setupsStore?.selectedServicePairs || !controlStore.syncstatus.data || isConsensusMissing || footerStore.prometheusIsOff"
       @mouseenter="cursorLocation = `${nodataMessage}`"
       @mouseleave="cursorLocation = ''"
     />
