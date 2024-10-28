@@ -1,8 +1,7 @@
 <template>
   <div class="peer2peerParent">
-    <!-- isConsensusMissing || !footerStore.isConsensusRunning -->
     <no-data
-      v-if="!setupStore?.selectedServicePairs"
+      v-if="!setupStore?.selectedServicePairs || isConsensusMissing || !footerStore.isConsensusRunning"
       @mouseenter="footerStore.cursorLocation = footerStore.nodataMessage"
       @mouseleave="footerStore.cursorLocation = ''"
     />
