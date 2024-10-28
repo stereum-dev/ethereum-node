@@ -7,7 +7,10 @@
       <span class="w-full h-1/5 flex justify-center items-center text-gray-200 text-2xs font-semibold uppercase">volume</span>
     </div>
     <div class="volume-box w-2/3 h-full flex flex-col justify-center items-center">
-      <div class="volume_services flex w-full h-1/4 border rounded-sm border-gray-700 overflow-hidden relative mt-1 mr-2">
+      <div
+        class="volume_services flex w-full h-1/4 border rounded-sm border-gray-700 overflow-hidden relative mt-1 mr-2"
+        @click="storageToggl"
+      >
         <div
           v-for="item in storagestatus"
           :key="item.id"
@@ -19,10 +22,25 @@
           }"
           @mouseenter="footerStore.cursorLocation = `${item.title} ${item.storageValue}`"
           @mouseleave="footerStore.cursorLocation = ''"
-        ></div>
+        />
       </div>
+      <template v-if="starogeRows">
+        <div class="w-full h-3/4 overflow-y-auto scrollable-container pr-1">
+          <div v-for="item in storagestatus" :key="item" class="w-full flex pt-1 pb-1">
+            <div
+              class="text-gray-200 text-2xs border border-gray-400 w-full h-4 pl-1 rounded-md flex justify-between pr-1"
+              :style="{
+                backgroundColor: getStableColor(item.service),
+              }"
+            >
+              <span>{{ item.title }}</span
+              ><span>{{ item.storageValue }}</span>
+            </div>
+          </div>
+        </div>
+      </template>
 
-      <div class="hdd-services w-full h-3/4 flex pt-1 pb-1">
+      <div v-else class="hdd-services w-full h-3/4 flex pt-1 pb-1">
         <div class="write-read-box h-full w-2/5 flex justify-start items-center text-[50%] border-r-2 border-gray-600">
           <div class="ttl-box w-1/4 h-full flex flex-col justify-center items-center mr-1">
             <div class="title w-full text-[7px] h-1/2 flex justify-start items-center text-gray-200 uppercase mr-1">
@@ -73,58 +91,13 @@
             {{ totalDisk }} GB {{ $t("controlPage.total") }}
           </div>
         </div>
-        <!-- <div class="left-side w-2/3 h-full flex justify-center items-center text-[45%] text-green-500 uppercase">
-          <span
-            @mouseenter="footerStore.cursorLocation = `${availDisk} GB ${t('controlPage.free')}`"
-            @mouseleave="footerStore.cursorLocation = ''"
-            >{{ availDisk }} GB {{ t("controlPage.free") }} </span
-          ><span
-            class="text-gray-400"
-            @mouseenter="footerStore.cursorLocation = `${totalDisk} GB ${t('controlPage.total')}`"
-            @mouseleave="footerStore.cursorLocation = ''"
-          >
-            / {{ totalDisk }} GB {{ $t("controlPage.total") }}</span
-          >
-        </div> -->
-        <!-- <div class="right-side w-1/3 h-full flex justify-center items-center uppercase">
-          <div class="ttl-box w-1/4 h-full flex flex-col justify-center items-center">
-            <div class="title w-full text-[50%] h-1/2 flex justify-center items-center text-gray-200 uppercase mr-1">write</div>
-            <div class="title w-full text-[50%] h-1/2 flex justify-center items-center text-gray-200 uppercase mr-1">read</div>
-          </div>
-          <div class="val-box w-3/4 h-full flex flex-col text-[70%] justify-center font-semibold items-center">
-            <div
-              class="title w-full h-1/2 flex justify-center items-center text-orange-500 uppercase"
-              @mouseenter="
-                footerStore.cursorLocation = `Write: ${convertWriteValueToMb} ${
-                  controlStore.writeValue / 1024 < 1 && controlStore.writeValue / 1024 > 0 ? 'KB' : 'MB'
-                }`
-              "
-              @mouseleave="footerStore.cursorLocation = ''"
-            >
-              {{ convertWriteValueToMb }}
-              {{ controlStore.writeValue / 1024 < 1 && controlStore.writeValue / 1024 > 0 ? "KB" : "MB" }}
-            </div>
-            <div
-              class="title w-full h-1/2 flex justify-center items-center text-teal-700 uppercase"
-              @mouseenter="
-                footerStore.cursorLocation = `Read: ${convertReadValueToMb} ${
-                  controlStore.readValue / 1024 < 1 && controlStore.writeValue / 1024 > 0 ? 'KB' : 'MB'
-                }`
-              "
-              @mouseleave="footerStore.cursorLocation = ''"
-            >
-              {{ convertReadValueToMb }}
-              {{ controlStore.readValue / 1024 < 1 && controlStore.writeValue / 1024 > 0 ? "KB" : "MB" }}
-            </div>
-          </div>
-        </div> -->
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { useControlStore } from "@/store/theControl";
 import { useServices } from "@/store/services";
 import { useFooter } from "@/store/theFooter";
@@ -136,6 +109,12 @@ const t = i18n.global.t;
 const controlStore = useControlStore();
 const serviceStore = useServices();
 const footerStore = useFooter();
+
+const starogeRows = ref(false);
+
+const storageToggl = () => {
+  starogeRows.value = !starogeRows.value;
+};
 
 const totalDisk = computed(() => controlStore.totalDisk);
 
@@ -212,6 +191,14 @@ const convertReadValueToMb = computed(() => {
 </script>
 
 <style scoped>
+.scrollable-container {
+  overflow-y: scroll;
+  scrollbar-width: none;
+}
+
+.scrollable-container::-webkit-scrollbar {
+  display: none;
+}
 .volume_services {
   white-space: nowrap;
   overflow-x: scroll;
@@ -220,9 +207,5 @@ const convertReadValueToMb = computed(() => {
 
 .volume_services::-webkit-scrollbar {
   display: none;
-}
-
-.squa {
-  flex-shrink: 0;
 }
 </style>
