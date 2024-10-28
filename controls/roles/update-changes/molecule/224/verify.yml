@@ -1,0 +1,39 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+    # ValidatorEjectorService
+    - name: Read ValidatorEjectorService file
+      slurp:
+        src: "/etc/stereum/services/15ce3684-4dbd-4657-8a21-b1243b72b1ca.yaml"
+      register: Ejector_service_configuration_raw
+
+    # ValidatorEjectorService2
+    - name: Read ValidatorEjectorService file
+      slurp:
+        src: "/etc/stereum/services/41b15ea7-12d4-49f6-8448-8a6164edef36.yaml"
+      register: Ejector_service_configuration2_raw
+
+    - name: Parse Service configurations
+      set_fact:
+        Ejector_service_configuration: "{{ Ejector_service_configuration_raw['content'] | b64decode | from_yaml }}"
+        Ejector_service_configuration2: "{{ Ejector_service_configuration2_raw['content'] | b64decode | from_yaml }}"
+
+    - debug:
+        msg: "{{ Ejector_service_configuration }}"
+    - debug:
+        msg: "{{ Ejector_service_configuration_raw['content'] | b64decode }}"
+
+    - debug:
+        msg: "{{ Ejector_service_configuration2 }}"
+    - debug:
+        msg: "{{ Ejector_service_configuration2_raw['content'] | b64decode }}"
+
+    - assert:
+        that:
+          - Ejector_service_configuration.env.ORACLE_ADDRESSES_ALLOWLIST | from_yaml | select('match', '0x73181107c8D9ED4ce0bbeF7A0b4ccf3320C41d12') | length == 1
+          - Ejector_service_configuration.env.ORACLE_ADDRESSES_ALLOWLIST | from_yaml | select('match', '0x1Ca0fEC59b86F549e1F1184d97cb47794C8Af58d') | length == 0
+          - Ejector_service_configuration2.env.ORACLE_ADDRESSES_ALLOWLIST | from_yaml | select('match', '0x73181107c8D9ED4ce0bbeF7A0b4ccf3320C41d12') | length == 1
+          - Ejector_service_configuration2.env.ORACLE_ADDRESSES_ALLOWLIST | from_yaml | select('match', '0x1Ca0fEC59b86F549e1F1184d97cb47794C8Af58d') | length == 0
+# EOF
