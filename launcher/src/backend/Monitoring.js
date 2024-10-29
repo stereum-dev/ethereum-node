@@ -1739,6 +1739,7 @@ export class Monitoring {
 
   // Get attestation rewards for given validators and epoch
   async getAttestationRewards(validators) {
+    if (validators.length === 0) return [];
     try {
       // Get local beacon port from first available consensus client
       const beaconResult = await this.findBeaconPort();
@@ -1801,6 +1802,7 @@ export class Monitoring {
 
   // Get Sync Committee for given validators and slot (count them together for whole epoch in frontend)
   async getSyncCommitteeRewards(validators, slot) {
+    if (validators.length === 0) return [];
     try {
       // Get local beacon port from first available consensus client
       const beaconResult = await this.findBeaconPort();
