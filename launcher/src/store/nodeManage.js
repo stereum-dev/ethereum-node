@@ -123,27 +123,26 @@ export const useNodeManage = defineStore("nodeManage", {
           freeCensorship: true,
         },
         {
-          icon: "/img/icon/one-click-icons/mevboost-icons/eden.png",
-          name: "Eden",
+          icon: "/img/icon/one-click-icons/mevboost-icons/flashbots.png",
+          name: "Titan Relay",
           mainnet:
-            "https://0xb3ee7afcf27f1f1259ac1787876318c6584ee353097a50ed84f51a1f21a323b3736f271a895c7ce918c038e4265918be@relay.edennetwork.io/",
-
+            "https://0x8c4ed5e24fe5c6ae21018437bde147693f68cda427cd1122cf20819c30eda7ed74f72dece09bb313f2a1855595ab677d@global.titanrelay.xyz",
           holesky:
-            "https://0xb1d229d9c21298a87846c7022ebeef277dfc321fe674fa45312e20b5b6c400bfde9383f801848d7837ed5fc449083a12@relay-holesky.edennetwork.io",
+            "https://0xaa58208899c6105603b74396734a6263cc7d947f444f396a90f7b7d3e65d102aec7e5e5291b27e08d02c50a050825c2f@holesky.titanrelay.xyz",
           id: 10,
           isSelected: false,
           isRemoved: false,
-          freeCensorship: false,
+          freeCensorship: true,
         },
         {
           icon: "/img/icon/one-click-icons/mevboost-icons/flashbots.png",
-          name: "Titan Relay",
-          holesky:
-            "https://0xaa58208899c6105603b74396734a6263cc7d947f444f396a90f7b7d3e65d102aec7e5e5291b27e08d02c50a050825c2f@holesky.titanrelay.xyz",
+          name: "Titan Relay Filtered",
+          mainnet:
+            "https://0x8c4ed5e24fe5c6ae21018437bde147693f68cda427cd1122cf20819c30eda7ed74f72dece09bb313f2a1855595ab677d@regional.titanrelay.xyz",
           id: 11,
           isSelected: false,
           isRemoved: false,
-          freeCensorship: true,
+          freeCensorship: false,
         },
         {
           icon: "/img/icon/one-click-icons/mevboost-icons/bloxroute.png",

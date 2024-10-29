@@ -102,6 +102,68 @@
             mevboost: []
             otherServices: []
       become: yes
+      
+    - name: Create SSVNetworkService config
+      copy:
+        dest: "/etc/stereum/services/cb941f15-6eef-4e4d-fc81-4d524b627373.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: SSVNetworkService
+          id: cb941f15-6eef-4e4d-fc81-4d524b627373
+          configVersion: 1
+          command: make BUILD_PATH=/go/bin/ssvnode start-node && docker logs ssv_node
+          entrypoint: []
+          env:
+            CONFIG_PATH: /data/config.yaml
+          image: bloxstaking/ssv-node:v1.3.8
+          ports:
+            - 0.0.0.0:12000:12000/udp
+            - 0.0.0.0:13000:13000/tcp
+          volumes:
+            - /opt/stereum/ssv_network-cb941f15-6eef-4e4d-fc81-4d524b627373/data:/data
+            - /opt/stereum/ssv_network-cb941f15-6eef-4e4d-fc81-4d524b627373/secrets:/secrets
+          user: "2000"
+          autoupdate: true
+          network: holesky
+          dependencies:
+            executionClients: []
+            consensusClients: []
+            mevboost: []
+            otherServices: []
+      become: yes
+
+    - name: Create SSVNetworkService config
+      copy:
+        dest: "/etc/stereum/services/611cf17d-adf7-433e-bc4e-2e38c0f502c3.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: SSVNetworkService
+          id: 611cf17d-adf7-433e-bc4e-2e38c0f502c3
+          configVersion: 1
+          command: make BUILD_PATH=/go/bin/ssvnode start-node && docker logs ssv_node
+          entrypoint: []
+          env:
+            CONFIG_PATH: /data/config.yaml
+          image: ssvlabs/ssv-node:v1.3.8
+          ports:
+            - 0.0.0.0:12000:12000/udp
+            - 0.0.0.0:13000:13000/tcp
+          volumes:
+            - /opt/stereum/ssv_network-611cf17d-adf7-433e-bc4e-2e38c0f502c3/data:/data
+            - /opt/stereum/ssv_network-611cf17d-adf7-433e-bc4e-2e38c0f502c3/secrets:/secrets
+          user: "2000"
+          autoupdate: true
+          network: holesky
+          dependencies:
+            executionClients: []
+            consensusClients: []
+            mevboost: []
+            otherServices: []
+      become: yes
 
     - name: Create ErigonService config
       copy:
@@ -209,27 +271,76 @@
             otherServices: []
       become: yes
 
-    - name: Create SSVNetworkService config
+    - name: Create ValidatorEjectorService config
       copy:
-        dest: "/etc/stereum/services/cb941f15-6eef-4e4d-fc81-4d524b627373.yaml"
+        dest: "/etc/stereum/services/3911cf56-f350-5fc7-dded-1d08da1a9954.yaml"
         owner: "root"
         group: "root"
         mode: 0644
         content: |
-          service: SSVNetworkService
-          id: cb941f15-6eef-4e4d-fc81-4d524b627373
+          service: ValidatorEjectorService
+          id: 3911cf56-f350-5fc7-dded-1d08da1a9954
           configVersion: 1
-          command: make BUILD_PATH=/go/bin/ssvnode start-node && docker logs ssv_node
+          command: []
           entrypoint: []
           env:
-            CONFIG_PATH: /data/config.yaml
-          image: bloxstaking/ssv-node:v1.3.8
-          ports:
-            - 0.0.0.0:12000:12000/udp
-            - 0.0.0.0:13000:13000/tcp
+            EXECUTION_NODE: ""
+            CONSENSUS_NODE: ""
+            LOCATOR_ADDRESS: "0x28FAB2059C713A7F9D8c86Db49f9bb0e96Af1ef8"
+            STAKING_MODULE_ID: "1"
+            OPERATOR_ID: "123456789"
+            MESSAGES_LOCATION: /app/messages
+            ORACLE_ADDRESSES_ALLOWLIST: '["0x12A1D74F8697b9f4F1eEBb0a9d0FB6a751366399",
+              "0xD892c09b556b547c80B7d8c8cB8d75bf541B2284",
+              "0xf7aE520e99ed3C41180B5E12681d31Aa7302E4e5",
+              "0x31fa51343297FFce0CC1E67a50B2D3428057D1b1",
+              "0x81E411f1BFDa43493D7994F82fb61A415F6b8Fd4",
+              "0x4c75FA734a39f3a21C57e583c1c29942F021C6B7",
+              "0xD3b1e36A372Ca250eefF61f90E833Ca070559970",
+              "0xF0F23944EfC5A63c53632C571E7377b85d5E6B6f",
+              "0xb29dD2f6672C0DFF2d2f173087739A42877A5172",
+              "0x3799bDA7B884D33F79CEC926af21160dc47fbe05"]'
+            HTTP_PORT: "8989"
+            RUN_METRICS: "true"
+            RUN_HEALTH_CHECK: "true"
+            DRY_RUN: "false"
+          image: lidofinance/validator-ejector:1.6.0
+          ports: []
           volumes:
-            - /opt/stereum/ssv_network-cb941f15-6eef-4e4d-fc81-4d524b627373/data:/data
-            - /opt/stereum/ssv_network-cb941f15-6eef-4e4d-fc81-4d524b627373/secrets:/secrets
+            - /opt/stereum/validatorejector-3911cf56-f350-5fc7-dded-1d08da1a9954/messages:/app/messages
+          user: "2000"
+          autoupdate: true
+          network: holesky
+          dependencies:
+            executionClients: []
+            consensusClients: []
+            mevboost: []
+            otherServices: []
+      become: yes
+      
+    - name: Create FlashbotsMevBoostService config
+      copy:
+        dest: "/etc/stereum/services/5c9c2120-03dc-ffa3-30a8-7faf61f09a3d.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: FlashbotsMevBoostService
+          id: 5c9c2120-03dc-ffa3-30a8-7faf61f09a3d
+          configVersion: 1
+          command: []
+          entrypoint:
+            - /app/mev-boost
+            - -addr
+            - 0.0.0.0:18550
+            - -holesky
+            - -relay-check
+            - -relays
+            - https://0xaa58208899c6105603b74396734a6263cc7d947f444f396a90f7b7d3e65d102aec7e5e5291b27e08d02c50a050825c2f@holesky.titanrelay.xyz,https://0xb1559beef7b5ba3127485bbbb090362d9f497ba64e177ee2c8e7db74746306efad687f2cf8574e38d70067d40ef136dc@relay-stag.ultrasound.money,https://0x821f2a65afb70e7f2e820a925a9b4c80a159620582c1766b1b09729fec178b11ea22abb3a51f07b288be815a1a2ff516@bloxroute.holesky.blxrbdn.com,https://0xafa4c6985aa049fb79dd37010438cfebeb0f2bd42b115b89dd678dab0670c1de38da0c4e9138c9290a398ecd9a0b3110@boost-relay-holesky.flashbots.net,https://0xab78bf8c781c58078c3beb5710c57940874dd96aef2835e7742c866b4c7c0406754376c2c8285a36c630346aa5c5f833@holesky.aestus.live,https://0xb1d229d9c21298a87846c7022ebeef277dfc321fe674fa45312e20b5b6c400bfde9383f801848d7837ed5fc449083a12@relay-holesky.edennetwork.io
+          env: {}
+          image: flashbots/mev-boost:1.8
+          ports: []
+          volumes: []
           user: "2000"
           autoupdate: true
           network: holesky
@@ -240,27 +351,29 @@
             otherServices: []
       become: yes
 
-    - name: Create SSVNetworkService config
+    - name: Create FlashbotsMevBoostService config
       copy:
-        dest: "/etc/stereum/services/611cf17d-adf7-433e-bc4e-2e38c0f502c3.yaml"
+        dest: "/etc/stereum/services/4fee6e50-1fe2-533c-8ec2-e23b83e3236c.yaml"
         owner: "root"
         group: "root"
         mode: 0644
         content: |
-          service: SSVNetworkService
-          id: 611cf17d-adf7-433e-bc4e-2e38c0f502c3
+          service: FlashbotsMevBoostService
+          id: 4fee6e50-1fe2-533c-8ec2-e23b83e3236c
           configVersion: 1
-          command: make BUILD_PATH=/go/bin/ssvnode start-node && docker logs ssv_node
-          entrypoint: []
-          env:
-            CONFIG_PATH: /data/config.yaml
-          image: ssvlabs/ssv-node:v1.3.8
-          ports:
-            - 0.0.0.0:12000:12000/udp
-            - 0.0.0.0:13000:13000/tcp
-          volumes:
-            - /opt/stereum/ssv_network-611cf17d-adf7-433e-bc4e-2e38c0f502c3/data:/data
-            - /opt/stereum/ssv_network-611cf17d-adf7-433e-bc4e-2e38c0f502c3/secrets:/secrets
+          command: []
+          entrypoint:
+            - /app/mev-boost
+            - -addr
+            - 0.0.0.0:18550
+            - -holesky
+            - -relay-check
+            - -relays
+            - https://0xab78bf8c781c58078c3beb5710c57940874dd96aef2835e7742c866b4c7c0406754376c2c8285a36c630346aa5c5f833@holesky.aestus.live,https://0xb1d229d9c21298a87846c7022ebeef277dfc321fe674fa45312e20b5b6c400bfde9383f801848d7837ed5fc449083a12@relay-holesky.edennetwork.io,https://0x821f2a65afb70e7f2e820a925a9b4c80a159620582c1766b1b09729fec178b11ea22abb3a51f07b288be815a1a2ff516@bloxroute.holesky.blxrbdn.com,https://0xafa4c6985aa049fb79dd37010438cfebeb0f2bd42b115b89dd678dab0670c1de38da0c4e9138c9290a398ecd9a0b3110@boost-relay-holesky.flashbots.net,https://0xb1559beef7b5ba3127485bbbb090362d9f497ba64e177ee2c8e7db74746306efad687f2cf8574e38d70067d40ef136dc@relay-stag.ultrasound.money,https://0xaa58208899c6105603b74396734a6263cc7d947f444f396a90f7b7d3e65d102aec7e5e5291b27e08d02c50a050825c2f@holesky.titanrelay.xyz
+          env: {}
+          image: flashbots/mev-boost:1.8
+          ports: []
+          volumes: []
           user: "2000"
           autoupdate: true
           network: holesky
