@@ -12,6 +12,7 @@ export const useSetups = defineStore("setups", {
     currentPairIndex: 0,
     clientPairsLength: 0,
     relatedValidators: null,
+    relatedValidatorPairs: null,
 
     //Setup Node Page
     isConfigViewActive: false,

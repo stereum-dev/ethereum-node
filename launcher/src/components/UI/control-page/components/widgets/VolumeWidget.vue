@@ -8,7 +8,7 @@
     </div>
     <div class="volume-box w-2/3 h-full flex flex-col justify-center items-center">
       <div
-        class="volume_services flex w-full h-1/4 border rounded-sm border-gray-700 overflow-hidden relative mt-1 mr-2"
+        class="volume_services flex w-full h-1/4 border rounded-sm border-gray-700 overflow-hidden relative mt-1 mr-2 cursor-pointer"
         @click="storageToggl"
       >
         <div
@@ -28,7 +28,8 @@
         <div class="w-full h-3/4 overflow-y-auto scrollable-container pr-1">
           <div v-for="item in storagestatus" :key="item" class="w-full flex pt-1 pb-1">
             <div
-              class="text-gray-200 text-2xs border border-gray-400 w-full h-4 pl-1 rounded-md flex justify-between pr-1"
+              :class="getTextColor(getStableColor(item.service))"
+              class="text-gray-200 text-2xs border border-gray-600 w-full h-4 pl-1 rounded-md flex justify-between pr-1"
               :style="{
                 backgroundColor: getStableColor(item.service),
               }"
@@ -171,6 +172,16 @@ const getStableColor = (identifier) => {
   }
 
   return color;
+};
+
+const getTextColor = (bgColor) => {
+  const hex = bgColor.replace("#", "");
+  const r = parseInt(hex.substr(0, 2), 16);
+  const g = parseInt(hex.substr(2, 2), 16);
+  const b = parseInt(hex.substr(4, 2), 16);
+  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+
+  return brightness > 128 ? "text-gray-800" : "text-gray-200";
 };
 
 const convertWriteValueToMb = computed(() => {

@@ -166,6 +166,67 @@ const relatedValidators = computed(() => {
   );
 });
 
+const allValidatorPairs = computed(() => {
+  try {
+    const setupsToCheck = setupStore.selectedSetup
+      ? [
+          {
+            network: setupStore.selectedSetup.network,
+            services: setupStore.selectedSetup.services || [],
+          },
+        ]
+      : setupStore.allSetups.map((setup) => ({
+          network: setup.network,
+          services: setup.services || [],
+        }));
+
+    const validators = setupsToCheck.flatMap(({ services, network }) => {
+      if (!Array.isArray(services)) {
+        console.warn(`Services list is missing or malformed in setup with network: ${network || "Unknown"}`);
+        return [];
+      }
+      return services.filter((service) => service.category === "validator");
+    });
+
+    return validators.map((validator) => {
+      const relatedPairs = servicePairs.value
+        ? servicePairs.value.filter((pair) =>
+            validator.config?.dependencies?.consensusClients?.some(
+              (dependency) => dependency.service === pair.consensusService.service && dependency.id === pair.consensusService.id
+            )
+          )
+        : [];
+
+      if (relatedPairs.length === 0) {
+        console.warn(`No related pairs found for validator ${validator.service} in network ${validator.network || "Unknown"}`);
+      }
+
+      return {
+        validator,
+        pairs: relatedPairs.map((pair) => ({
+          ...pair,
+          network: setupsToCheck.find((setup) => setup.services.includes(validator))?.network || "Unknown",
+        })),
+        network: setupsToCheck.find((setup) => setup.services.includes(validator))?.network || "Unknown",
+      };
+    });
+  } catch (error) {
+    console.error("Error computing allValidatorPairs:", error);
+    return [];
+  }
+});
+
+watch(
+  allValidatorPairs,
+  (newPair, oldPair) => {
+    if (JSON.stringify(newPair) !== JSON.stringify(oldPair)) {
+      setupStore.relatedValidatorPairs = newPair;
+      console.log("relatedValidatorPairs", setupStore.relatedValidatorPairs);
+    }
+  },
+  { immediate: true, deep: true }
+);
+
 const filteredValidatorServices = computed(() => {
   const setup = setupStore.selectedSetup;
   return setup?.services.filter((service) => service.category === "validator") || [];
