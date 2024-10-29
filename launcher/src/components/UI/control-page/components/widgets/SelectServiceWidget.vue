@@ -216,23 +216,43 @@ const allValidatorPairs = computed(() => {
   }
 });
 
-watch(
-  allValidatorPairs,
-  (newPair, oldPair) => {
-    if (JSON.stringify(newPair) !== JSON.stringify(oldPair)) {
-      setupStore.relatedValidatorPairs = newPair;
-      console.log("relatedValidatorPairs", setupStore.relatedValidatorPairs);
-    }
-  },
-  { immediate: true, deep: true }
-);
-
 const filteredValidatorServices = computed(() => {
-  const setup = setupStore.selectedSetup;
-  return setup?.services.filter((service) => service.category === "validator") || [];
+  const servicesToCheck = setupStore.selectedSetup
+    ? setupStore.selectedSetup.services
+    : setupStore.allSetups.flatMap((setup) => setup.services || []);
+
+  return servicesToCheck.filter((service) => service.category === "validator");
 });
 
-const selectedValidatorService = computed(() => filteredValidatorServices.value[currentIndex.value] || null);
+const selectedValidatorService = computed(() => {
+  return filteredValidatorServices.value.length > 0 ? filteredValidatorServices.value[currentIndex.value] : null;
+});
+
+const setupStoreRelatedValidatorPairs = computed(() => {
+  if (!selectedValidatorService.value) return null;
+
+  const relatedPairs = allValidatorPairs.value.find((pair) => pair.validator.id === selectedValidatorService.value.id);
+
+  return relatedPairs || null;
+});
+
+watch(
+  setupStoreRelatedValidatorPairs,
+  (newPairs) => {
+    setupStore.relatedValidatorPairs = newPairs;
+  },
+  { immediate: true }
+);
+
+watch(
+  () => setupStore.selectedSetup,
+  (newSetup) => {
+    if (newSetup) {
+      currentIndex.value = 0;
+    }
+  },
+  { immediate: true }
+);
 
 const formattedValidatorNo = computed(() => stakingStore.keys.length.toString().padStart(3, "0"));
 
@@ -272,7 +292,6 @@ const nextValidator = () => {
 watch(
   selectedPair,
   (newPair, oldPair) => {
-    // Check if newPair is different from oldPair
     if (JSON.stringify(newPair) !== JSON.stringify(oldPair)) {
       setupStore.selectedServicePairs = newPair;
     }

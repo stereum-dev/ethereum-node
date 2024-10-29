@@ -28,8 +28,7 @@ watch(
   () => controlStore.pickedService,
   (newValue) => {
     pickedService.value = newValue === "vld" ? false : true;
-  }
+  },
+  { immediate: true }
 );
 </script>
-
-<style scoped></style>

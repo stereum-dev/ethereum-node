@@ -7,12 +7,12 @@
         <div class="icon-bar h-full w-6 flex justify-center items-center">
           <img
             class="w-5 h-5"
-            :src="setupStore.relatedValidatorPairs[0]?.pairs[0]?.consensusService.icon || '/path/to/default-icon.png'"
+            :src="setupStore.relatedValidatorPairs?.pairs[0]?.consensusService.icon || '/path/to/default-icon.png'"
             alt=""
           />
         </div>
         <span class="client-name w-24 text-gray-200 uppercase text-[50%] flex justify-start items-center pl-2">
-          {{ setupStore.relatedValidatorPairs[0]?.pairs[0]?.consensusService.name || "Unknown Consensus Client" }}
+          {{ setupStore.relatedValidatorPairs?.pairs[0]?.consensusService.name || "Unknown Consensus Client" }}
         </span>
       </div>
 
@@ -22,12 +22,12 @@
         <div class="icon-bar h-full w-6 flex justify-center items-center">
           <img
             class="w-5 h-5"
-            :src="setupStore.relatedValidatorPairs[0]?.pairs[0]?.executionService.icon || '/path/to/default-icon.png'"
+            :src="setupStore.relatedValidatorPairs?.pairs[0]?.executionService.icon || '/path/to/default-icon.png'"
             alt=""
           />
         </div>
         <span class="client-name w-24 text-gray-200 uppercase text-[50%] flex justify-start items-center pl-2">
-          {{ setupStore.relatedValidatorPairs[0]?.pairs[0]?.executionService.name || "Unknown Execution Client" }}
+          {{ setupStore.relatedValidatorPairs?.pairs[0]?.executionService.name || "Unknown Execution Client" }}
         </span>
       </div>
     </div>

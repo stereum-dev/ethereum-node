@@ -76,7 +76,7 @@ export default {
       nodataMessage: "nodataMessage",
     }),
     ...mapState(useSetups, {
-      selectedSetup: "selectedSetup",
+      relatedValidatorPairs: "relatedValidatorPairs",
     }),
     formattedBalance() {
       return this.totalBalance.toFixed(5);
@@ -90,7 +90,7 @@ export default {
     },
 
     setSelectedCurrency() {
-      switch (this.selectedSetup?.network) {
+      switch (this.relatedValidatorPairs?.network) {
         case "gnosis":
           return "/img/icon/control-page-icons/network-currency-icons/network-currency-icons-gnosis-mainnet.png";
         case "sepolia":
