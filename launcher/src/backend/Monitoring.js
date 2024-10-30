@@ -17,6 +17,7 @@ const globalMonitoringCache = {
   refreshIntervalSeconds: 5,
   nodestatsInitialized: false,
   storagestatus: {},
+  setTime: 300,
   idleTimerRunning: false,
   idleTimerStop: false,
 };
@@ -3522,22 +3523,27 @@ rm -rf diskoutput
     return [];
   }
 
-  async idleTimerCheck(timerStop) {
-    if (!this.globalMonitoringCache.idleTimerRunning) {
-      this.globalMonitoringCache.idleTimerRunning = true;
-      await this.idleTimerLoop();
-    }
-    if (timerStop) {
-      this.globalMonitoringCache.idleTimerStop = true;
-    }
+  async setIdleTime(setTime) {
+    this.globalMonitoringCache.setTime = setTime;
   }
 
-  async idleTimerLoop() {
-    if (powerMonitor.getSystemIdleTime() > 300) {
-      //loggout
+  async idleTimerCheck(timerStop, win) {
+    if (!this.globalMonitoringCache.idleTimerRunning) {
+      this.globalMonitoringCache.idleTimerRunning = true;
+      await this.idleTimerLoop(win);
+    }
+    this.globalMonitoringCache.idleTimerStop = timerStop;
+  }
+
+  async idleTimerLoop(win) {
+    if (powerMonitor.getSystemIdleTime() >= this.globalMonitoringCache.setTime * 60) {
+      win.send("IdleLogout");
     } else if (this.isLoggedIn && !this.globalMonitoringCache.idleTimerStop) {
       await new Promise((resolve) => setTimeout(resolve, 60000));
-      await this.idleTimerLoop();
+      await this.idleTimerLoop(win);
+    } else {
+      this.globalMonitoringCache.idleTimerStop = false;
+      this.globalMonitoringCache.idleTimerRunning = false;
     }
   }
 }

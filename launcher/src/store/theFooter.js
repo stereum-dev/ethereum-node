@@ -20,6 +20,7 @@ export const useFooter = defineStore("theFooter", {
       nodataMessage: "",
       volState: false,
       idleTimer: false,
+      idleTimerTime: 5,
     };
   },
   getters: {},

@@ -1,8 +1,7 @@
 <template>
-  <div class="toggle-container">
-    <label class="switch">
-      <input type="checkbox" :checked="footerStore.idleTimer" @click="toggleIdleTimer" />
-      <div class="slider round"></div>
+  <div>
+    <label>
+      <input type="text" :value="footerStore.idleTimerTime" @change="onChange($event)" />
     </label>
   </div>
 </template>
@@ -14,15 +13,13 @@ import { useFooter } from "@/store/theFooter";
 
 const footerStore = useFooter();
 
-let idleTimer = false;
-
 const checkSettings = async () => {
   try {
     const savedConfig = await ControlService.readConfig();
-    if (typeof savedConfig.idleTimer.enabled !== "undefined") {
-      footerStore.idleTimer = savedConfig.idleTimer.enabled;
+    if (typeof savedConfig.idleTimerTime.value !== "undefined") {
+      footerStore.idleTimerTime = savedConfig.idleTimerTime.value;
     } else {
-      updateSettings(false, footerStore.idleTimerTime);
+      updateSettings(5);
       checkSettings();
     }
   } catch (error) {
@@ -30,28 +27,28 @@ const checkSettings = async () => {
   }
 };
 
-const updateSettings = async (idleT) => {
-  console.log(idleT + " " + footerStore.idleTimerTime);
+const updateSettings = async (idleTime) => {
   try {
     const prevConf = await ControlService.readConfig();
     const conf = {
       ...prevConf,
-      idleTimer: { enabled: idleT },
-      idleTimerTime: { value: footerStore.idleTimerTime },
+      idleTimerTime: { value: idleTime },
     };
     await ControlService.writeConfig(conf);
-    await ControlService.idleTimerCheck(!idleT);
-    await ControlService.setIdleTime(footerStore.idleTimerTime);
+    await ControlService.setIdleTime(idleTime);
+    useFooter.idleTimerTime = idleTime;
     checkSettings();
   } catch (error) {
     console.error("Failed to update settings:", error);
   }
 };
 
-const toggleIdleTimer = async () => {
-  idleTimer = !idleTimer;
-  footerStore.idleTimer = !footerStore.idleTimer;
-  updateSettings(idleTimer);
+const onChange = async (event) => {
+  if (event.target.value < 5) {
+    updateSettings(5);
+  } else {
+    updateSettings(event.target.value);
+  }
 };
 
 onMounted(() => {

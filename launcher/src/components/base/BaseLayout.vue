@@ -48,7 +48,7 @@
   </div>
 </template>
 <script setup>
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 
 import TheFooter from "../layers/TheFooter.vue";
 import LogoutModal from "../UI/base-header/components/modals/LogoutModal.vue";
@@ -92,7 +92,16 @@ const getLoadingAnime = computed(() => {
 onMounted(() => {
   useUpdateCheck();
   checkSettings();
+  ControlService.addListener("IdleLogout", idleListener);
 });
+
+onUnmounted(() => {
+  ControlService.removeListener("IdleLogout", idleListener);
+});
+
+const idleListener = () => {
+  loggingOut();
+};
 
 const closeServiceBrowser = () => {
   headerStore.setServiceModal(null);
@@ -177,6 +186,7 @@ const checkSettings = async () => {
     const savedConfig = await ControlService.readConfig();
     if (typeof savedConfig.idleTimer.enabled !== "undefined") {
       if (savedConfig.idleTimer.enabled) {
+        await ControlService.setIdleTime(savedConfig.idleTimerTime.value);
         await ControlService.idleTimerCheck(false);
       }
     }
