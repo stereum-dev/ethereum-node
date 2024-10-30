@@ -55,7 +55,15 @@
         >
           {{ utcTime }}
         </div>
-        <div class="time-box w-2/6 h-full flex justify-center items-center text-gray-200 font-semibold text-[60%]">
+        <div
+          class="time-box w-2/6 h-full flex justify-center items-center text-gray-200 font-semibold text-[60%]"
+          @mouseenter="
+            footerStore.cursorLocation = `${t('controlPage.serverSetedTimeIs', {
+              time: serverTime,
+            })}`
+          "
+          @mouseleave="footerStore.cursorLocation = ''"
+        >
           {{ serverTime }}
         </div>
         <div class="w-1/6 h-full flex justify-center items-center">
@@ -77,22 +85,52 @@ import i18n from "@/includes/i18n";
 const t = i18n.global.t;
 
 const utcTime = ref("");
-const serverTime = ref("--:--:--");
+const serverTime = ref("");
 let polling = null;
+const serverOffset = ref(0);
 
 const controlStore = useControlStore();
 const footerStore = useFooter();
+
 const getServerTimeZone = async () => {
-  let haha = await ControlService.fetchCurrentTimeZone();
-  console.log("haha---------------------------------------", haha);
+  try {
+    const response = await ControlService.fetchCurrentTimeZone();
+    const timeZoneLog = response.stdout.trim();
+
+    const offsetMatch = timeZoneLog.match(/\((UTC), ([+-]\d{2})(\d{2})\)/);
+    if (offsetMatch) {
+      const hoursOffset = parseInt(offsetMatch[2], 10);
+      const minutesOffset = parseInt(offsetMatch[3], 10);
+      serverOffset.value = hoursOffset * 60 + minutesOffset;
+    }
+  } catch (error) {
+    console.error("Error fetching time zone:", error);
+  }
+};
+
+const getServerTime = () => {
+  const date = new Date();
+  const utcMinutes = date.getUTCMinutes();
+  const utcHours = date.getUTCHours();
+
+  const localMinutes = utcMinutes + serverOffset.value;
+  const adjustedDate = new Date(date);
+  adjustedDate.setUTCHours(utcHours, localMinutes);
+
+  const hours = String(adjustedDate.getUTCHours()).padStart(2, "0");
+  const minutes = String(adjustedDate.getUTCMinutes()).padStart(2, "0");
+  const seconds = String(adjustedDate.getUTCSeconds()).padStart(2, "0");
+
+  serverTime.value = `${hours}:${minutes}:${seconds}`;
 };
 
 onMounted(() => {
+  getServerTimeZone();
+
   polling = setInterval(() => {
     getUtcTime();
+    getServerTime();
   }, 1000);
-
-  getServerTimeZone();
 });
 
 onUnmounted(() => {
