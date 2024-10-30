@@ -21,6 +21,7 @@ export const useControlStore = defineStore("theControl", {
       currentSlotData: null,
       currentEpochData: null,
       currentResult: {},
+      slotIndex: 0,
       noDataFlag: false,
       ServerName: null,
       ipAddress: null,

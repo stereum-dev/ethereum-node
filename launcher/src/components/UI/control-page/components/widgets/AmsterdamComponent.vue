@@ -135,6 +135,7 @@ const loadingStrater = ref(false);
 const networkFlag = ref(false);
 const polling = ref({});
 const changeCounter = ref(0);
+const indexPolling = ref({});
 
 const getSetupNetwork = computed(() => {
   if (!setupsStore.selectedServicePairs) {
@@ -178,6 +179,16 @@ const flag = computed(() => {
   }
   return controlStore.currentResult.beaconStatus !== 0;
 });
+
+const getLastGreenIndex = () => {
+  if (!Array.isArray(proposedBlock.value)) {
+    controlStore.slotIndex = -1;
+    return;
+  }
+
+  const getSlotIndex = proposedBlock.value.map((n) => n.slotStatus).lastIndexOf("proposed");
+  controlStore.slotIndex = getSlotIndex;
+};
 
 const serviceStateController = (serviceName, stateProperty) => {
   let isServiceOff = true;
@@ -271,10 +282,14 @@ const refreshTimer = () => {
 
 onMounted(() => {
   refreshTimer();
+  indexPolling.value = setInterval(() => {
+    getLastGreenIndex();
+  }, 500);
 });
 
 onBeforeUnmount(() => {
   clearInterval(polling.value);
+  clearInterval(indexPolling.value);
 });
 
 watch(

@@ -13,7 +13,7 @@
         }}</span>
       </div>
 
-      <div class="activeWidget w-3/4 h-full flex justify-around items-center pt-1 pb-1">
+      <div class="activeWidget w-3/4 h-full flex justify-center items-center pt-1 pb-1">
         <div
           class="consensusContainer"
           @mouseenter="footerStore.cursorLocation = `${consensusSyncData?.title}: ${formattedConsensusValue}`"

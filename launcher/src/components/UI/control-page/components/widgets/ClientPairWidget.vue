@@ -8,14 +8,14 @@
           class="index-line w-full h-1/2 flex justify-center items-center pl-2"
           @mouseenter="
             footerStore.cursorLocation = `${t('controlPage.clientPairIndexIs', {
-              index: setupStore.currentPairIndex,
+              index: setupStore.currentPairIndex + 1,
             })}`
           "
           @mouseleave="footerStore.cursorLocation = ''"
         >
           <span class="w-1/2 h-full flex justify-start items-center font-mono text-gray-200 uppercase text-xs">index</span>
           <span class="w-1/2 h-full flex justify-center items-center font-semibold text-gray-200 uppercase text-xs">{{
-            setupStore.currentPairIndex
+            setupStore.currentPairIndex + 1
           }}</span>
         </div>
         <div

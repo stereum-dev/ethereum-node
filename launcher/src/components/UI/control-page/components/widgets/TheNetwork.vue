@@ -14,15 +14,16 @@
           class="text-orange-600 font-semibold text-lg"
           @mouseenter="
             footerStore.cursorLocation = `${t('controlPage.receiveDataIs', {
-              data: controlStore.rx,
+              data: controlStore.rx > 1000 ? (controlStore.rx / 1000).toFixed(2) : controlStore.rx,
+              unit: controlStore.rx > 1000 ? 'MB/s' : 'KB/s',
             })} `
           "
           @mouseleave="footerStore.cursorLocation = ''"
-          >{{ controlStore.rx }}</span
+          >{{ controlStore.rx > 1000 ? (controlStore.rx / 1000).toFixed(2) : controlStore.rx }}</span
         >
       </div>
       <div class="w-full h-1/3 font-semibold text-gray-200 text-sm flex justify-center items-end">
-        <span>KB/s</span>
+        <span>{{ controlStore.rx > 1000 ? "MB/s" : "KB/s" }}</span>
       </div>
       <div class="receiveTitle w-full h-1/3 flex justify-center items-center font-light text-gray-200 text-[50%]">
         {{ $t("controlPage.receive") }}
@@ -34,15 +35,16 @@
           class="text-teal-700 font-semibold text-lg"
           @mouseenter="
             footerStore.cursorLocation = `${t('controlPage.transmitDataIs', {
-              data: controlStore.tx,
+              data: controlStore.tx > 1000 ? (controlStore.tx / 1000).toFixed(2) : controlStore.tx,
+              unit: controlStore.tx > 1000 ? 'MB/s' : 'KB/s',
             })} `
           "
           @mouseleave="footerStore.cursorLocation = ''"
-          >{{ controlStore.tx }}</span
+          >{{ controlStore.tx > 1000 ? (controlStore.tx / 1000).toFixed(2) : controlStore.tx }}</span
         >
       </div>
       <div class="w-full h-1/3 font-semibold text-gray-200 text-sm flex justify-center items-end">
-        <span>KB/s</span>
+        <span>{{ controlStore.tx > 1000 ? "MB/s" : "KB/s" }}</span>
       </div>
       <div class="receiveTitle w-full h-1/3 flex justify-center items-center font-light text-gray-200 text-[50%]">
         {{ $t("controlPage.transmit") }}

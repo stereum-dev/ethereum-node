@@ -13,7 +13,17 @@
           })
         "
       />
-      <ServiceLine label="INDEX" value="-----" />
+      <ServiceLine
+        label="INDEX"
+        :value="flag ? beaconControler : controlStore?.slotIndex + 1"
+        :hover-text="
+          controlStore.slotIndex < 0
+            ? ''
+            : t('controlPage.currentSlotIs', {
+                slot: controlStore.slotIndex + 1,
+              })
+        "
+      />
       <ServiceLine
         :label="t('controlPage.currentSlot')"
         :value="flag ? beaconControler : controlStore?.currentResult?.currentSlot"

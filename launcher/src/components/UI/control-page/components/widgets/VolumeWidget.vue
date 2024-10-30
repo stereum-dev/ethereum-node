@@ -200,23 +200,3 @@ const convertReadValueToMb = computed(() => {
   return Math.floor(mbValue);
 });
 </script>
-
-<style scoped>
-.scrollable-container {
-  overflow-y: scroll;
-  scrollbar-width: none;
-}
-
-.scrollable-container::-webkit-scrollbar {
-  display: none;
-}
-.volume_services {
-  white-space: nowrap;
-  overflow-x: scroll;
-  scrollbar-width: none;
-}
-
-.volume_services::-webkit-scrollbar {
-  display: none;
-}
-</style>
