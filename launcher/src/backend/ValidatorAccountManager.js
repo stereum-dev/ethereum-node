@@ -233,7 +233,7 @@ export class ValidatorAccountManager {
           };
         });
         //Push successful task
-        this.nodeConnection.taskManager.otherTasksHandler(ref, `Get Keys`, true, data.data);
+        this.nodeConnection.taskManager.otherTasksHandler(ref, `Get Keys`, true, JSON.stringify(data.data, null, 2));
       } else {
         const result = await this.keymanagerAPI(client, "GET", "/eth/v1/keystores");
 

@@ -36,7 +36,7 @@ export async function useListKeys(forceRefresh) {
         //update service config (pinia)
         client.config.keys = result.data
           ? result.data.map((e) => {
-              return { key: e.validating_pubkey, isRemote: e.readonly };
+              return { key: e.validating_pubkey, isRemote: e.readonly, dvt: e.dvt ? e.dvt : false };
             })
           : [];
 
@@ -61,6 +61,7 @@ export async function useListKeys(forceRefresh) {
               balance: "-",
               network: client.config.network,
               isRemote: key.isRemote,
+              dvt: key.dvt ? key.dvt : false,
             };
           })
         );
