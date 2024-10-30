@@ -3017,8 +3017,8 @@ export class Monitoring {
         cpu: arr[3],
         rx: arr[4].split(" ")[0],
         tx: arr[4].split(" ")[1],
-        readValue: arr[5].split(" ")[1],
-        writeValue: arr[5].split(" ")[2],
+        readValue: (arr[5] && arr[5].split(" ")[1]) || "0",
+        writeValue: (arr[5] && arr[5].split(" ")[2]) || "0",
         tempCPU: tempCPU,
       };
 
