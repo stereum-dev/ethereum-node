@@ -1,51 +1,58 @@
 <template>
-  <div class="Sync-parent relative">
+  <div class="Sync-parent flex w-full h-full justify-center items-center relative">
     <no-data
       v-if="!setupsStore?.selectedServicePairs || !controlStore.syncstatus.data || isConsensusMissing || footerStore.prometheusIsOff"
-      @mouseenter="cursorLocation = `${nodataMessage}`"
-      @mouseleave="cursorLocation = ''"
     />
-    <div v-else class="sync-box">
-      <div class="sync-icon">
-        <div class="sync-icon_container">
-          <img :src="syncIconPath" />
+    <template v-else>
+      <div class="sync-icon w-1/4 h-full flex flex-col justify-center items-center">
+        <div class="sync-icon_container flex justify-center items-center w-full h-4/5 p-2">
+          <img class="w-full" :src="syncIconPath" />
         </div>
-        <span>{{ $t("controlPage.syncStatus") }}</span>
+        <span class="w-full h-1/5 flex justify-center items-center text-gray-200 text-[40%] font-semibold uppercase">{{
+          $t("controlPage.syncStatus")
+        }}</span>
       </div>
-      <div class="wrapper">
-        <div class="activeWidget">
-          <div class="consensusContainer">
-            <div class="consensusName">
-              <span class="text-gray-200 mt-2">{{ setupsStore?.selectedServicePairs?.consensusService?.name }}</span>
-            </div>
-            <div class="progressBox">
-              <sync-circular-progress :color="consensusColor" :sync-percent="consensusCyrcle" />
-            </div>
-            <div class="syncStatusStatus">
-              <span :style="{ color: consensusColor }">{{ consensusState }}</span>
-            </div>
-            <div class="consensusIconCons">
-              <img :src="setupsStore?.selectedServicePairs?.consensusService?.icon" alt="consensus" />
-            </div>
-          </div>
 
-          <div class="executionContainer">
-            <div class="executionName">
-              <span class="text-gray-200 mt-2">{{ setupsStore?.selectedServicePairs?.executionService?.name }}</span>
-            </div>
-            <div class="progressBox">
-              <sync-circular-progress :color="executionColor" :sync-percent="executionCyrcle" />
-            </div>
-            <div class="syncStatusStatus">
-              <span :style="{ color: executionColor }">{{ executionState }}</span>
-            </div>
-            <div class="executionIconCons">
-              <img :src="setupsStore?.selectedServicePairs?.executionService?.icon" alt="execution" />
-            </div>
+      <div class="activeWidget w-3/4 h-full flex justify-around items-center pt-1 pb-1">
+        <div
+          class="consensusContainer"
+          @mouseenter="footerStore.cursorLocation = `${consensusSyncData?.title}: ${formattedConsensusValue}`"
+          @mouseleave="footerStore.cursorLocation = ''"
+        >
+          <div class="consensusName">
+            <span class="text-gray-200">{{ setupsStore?.selectedServicePairs?.consensusService?.name }}</span>
+          </div>
+          <div class="progressBox">
+            <sync-circular-progress :color="consensusColor" :sync-percent="consensusCyrcle" />
+          </div>
+          <div class="syncStatusStatus">
+            <span :style="{ color: consensusColor }">{{ consensusState }}</span>
+          </div>
+          <div class="consensusIconCons">
+            <img :src="setupsStore?.selectedServicePairs?.consensusService?.icon" alt="consensus" />
+          </div>
+        </div>
+
+        <div
+          class="executionContainer"
+          @mouseenter="footerStore.cursorLocation = `${executionSyncData?.title}: ${formattedExecutionValue}`"
+          @mouseleave="footerStore.cursorLocation = ''"
+        >
+          <div class="executionName">
+            <span class="text-gray-200">{{ setupsStore?.selectedServicePairs?.executionService?.name }}</span>
+          </div>
+          <div class="progressBox">
+            <sync-circular-progress :color="executionColor" :sync-percent="executionCyrcle" />
+          </div>
+          <div class="syncStatusStatus">
+            <span :style="{ color: executionColor }">{{ executionState }}</span>
+          </div>
+          <div class="executionIconCons">
+            <img :src="setupsStore?.selectedServicePairs?.executionService?.icon" alt="execution" />
           </div>
         </div>
       </div>
-    </div>
+    </template>
   </div>
 </template>
 
@@ -77,6 +84,14 @@ const syncIcons = {
   syncing: "/animation/synchronisation/synchronisation-icon-active.gif",
   synced: "/animation/synchronisation/synchronisation-icon-sucess.gif",
 };
+
+const formattedConsensusValue = computed(
+  () => formatSyncData(consensusSyncData.value?.frstVal) + " / " + formatSyncData(consensusSyncData.value?.scndVal)
+);
+
+const formattedExecutionValue = computed(
+  () => formatSyncData(executionSyncData.value?.frstVal) + " / " + formatSyncData(executionSyncData.value?.scndVal)
+);
 
 // Handle sync status and colors
 const handleSyncStatus = (client, colorRef, cyrcleRef, stateRef) => {
@@ -140,23 +155,22 @@ watch(
   (newVal) => {
     handleSyncStatus(newVal, consensusColor, consensusCyrcle, consensusState);
   },
-  { immediate: true }
+  { immediate: true, deep: true }
 );
 watch(
   () => executionSyncData.value,
   (newVal) => handleSyncStatus(newVal, executionColor, executionCyrcle, executionState),
-  { immediate: true }
+  { immediate: true, deep: true }
 );
+
+const formatSyncData = (arg) => {
+  const num = Number(arg) || 0;
+
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+};
 </script>
 
 <style scoped>
-.activeWidget {
-  display: flex;
-  width: 100%;
-  height: 100%;
-  justify-content: center;
-  align-items: center;
-}
 .consensusContainer,
 .executionContainer {
   display: flex;
@@ -179,17 +193,12 @@ watch(
   align-items: center;
   text-transform: uppercase;
 }
-.executionIconCons {
-  position: absolute;
-  width: 51%;
-  left: 24.5%;
-  top: 28.5%;
-}
+
+.executionIconCons,
 .consensusIconCons {
   position: absolute;
-  width: 51%;
-  left: 24.5%;
-  top: 28.5%;
+  width: 44%;
+  top: 26%;
 }
 .consensusPer {
   position: absolute;
@@ -218,182 +227,5 @@ watch(
   justify-content: center;
   align-items: center;
   bottom: 0;
-}
-.pageNumber {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 70%;
-  width: 98%;
-  height: 30%;
-}
-.arrowBox {
-  width: 6%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-.arrowUp,
-.arrowDown {
-  height: 30%;
-  justify-content: center;
-  align-items: center;
-  display: flex;
-  cursor: pointer;
-}
-.arrowDown img {
-  transform: rotate(180deg);
-}
-.Sync-parent {
-  display: flex;
-  width: 100%;
-  justify-content: center;
-  align-items: flex-start;
-  box-sizing: border-box;
-  height: 100%;
-}
-.sync-box {
-  width: 90%;
-  height: 100%;
-  display: flex;
-  box-sizing: border-box;
-  justify-content: center;
-  align-items: center;
-}
-.sync-icon {
-  box-sizing: border-box;
-  width: 31%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-.sync-icon span {
-  width: 100%;
-  height: 20%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 50%;
-  color: #c1c1c1;
-  font-weight: bold;
-}
-.sync-icon_container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 75%;
-}
-.sync-icon_container img {
-  width: 70%;
-  height: 90%;
-}
-.sync-box_value {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  flex-direction: column;
-  overflow-y: auto;
-  color: #c1c1c1;
-  overflow-y: auto;
-  position: relative;
-}
-.wrapper {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  width: 69%;
-  height: 100%;
-  position: relative;
-}
-.sync-box_row {
-  display: flex;
-  width: 95%;
-  height: 27%;
-  justify-content: space-between;
-  align-items: center;
-  border: 1px solid #c1c1c1;
-  border-radius: 5px;
-  padding: 2% 2%;
-  margin: 2% 0;
-}
-.sync-box-row_title {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: max-content;
-  font-weight: 600;
-  font-size: 45%;
-  margin-left: 1%;
-}
-.sync-box-row_val {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 62%;
-  font-weight: 400;
-  font-size: 50%;
-  color: #94deff;
-}
-/* width */
-::-webkit-scrollbar {
-  width: 5px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-  border: 1px solid #343434;
-  background: rgb(42, 42, 42);
-  box-sizing: border-box;
-  box-shadow: 1px 1px 10px 1px rgb(23, 23, 23);
-  border-radius: 10px;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #324b3f;
-  border-radius: 10px;
-}
-
-/* Client font colors */
-.clientred * {
-  color: #f84343;
-}
-.clientorange * {
-  color: #ff8c00;
-}
-.clientgrey * {
-  color: grey;
-}
-.clientblue * {
-  color: lightblue;
-}
-.clientgreen * {
-  color: #00be00;
-}
-
-::-webkit-scrollbar {
-  width: 5px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-  border: 1px solid #343434;
-  background: rgb(42, 42, 42);
-  box-sizing: border-box;
-  box-shadow: 1px 1px 10px 1px rgb(23, 23, 23);
-  border-radius: 10px;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #324b3f;
-  border-radius: 10px;
 }
 </style>

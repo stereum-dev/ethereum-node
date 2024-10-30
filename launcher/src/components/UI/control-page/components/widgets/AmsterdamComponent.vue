@@ -1,20 +1,22 @@
 <template>
-  <div class="amsterdam-parent">
+  <div class="amsterdam-parent flex w-full h-full justify-center items-center relative">
     <no-data
       v-if="!setupsStore.selectedServicePairs || isConsensusMissing || !footerStore.isConsensusRunning || footerStore.prometheusIsOff"
     />
     <template v-else>
       <div
-        class="icoTitle"
+        class="icoTitle w-1/4 h-full flex flex-col justify-center items-center"
         @mouseenter="footerStore.cursorLocation = `${t('controlPage.netSel')} ${getSetupNetwork?.name}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
-        <div class="icoContainer">
-          <img :src="!setupsStore.selectedServicePairs ? defaultIcon : getSetupNetwork?.icon" />
+        <div class="icoContainer flex justify-center items-center w-full h-4/5 p-2">
+          <img class="w-full" :src="!setupsStore.selectedServicePairs ? defaultIcon : getSetupNetwork?.icon" />
         </div>
-        <span>{{ $t("controlPage.node") }}</span>
+        <span class="w-full h-1/5 flex justify-center items-center text-gray-200 text-[40%] font-semibold uppercase">{{
+          $t("controlPage.node")
+        }}</span>
       </div>
-      <div class="docBox">
+      <div class="docBox p2pBarBox w-3/4 h-full flex justify-around items-center flex-col">
         <div v-if="flag" class="box-wrapper">
           <div class="spinner-square">
             <div class="square-1 square"></div>
@@ -327,50 +329,6 @@ watch(
   height: 95%;
   box-sizing: border-box;
   position: relative;
-}
-.amsterdam-parent {
-  display: flex;
-  width: 100%;
-  height: 100%;
-  justify-content: center;
-  align-content: center;
-  color: #c1c1c1;
-  position: relative;
-}
-.icoTitle {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  width: 30%;
-  height: 100%;
-}
-.icoContainer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 80%;
-}
-.icoContainer img {
-  width: 70%;
-}
-.icoTitle span {
-  width: 100%;
-  height: 20%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 60%;
-}
-.docBox {
-  width: 70%;
-  height: 100%;
-  display: flex;
-  position: relative;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
 }
 
 .Finalized-part,
