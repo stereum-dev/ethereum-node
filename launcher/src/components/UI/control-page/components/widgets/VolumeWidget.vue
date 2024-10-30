@@ -52,27 +52,22 @@
           <div class="val-box w-3/4 h-full flex flex-col text-xs justify-center font-semibold items-center">
             <div
               class="title w-full h-1/2 flex justify-center items-center text-orange-500 uppercase"
-              @mouseenter="
-                footerStore.cursorLocation = `Write: ${convertWriteValueToMb} ${
-                  controlStore.writeValue / 1024 < 1 && controlStore.writeValue / 1024 > 0 ? 'KB' : 'MB'
-                }`
-              "
+              @mouseenter="footerStore.cursorLocation = `Write: ${convertWriteValueToMb} MB`"
               @mouseleave="footerStore.cursorLocation = ''"
             >
               {{ convertWriteValueToMb }}
-              {{ controlStore.writeValue / 1024 < 1 && controlStore.writeValue / 1024 > 0 ? "KB" : "MB" }}
+              MB
             </div>
             <div
               class="title w-full h-1/2 flex justify-center items-center text-teal-700 uppercase"
               @mouseenter="
-                footerStore.cursorLocation = `Read: ${convertReadValueToMb} ${
-                  controlStore.readValue / 1024 < 1 && controlStore.writeValue / 1024 > 0 ? 'KB' : 'MB'
-                }`
+                footerStore.cursorLocation = `Read: ${convertReadValueToMb}   MB
+                `
               "
               @mouseleave="footerStore.cursorLocation = ''"
             >
               {{ convertReadValueToMb }}
-              {{ controlStore.readValue / 1024 < 1 && controlStore.writeValue / 1024 > 0 ? "KB" : "MB" }}
+              MB
             </div>
           </div>
         </div>
