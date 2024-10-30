@@ -70,6 +70,7 @@
 import { useControlStore } from "@/store/theControl";
 import { onMounted, ref, onUnmounted } from "vue";
 import { useFooter } from "@/store/theFooter";
+import ControlService from "@/store/ControlService";
 
 import i18n from "@/includes/i18n";
 
@@ -81,11 +82,17 @@ let polling = null;
 
 const controlStore = useControlStore();
 const footerStore = useFooter();
+const getServerTimeZone = async () => {
+  let haha = await ControlService.fetchCurrentTimeZone();
+  console.log("haha---------------------------------------", haha);
+};
 
 onMounted(() => {
   polling = setInterval(() => {
     getUtcTime();
   }, 1000);
+
+  getServerTimeZone();
 });
 
 onUnmounted(() => {

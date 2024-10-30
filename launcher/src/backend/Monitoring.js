@@ -3722,4 +3722,7 @@ rm -rf diskoutput
     }
     return [];
   }
+  async fetchCurrentTimeZone() {
+    return await this.nodeConnection.sshService.exec(`timedatectl | grep "Time zone"`);
+  }
 }

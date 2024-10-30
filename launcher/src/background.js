@@ -776,6 +776,10 @@ ipcMain.handle("deleteSlasherVolume", async (event, args) => {
   return await serviceManager.deleteSlasherVolume(args);
 });
 
+ipcMain.handle("fetchCurrentTimeZone", async () => {
+  return await monitoring.fetchCurrentTimeZone();
+});
+
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { secure: true, standard: true } }]);
 

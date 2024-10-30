@@ -710,6 +710,10 @@ class ControlService extends EventEmitter {
   async deleteSlasherVolume(args) {
     return this.promiseIpc.send("deleteSlasherVolume", args);
   }
+
+  async fetchCurrentTimeZone(args) {
+    return this.promiseIpc.send("fetchCurrentTimeZone", args);
+  }
 }
 if (!instance) {
   instance = new ControlService(window.electron);
