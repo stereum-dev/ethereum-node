@@ -2977,34 +2977,34 @@ export class Monitoring {
   async getServerVitals() {
     const tempCPU = await this.getCPUTemperature();
     const serverVitals = await this.nodeConnection.sshService.exec(`
-        hostname &&
-        free --mega | sed -n '2p' | awk '{print $2" "$3}' &&
-        df --total -BG --exclude-type=overlay | grep ^total | awk '{print $2" "$4" "$5}'
-        sar -u 1 1 | awk '{if ($7 != "%idle") print 100.000-$NF}' | tail -1 &&
-        INTERFACE=\`ip route get 8.8.8.8 | head -n1 | awk '{print $5}'\` &&
-sar -n DEV 1 1 | awk -v var="$INTERFACE" '{ if($2 == var) print $5" "$6}' | sed -n '1p' &&
-        rm -rf disks &&
-rm -rf diskspeeds &&
-rm -rf diskoutput &&
-lsblk -d -o NAME | grep -v '[$!loop|NAME|]' | sed '/sr0/d' > disks &&
-input="disks" &&
-while IFS= read -r line
-do
-iostat -x | grep "$line" | awk '{print $3" "$9}' >> diskspeeds
-done < "$input" &&
-linecount=\`wc -l disks | awk '{print $1}'\` &&
-counter=1 &&
-while [[ $linecount -ge $counter ]]
-do
-linea=$( head -n $counter disks | tail -1)
-lineb=$( head -n $counter diskspeeds | tail -1)
-echo "$linea $lineb"
-counter=$(($counter + 1))
-done &&
-rm -rf disks &&
-rm -rf diskspeeds &&
-rm -rf diskoutput
-        `);
+      hostname &&
+      free --mega | sed -n '2p' | awk '{print $2" "$3}' &&
+      df --total -BG --exclude-type=overlay | grep ^total | awk '{print $2" "$4" "$5}' &&
+      sar -u 1 1 | awk '{if ($7 != "%idle") print 100.000-$NF}' | tail -1 &&
+      INTERFACE=\`ip route get 8.8.8.8 | head -n1 | awk '{print $5}'\` &&
+      sar -n DEV 1 1 | awk -v var="$INTERFACE" '{ if($2 == var) print $5" "$6}' | sed -n '1p' &&
+      rm -rf disks &&
+      rm -rf diskspeeds &&
+      rm -rf diskoutput &&
+      lsblk -d -o NAME | grep -v '[$!loop|NAME|]' | sed '/sr0/d' > disks &&
+      input="disks" &&
+      while IFS= read -r line
+      do
+        iostat -xdmy 2 1 | grep "$line" | awk '{print $3" "$9}' >> diskspeeds
+      done < "$input" &&
+      linecount=\`wc -l disks | awk '{print $1}'\` &&
+      counter=1 &&
+      while [[ $linecount -ge $counter ]]
+      do
+        linea=$( head -n $counter disks | tail -1)
+        lineb=$( head -n $counter diskspeeds | tail -1)
+        echo "$linea $lineb"
+        counter=$(($counter + 1))
+      done &&
+      rm -rf disks &&
+      rm -rf diskspeeds &&
+      rm -rf diskoutput
+    `);
     try {
       let arr = serverVitals.stdout.split(/\n/);
       const data = {
@@ -3021,6 +3021,7 @@ rm -rf diskoutput
         writeValue: arr[5].split(" ")[2],
         tempCPU: tempCPU,
       };
+
       return data;
     } catch (e) {
       return null;
