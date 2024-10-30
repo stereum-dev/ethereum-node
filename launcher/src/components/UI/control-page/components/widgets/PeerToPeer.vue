@@ -1,46 +1,47 @@
 <template>
-  <div class="peer2peerParent">
+  <div class="peer2peerParent flex w-full h-full justify-center items-center relative">
     <no-data
       v-if="!setupStore?.selectedServicePairs || isConsensusMissing || !footerStore.isConsensusRunning"
       @mouseenter="footerStore.cursorLocation = footerStore.nodataMessage"
       @mouseleave="footerStore.cursorLocation = ''"
     />
     <template v-else>
-      <div class="p2pBox">
-        <div class="p2pIco">
-          <div class="p2pIco-container">
-            <img src="/img/icon/control-page-icons/PeerToPeerIcon.svg" alt="Peer to Peer Icon" />
-          </div>
-          <span>{{ t("controlPage.peerNetwork") }}</span>
+      <div class="p2pIco w-1/4 h-full flex flex-col justify-center items-center">
+        <div class="p2pIco-container flex justify-center items-center w-full h-4/5 p-2">
+          <img class="w-full" src="/img/icon/control-page-icons/PeerToPeerIcon.svg" alt="Peer to Peer Icon" />
         </div>
-        <div class="wrapper">
-          <div class="p2pBarBox">
-            <ClientStatus
-              :client-name="consensusClient"
-              :client-val="consensusValPeer"
-              :client-num="consensusNumPeer"
-              @mouseenter="
-                footerStore.cursorLocation = `${t('controlPage.connectedPairsTo', {
-                  client: consensusClient,
-                  peer: consensusValPeer,
-                })} `
-              "
-              @mouseleave="footerStore.cursorLocation = ''"
-            />
-            <ClientStatus
-              :client-name="executionClient"
-              :client-val="executionValPeer"
-              :client-num="executionNumPeer"
-              @mouseenter="
-                footerStore.cursorLocation = `${t('controlPage.connectedPairsTo', {
-                  client: executionClient,
-                  peer: executionValPeer,
-                })} `
-              "
-              @mouseleave="footerStore.cursorLocation = ''"
-            />
-          </div>
-        </div>
+        <span class="w-full h-1/5 flex justify-center items-center text-gray-200 text-[40%] font-semibold uppercase">{{
+          t("controlPage.peerNetwork")
+        }}</span>
+      </div>
+
+      <div class="p2pBarBox w-3/4 h-full flex justify-around items-center flex-col pt-1 pb-1">
+        <ClientStatus
+          :client-name="consensusClient"
+          :client-val="consensusValPeer"
+          :client-num="consensusNumPeer"
+          :client-icon="reactiveServiceStates.consensus.icon"
+          @mouseenter="
+            footerStore.cursorLocation = `${t('controlPage.connectedPairsTo', {
+              client: consensusClient,
+              peer: consensusValPeer,
+            })} `
+          "
+          @mouseleave="footerStore.cursorLocation = ''"
+        />
+        <ClientStatus
+          :client-name="executionClient"
+          :client-val="executionValPeer"
+          :client-num="executionNumPeer"
+          :client-icon="reactiveServiceStates.execution.icon"
+          @mouseenter="
+            footerStore.cursorLocation = `${t('controlPage.connectedPairsTo', {
+              client: executionClient,
+              peer: executionValPeer,
+            })} `
+          "
+          @mouseleave="footerStore.cursorLocation = ''"
+        />
       </div>
     </template>
   </div>
@@ -78,18 +79,20 @@ const executionValPeer = computed(() => findPeerDetails("execution", setupStore.
 const executionNumPeer = computed(() => findPeerDetails("execution", setupStore.selectedServicePairs?.executionService?.id).numPeer || 0);
 
 const isConsensusMissing = computed(() => footerStore.missingServices?.includes("consensus"));
+
+const reactiveServiceStates = computed(() => ({
+  execution: {
+    name: setupStore.selectedServicePairs?.executionService?.name || "",
+    icon: setupStore.selectedServicePairs?.executionService?.icon || "",
+  },
+  consensus: {
+    name: setupStore.selectedServicePairs?.consensusService?.name || "",
+    icon: setupStore.selectedServicePairs?.consensusService?.icon || "",
+  },
+}));
 </script>
 
 <style scoped>
-.p2pBarBox {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  overflow-y: auto;
-}
 .wrapper {
   width: 70%;
   height: 100%;
@@ -108,15 +111,7 @@ const isConsensusMissing = computed(() => footerStore.missingServices?.includes(
   font-weight: 600;
   color: #c1c1c1;
 }
-.peer2peerParent {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  height: 100%;
-  box-sizing: border-box;
-  position: relative;
-}
+
 .p2pTtl {
   width: 100%;
   height: 20%;
@@ -126,44 +121,5 @@ const isConsensusMissing = computed(() => footerStore.missingServices?.includes(
   justify-content: center;
   align-items: center;
   font-size: 50%;
-}
-
-.p2pBox {
-  width: 90%;
-  height: 100%;
-  display: flex;
-  box-sizing: border-box;
-  justify-content: flex-start;
-  align-items: center;
-}
-.p2pIco {
-  box-sizing: border-box;
-  width: 30%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-.p2pIco span {
-  width: 100%;
-  height: 20%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 50%;
-  font-weight: bold;
-  color: #c1c1c1;
-}
-.p2pIco-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 80%;
-}
-.p2pIco-container img {
-  width: 70%;
-  height: 90%;
 }
 </style>

@@ -26,7 +26,7 @@
       </div>
       <template v-if="starogeRows">
         <div class="w-full h-3/4 overflow-y-auto scrollable-container pr-1">
-          <div v-for="item in storagestatus" :key="item" class="w-full flex pt-1 pb-1">
+          <div v-for="item in storagestatus" :key="item" class="w-full flex pt-1">
             <div
               :class="getTextColor(getStableColor(item.service))"
               class="text-gray-200 text-2xs border border-gray-600 w-full h-4 pl-1 rounded-md flex justify-between pr-1"

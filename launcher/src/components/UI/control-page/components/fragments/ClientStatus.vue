@@ -1,7 +1,7 @@
 <template>
   <div class="p2pBarCont">
     <div class="titleVal">
-      <span>{{ props.clientName }}</span>
+      <img class="w-3/4" :src="props.clientIcon" alt="" />
     </div>
     <div class="p2pVal">
       <div class="p2pVal_value" :style="{ width: props.clientVal + '%' }"></div>
@@ -13,8 +13,6 @@
 </template>
 
 <script setup>
-import { defineProps } from "vue";
-
 const props = defineProps({
   clientName: {
     type: String,
@@ -26,6 +24,10 @@ const props = defineProps({
   },
   clientNum: {
     type: Number,
+    required: true,
+  },
+  clientIcon: {
+    type: String,
     required: true,
   },
 });
@@ -42,9 +44,9 @@ const props = defineProps({
 
 .titleVal {
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
-  width: 40%;
+  width: 20%;
   height: 100%;
   font-size: 42%;
   font-weight: 600;
