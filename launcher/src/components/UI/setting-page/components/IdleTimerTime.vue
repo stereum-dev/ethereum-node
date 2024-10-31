@@ -23,7 +23,6 @@ const checkSettings = async () => {
       footerStore.idleTimerTime = savedConfig.idleTimerTime.value;
     } else {
       updateSettings(5);
-      checkSettings();
     }
   } catch (error) {
     console.error("Failed to load saved settings:", error);
@@ -47,11 +46,10 @@ const updateSettings = async (idleTime) => {
 };
 
 const onChange = async (event) => {
-  if (event.target.value < 5) {
-    updateSettings(5);
-  } else {
-    updateSettings(event.target.value);
+  if (event.target.value == "" || event.target.value < 5) {
+    event.target.value = 5;
   }
+  updateSettings(event.target.value);
 };
 
 onMounted(() => {
