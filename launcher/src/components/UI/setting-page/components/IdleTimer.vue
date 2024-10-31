@@ -1,8 +1,8 @@
 <template>
   <div class="toggle-container">
-    <label class="switch">
+    <label class="switch relative">
       <input type="checkbox" :checked="footerStore.idleTimer" @click="toggleIdleTimer" />
-      <div class="slider round"></div>
+      <div class="slider round w-full h-full cursor-pointer bg-gray-400"></div>
     </label>
   </div>
 </template>
@@ -60,17 +60,17 @@ onMounted(() => {
 </script>
 <style scoped>
 .toggle-container {
-  width: 50%;
+  width: 100%;
   height: 93%;
   position: relative;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
 }
+
 .switch {
-  width: 100%;
-  height: 100%;
-  position: relative;
+  width: 50px;
+  height: 24px;
 }
 
 .switch input {
@@ -78,52 +78,31 @@ onMounted(() => {
 }
 
 .slider {
-  width: 80%;
-  height: 80%;
-  margin-top: 2px;
-  margin-right: 3px;
-  margin: 2px 3px;
-  cursor: pointer;
-  background-color: rgb(215, 215, 215);
-  -webkit-transition: 0.4s;
+  border-radius: 34px;
   transition: 0.4s;
+  box-shadow: inset 0px 0px 6px rgba(0, 0, 0, 0.3);
 }
 
 .slider:before {
   position: absolute;
   content: "";
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   border: 2px solid #0686bd;
-  left: 7%;
-  bottom: 8.4%;
+  left: 3px;
+  bottom: 2px;
   background-color: #3183da;
-  -webkit-transition: 0.4s;
   transition: 0.4s;
+  border-radius: 50%;
 }
 
 input:checked + .slider {
   background-color: #e9e9e9;
 }
+
 input:checked + .slider:before {
-  width: 18px;
-  height: 18px;
-  border: 1px solid #157ca8;
+  transform: translateX(24px);
   background-color: #488f63;
   border: 1px solid #09794c;
-}
-
-input:checked + .slider:before {
-  -webkit-transform: translateX(14px);
-  -ms-transform: translateX(14px);
-  transform: translateX(15px);
-}
-
-.slider.round {
-  border-radius: 34px;
-}
-
-.slider.round:before {
-  border-radius: 50%;
 }
 </style>
