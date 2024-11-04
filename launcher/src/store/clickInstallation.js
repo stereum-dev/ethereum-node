@@ -3,6 +3,7 @@ import { defineStore } from "pinia";
 export const useClickInstall = defineStore("clickInstallation", {
   state: () => {
     return {
+      isPathValid: true,
       startServicesAfterInstall: false,
       isConfigButtonEnbabled: false,
       installMonitoring: false,
