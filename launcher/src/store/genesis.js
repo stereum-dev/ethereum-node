@@ -21,6 +21,10 @@ export const useGenesis = defineStore("genesis", {
         grayGlacierBlock: 0,
         shanghaiTime: 1694203366,
         cancunTime: 1694203366,
+        clique: {
+          period: 5,
+          epoch: 30000,
+        },
         terminalTotalDifficulty: 0,
         terminalTotalDifficultyPassed: true,
       },
