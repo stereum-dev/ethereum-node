@@ -69,9 +69,11 @@
               <div class="w-full h-full bg-gray-300 rounded-full flex justify-start items-center">
                 <input
                   v-model="userSelectedPath"
+                  :class="{ 'invalid-path': !clickStore.isPathValid }"
                   type="text"
                   placeholder="/opt/stereum"
-                  class="w-full h-full bg-gray-300 rounded-full px-2 text-lg text-gray-800 font-semibold outline-none"
+                  class="custom-path-input w-full h-full bg-gray-300 rounded-full px-2 text-lg text-gray-800 font-semibold outline-none"
+                  @input="validatePath"
                 />
               </div>
             </div>
@@ -79,11 +81,11 @@
         </div>
       </div>
     </div>
-    <CustomFooter :disabled-btn="nextBtnDisabled" @prepare-stereum="prepareStereum" />
+    <CustomFooter :disabled-btn="!clickStore.isPathValid" @prepare-stereum="prepareStereum" />
   </div>
 </template>
 <script setup>
-import { ref, onMounted, onBeforeMount, watch, watchEffect } from "vue";
+import { ref, onMounted, onBeforeMount, watch } from "vue";
 import CustomFooter from "./CustomFooter.vue";
 import CustomHeader from "./CustomHead.vue";
 import ControlService from "@/store/ControlService";
@@ -98,20 +100,16 @@ const clickStore = useClickInstall();
 
 const router = useRouter();
 const userSelectedPath = ref("/opt/stereum");
-const inputTitle = ref("Choose your installation path where Stereum will be installed");
-const nextBtnDisabled = ref(false);
+
 const displayItem = ref("Click to select a network");
+
+const validatePath = () => {
+  const pathRegex = /^\/(?:[^ /\0*?<>|&{}$;][^ /\0]*\/?)*[^ /\0*?<>|&{}$;]{1,}$/;
+  clickStore.isPathValid = pathRegex.test(clickStore.installationPath.trim());
+};
 
 watch(userSelectedPath, (newValue) => {
   clickStore.installationPath = newValue;
-});
-
-watchEffect(() => {
-  if (userSelectedPath.value === "") {
-    nextBtnDisabled.value = true;
-  } else {
-    nextBtnDisabled.value = false;
-  }
 });
 
 // Lifecycle Hooks
@@ -121,6 +119,8 @@ onBeforeMount(() => {
 
 onMounted(() => {
   displayItem.value = "Click to select a network";
+
+  clickStore.isPathValid = true;
 
   if (clickStore.installationPath === "") {
     getInstallPath();
@@ -152,6 +152,10 @@ const activeBtn = () => {
 </script>
 
 <style scoped>
+.invalid-path {
+  border: 2px solid red;
+}
+
 .slide-fade-enter-active {
   transition-duration: 500;
   opacity: 0;
