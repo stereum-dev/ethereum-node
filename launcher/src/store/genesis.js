@@ -21,10 +21,6 @@ export const useGenesis = defineStore("genesis", {
         grayGlacierBlock: 0,
         shanghaiTime: 1694203366,
         cancunTime: 1694203366,
-        clique: {
-          period: 5,
-          epoch: 30000,
-        },
         terminalTotalDifficulty: 0,
         terminalTotalDifficultyPassed: true,
       },
@@ -33,8 +29,6 @@ export const useGenesis = defineStore("genesis", {
       extraData:
         "0x0000000000000000000000000000000000000000000000000000000000000000123463a4b065722e99115d6c222f267d9cabb5240000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
       gasLimit: "0x1c9c380",
-      difficulty: "0x1",
-      mixHash: "0x0000000000000000000000000000000000000000000000000000000000000000",
       coinbase: "0x0000000000000000000000000000000000000000",
       alloc: {
         "123463a4b065722e99115d6c222f267d9cabb524": {
