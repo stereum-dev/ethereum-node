@@ -34,16 +34,16 @@ import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
       >
         <span
           v-if="
-            !getFilteredValidators.length > 0 &&
+            !getFilteredValidators?.length > 0 &&
             !isLoading &&
             !stakingStore.isPreviewListActive &&
             !searchNotFound &&
-            !filteredDoppelgangerKeys.length
+            !filteredDoppelgangerKeys?.length
           "
           class="text-lg font-bold text-gray-300 text-center uppercase select-none"
           >{{ $t("stakingPage.noVal") }}</span
         >
-        <span v-if="searchNotFound && getFilteredValidators.length > 0" class="text-lg font-bold text-gray-300 text-center uppercase">{{
+        <span v-if="searchNotFound && getFilteredValidators?.length > 0" class="text-lg font-bold text-gray-300 text-center uppercase">{{
           $t("stakingPage.noMatch")
         }}</span>
         <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
@@ -68,7 +68,7 @@ import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
         <DoppelGCheckRow
           v-for="key in filteredDoppelgangerKeys"
           v-show="
-            stakingStore.doppelgangerKeys.length &&
+            stakingStore.doppelgangerKeys?.length &&
             !stakingStore.isPreviewListActive &&
             !isLoading &&
             stakingStore.selectedServiceToFilter?.config?.serviceID === key.serviceID
@@ -79,7 +79,7 @@ import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
 
         <GroupRow
           v-for="group in getCorrectValidatorGroups"
-          v-show="!stakingStore.isPreviewListActive && stakingStore.validatorKeyGroups.length > 0 && !isLoading"
+          v-show="!stakingStore.isPreviewListActive && stakingStore.validatorKeyGroups?.length > 0 && !isLoading"
           :key="group.groupID"
           :item="group"
           @open-group="openGroup"
@@ -89,7 +89,7 @@ import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
 
         <KeyRow
           v-for="key in getFilteredValidators"
-          v-show="!isKeyInGroup(key) && !stakingStore.isPreviewListActive && stakingStore.keys.length > 0 && !isLoading"
+          v-show="!isKeyInGroup(key) && !stakingStore.isPreviewListActive && stakingStore.keys?.length > 0 && !isLoading"
           :key="key.pubkey"
           :item="key"
           @remove-single="removeSingle"
@@ -135,21 +135,26 @@ stakingStore.filteredKeys = computed(() => {
   if (stakingStore.searchContent === "") {
     return stakingStore.keys;
   }
+
   return stakingStore.keys.filter(
     (key) =>
       (key.key && key.key.toLowerCase().includes(stakingStore.searchContent.toLowerCase())) ||
-      (key.displayName && key.displayName !== "" && key.displayName.toLowerCase().includes(stakingStore.searchContent.toLowerCase()))
+      (key.displayName && key.displayName !== "" && key.displayName.toLowerCase()?.includes(stakingStore.searchContent.toLowerCase()))
   );
 });
 
+console.log(stakingStore.filteredKeys);
+console.log("All keys", stakingStore.keys);
+
 const getFilteredValidators = computed(() => {
+  stakingStore.selectedServiceToFilter;
   if (!setupStore.selectedSetup) {
     // If selectedSetup is null, return all keys
     return stakingStore.filteredKeys;
   } else {
-    const serviceIds = setupStore.selectedSetup.services.map((service) => service.config.serviceID);
+    const serviceIds = setupStore.selectedSetup.services?.map((service) => service.config.serviceID);
     // Filter keys by checking if validatorID exists in serviceIds
-    return stakingStore.filteredKeys.filter((key) => serviceIds.includes(key.validatorID));
+    return stakingStore.filteredKeys.filter((key) => serviceIds?.includes(key.validatorID));
   }
 });
 
