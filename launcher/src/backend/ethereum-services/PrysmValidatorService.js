@@ -76,14 +76,12 @@ export class PrysmValidatorService extends NodeService {
             "--enable-doppelganger=true",
           ];
 
-    const imageVersion = network === "devnet" ? "v5.0.4" : "v5.1.0";
-
     service.init(
       "PrysmValidatorService", //service
       service.id, //id
       1, // configVersion
       image, //image
-      imageVersion, //imageVersion
+      "v5.0.4", //imageVersion
       cmd, //command
       ["/app/cmd/validator/validator"], // entrypoint
       null, // env
