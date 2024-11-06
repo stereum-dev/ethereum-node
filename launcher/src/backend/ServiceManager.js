@@ -1394,7 +1394,7 @@ export class ServiceManager {
       `);
     }
     newServices.forEach((service) => {
-      if (service.network !== "devnet") {
+      if (service.network !== "devnet" || (service.network === "devnet" && service.service === "GethService")) {
         if (versions[service.network] && versions[service.network][service.service]) {
           service.imageVersion = versions[service.network][service.service].slice(-1).pop();
         } else if (versions["mainnet"] && versions["mainnet"][service.service]) {
