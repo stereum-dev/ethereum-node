@@ -10,7 +10,7 @@
 
 ---
 
-### 🍄 Stereum - Ethereum Node Setup & Manager
+### 🍄 [Stereum](https://www.stereum.com/) - Ethereum Node Setup & Manager
 
 #### Become a Node Runner
 
