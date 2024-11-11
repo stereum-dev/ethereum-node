@@ -1898,6 +1898,10 @@ video {
   max-height: 15rem;
 }
 
+.max-h-7{
+  max-height: 1.75rem;
+}
+
 .max-h-8{
   max-height: 2rem;
 }
@@ -2024,10 +2028,6 @@ video {
 
 .max-h-full{
   max-height: 100%;
-}
-
-.max-h-7{
-  max-height: 1.75rem;
 }
 
 .min-h-11{
@@ -3118,6 +3118,11 @@ video {
   border-bottom-left-radius: 0.125rem;
 }
 
+.rounded-l-full{
+  border-top-left-radius: 9999px;
+  border-bottom-left-radius: 9999px;
+}
+
 .rounded-l-md{
   border-top-left-radius: 0.375rem;
   border-bottom-left-radius: 0.375rem;
@@ -3166,11 +3171,6 @@ video {
 .rounded-t-md{
   border-top-left-radius: 0.375rem;
   border-top-right-radius: 0.375rem;
-}
-
-.rounded-l-full{
-  border-top-left-radius: 9999px;
-  border-bottom-left-radius: 9999px;
 }
 
 .rounded-bl-\[37px\]{
@@ -3739,6 +3739,11 @@ video {
   background-color: rgb(41 46 50 / var(--tw-bg-opacity));
 }
 
+.bg-\[\#2a2c30\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(42 44 48 / var(--tw-bg-opacity));
+}
+
 .bg-\[\#2a2e30\]{
   --tw-bg-opacity: 1;
   background-color: rgb(42 46 48 / var(--tw-bg-opacity));
@@ -3847,6 +3852,11 @@ video {
 .bg-\[\#3e4347\]{
   --tw-bg-opacity: 1;
   background-color: rgb(62 67 71 / var(--tw-bg-opacity));
+}
+
+.bg-\[\#464A43\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(70 74 67 / var(--tw-bg-opacity));
 }
 
 .bg-\[\#495056\]{
@@ -4156,16 +4166,6 @@ video {
 .bg-zinc-700{
   --tw-bg-opacity: 1;
   background-color: rgb(63 63 70 / var(--tw-bg-opacity));
-}
-
-.bg-\[\#2a2c30\]{
-  --tw-bg-opacity: 1;
-  background-color: rgb(42 44 48 / var(--tw-bg-opacity));
-}
-
-.bg-\[\#464A43\]{
-  --tw-bg-opacity: 1;
-  background-color: rgb(70 74 67 / var(--tw-bg-opacity));
 }
 
 .bg-opacity-80{
@@ -4501,6 +4501,10 @@ video {
   font-size: 26px;
 }
 
+.text-\[7px\]{
+  font-size: 7px;
+}
+
 .text-\[8px\]{
   font-size: 8px;
 }
@@ -4539,10 +4543,6 @@ video {
   line-height: 1rem;
 }
 
-.text-\[7px\]{
-  font-size: 7px;
-}
-
 .font-\[400\]{
   font-weight: 400;
 }
@@ -4569,10 +4569,6 @@ video {
 
 .font-semibold{
   font-weight: 600;
-}
-
-.font-thin{
-  font-weight: 100;
 }
 
 .uppercase{
@@ -4819,16 +4815,6 @@ video {
 .text-yellow-500{
   --tw-text-opacity: 1;
   color: rgb(234 179 8 / var(--tw-text-opacity));
-}
-
-.text-green-300{
-  --tw-text-opacity: 1;
-  color: rgb(134 239 172 / var(--tw-text-opacity));
-}
-
-.text-amber-100{
-  --tw-text-opacity: 1;
-  color: rgb(254 243 199 / var(--tw-text-opacity));
 }
 
 .placeholder-gray-400\/70::-webkit-input-placeholder{
