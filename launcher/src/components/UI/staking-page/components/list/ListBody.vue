@@ -147,15 +147,25 @@ console.log(stakingStore.filteredKeys);
 console.log("All keys", stakingStore.keys);
 
 const getFilteredValidators = computed(() => {
-  stakingStore.selectedServiceToFilter;
-  if (!setupStore.selectedSetup) {
-    // If selectedSetup is null, return all keys
+  // No setup and no service filter
+  if (!setupStore.selectedSetup && !stakingStore.selectedServiceToFilter) {
     return stakingStore.filteredKeys;
-  } else {
-    const serviceIds = setupStore.selectedSetup.services?.map((service) => service.config.serviceID);
-    // Filter keys by checking if validatorID exists in serviceIds
+  }
+
+  // No setup but a service filter exists
+  if (!setupStore.selectedSetup && stakingStore.selectedServiceToFilter) {
+    return stakingStore.filteredKeys.filter((key) => key.validatorID === stakingStore.selectedServiceToFilter?.config?.serviceID);
+  }
+
+  // Setup exists but no service filter
+  if (setupStore.selectedSetup && !stakingStore.selectedServiceToFilter) {
+    const serviceIds = setupStore.selectedSetup?.services?.map((service) => service.config?.serviceID);
     return stakingStore.filteredKeys.filter((key) => serviceIds?.includes(key.validatorID));
   }
+
+  // Both setup and service filter exist
+  const selectedServiceId = stakingStore.selectedServiceToFilter.config?.serviceID;
+  return stakingStore.filteredKeys.filter((key) => key.validatorID === selectedServiceId);
 });
 
 const getCorrectValidatorGroups = computed(() => {
@@ -231,7 +241,6 @@ watch(
 // Lifecycle Hooks
 onMounted(async () => {
   stakingStore.forceRefresh = true;
-  await listKeys();
   if (getFilteredValidators.value.length > 0 && stakingStore.searchContent === "") {
     await listGroups();
   }
