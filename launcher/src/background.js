@@ -17,6 +17,7 @@ import { SSHService } from "./backend/SSHService.js";
 import path from "path";
 import { readFileSync } from "fs";
 import url from "url";
+import checkSigningKeys from "./backend/web3/CSM.js";
 const isDevelopment = process.env.NODE_ENV !== "production";
 const nodeConnection = new NodeConnection();
 const storageService = new StorageService();
@@ -775,6 +776,10 @@ ipcMain.handle("getNewLauncherVersion", async () => {
 
 ipcMain.handle("deleteSlasherVolume", async (event, args) => {
   return await serviceManager.deleteSlasherVolume(args);
+});
+
+ipcMain.handle("getCSMQueue", async (event, args) => {
+  return await checkSigningKeys(args.keysArray, monitoring);
 });
 
 // Scheme must be registered before the app is ready

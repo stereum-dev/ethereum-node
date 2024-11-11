@@ -269,6 +269,7 @@ export class Monitoring {
                 serviceID: config.id,
                 instanceID: newState && newState.hasOwnProperty("Names") ? newState.Names : "N/A",
                 command: config.command,
+                env: config.env,
                 configVersion: config.configVersion,
                 image: config.image,
                 imageVersion: config.imageVersion,

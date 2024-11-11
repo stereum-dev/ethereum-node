@@ -710,6 +710,9 @@ class ControlService extends EventEmitter {
   async deleteSlasherVolume(args) {
     return this.promiseIpc.send("deleteSlasherVolume", args);
   }
+  async getCSMQueue(keysArray) {
+    return this.promiseIpc.send("getCSMQueue", { keysArray });
+  }
 }
 if (!instance) {
   instance = new ControlService(window.electron);
