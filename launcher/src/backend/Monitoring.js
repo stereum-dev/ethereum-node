@@ -9,6 +9,7 @@ import * as crypto from "crypto";
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
+const { powerMonitor } = require("electron");
 
 const globalMonitoringCache = {
   intervalHandler: null,
@@ -16,6 +17,9 @@ const globalMonitoringCache = {
   refreshIntervalSeconds: 5,
   nodestatsInitialized: false,
   storagestatus: {},
+  setTime: 300,
+  idleTimerRunning: false,
+  idleTimerStop: false,
 };
 
 export class Monitoring {
@@ -39,6 +43,8 @@ export class Monitoring {
   async cleanup() {
     this.isLoggedIn = false;
     this.triedCurlInstall = false;
+    this.idleTimerRunning = false;
+    this.idleTimerStop = false;
     this.rpcTunnel = {};
     this.wsTunnel = {};
     this.beaconTunnel = {};
@@ -263,6 +269,7 @@ export class Monitoring {
                 serviceID: config.id,
                 instanceID: newState && newState.hasOwnProperty("Names") ? newState.Names : "N/A",
                 command: config.command,
+                env: config.env,
                 configVersion: config.configVersion,
                 image: config.image,
                 imageVersion: config.imageVersion,
@@ -3515,5 +3522,29 @@ rm -rf diskoutput
       };
     }
     return [];
+  }
+
+  async setIdleTime(setTime) {
+    this.globalMonitoringCache.setTime = setTime;
+  }
+
+  async idleTimerCheck(timerStop, win) {
+    if (!this.globalMonitoringCache.idleTimerRunning) {
+      this.globalMonitoringCache.idleTimerRunning = true;
+      await this.idleTimerLoop(win);
+    }
+    this.globalMonitoringCache.idleTimerStop = timerStop;
+  }
+
+  async idleTimerLoop(win) {
+    if (powerMonitor.getSystemIdleTime() >= this.globalMonitoringCache.setTime * 60) {
+      win.send("IdleLogout");
+    } else if (this.isLoggedIn && !this.globalMonitoringCache.idleTimerStop) {
+      await new Promise((resolve) => setTimeout(resolve, 60000));
+      await this.idleTimerLoop(win);
+    } else {
+      this.globalMonitoringCache.idleTimerStop = false;
+      this.globalMonitoringCache.idleTimerRunning = false;
+    }
   }
 }

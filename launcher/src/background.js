@@ -17,6 +17,7 @@ import { SSHService } from "./backend/SSHService.js";
 import path from "path";
 import { readFileSync } from "fs";
 import url from "url";
+import checkSigningKeys from "./backend/web3/CSM.js";
 const isDevelopment = process.env.NODE_ENV !== "production";
 const nodeConnection = new NodeConnection();
 const storageService = new StorageService();
@@ -101,6 +102,15 @@ ipcMain.handle("closeTunnels", async () => {
 ipcMain.handle("logout", async () => {
   await monitoring.logout();
   return await nodeConnection.logout();
+});
+
+ipcMain.handle("idleTimerCheck", async (event, args) => {
+  const current_window = event.sender;
+  return await monitoring.idleTimerCheck(args.timerStop, current_window);
+});
+
+ipcMain.handle("setIdleTime", async (event, arg) => {
+  return await monitoring.setIdleTime(arg);
 });
 
 // userData storage
@@ -766,6 +776,10 @@ ipcMain.handle("getNewLauncherVersion", async () => {
 
 ipcMain.handle("deleteSlasherVolume", async (event, args) => {
   return await serviceManager.deleteSlasherVolume(args);
+});
+
+ipcMain.handle("getCSMQueue", async (event, args) => {
+  return await checkSigningKeys(args.keysArray, monitoring);
 });
 
 // Scheme must be registered before the app is ready
