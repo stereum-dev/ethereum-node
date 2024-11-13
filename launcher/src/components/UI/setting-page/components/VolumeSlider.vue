@@ -21,9 +21,11 @@ import { ref, onMounted, onUnmounted } from "vue";
 import { useLangStore } from "@/store/languages";
 import { useSoundStore } from "@/store/sound";
 import ControlService from "@/store/ControlService";
+import { useFooter } from "@/store/theFooter";
 
 const soundStore = useSoundStore();
 const langStore = useLangStore();
+const footerStore = useFooter();
 
 const sliderBar = ref(null);
 const volumePercentage = ref(95);
@@ -31,17 +33,12 @@ const volumePercentage = ref(95);
 const checkSettings = async () => {
   try {
     const savedConfig = await ControlService.readConfig();
-
     if (savedConfig?.savedVolume?.volume) {
       langStore.currentVolume = savedConfig.savedVolume.volume;
-      volumePercentage.value = savedConfig.savedVolume.volume * 100;
-    } else if (savedConfig?.savedVolume?.volume === 0) {
-      langStore.currentVolume = 0;
-      volumePercentage.value = 0;
     } else {
-      langStore.currentVolume = 0.95;
-      volumePercentage.value = 95;
+      langStore.currentVolume = await window.promiseIpc.getVolume();
     }
+    volumePercentage.value = langStore.currentVolume * 100;
   } catch (error) {
     console.error("Failed to load saved settings:", error);
   }
@@ -65,7 +62,19 @@ const updateVolume = async (clientX) => {
   const newVolume = Math.max(0, Math.min(1, (clientX - barRect.left) / barRect.width));
   langStore.currentVolume = newVolume;
   volumePercentage.value = newVolume * 100;
+
+  await window.promiseIpc.setVolume(langStore.currentVolume);
+
+  footerStore.volState = newVolume > 0;
+
   await updateSettings(langStore.currentVolume);
+};
+
+const syncSystemVolume = async () => {
+  const systemVolume = await window.promiseIpc.getVolume();
+  langStore.currentVolume = systemVolume;
+  volumePercentage.value = systemVolume * 100;
+  footerStore.volState = systemVolume > 0;
 };
 
 const playSoundEffect = async (base64Data) => {
@@ -105,16 +114,20 @@ const startDrag = () => {
   document.addEventListener("mouseup", onMouseUp);
 };
 
+let volumeSyncInterval;
 onMounted(() => {
   checkSettings();
   sliderBar.value.addEventListener("click", (event) => {
     updateVolume(event.clientX);
   });
+
+  volumeSyncInterval = setInterval(syncSystemVolume, 2000);
 });
 
 onUnmounted(() => {
   document.removeEventListener("mousemove", onMouseMove);
   document.removeEventListener("mouseup", onMouseUp);
+  clearInterval(volumeSyncInterval);
 });
 </script>
 
