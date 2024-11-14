@@ -18,7 +18,6 @@ import path from "path";
 import { readFileSync } from "fs";
 import url from "url";
 import checkSigningKeys from "./backend/web3/CSM.js";
-const loudness = require("loudness");
 const isDevelopment = process.env.NODE_ENV !== "production";
 const nodeConnection = new NodeConnection();
 const storageService = new StorageService();
@@ -690,15 +689,6 @@ ipcMain.handle("checkAndCreateMultiSetup", async () => {
 
 ipcMain.handle("checkConnectionQuality", async (event, args) => {
   return await nodeConnection.sshService.checkConnectionQuality(args);
-});
-
-ipcMain.handle("set-system-volume", async (event, volume) => {
-  await loudness.setVolume(volume * 100);
-});
-
-ipcMain.handle("get-system-volume", async () => {
-  const volume = await loudness.getVolume();
-  return volume / 100;
 });
 
 ipcMain.handle("startShell", async (event) => {
