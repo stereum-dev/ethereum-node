@@ -351,7 +351,6 @@ export default {
       criticalCsm: [],
       notifCsm: [],
       csmInterval: null,
-      volumeSyncInterval: null,
     };
   },
   computed: {
@@ -455,7 +454,6 @@ export default {
     },
   },
   mounted() {
-    this.volumeSyncInterval = setInterval(this.syncSystemVolume, 2000);
     this.checkSettings();
     this.readService();
     this.watchAlertStatus();
@@ -472,7 +470,6 @@ export default {
     }, 120000);
   },
   beforeUnmount() {
-    clearInterval(this.volumeSyncInterval);
     clearInterval(this.polling);
     if (this.obolInterval) {
       clearInterval(this.obolInterval);
@@ -562,25 +559,10 @@ export default {
       }
     },
 
-    async volToggle() {
-      if (this.volState) {
-        this.currentVolume = await window.promiseIpc.getVolume();
-        await window.promiseIpc.setVolume(0);
-        this.volState = false;
-      } else {
-        await window.promiseIpc.setVolume(this.currentVolume || 0.95);
-        this.volState = true;
-      }
-    },
-
-    async syncSystemVolume() {
-      try {
-        const systemVolume = await window.promiseIpc.getVolume();
-        this.currentVolume = systemVolume;
-        this.volState = systemVolume > 0;
-      } catch (error) {
-        console.error("Failed to sync system volume:", error);
-      }
+    volToggle() {
+      this.volState = !this.volState;
+      this.updateSettings(this.volState ? 0.95 : 0);
+      this.cursorLocation = ``;
     },
     iconFilter(arg) {
       if (arg.name === "PrometheusNodeExporter") {
