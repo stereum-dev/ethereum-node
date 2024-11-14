@@ -72,6 +72,14 @@ class ControlService extends EventEmitter {
     await this.promiseIpc.send("setApikey", args);
   }
 
+  async idleTimerCheck(timerStop, win) {
+    return await this.promiseIpc.send("idleTimerCheck", { timerStop, win });
+  }
+
+  async setIdleTime(args) {
+    return await this.promiseIpc.send("setIdleTime", args);
+  }
+
   async readConfig() {
     return await this.promiseIpc.send("readConfig");
   }
@@ -713,6 +721,10 @@ class ControlService extends EventEmitter {
 
   async fetchCurrentTimeZone(args) {
     return this.promiseIpc.send("fetchCurrentTimeZone", args);
+  }
+
+  async getCSMQueue(keysArray) {
+    return this.promiseIpc.send("getCSMQueue", { keysArray });
   }
 }
 if (!instance) {

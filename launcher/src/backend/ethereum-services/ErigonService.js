@@ -16,7 +16,7 @@ export class ErigonService extends NodeService {
       service.id, // id
       1, // configVersion
       "thorax/erigon", // image
-      "v2.36.1", // imageVersion
+      "v2.60.8", // imageVersion
       [
         `erigon`,
         `--chain=${network}`,
@@ -88,7 +88,7 @@ export class ErigonService extends NodeService {
       this.imageVersion = this.imageVersion.startsWith("v") ? this.imageVersion.slice(1) : this.imageVersion;
     } else {
       this.imageVersion = this.imageVersion.endsWith("-arm64") ? this.imageVersion.replace("-arm64", "") : this.imageVersion;
-      this.imageVersion = this.imageVersion.startsWith("v") ? this.imageVersion : "v" + this.imageVersion;
+      this.imageVersion = this.imageVersion.startsWith("v") ? this.imageVersion.slice(1) : this.imageVersion;
     }
   }
 

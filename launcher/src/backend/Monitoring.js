@@ -9,6 +9,7 @@ import * as crypto from "crypto";
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
+const { powerMonitor } = require("electron");
 
 const globalMonitoringCache = {
   intervalHandler: null,
@@ -16,6 +17,9 @@ const globalMonitoringCache = {
   refreshIntervalSeconds: 5,
   nodestatsInitialized: false,
   storagestatus: {},
+  setTime: 300,
+  idleTimerRunning: false,
+  idleTimerStop: false,
 };
 
 export class Monitoring {
@@ -39,6 +43,8 @@ export class Monitoring {
   async cleanup() {
     this.isLoggedIn = false;
     this.triedCurlInstall = false;
+    this.idleTimerRunning = false;
+    this.idleTimerStop = false;
     this.rpcTunnel = {};
     this.wsTunnel = {};
     this.beaconTunnel = {};
@@ -263,6 +269,7 @@ export class Monitoring {
                 serviceID: config.id,
                 instanceID: newState && newState.hasOwnProperty("Names") ? newState.Names : "N/A",
                 command: config.command,
+                env: config.env,
                 configVersion: config.configVersion,
                 image: config.image,
                 imageVersion: config.imageVersion,
@@ -3375,7 +3382,7 @@ export class Monitoring {
     }
 
     try {
-      const beaconAPIPort = beaconStatus.data[0].beacon.destinationPort;
+      const beaconAPIPort = beaconStatus.data[0].beacon.servicePort;
       const serviceId = beaconStatus.data[0].sid;
       if (!Array.isArray(pubkey)) {
         pubkey = [pubkey];
@@ -3386,7 +3393,7 @@ export class Monitoring {
         if (!output.includes("{") || !output.includes("}")) {
           return {
             pubkey: pubkey,
-            code: null,
+            code: /20[0-8] OK/.test(output) ? 200 : null,
             msg: output,
           };
         }
@@ -3432,6 +3439,8 @@ export class Monitoring {
           if (SSHService.checkExecError(runExitCommand) && runExitCommand.stderr) {
             throw new Error(SSHService.extractExecError(runExitCommand));
           }
+          if (!runExitCommand.stdout)
+            throw `ReturnCode: ${runExitCommand.rc}\nStderr: ${runExitCommand.stderr}\nStdout: ${runExitCommand.stdout}\nIs Your Consensus Client Running?`;
 
           const response = parseRunExitCommandOutput(runExitCommand.stdout, pubkey);
 
@@ -3725,5 +3734,29 @@ export class Monitoring {
   }
   async fetchCurrentTimeZone() {
     return await this.nodeConnection.sshService.exec(`timedatectl | grep "Time zone"`);
+  }
+
+  async setIdleTime(setTime) {
+    this.globalMonitoringCache.setTime = setTime;
+  }
+
+  async idleTimerCheck(timerStop, win) {
+    if (!this.globalMonitoringCache.idleTimerRunning) {
+      this.globalMonitoringCache.idleTimerRunning = true;
+      await this.idleTimerLoop(win);
+    }
+    this.globalMonitoringCache.idleTimerStop = timerStop;
+  }
+
+  async idleTimerLoop(win) {
+    if (powerMonitor.getSystemIdleTime() >= this.globalMonitoringCache.setTime * 60) {
+      win.send("IdleLogout");
+    } else if (this.isLoggedIn && !this.globalMonitoringCache.idleTimerStop) {
+      await new Promise((resolve) => setTimeout(resolve, 60000));
+      await this.idleTimerLoop(win);
+    } else {
+      this.globalMonitoringCache.idleTimerStop = false;
+      this.globalMonitoringCache.idleTimerRunning = false;
+    }
   }
 }

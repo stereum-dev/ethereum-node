@@ -17,6 +17,8 @@ import { SSHService } from "./backend/SSHService.js";
 import path from "path";
 import { readFileSync } from "fs";
 import url from "url";
+import checkSigningKeys from "./backend/web3/CSM.js";
+const loudness = require("loudness");
 const isDevelopment = process.env.NODE_ENV !== "production";
 const nodeConnection = new NodeConnection();
 const storageService = new StorageService();
@@ -101,6 +103,15 @@ ipcMain.handle("closeTunnels", async () => {
 ipcMain.handle("logout", async () => {
   await monitoring.logout();
   return await nodeConnection.logout();
+});
+
+ipcMain.handle("idleTimerCheck", async (event, args) => {
+  const current_window = event.sender;
+  return await monitoring.idleTimerCheck(args.timerStop, current_window);
+});
+
+ipcMain.handle("setIdleTime", async (event, arg) => {
+  return await monitoring.setIdleTime(arg);
 });
 
 // userData storage
@@ -685,6 +696,15 @@ ipcMain.handle("checkConnectionQuality", async (event, args) => {
   return await nodeConnection.sshService.checkConnectionQuality(args);
 });
 
+ipcMain.handle("set-system-volume", async (event, volume) => {
+  await loudness.setVolume(volume * 100);
+});
+
+ipcMain.handle("get-system-volume", async () => {
+  const volume = await loudness.getVolume();
+  return volume / 100;
+});
+
 ipcMain.handle("startShell", async (event) => {
   if (!nodeConnection.sshService.shellStream) {
     try {
@@ -778,6 +798,10 @@ ipcMain.handle("deleteSlasherVolume", async (event, args) => {
 
 ipcMain.handle("fetchCurrentTimeZone", async () => {
   return await monitoring.fetchCurrentTimeZone();
+});
+
+ipcMain.handle("getCSMQueue", async (event, args) => {
+  return await checkSigningKeys(args.keysArray, monitoring);
 });
 
 // Scheme must be registered before the app is ready

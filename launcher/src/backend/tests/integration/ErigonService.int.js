@@ -90,7 +90,7 @@ test("erigon installation", async () => {
   expect(ufw.stdout).toMatch(/30303\/udp/);
 
   //check docker container
-  expect(docker.stdout).toMatch(/thorax\/erigon/);
+  expect(docker.stdout).toMatch(/erigontech\/erigon/);
   expect(docker.stdout).toMatch(/30303->30303/);
   expect(docker.stdout).toMatch(/8545-8546/);
   if (!executionClient.id.includes("Up")) {
