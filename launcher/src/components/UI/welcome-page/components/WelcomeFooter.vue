@@ -71,7 +71,7 @@ const display = async (osResponse, suResponse) => {
       isSupported.value = true;
     }
   } else {
-    message.value = "UNSUPPORTED OS";
+    message.value = "UNSUPPORTED OS. USE UBUNTU VERSION 22.04 OR 24.04.";
   }
   active.value = false;
 };
