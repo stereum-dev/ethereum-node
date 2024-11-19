@@ -11,8 +11,4 @@ contextBridge.exposeInMainWorld("promiseIpc", {
     ipcRenderer.on("terminal-output", (_, arg) => callback(arg));
     return () => ipcRenderer.removeListener("terminal-output", callback);
   },
-
-  // Audio control functions
-  setVolume: (volume) => ipcRenderer.invoke("set-system-volume", volume),
-  getVolume: () => ipcRenderer.invoke("get-system-volume"),
 });

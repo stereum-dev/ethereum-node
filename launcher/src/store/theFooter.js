@@ -19,11 +19,9 @@ export const useFooter = defineStore("theFooter", {
       missingServices: false,
       prometheusIsOff: false,
       nodataMessage: "",
-
+      volState: false,
       idleTimer: false,
       idleTimerTime: 5,
-      volState: true,
-      isMuted: false,
     };
   },
   getters: {},
