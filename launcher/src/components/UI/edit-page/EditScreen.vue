@@ -468,7 +468,7 @@ const setupDevnet = async () => {
     setupStore.isDevnetSetupModalActive = false;
     setupStore.currentStep = 1;
 
-    await ControlService.writeGenesisJson(useDeepClone(setupStore.genesisFile));
+    await ControlService.writeGenesisJsonDevnet(useDeepClone(setupStore.genesisFile));
     const existDepositContract = setupStore.genesisFile.alloc.hasOwnProperty("4242424242424242424242424242424242424242");
 
     const writeConfigData = {
@@ -476,7 +476,7 @@ const setupDevnet = async () => {
       existDepositContract,
     };
 
-    await ControlService.writeConfigYaml(writeConfigData);
+    await ControlService.writeConfigYamlDevnet(writeConfigData);
     await ControlService.initGenesis();
 
     // Create setup data

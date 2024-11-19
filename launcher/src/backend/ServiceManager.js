@@ -2361,7 +2361,7 @@ export class ServiceManager {
     }
   }
 
-  async writeGenesisJson(genesis) {
+  async writeGenesisJsonDevnet(genesis) {
     const ref = StringUtils.createRandomString();
     this.nodeConnection.taskManager.otherTasksHandler(ref, `Writing Genesis JSON`);
     try {
@@ -2391,7 +2391,7 @@ export class ServiceManager {
     }
   }
 
-  async writeConfigYaml(writeConfigData) {
+  async writeConfigYamlDevnet(writeConfigData) {
     const ref = StringUtils.createRandomString();
     this.nodeConnection.taskManager.otherTasksHandler(ref, `Writing Config YAML`);
     try {
