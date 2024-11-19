@@ -13,11 +13,11 @@ stereum_static:
       lighthouse: v4.5.0
       nimbus: multiarch-v23.10.0
       teku: "23.10.0"
-      prysm: v4.1.0
+      prysm: v5.0.4
       lodestar: v1.11.3
 
       # execution clients
-      geth: v1.13.4
+      geth: v1.14.10-amd64
       besu: "23.10.0"
       nethermind: "1.21.0"
       erigon: v2.52.5

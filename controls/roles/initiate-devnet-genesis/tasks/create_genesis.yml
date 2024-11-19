@@ -2,7 +2,7 @@
 - name: Create beacon chain genesis
   docker_container:
     name: create-beacon-chain-genesis
-    image: gcr.io/prysmaticlabs/prysm/cmd/prysmctl:v5.0.4
+    image: gcr.io/prysmaticlabs/prysm/cmd/prysmctl:{{ stereum_static.defaults.versions.prysm }}
     command:
       - testnet
       - generate-genesis
