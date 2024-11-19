@@ -17,7 +17,6 @@ export class PrysmBeaconService extends NodeService {
     const executionDir = "/execution";
 
     //volumes
-
     const volumes =
       network === "devnet"
         ? [new ServiceVolume(workingDir, configYamlDir)]
@@ -56,42 +55,7 @@ export class PrysmBeaconService extends NodeService {
       })
       .join();
 
-    const cmd =
-      network === "devnet"
-        ? [
-            `--datadir=${dataDir}`,
-            "--min-sync-peers=0",
-            `--genesis-state=${genesisDir}/genesis.ssz`,
-            "--interop-eth1data-votes",
-            `--chain-config-file=${configYamlDir}/config.yml`,
-            "--contract-deployment-block=0",
-            `--chain-id=${chainId}`,
-            "--rpc-host=0.0.0.0",
-            "--grpc-gateway-host=0.0.0.0",
-            `--execution-endpoint=${executionEndpoint}`,
-            "--accept-terms-of-use=true",
-            `--jwt-secret=${JWTDir}`,
-            "--suggested-fee-recipient=0x0000000000000000000000000000000000000000",
-            "--minimum-peers-per-subnet=0",
-            "--monitoring-host=0.0.0.0",
-            "--monitoring-port=8080",
-            "--force-clear-db",
-          ]
-        : [
-            "--accept-terms-of-use=true",
-            `--${network}`,
-            `--datadir=${dataDir}`,
-            `--block-batch-limit=512`,
-            "--rpc-host=0.0.0.0",
-            "--grpc-gateway-host=0.0.0.0",
-            "--p2p-max-peers=100",
-            `--execution-endpoint=${executionEndpoint}`,
-            `--jwt-secret=${JWTDir}`,
-            "--monitoring-host=0.0.0.0",
-            "--monitoring-port=8080",
-            "--p2p-tcp-port=13001",
-            "--p2p-udp-port=12001",
-          ];
+    const cmd = service.generatePrysmBeaconCommand(network, dataDir, genesisDir, configYamlDir, executionEndpoint, JWTDir, chainId);
 
     service.init(
       "PrysmBeaconService", //service
@@ -124,6 +88,43 @@ export class PrysmBeaconService extends NodeService {
     }
 
     return service;
+  }
+
+  generatePrysmBeaconCommand(network, dataDir, genesisDir, configYamlDir, executionEndpoint, JWTDir, chainId) {
+    const commonCmd = [
+      "--accept-terms-of-use=true",
+      `--datadir=${dataDir}`,
+      "--rpc-host=0.0.0.0",
+      "--grpc-gateway-host=0.0.0.0",
+      `--execution-endpoint=${executionEndpoint}`,
+      `--jwt-secret=${JWTDir}`,
+      "--monitoring-host=0.0.0.0",
+      "--monitoring-port=8080",
+    ];
+
+    if (network === "devnet") {
+      return [
+        ...commonCmd,
+        "--min-sync-peers=0",
+        `--genesis-state=${genesisDir}/genesis.ssz`,
+        "--interop-eth1data-votes",
+        `--chain-config-file=${configYamlDir}/config.yml`,
+        "--contract-deployment-block=0",
+        `--chain-id=${chainId}`,
+        "--suggested-fee-recipient=0x0000000000000000000000000000000000000000",
+        "--minimum-peers-per-subnet=0",
+        "--force-clear-db",
+      ];
+    } else {
+      return [
+        ...commonCmd,
+        `--${network}`,
+        `--block-batch-limit=512`,
+        "--p2p-max-peers=100",
+        "--p2p-tcp-port=13001",
+        "--p2p-udp-port=12001",
+      ];
+    }
   }
 
   static buildByConfiguration(config) {

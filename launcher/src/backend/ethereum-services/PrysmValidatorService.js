@@ -41,40 +41,16 @@ export class PrysmValidatorService extends NodeService {
       })
       .join();
 
-    const cmd =
-      network === "devnet"
-        ? [
-            `--beacon-rpc-provider=${provider}`,
-            `--datadir=${dataDir}/validatordata`,
-            "--accept-terms-of-use=true",
-            "--interop-num-validators=64",
-            "--interop-start-index=0",
-            `--chain-config-file=${configYamlDir}/config.yml`,
-            "--monitoring-host=0.0.0.0",
-            "--monitoring-port=8081",
-            "--force-clear-db",
-          ]
-        : [
-            "--accept-terms-of-use=true",
-            `--beacon-rpc-provider=${provider}`,
-            `--beacon-rpc-gateway-provider=${providerGateway}`,
-            "--web",
-            `--${network}`,
-            `--datadir=${dataDir}`,
-            `--keymanager-token-file=${walletDir + "/auth-token"}`,
-            `--wallet-dir=${walletDir}`,
-            `--wallet-password-file=${passwordDir + "/wallet-password"}`,
-            "--monitoring-host=0.0.0.0",
-            "--grpc-gateway-port=7500",
-            "--grpc-gateway-host=0.0.0.0",
-            '--grpc-gateway-corsdomain="*"',
-            "--monitoring-host=0.0.0.0",
-            "--monitoring-port=8081",
-            "--suggested-fee-recipient=0x0000000000000000000000000000000000000000",
-            `--graffiti-file=${graffitiDir + "/graffitis.yaml"}`,
-            "--enable-builder=true",
-            "--enable-doppelganger=true",
-          ];
+    const cmd = service.generatePrysmValidatorCommand(
+      network,
+      dataDir,
+      walletDir,
+      passwordDir,
+      graffitiDir,
+      configYamlDir,
+      provider,
+      providerGateway
+    );
 
     service.init(
       "PrysmValidatorService", //service
@@ -94,6 +70,44 @@ export class PrysmValidatorService extends NodeService {
     );
 
     return service;
+  }
+
+  generatePrysmValidatorCommand(network, dataDir, walletDir, passwordDir, graffitiDir, configYamlDir, provider, providerGateway) {
+    const commonCmd = [
+      "--accept-terms-of-use=true",
+      `--beacon-rpc-provider=${provider}`,
+      "--monitoring-host=0.0.0.0",
+      "--monitoring-port=8081",
+    ];
+
+    if (network === "devnet") {
+      return [
+        ...commonCmd,
+        `--datadir=${dataDir}/validatordata`,
+        "--interop-num-validators=64",
+        "--interop-start-index=0",
+        `--chain-config-file=${configYamlDir}/config.yml`,
+        "--force-clear-db",
+      ];
+    } else {
+      return [
+        ...commonCmd,
+        `--beacon-rpc-gateway-provider=${providerGateway}`,
+        "--web",
+        `--${network}`,
+        `--datadir=${dataDir}`,
+        `--keymanager-token-file=${walletDir}/auth-token`,
+        `--wallet-dir=${walletDir}`,
+        `--wallet-password-file=${passwordDir}/wallet-password`,
+        "--grpc-gateway-port=7500",
+        "--grpc-gateway-host=0.0.0.0",
+        '--grpc-gateway-corsdomain="*"',
+        "--suggested-fee-recipient=0x0000000000000000000000000000000000000000",
+        `--graffiti-file=${graffitiDir}/graffitis.yaml`,
+        "--enable-builder=true",
+        "--enable-doppelganger=true",
+      ];
+    }
   }
 
   static buildByConfiguration(config) {
