@@ -2,7 +2,7 @@
 - name: Set up Geth genesis configuration
   docker_container:
     name: geth-genesis
-    image: ethereum/client-go:latest
+    image: ethereum/client-go:v1.14.10-amd64
     command: --datadir=/execution init /execution/genesis.json
     volumes:
       - "{{ working_dir }}/genesis/execution:/execution"
