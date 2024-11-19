@@ -851,19 +851,17 @@ export class ServiceManager {
     let service;
     switch (name) {
       case "GethService":
-        ports =
-          args.network === "devnet"
-            ? [
-                new ServicePort(null, 8551, 8551, servicePortProtocol.tcp),
-                new ServicePort(null, 8545, 8545, servicePortProtocol.tcp),
-                new ServicePort(null, 8546, 8546, servicePortProtocol.tcp),
-              ]
-            : [
-                new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
-                new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
-                new ServicePort("127.0.0.1", args.port ? args.port : 8545, 8545, servicePortProtocol.tcp),
-                new ServicePort("127.0.0.1", 8546, 8546, servicePortProtocol.tcp),
-              ];
+        ports = [
+          new ServicePort("127.0.0.1", args.port ? args.port : 8545, 8545, servicePortProtocol.tcp),
+          new ServicePort("127.0.0.1", 8546, 8546, servicePortProtocol.tcp),
+        ];
+
+        args.network === "devnet"
+          ? ports.push(new ServicePort(null, 8551, 8551, servicePortProtocol.tcp))
+          : ports.push(
+              new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
+              new ServicePort(null, 30303, 30303, servicePortProtocol.udp)
+            );
         return GethService.buildByUserInput(args.network, ports, args.installDir + "/geth");
 
       case "RethService":
@@ -924,21 +922,21 @@ export class ServiceManager {
         return LighthouseValidatorService.buildByUserInput(args.network, ports, args.installDir + "/lighthouse", args.consensusClients);
 
       case "PrysmBeaconService":
-        ports =
-          args.network === "devnet"
-            ? [
-                new ServicePort(null, 4000, 4000, servicePortProtocol.tcp),
-                new ServicePort(null, 3500, 3500, servicePortProtocol.tcp),
-                new ServicePort(null, 8080, 8080, servicePortProtocol.tcp),
-                new ServicePort(null, 6060, 6060, servicePortProtocol.tcp),
-                new ServicePort(null, 9090, 9090, servicePortProtocol.tcp),
-              ]
-            : [
-                new ServicePort(null, 13001, 13001, servicePortProtocol.tcp),
-                new ServicePort(null, 12001, 12001, servicePortProtocol.udp),
-                new ServicePort("127.0.0.1", 4000, 4000, servicePortProtocol.tcp),
-                new ServicePort("127.0.0.1", args.port ? args.port : 3500, 3500, servicePortProtocol.tcp),
-              ];
+        ports = [
+          new ServicePort("127.0.0.1", 4000, 4000, servicePortProtocol.tcp),
+          new ServicePort("127.0.0.1", args.port ? args.port : 3500, 3500, servicePortProtocol.tcp),
+        ];
+
+        args.network === "devnet"
+          ? ports.push(
+              new ServicePort(null, 8080, 8080, servicePortProtocol.tcp),
+              new ServicePort(null, 6060, 6060, servicePortProtocol.tcp),
+              new ServicePort(null, 9090, 9090, servicePortProtocol.tcp)
+            )
+          : ports.push(
+              new ServicePort(null, 13001, 13001, servicePortProtocol.tcp),
+              new ServicePort(null, 12001, 12001, servicePortProtocol.udp)
+            );
         return PrysmBeaconService.buildByUserInput(
           args.network,
           ports,
