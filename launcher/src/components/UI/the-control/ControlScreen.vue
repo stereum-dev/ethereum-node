@@ -376,6 +376,7 @@ const updateServiceLogs = async () => {
     nodeStore.serviceLogs = data;
   }
 };
+//start of the control screen
 </script>
 
 <style scoped>
