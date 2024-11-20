@@ -19,7 +19,6 @@ export async function useListKeys(forceRefresh) {
       if ((client.config.keys === undefined || client.config.keys.length === 0 || forceRefresh) && client.state === "running") {
         //refresh validaotr list
         let result = await ControlService.listValidators(client.config.serviceID);
-
         if (!client.service.includes("Web3Signer")) {
           let resultRemote = await ControlService.listRemoteKeys(client.config.serviceID);
           let remoteKeys = resultRemote.data
@@ -102,6 +101,7 @@ export async function useListKeys(forceRefresh) {
 }
 
 export async function useUpdateValidatorStats() {
+  console.log("test");
   const nodeManageStore = useNodeManage();
   const stakingStore = useStakingStore();
   let totalBalance = 0;
@@ -119,18 +119,19 @@ export async function useUpdateValidatorStats() {
       });
       var latestEpoch = latestEpochResponse.data.data.epoch;
       let buffer = stakingStore.keys.map((key) => key.key);
+      if (stakingStore.keys.length <= 100) {
+        const chunkSize = 50;
+        for (let i = 0; i < buffer.length; i += chunkSize) {
+          //split validator accounts into chunks of 50 (api url limit)
+          const chunk = buffer.slice(i, i + chunkSize);
+          let response = await axios.get(nodeManageStore.currentNetwork.dataEndpoint + "/validator/" + encodeURIComponent(chunk.join()), {
+            validateStatus: function (status) {
+              return status < 500;
+            },
+          });
 
-      const chunkSize = 50;
-      for (let i = 0; i < buffer.length; i += chunkSize) {
-        //split validator accounts into chunks of 50 (api url limit)
-        const chunk = buffer.slice(i, i + chunkSize);
-        let response = await axios.get(nodeManageStore.currentNetwork.dataEndpoint + "/validator/" + encodeURIComponent(chunk.join()), {
-          validateStatus: function (status) {
-            return status < 500;
-          },
-        });
-
-        if (response.data.data) data = data.concat(response.data.data); //merge all gathered stats in one array
+          if (response.data.data) data = data.concat(response.data.data); //merge all gathered stats in one array
+        }
       }
     }
   } catch (err) {
