@@ -11,12 +11,8 @@
         </span>
       </div>
 
-      <div
-        v-if="chartOptions && chartSeries"
-        class="peers-over-time_part w-3/4 h-full flex justify-start items-start"
-        @mouseleave="footerStore.cursorLocation = ''"
-      >
-        <VueApexCharts :options="chartOptions" :series="chartSeries" class="full-size-chart" />
+      <div v-if="chartOptions && chartSeries" class="peers-over-time_part w-3/4 h-full flex" @mouseleave="footerStore.cursorLocation = ''">
+        <VueApexCharts :options="chartOptions" :series="chartSeries" class="w-3/4 h-full" />
       </div>
 
       <div v-if="setupStore.selectedServicePairs !== null" class="iconss w-1/5 h-full flex justify-center items-center flex-col gap-1">
@@ -109,7 +105,7 @@ const chartOptions = {
     strokeDashArray: 5,
     xaxis: { lines: { show: true } },
     yaxis: { lines: { show: true } },
-    padding: { top: -25, bottom: -7, left: -5, right: -2 },
+    padding: { top: -27, bottom: -12, left: -5, right: -10 },
   },
   stroke: { width: 1, colors: ["#00ff00"], curve: "smooth" },
   fill: {
@@ -194,11 +190,3 @@ const getServiceIcon = (service) =>
     ? "/img/icon/loading-icons/loading-circle.png"
     : setupStore.selectedServicePairs?.[`${service}Service`]?.icon || "";
 </script>
-
-<style scoped>
-.full-size-chart {
-  width: 100%;
-  height: 100%;
-  min-height: 100%;
-}
-</style>
