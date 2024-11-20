@@ -2,7 +2,7 @@
 - name: Set up Geth genesis configuration
   docker_container:
     name: geth-genesis
-    image: ethereum/client-go:{{ stereum_static.defaults.versions.geth }}
+    image: ethereum/client-go:{{ stereum_static.defaults.devnet.geth }}
     command: --datadir=/execution init /execution/genesis.json
     volumes:
       - "{{ working_dir }}/genesis/execution:/execution"
