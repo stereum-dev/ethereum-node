@@ -54,6 +54,7 @@ export async function useUpdateCheck() {
     let newAvailableUpdates = [];
     if (versions.latest && services?.length > 0) {
       services.forEach((service) => {
+        if (service.network === "devnet") return;
         if (!versions.latest[service.network] || !versions.latest[service.network][service.service]) service.network = "mainnet";
         if (!versions.latest[service.network] || !versions.latest[service.network][service.service]) service.network = "prater";
         if (versions.latest[service.network] && versions.latest[service.network][service.service]) {
