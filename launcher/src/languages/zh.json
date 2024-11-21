@@ -840,7 +840,10 @@
     "serch": "搜索",
     "serchFor": "搜索...",
     "addServer": "添加新的服务器连接",
-    "serverAccMang": "Server Management"
+    "serverAccMang": "Server Management",
+    "cstmServ": "CUSTOM SERVICE",
+    "create": "CREATE",
+    "addConfServ": "ADD A CONFIG SERVICE"
   },
   "oneClick": {
     "installedService": "已安装服务",
