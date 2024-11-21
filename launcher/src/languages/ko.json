@@ -144,7 +144,33 @@
     "p2pNet": "피어 투 피어 네트워크",
     "selConcensus": "합의 클라이언트 선택",
     "selExecution": "실행 클라이언트 선택",
-    "subsribeSubnet": "구독된 서브넷"
+    "subsribeSubnet": "구독된 서브넷",
+    "info": "INFO",
+    "machineNameIs": "Machine Name is {name}",
+    "machineIp": "Machine IP is {ip}",
+    "utcTime": "UTC Time is {time}",
+    "serverSetedTimeIs": "The time set for the server is {time}",
+    "cpuUsageIs": "CPU Usage is {usage}% at {time}",
+    "ramUsageIs": "RAM Usage is {usage} MB",
+    "ramTotalis": "Total RAM is {total} MB",
+    "receiveDataIs": "Receiving Data is {data} {unit}",
+    "transmitDataIs": "Transmitting Data is {data} {unit}",
+    "clientPairIndexIs": "Client Pair Index is {index}",
+    "totalClientPairs": "Total Client Pairs is {total}",
+    "connectValWidg": "CONNECTED VALIDATOR CLIENTS",
+    "keyImported": "in this validator client {imported} {key} {isAre} imported",
+    "portIs": "{name} port is {port} and protocol is {prot}",
+    "servicePort": "Service Ports",
+    "connectedPairsTo": "connected pairs to {client} is {peer}%",
+    "connectedPairs": "now there {isAre} {connected} connected pairs at {time}",
+    "peerNetwork": "PEER NETWORK",
+    "pOverTime": "Peers Over Time",
+    "currentEpochIs": "Current Epoch is {epoch}",
+    "currentSlotIs": "Current Slot is {slot}",
+    "correntSlotIndexIs": "Current Slot Index is {index}",
+    "connectedSubnets": "now there {isAre} {count} connected subnets",
+    "subscribedSubnets": "SUBSCRIBED SUBNETS",
+    "rpcDataReciv": "Data received via RPC averages {value} over time at {time}"
   },
   "taskManager": {
     "clickDisplay": "작업을 클릭하여 표시"
@@ -1068,5 +1094,8 @@
     "acc": "accept",
     "deny": "deny",
     "updateTo": "Updating Stereum Launcher to {version}"
+  },
+  "setupServicesWidget": {
+    "text": "total services on setup"
   }
 }
