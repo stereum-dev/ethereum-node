@@ -15,7 +15,7 @@
         </div>
       </div>
       <no-data
-        v-else-if="isConsensusMissing || !isConsensusRunning || prometheusIsOff"
+        v-else-if="isConsensusMissing || !isConsensusRunning || prometheusIsOff || selectedSetup?.network === 'devnet'"
         @mouseenter="cursorLocation = `${nodataMessage}`"
         @mouseleave="cursorLocation = ''"
       />
@@ -184,7 +184,9 @@ export default {
     getSetupNetwork() {
       let setupNet;
       const net = this.selectedSetup?.network;
-      if (net && this.networkList) {
+      if (net && net === "devnet") {
+        setupNet = "/img/icon/network-icons/devnet-circle.png";
+      } else if (net && this.networkList) {
         setupNet = this.networkList.find((network) => network.network === net);
       }
       return setupNet;

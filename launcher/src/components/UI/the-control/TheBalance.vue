@@ -1,6 +1,6 @@
 <template>
   <div class="balance-parent">
-    <NoData v-if="isConsensusMissing" />
+    <NoData v-if="isConsensusMissing || selectedSetup?.network === 'devnet'" />
     <div v-else class="wrapper">
       <div class="finalized-box">
         <div class="finalized-value" @mouseenter="cursorLocation = `${finEPOCH} `" @mouseleave="cursorLocation = ''">
@@ -17,10 +17,11 @@
 </template>
 <script>
 import NoData from "./NoData.vue";
-import { mapWritableState } from "pinia";
+import { mapWritableState, mapState } from "pinia";
 import { useFooter } from "@/store/theFooter";
-import { mapState } from "pinia";
+
 import { useControlStore } from "@/store/theControl";
+import { useSetups } from "@/store/setups";
 export default {
   components: {
     NoData,
@@ -37,6 +38,9 @@ export default {
     ...mapState(useControlStore, {
       balancestatus: "balancestatus",
       noDataFlag: "noDataFlag",
+    }),
+    ...mapState(useSetups, {
+      selectedSetup: "selectedSetup",
     }),
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
