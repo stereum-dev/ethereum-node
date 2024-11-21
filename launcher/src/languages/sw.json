@@ -840,7 +840,10 @@
     "serch": "Tafuta",
     "serchFor": "Tafuta...",
     "addServer": "ONGEZA UNGANISHO MPYA WA SEVA",
-    "serverAccMang": "Usimamizi wa Seva"
+    "serverAccMang": "Usimamizi wa Seva",
+    "cstmServ": "CUSTOM SERVICE",
+    "create": "CREATE",
+    "addConfServ": "ADD A CONFIG SERVICE"
   },
   "oneClick": {
     "installedService": "HUDUMA ZILIZOSAKINISHWA",
