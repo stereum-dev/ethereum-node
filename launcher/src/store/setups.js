@@ -13,6 +13,57 @@ export const useSetups = defineStore("setups", {
     clientPairsLength: 0,
     relatedValidators: null,
     relatedValidatorPairs: null,
+    //DEVNET NETWORK CONFIGURATION
+    uploadedGenesisConfig: null,
+    genesisFile: null,
+    devnetConfigData: {
+      network: "devnet",
+      setupName: "",
+      setupColor: "",
+      genesisConfig: null,
+
+      genesisChanged: false,
+      configYaml: "",
+      services: [],
+    },
+    devnetButtonDisabled: true,
+    genesisChanged: false,
+    isDevnetSetupModalActive: false,
+    currentStep: 1,
+    uploadedGenesisFile: null,
+
+    configYaml: `
+    CONFIG_NAME: interop
+    PRESET_BASE: interop
+
+    # Genesis
+    GENESIS_FORK_VERSION: 0x20000089
+
+    # Altair
+    ALTAIR_FORK_EPOCH: 0
+    ALTAIR_FORK_VERSION: 0x20000090
+
+    # Merge
+    BELLATRIX_FORK_EPOCH: 0
+    BELLATRIX_FORK_VERSION: 0x20000091
+    TERMINAL_TOTAL_DIFFICULTY: 0
+
+    # Capella
+    CAPELLA_FORK_EPOCH: 0
+    CAPELLA_FORK_VERSION: 0x20000092
+    MAX_WITHDRAWALS_PER_PAYLOAD: 16
+
+    # Deneb
+    DENEB_FORK_VERSION: 0x20000093
+    DENEB_FORK_EPOCH: 0
+
+    # Time parameters
+    SECONDS_PER_SLOT: 12
+    SLOTS_PER_EPOCH: 6
+
+    # Deposit contract
+    DEPOSIT_CONTRACT_ADDRESS: 0x4242424242424242424242424242424242424242
+    `,
 
     //Setup Node Page
     isConfigViewActive: false,
@@ -73,6 +124,18 @@ export const useSetups = defineStore("setups", {
       if (updatedSetup) {
         this.selectedSetup = updatedSetup;
       }
+    },
+    resetDevnetConfigData() {
+      this.devnetConfigData = {
+        network: "devnet",
+        setupName: "",
+        setupColor: "",
+        genesisConfig: null,
+        uploadedGenesisConfig: null,
+        genesisChanged: false,
+        configYaml: "",
+        services: [],
+      };
     },
   },
 });

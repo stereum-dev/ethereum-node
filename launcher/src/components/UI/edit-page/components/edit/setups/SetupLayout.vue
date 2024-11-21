@@ -38,7 +38,7 @@ const props = defineProps({
 const matchedNetworkIcon = computed(() => {
   const matchedNetwork = manageStore.networkList.find((network) => network.network === props.setup.network);
 
-  return matchedNetwork ? matchedNetwork.icon : "";
+  return matchedNetwork ? matchedNetwork.icon : "/img/icon/network-icons/devnet-circle.png";
 });
 
 const NodeConfigName = computed(() => {
@@ -51,6 +51,8 @@ const NodeConfigName = computed(() => {
     shortName = "HLS NODE CONFIG";
   } else if (matchedNetwork?.network === "optimism") {
     shortName = "OPITMISM CONFIG";
+  } else {
+    shortName = "NODE CONFIG";
   }
 
   return shortName;

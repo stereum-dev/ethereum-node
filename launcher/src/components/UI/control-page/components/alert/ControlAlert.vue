@@ -192,7 +192,7 @@
 
         <!-- csm red end -->
         <!-- csm green start -->
-        <template v-if="notifCsm && !alertShowState.includes('green')">
+        <template v-if="notifCsm && !alertShowState?.includes('green')">
           <div
             v-for="notif in notifCsm"
             :key="notif"
@@ -318,10 +318,11 @@
 import ControlService from "@/store/ControlService";
 import { useTaskManager } from "@/store/taskManager";
 import { useControlStore } from "@/store/theControl";
-import { mapWritableState } from "pinia";
+import { mapWritableState, mapState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useServices } from "@/store/services";
 import { useFooter } from "@/store/theFooter";
+import { useSetups } from "@/store/setups";
 export default {
   data() {
     return {
@@ -375,6 +376,9 @@ export default {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       newUpdates: "newUpdates",
+    }),
+    ...mapState(useSetups, {
+      selectedSetup: "selectedSetup",
     }),
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
@@ -569,7 +573,7 @@ export default {
     },
 
     async readService() {
-      const validators = this.installedServices.filter((i) => i.category === "validator");
+      const validators = this.installedServices?.filter((i) => i.category === "validator");
 
       if (validators && validators.length > 0 && validators[0].config) {
         const addresses = [];
@@ -584,12 +588,13 @@ export default {
             continue;
           }
           const pattern = validator.expertOptions[patternIndex].pattern;
-          const match = [...validator.yaml.match(new RegExp(pattern))][2];
-          if (match) {
-            validator.address = match; // Update the address property directly
+          const match = validator.yaml ? validator.yaml.match(new RegExp(pattern)) : null;
+
+          if (match && match.length > 2) {
+            validator.address = match[2]; // Update the address property directly
             addresses.push(validator);
           } else {
-            console.error("Could not find default-fee-recipient address in the service YAML for validator:", validator.name);
+            return;
           }
         }
         const notSetAddresses = addresses.filter((validator) => validator.address === "0x0000000000000000000000000000000000000000");

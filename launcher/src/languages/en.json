@@ -866,7 +866,10 @@
     "serch": "Search",
     "serchFor": "Search for...",
     "addServer": "ADD A NEW SERVER CONNECTION",
-    "serverAccMang": "Server Management"
+    "serverAccMang": "Server Management",
+    "cstmServ": "CUSTOM SERVICE",
+    "create": "CREATE",
+    "addConfServ": "ADD A CONFIG SERVICE"
   },
   "oneClick": {
     "installedService": "INSTALLED SERVICES",
