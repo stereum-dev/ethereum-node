@@ -840,7 +840,10 @@
     "serch": "Ara",
     "serchFor": "Şunun için ara...",
     "addServer": "YENİ BİR SUNUCU BAĞLANTISI EKLE",
-    "serverAccMang": "Server Management"
+    "serverAccMang": "Server Management",
+    "cstmServ": "CUSTOM SERVICE",
+    "create": "CREATE",
+    "addConfServ": "ADD A CONFIG SERVICE"
   },
   "oneClick": {
     "installedService": "KURULAN HİZMETLER",
