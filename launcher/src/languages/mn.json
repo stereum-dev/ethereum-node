@@ -840,7 +840,10 @@
     "serch": "Хайх",
     "serchFor": "Хайх...",
     "addServer": "ШИНЭ СЕРВЕР ХОЛБОЛТ НЭМЭХ",
-    "serverAccMang": "Server Management"
+    "serverAccMang": "Server Management",
+    "cstmServ": "CUSTOM SERVICE",
+    "create": "CREATE",
+    "addConfServ": "ADD A CONFIG SERVICE"
   },
   "oneClick": {
     "installedService": "СУУЛГАСАН СЕРВИСҮҮД",
