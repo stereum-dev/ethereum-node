@@ -7,6 +7,12 @@ export const useSetups = defineStore("setups", {
     editSetups: [],
     stakingSetups: [],
 
+    //select service pairs widget
+    selectedServicePairs: null,
+    currentPairIndex: 0,
+    clientPairsLength: 0,
+    relatedValidators: null,
+    relatedValidatorPairs: null,
     //DEVNET NETWORK CONFIGURATION
     uploadedGenesisConfig: null,
     genesisFile: null,

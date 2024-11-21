@@ -407,6 +407,10 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("getQRCode");
   }
 
+  async getCPUTemperature() {
+    return await this.promiseIpc.send("getCPUTemperature");
+  }
+
   async importRemoteKeys(args) {
     return await this.promiseIpc.send("importRemoteKeys", args);
   }
@@ -728,9 +732,18 @@ class ControlService extends EventEmitter {
     return this.promiseIpc.send("getNewLauncherVersion");
   }
 
+  async getSubnetSubs() {
+    return this.promiseIpc.send("getSubnetSubs");
+  }
+
   async deleteSlasherVolume(args) {
     return this.promiseIpc.send("deleteSlasherVolume", args);
   }
+
+  async fetchCurrentTimeZone(args) {
+    return this.promiseIpc.send("fetchCurrentTimeZone", args);
+  }
+
   async getCSMQueue(keysArray) {
     return this.promiseIpc.send("getCSMQueue", { keysArray });
   }

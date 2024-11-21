@@ -1,5 +1,5 @@
 <template>
-  <div class="alert-box_parent">
+  <div class="alert-box_parent rounded-md">
     <div class="alert-box">
       <div class="alert-box_header h-8 w-full flex justify-center items-center">
         <div class="alert-box_icons border border-gray-600 rounded-md bg-[#151618] w-3/4 h-full flex justify-center items-center pt-0.5">
@@ -683,24 +683,22 @@ export default {
   right: 0 !important;
 }
 .alert-box_parent {
-  width: 161px;
-  max-height: 333px;
-  height: 333px;
-  border-radius: 15px;
+  width: 100%;
+  max-height: 100%;
+  height: 100%;
   background-color: #264744;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 10px 5px;
+
   position: relative;
-  box-shadow: 0px 0px 5px 2px #001717;
   cursor: default;
 }
 .alert-box {
   display: flex;
-  height: 330px;
-  justify-content: space-between;
+  height: 100%;
+  width: 100%;
   align-items: center;
   flex-direction: column;
   padding: 5px;
@@ -748,9 +746,9 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  width: 140px;
-  max-height: 338px;
-  height: 338px;
+  width: 100%;
+
+  height: 92%;
   background: #23272a;
   border: 1px solid #707070;
   border-radius: 5px;
@@ -763,7 +761,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   width: 95%;
-  height: 13%;
+  height: 9%;
   background: #ffd924;
   border: 1px solid #707070;
   border-radius: 5px;
@@ -775,7 +773,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   width: 95%;
-  height: 13%;
+  height: 9%;
   background: rgb(173, 7, 7);
   border: 1px solid #707070;
   border-radius: 5px;
@@ -788,7 +786,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   width: 95%;
-  height: 13%;
+  height: 9%;
   background: #5f7e6a;
   border: 1px solid #707070;
   border-radius: 5px;
@@ -799,15 +797,15 @@ export default {
 }
 
 .icon-box {
-  width: 28%;
-  height: 95%;
+  width: 25%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .icon-box img {
-  width: 95%;
-  height: 99%;
+  width: 1.5rem;
+  height: 1.5rem;
 }
 .message-box {
   width: 90%;

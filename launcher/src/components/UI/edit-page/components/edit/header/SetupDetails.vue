@@ -1,5 +1,5 @@
 <template>
-  <div class="col-start-4 col-end-7 grid grid-cols-6 gap-1 items-center bg-[#151618] border h-full border-gray-600 rounded-md p-2">
+  <div class="grid grid-cols-6 gap-1 items-center bg-[#151618] border h-full border-gray-600 rounded-md">
     <SetupDropdown
       :list="props.list"
       @select-rename="selectRename"

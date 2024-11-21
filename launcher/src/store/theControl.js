@@ -3,10 +3,16 @@ import { defineStore } from "pinia";
 export const useControlStore = defineStore("theControl", {
   state: () => {
     return {
+      rpcPort: 0,
+      rpcReceivedData: [],
+      subnetSubs: [],
+      setupServices: 0,
+      pickeedService: "exeCons",
       currentConsensusIcon: "",
       currentExecutionIcon: "",
       synchronizationError: false,
       synchronizationErrorControl: false,
+      tempCPU: null,
       pageNumber: 1,
       consensusName: "",
       request: [],
@@ -15,6 +21,7 @@ export const useControlStore = defineStore("theControl", {
       currentSlotData: null,
       currentEpochData: null,
       currentResult: {},
+      slotIndex: 0,
       noDataFlag: false,
       ServerName: null,
       ipAddress: null,

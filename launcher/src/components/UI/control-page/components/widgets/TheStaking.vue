@@ -1,40 +1,42 @@
 <template>
-  <div class="staking-parent">
-    <div class="staking-box">
-      <div class="staking-ico">
-        <div class="staking-ico_container">
-          <img src="/img/icon/control-page-icons/key-eth.svg" alt="Key-icon" />
+  <div class="staking-parent relative">
+    <NoData
+      v-if="flagNoData || isValidatorMissing || relatedValidatorPairs?.network === 'devnet'"
+      @mouseenter="cursorLocation = `${nodataMessage}`"
+      @mouseleave="cursorLocation = ''"
+    />
+    <template v-else>
+      <div class="staking-box">
+        <div class="staking-ico">
+          <div class="staking-ico_container">
+            <img src="/img/icon/control-page-icons/key-eth.svg" alt="Key-icon" />
+          </div>
+          <span>STAKING</span>
         </div>
-        <span>STAKING</span>
-      </div>
 
-      <div class="staking-container">
-        <NoData
-          v-if="flagNoData || isValidatorMissing || selectedSetup?.network === 'devnet'"
-          @mouseenter="cursorLocation = `${nodataMessage}`"
-          @mouseleave="cursorLocation = ''"
-        />
-        <div v-else class="wrapper">
-          <div class="side-top">
-            <div class="top-value" @mouseenter="cursorLocation = `${ttlBal}`" @mouseleave="cursorLocation = ''">
-              <span>{{ formattedBalance }}</span>
+        <div class="staking-container">
+          <div class="wrapper">
+            <div class="side-top">
+              <div class="top-value" @mouseenter="cursorLocation = `${ttlBal}`" @mouseleave="cursorLocation = ''">
+                <span>{{ formattedBalance }}</span>
+              </div>
+              <div class="top-icon" @mouseenter="cursorLocation = `${currentNetwork?.name}`" @mouseleave="cursorLocation = ''">
+                <img :src="setSelectedCurrency" alt="coin-icon" />
+              </div>
             </div>
-            <div class="top-icon" @mouseenter="cursorLocation = `${currentNetwork?.name}`" @mouseleave="cursorLocation = ''">
-              <img :src="setSelectedCurrency" alt="coin-icon" />
-            </div>
-          </div>
-          <div class="side-bottom">
-            <div class="number-of-validators" @mouseenter="cursorLocation = `${enteredKeys}`" @mouseleave="cursorLocation = ''">
-              <span>{{ formattedValidatorNo }}</span>
-            </div>
-            <div class="number-of-validators_title">
-              <span>IMPORTED</span>
-              <span>VALIDATOR(s)</span>
+            <div class="side-bottom">
+              <div class="number-of-validators" @mouseenter="cursorLocation = `${enteredKeys}`" @mouseleave="cursorLocation = ''">
+                <span>{{ formattedValidatorNo }}</span>
+              </div>
+              <div class="number-of-validators_title">
+                <span>IMPORTED</span>
+                <span>VALIDATOR(s)</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </template>
   </div>
 </template>
 <script>
@@ -76,7 +78,8 @@ export default {
       nodataMessage: "nodataMessage",
     }),
     ...mapState(useSetups, {
-      selectedSetup: "selectedSetup",
+      relatedValidatorPairs: "relatedValidatorPairs",
+      selectedServicePairs: "selectedServicePairs",
     }),
     formattedBalance() {
       return this.totalBalance.toFixed(5);
@@ -90,7 +93,7 @@ export default {
     },
 
     setSelectedCurrency() {
-      switch (this.selectedSetup?.network) {
+      switch (this.relatedValidatorPairs?.network) {
         case "gnosis":
           return "/img/icon/control-page-icons/network-currency-icons/network-currency-icons-gnosis-mainnet.png";
         case "sepolia":
