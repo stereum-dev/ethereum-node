@@ -899,7 +899,6 @@ export class ServiceManager {
           new ServicePort("127.0.0.1", 8546, 8546, servicePortProtocol.tcp),
         ];
         service = ErigonService.buildByUserInput(args.network, ports, args.installDir + "/erigon");
-        service.switchImageTag(this.nodeConnection.settings.stereum.settings.arch);
         return service;
 
       case "LighthouseBeaconService":
