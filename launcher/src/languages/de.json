@@ -840,7 +840,10 @@
     "serch": "Suchen",
     "serchFor": "Suchen nach...",
     "addServer": "EINE NEUE SERVERVERBINDUNG HINZUFÜGEN",
-    "serverAccMang": "Server-Verwaltung"
+    "serverAccMang": "Server-Verwaltung",
+    "cstmServ": "CUSTOM SERVICE",
+    "create": "CREATE",
+    "addConfServ": "ADD A CONFIG SERVICE"
   },
   "oneClick": {
     "installedService": "INSTALLIERTE DIENSTE",
