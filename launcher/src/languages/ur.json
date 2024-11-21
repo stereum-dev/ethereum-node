@@ -840,7 +840,10 @@
     "serch": "تلاش کریں",
     "serchFor": "کے لیے تلاش کریں...",
     "addServer": "ایک نیا سرور کنکشن شامل کریں",
-    "serverAccMang": "سرور مینجمنٹ"
+    "serverAccMang": "سرور مینجمنٹ",
+    "cstmServ": "CUSTOM SERVICE",
+    "create": "CREATE",
+    "addConfServ": "ADD A CONFIG SERVICE"
   },
   "oneClick": {
     "installedService": "نصب خدمات",
