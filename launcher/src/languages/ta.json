@@ -840,7 +840,10 @@
     "serch": "தேடு",
     "serchFor": "இதற்காக தேடு...",
     "addServer": "புதிய சர்வர் இணைப்பை சேர்க்கவும்",
-    "serverAccMang": "சர்வர் மேலாண்மை"
+    "serverAccMang": "சர்வர் மேலாண்மை",
+    "cstmServ": "CUSTOM SERVICE",
+    "create": "CREATE",
+    "addConfServ": "ADD A CONFIG SERVICE"
   },
   "oneClick": {
     "installedService": "நிறுவப்பட்ட சேவைகள்",
