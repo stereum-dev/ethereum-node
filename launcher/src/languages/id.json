@@ -840,7 +840,10 @@
     "serch": "Cari",
     "serchFor": "Cari...",
     "addServer": "TAMBAHKAN KONEKSI SERVER BARU",
-    "serverAccMang": "Manajemen Server"
+    "serverAccMang": "Manajemen Server",
+    "cstmServ": "CUSTOM SERVICE",
+    "create": "CREATE",
+    "addConfServ": "ADD A CONFIG SERVICE"
   },
   "oneClick": {
     "installedService": "LAYANAN YANG TERINSTAL",
