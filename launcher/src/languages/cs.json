@@ -840,7 +840,10 @@
     "serch": "Hledat",
     "serchFor": "Hledat...",
     "addServer": "PŘIDAT NOVÉ PŘIPOJENÍ K SERVERU",
-    "serverAccMang": "Server Management"
+    "serverAccMang": "Server Management",
+    "cstmServ": "CUSTOM SERVICE",
+    "create": "CREATE",
+    "addConfServ": "ADD A CONFIG SERVICE"
   },
   "oneClick": {
     "installedService": "INSTALOVANÉ SLUŽBY",
