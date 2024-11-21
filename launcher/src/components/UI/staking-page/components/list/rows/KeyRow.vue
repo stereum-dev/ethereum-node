@@ -9,7 +9,7 @@ import { computed } from 'vue';
     @click="selectKey(props.item)"
   >
     <div
-      class="col-start-1 col-span-1 self-center overflow-hidden flex justify-start items-center"
+      class="col-start-1 col-span-2 self-center overflow-hidden flex justify-start items-center space-x-2"
     >
       <div
         class="w-6 h-6 rounded-full cursor-pointer p-[2px]"
@@ -32,14 +32,34 @@ import { computed } from 'vue';
           @mousedown.prevent
         />
       </div>
+      <div
+        class="w-6 h-6 rounded-full cursor-pointer p-[2px]"
+        @mouseenter="footerStore.cursorLocation = `${props.item.dvt ? 'DVT Key' : ''}`"
+        @mouseleave="footerStore.cursorLocation = ''"
+      >
+        <img
+          v-if="checkValidatorKeyType !== null"
+          class="w-full h-full"
+          :src="
+            checkValidatorKeyType === 'csm'
+              ? '/img/icon/staking-page-icons/csm-key.png'
+              : checkValidatorKeyType === 'obol'
+              ? '/img/icon/staking-page-icons/obol-key.png'
+              : '/img/icon/staking-page-icons/ssv-key.png'
+          "
+          alt="DVT Key"
+          @mousedown.prevent
+        />
+      </div>
     </div>
+
     <div
-      class="col-start-2 col-end-8 self-center overflow-hidden flex justify-start items-center"
+      class="col-start-3 col-end-8 self-center overflow-hidden flex justify-start items-center"
       @mouseenter="footerStore.cursorLocation = `${props.item.key}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
       <span
-        class="text-center font-semibold text-xs"
+        class="text-center font-semibold text-[10px]"
         :class="props.item?.selected ? 'text-gray-800' : 'text-gray-300'"
         >{{ displayText }}</span
       >
@@ -55,7 +75,7 @@ import { computed } from 'vue';
     />
 
     <span
-      class="col-start-9 col-end-12 self-center text-center text-xs text-gray-300 overflow-hidden"
+      class="col-start-9 col-end-12 self-center text-center text-[10px] text-gray-300 overflow-hidden"
       :class="props.item.selected ? 'text-gray-800' : 'text-gray-300'"
       :style="{ color: getStatusColor }"
       @mouseenter="
@@ -76,7 +96,7 @@ import { computed } from 'vue';
     </div>
 
     <span
-      class="col-start-13 col-end-17 self-center text-center text-xs text-gray-300 overflow-hidden"
+      class="col-start-13 col-end-17 self-center text-center text-[10px] text-gray-300 overflow-hidden"
       :class="props.item.selected ? 'text-gray-800' : 'text-gray-300'"
       @mouseenter="footerStore.cursorLocation = `${balExpl}`"
       @mouseleave="footerStore.cursorLocation = ''"
@@ -88,11 +108,7 @@ import { computed } from 'vue';
       @mousedown.prevent
     >
       <div
-        v-if="
-          getValidatorClients.service !== 'CharonService' &&
-          getValidatorClients.service !== 'SSVNetworkService' &&
-          getValidatorClients.service !== 'LCOMService'
-        "
+        v-if="getValidatorClients.service !== 'LCOMService'"
         class="col-span-1 w-full h-full rounded-md justify-self-center flex justify-center items-center"
         @mouseenter="footerStore.cursorLocation = `Beaconcha.in`"
         @mouseleave="footerStore.cursorLocation = ''"
@@ -150,7 +166,11 @@ import { computed } from 'vue';
         />
       </div>
       <div
-        v-if="getValidatorClients.service !== 'LCOMService'"
+        v-if="
+          getValidatorClients.service !== 'LCOMService' &&
+          getValidatorClients.service !== 'CharonService' &&
+          getValidatorClients.service !== 'SSVNetworkService'
+        "
         class="col-span-1 w-full h-full rounded-md justify-self-center flex justify-center items-center"
         @mouseenter="footerStore.cursorLocation = `${removVal}`"
         @mouseleave="footerStore.cursorLocation = ''"
@@ -186,12 +206,12 @@ import { computed } from 'vue';
 </template>
 
 <script setup>
-import { computed } from "vue";
-import { useStakingStore } from "@/store/theStaking";
-import { useFooter } from "@/store/theFooter";
 import i18n from "@/includes/i18n";
-import { useSetups } from "@/store/setups";
 import { useServices } from "@/store/services";
+import { useSetups } from "@/store/setups";
+import { useFooter } from "@/store/theFooter";
+import { useStakingStore } from "@/store/theStaking";
+import { computed } from "vue";
 
 const props = defineProps({
   item: {
@@ -341,6 +361,23 @@ const getValidatorClients = computed(() => {
     .filter((service) => service.category === "validator")
     .find((service) => service.config.serviceID === props.item.validatorID);
   return clients;
+});
+
+const checkValidatorKeyType = computed(() => {
+  const { item } = props;
+  if (!item?.dvt) return null;
+
+  const service = serviceStore.installedServices.find(
+    (service) => service?.config?.serviceID === item?.validatorID
+  );
+
+  const serviceKeyTypes = {
+    LCOMService: "csm",
+    SSVNetworkService: "ssv",
+    CharonService: "obol",
+  };
+
+  return serviceKeyTypes[service?.service] || null;
 });
 
 //Methods
