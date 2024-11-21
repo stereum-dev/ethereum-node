@@ -840,7 +840,10 @@
     "serch": "Поиск",
     "serchFor": "Искать...",
     "addServer": "ДОБАВИТЬ НОВОЕ ПОДКЛЮЧЕНИЕ К СЕРВЕРУ",
-    "serverAccMang": "Server Management"
+    "serverAccMang": "Server Management",
+    "cstmServ": "CUSTOM SERVICE",
+    "create": "CREATE",
+    "addConfServ": "ADD A CONFIG SERVICE"
   },
   "oneClick": {
     "installedService": "УСТАНОВЛЕННЫЕ СЛУЖБЫ",
