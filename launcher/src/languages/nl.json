@@ -840,7 +840,10 @@
     "serch": "Zoeken",
     "serchFor": "Zoeken naar...",
     "addServer": "VOEG EEN NIEUWE SERVERVERBINDING TOE",
-    "serverAccMang": "Server Management"
+    "serverAccMang": "Server Management",
+    "cstmServ": "CUSTOM SERVICE",
+    "create": "CREATE",
+    "addConfServ": "ADD A CONFIG SERVICE"
   },
   "oneClick": {
     "installedService": "GEÏNSTALLEERDE DIENSTEN",
