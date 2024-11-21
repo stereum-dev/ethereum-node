@@ -840,7 +840,10 @@
     "serch": "Претрага",
     "serchFor": "Тражи за...",
     "addServer": "ДОДАЈ НОВУ ВЕЗУ СЕРВЕРА",
-    "serverAccMang": "Server Management"
+    "serverAccMang": "Server Management",
+    "cstmServ": "CUSTOM SERVICE",
+    "create": "CREATE",
+    "addConfServ": "ADD A CONFIG SERVICE"
   },
   "oneClick": {
     "installedService": "ИНСТАЛИРАНЕ УСЛУГЕ",
