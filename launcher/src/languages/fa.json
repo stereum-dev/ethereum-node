@@ -840,7 +840,10 @@
     "serch": "جستجو",
     "serchFor": "جستجو برای...",
     "addServer": "اضافه کردن یک اتصال سرور جدید",
-    "serverAccMang": "Server Management"
+    "serverAccMang": "Server Management",
+    "cstmServ": "CUSTOM SERVICE",
+    "create": "CREATE",
+    "addConfServ": "ADD A CONFIG SERVICE"
   },
   "oneClick": {
     "installedService": "خدمات نصب شده",
