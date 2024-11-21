@@ -840,7 +840,10 @@
     "serch": "検索",
     "serchFor": "検索...",
     "addServer": "新しいサーバー接続を追加",
-    "serverAccMang": "Server Management"
+    "serverAccMang": "Server Management",
+    "cstmServ": "CUSTOM SERVICE",
+    "create": "CREATE",
+    "addConfServ": "ADD A CONFIG SERVICE"
   },
   "oneClick": {
     "installedService": "インストールされたサービス",
