@@ -840,7 +840,10 @@
     "serch": "Tìm kiếm",
     "serchFor": "Tìm kiếm...",
     "addServer": "THÊM MỘT KẾT NỐI MÁY CHỦ MỚI",
-    "serverAccMang": "Server Management"
+    "serverAccMang": "Server Management",
+    "cstmServ": "CUSTOM SERVICE",
+    "create": "CREATE",
+    "addConfServ": "ADD A CONFIG SERVICE"
   },
   "oneClick": {
     "installedService": "DỊCH VỤ ĐÃ CÀI ĐẶT",
