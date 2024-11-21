@@ -140,7 +140,7 @@ export class NodeUpdates {
       const res = await this.nodeConnection.sshService.exec(`lsb_release -d | awk '{print $3}'`);
       return res.stdout;
     } catch (err) {
-      log.error("Error occurred during get count pd updating os packages:\n", err);
+      log.error("Error occurred during get count of updating OS packages:\n", err);
     }
   }
 
@@ -154,7 +154,7 @@ export class NodeUpdates {
 
       return res.stdout;
     } catch (err) {
-      log.error("Error occurred during get count pd updating os packages:\n", err);
+      log.error("Error occurred during get count of updating OS packages:\n", err);
     }
   }
 
