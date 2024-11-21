@@ -1,7 +1,13 @@
 <template>
   <div class="Sync-parent flex w-full h-full justify-center items-center relative">
     <no-data
-      v-if="!setupsStore?.selectedServicePairs || !controlStore.syncstatus.data || isConsensusMissing || footerStore.prometheusIsOff"
+      v-if="
+        !setupsStore?.selectedServicePairs ||
+        !controlStore.syncstatus.data ||
+        isConsensusMissing ||
+        footerStore.prometheusIsOff ||
+        setupsStore?.selectedServicePairs?.network === 'devnet'
+      "
     />
     <template v-else>
       <div class="sync-icon w-1/4 h-full flex flex-col justify-center items-center">

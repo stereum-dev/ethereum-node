@@ -1,7 +1,13 @@
 <template>
   <div class="amsterdam-parent flex w-full h-full justify-center items-center relative">
     <no-data
-      v-if="!setupsStore.selectedServicePairs || isConsensusMissing || !footerStore.isConsensusRunning || footerStore.prometheusIsOff"
+      v-if="
+        !setupsStore.selectedServicePairs ||
+        isConsensusMissing ||
+        !footerStore.isConsensusRunning ||
+        footerStore.prometheusIsOff ||
+        setupsStore?.selectedServicePairs?.network === 'devnet'
+      "
     />
     <template v-else>
       <div

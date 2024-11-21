@@ -662,8 +662,6 @@ const onDrop = (event) => {
 //Confirm Adding service
 
 const addServiceHandler = (item) => {
-  console.log("item", item);
-
   if (item.client.service === "CustomService" && !item.customConfigReady) {
     manageStore.customConfig.installDir = item.installDir;
     clientToInstall.value.configPanel = true;
@@ -685,8 +683,6 @@ const addServiceHandler = (item) => {
     ports: item.ports,
     volumes: item.volumes,
   };
-
-  console.log("dataObject", dataObject);
 
   if (item.client.service === "ExternalExecutionService") {
     dataObject.source = item.client.config?.source;

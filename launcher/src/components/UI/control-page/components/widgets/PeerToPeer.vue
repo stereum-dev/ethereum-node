@@ -1,7 +1,12 @@
 <template>
   <div class="peer2peerParent flex w-full h-full justify-center items-center relative">
     <no-data
-      v-if="!setupStore?.selectedServicePairs || isConsensusMissing || !footerStore.isConsensusRunning"
+      v-if="
+        !setupStore?.selectedServicePairs ||
+        isConsensusMissing ||
+        !footerStore.isConsensusRunning ||
+        setupStore?.selectedServicePairs?.network === 'devnet'
+      "
       @mouseenter="footerStore.cursorLocation = footerStore.nodataMessage"
       @mouseleave="footerStore.cursorLocation = ''"
     />

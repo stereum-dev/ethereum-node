@@ -1,11 +1,11 @@
 <template>
-  <div class="service-ports-parent w-full h-full flex flex-col justify-center items-center relative">
+  <div class="service-ports-parent w-full h-full flex flex-col justify-center items-center relative z-10">
     <NoData v-if="!setupStore?.selectedServicePairs" />
     <template v-else>
       <div class="widget-name w-full h-1/5 flex justify-center items-center text-gray-200 uppercase font-semibold text-[55%]">
         {{ t("controlPage.servicePort") }}
       </div>
-      <div class="widget-box w-full h-4/5 flex flex-col gap-1 p-1 justify-start items-center">
+      <div class="widget-box w-full h-4/5 flex flex-col gap-1 p-1 justify-start items-center overflow-y-auto">
         <div
           v-for="portData in matchingPorts"
           :key="portData.uniqueKey"
@@ -80,3 +80,12 @@ const clearCursorLocation = () => {
   footerStore.cursorLocation = "";
 };
 </script>
+<style>
+.custom-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.custom-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+</style>

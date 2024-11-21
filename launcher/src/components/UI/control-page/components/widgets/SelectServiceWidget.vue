@@ -12,7 +12,7 @@
           </div>
 
           <div class="arrow-box flex justify-center items-center w-[10%] h-full text-gray-200 text-lg font-semibold uppercase">
-            <ServiceArrow direction="next" :class="{ 'rotate-[270deg]': isOpen, 'rotate-90': !isOpen }" />
+            <ServiceArrow direction="next" :class="{ 'rotate-[270deg]': isOpen, 'rotate-90': !isOpen }" class="z-10" />
           </div>
         </div>
 
@@ -35,7 +35,7 @@
       </div>
 
       <div v-if="controlStore.pickedService === 'vld'" class="h-1/2 w-full flex justify-center items-center">
-        <ServiceArrow v-if="filteredValidatorServices.length > 1" direction="prev" @prev="prevValidator" />
+        <ServiceArrow v-if="filteredValidatorServices.length > 1" direction="prev" class="z-10" @prev="prevValidator" />
         <div class="validator-info w-4/5 h-full flex justify-center items-center">
           <ServiceIcon
             :icon="selectedValidatorService?.icon || '/img/icon/stereum-icons/stereum-logo.png'"
@@ -54,23 +54,23 @@
           </div>
           <ServiceIcon icon="/img/icon/control-page-icons/key-eth.svg" alt-text="key" />
         </div>
-        <ServiceArrow v-if="filteredValidatorServices.length > 1" direction="next" @next="nextValidator" />
+        <ServiceArrow v-if="filteredValidatorServices.length > 1" direction="next" class="z-10" @next="nextValidator" />
       </div>
 
       <div v-else class="h-1/2 w-full flex justify-center items-center">
-        <ServiceArrow v-if="servicePairs.length > 1" direction="prev" @prev="prevPair" />
+        <ServiceArrow v-if="servicePairs.length > 1" direction="prev" class="z-10" @prev="prevPair" />
         <div class="pairs-info w-4/5 h-full flex justify-center items-center">
           <ServiceDetails :service="selectedPair?.executionService" service-type="exec" />
           <ServiceDetails :service="selectedPair?.consensusService" service-type="cons" />
         </div>
-        <ServiceArrow v-if="servicePairs.length > 1" direction="next" @next="nextPair" />
+        <ServiceArrow v-if="servicePairs.length > 1" direction="next" class="z-10" @next="nextPair" />
       </div>
     </template>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, onMounted } from "vue";
 import { useControlStore } from "@/store/theControl";
 import { useSetups } from "@/store/setups";
 import { useStakingStore } from "@/store/theStaking";
@@ -90,6 +90,10 @@ const currentIndex = ref(0);
 
 const selectedServiceLabel = computed(() => {
   return controlStore.pickedService === "exeCons" ? "EXECUTION & CONSENSUS CLIENTS" : "VALIDATOR CLIENT";
+});
+
+onMounted(() => {
+  controlStore.pickedService = "exeCons";
 });
 
 const servicePairs = computed(() => {

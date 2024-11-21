@@ -1,6 +1,6 @@
 <template>
   <div class="peers-over-time_parent flex w-full h-full justify-center items-center">
-    <NoData v-if="loading" />
+    <NoData v-if="loading || setupStore?.selectedServicePairs?.network === 'devnet'" />
     <template v-else>
       <div class="peers-over-time_ico w-1/4 h-full flex flex-col justify-center items-center">
         <div class="peers-over-time_ico_container flex justify-center items-center w-full h-3/4">
