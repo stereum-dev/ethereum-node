@@ -840,7 +840,10 @@
     "serch": "శోధన",
     "serchFor": "కోసం శోధించండి...",
     "addServer": "కొత్త సర్వర్ కనెక్షన్ జోడించండి",
-    "serverAccMang": "సర్వర్ నిర్వహణ"
+    "serverAccMang": "సర్వర్ నిర్వహణ",
+    "cstmServ": "CUSTOM SERVICE",
+    "create": "CREATE",
+    "addConfServ": "ADD A CONFIG SERVICE"
   },
   "oneClick": {
     "installedService": "ఇన్‌స్టాల్ చేయబడిన సేవలు",
