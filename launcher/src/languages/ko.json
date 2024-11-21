@@ -840,7 +840,10 @@
     "serch": "검색",
     "serchFor": "검색...",
     "addServer": "새 서버 연결 추가",
-    "serverAccMang": "서버 관리"
+    "serverAccMang": "서버 관리",
+    "cstmServ": "CUSTOM SERVICE",
+    "create": "CREATE",
+    "addConfServ": "ADD A CONFIG SERVICE"
   },
   "oneClick": {
     "installedService": "설치된 서비스",
