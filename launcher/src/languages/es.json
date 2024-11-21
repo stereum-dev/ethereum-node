@@ -840,7 +840,10 @@
     "serch": "Buscar",
     "serchFor": "Buscar por...",
     "addServer": "AÑADIR UNA NUEVA CONEXIÓN DE SERVIDOR",
-    "serverAccMang": "Server Management"
+    "serverAccMang": "Server Management",
+    "cstmServ": "CUSTOM SERVICE",
+    "create": "CREATE",
+    "addConfServ": "ADD A CONFIG SERVICE"
   },
   "oneClick": {
     "installedService": "SERVICIOS INSTALADOS",
