@@ -63,6 +63,21 @@
           >
             {{ $t("multiServer.saveServer") }}
           </div>
+          <img
+            class="w-7 hover:scale-110 active:scale-100 transition-all ease-in-out duration-200 cursor-pointer self-center border-4 border-gray-400 rounded-full shadow-md shadow-[#141414]"
+            src="/img/icon/server-management-icons/plus-icon.png"
+            alt="icon"
+            @mousedown.prevent
+            @mouseenter="(expHovered = true), (footerStore.cursorLocation = `${t('loginForm.save')}`)"
+            @mouseleave="(expHovered = false), (footerStore.cursorLocation = '')"
+            @click="exportConnections"
+          />
+          <div
+            v-if="expHovered"
+            class="absolute -top-11 -right-5 w-28 rounded-sm uppercase bg-[#202632] px-3 py-2 text-center text-xs font-medium text-white outline-none"
+          >
+            export
+          </div>
         </div>
       </div>
       <div class="col-start-1 col-end-7 row-start-2 row-span-1 grid grid-cols-12 grid-rows-3 mr-1">
@@ -272,6 +287,8 @@ import ControlService from "@/store/ControlService";
 import { useRouter } from "vue-router";
 import { useFooter } from "@/store/theFooter";
 import i18n from "@/includes/i18n";
+import JSZip from "jszip";
+import { saveAs } from "file-saver";
 
 const t = i18n.global.t;
 
@@ -293,6 +310,7 @@ const sshError = ref("");
 const devices = ref([]);
 const removeHovered = ref(false);
 const addHovered = ref(false);
+const expHovered = ref(false);
 const isFormValid = ref(false);
 const useSSHKey = ref(false);
 const usePassword = ref(false);
@@ -332,6 +350,16 @@ const addButtonDisabled = computed(() => {
 const removeButtonDisabled = computed(() => {
   return !serverStore.selectedServerToConnect;
 });
+
+const exportConnections = async () => {
+  const zip = new JSZip();
+  const conectionsJSON = JSON.stringify(serverStore.connections);
+  zip.file("connections.json", conectionsJSON);
+
+  const blob = await zip.generateAsync({ type: "blob" });
+
+  saveAs(blob, "connections.zip");
+};
 
 //*********** Watchers ***********//
 
