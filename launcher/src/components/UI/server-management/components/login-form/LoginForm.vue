@@ -4,6 +4,7 @@
   >
     <div class="w-full h-full col-start-1 col-span-full row-start-1 row-span-1 flex justify-start items-center">
       <span class="text-md font-semibold text-gray-300 uppercase">Login to server</span>
+      <input type="file" @change="importConnections" />
     </div>
     <form
       class="w-full h-full col-start-1 col-span-full row-start-3 row-span-full grid grid-cols-12 grid-rows-6 space-y-1"
@@ -298,7 +299,7 @@ const footerStore = useFooter();
 const serverStore = useServers();
 const router = useRouter();
 
-const { add } = useServerLogin();
+const { add, loadStoredConnections } = useServerLogin();
 
 //Refs
 
@@ -359,6 +360,46 @@ const exportConnections = async () => {
   const blob = await zip.generateAsync({ type: "blob" });
 
   saveAs(blob, "connections.zip");
+};
+
+const importConnections = async (event) => {
+  const file = event.target.files[0];
+  if (!file) {
+    return;
+  }
+
+  const zip = new JSZip();
+  try {
+    const connect = await file.arrayBuffer();
+
+    const zipContent = await zip.loadAsync(connect);
+
+    const connectionsFile = zipContent.file("connections.json");
+    if (!connectionsFile) {
+      alert("No connections.json file found in the zip.");
+      return;
+    }
+
+    const jsonData = await connectionsFile.async("string");
+
+    console.log("jsonData======>", jsonData);
+
+    // Parse the JSON data
+    const newConnections = JSON.parse(jsonData);
+
+    if (Array.isArray(newConnections) && newConnections.length > 0) {
+      // Clear existing connections and replace with new ones
+      serverStore.savedServers.savedConnections.splice(0, serverStore.connections.length, ...newConnections);
+      console.log("seaved savedServers", serverStore.savedServers);
+      console.log("Updated connections:", serverStore.connections);
+    } else {
+      console.error("Invalid or empty connections data.");
+    }
+
+    await loadStoredConnections();
+  } catch (error) {
+    console.error("An error occurred:", error);
+  }
 };
 
 //*********** Watchers ***********//

@@ -62,7 +62,6 @@ export const useServerLogin = () => {
       savedConnections = savedConnections.concat(storageSavedConnections.savedConnections);
     }
     serverStore.connections = savedConnections;
-    console.log("Connections loaded:", serverStore.connections);
   };
 
   const writeSettings = async () => {
