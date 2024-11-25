@@ -1,58 +1,45 @@
 <template>
   <div
-    class="w-full h-full max-h-7 col-start-1 col-span-full row-span-1 border border-gray-500 rounded-full grid grid-cols-6 bg-[#313539] items-center p-[1px]"
-    @mouseenter="footerStore.cursorLocation = `${blockProdreward}`"
-    @mouseleave="footerStore.cursorLocation = ''"
+    class="w-full h-full max-h-7 col-start-1 col-span-full row-span-1 border border-gray-600 rounded-full grid grid-cols-6 bg-[#2a2c30] items-center p-[1px]"
   >
     <div
-      class="h-full col-start-1 col-end-3 self-center flex justify-start items-center px-1"
+      class="h-full col-start-1 col-end-4 self-center flex justify-start items-center px-2 rounded-l-full"
     >
-      <span class="text-[7px] text-amber-300 font-normal font-sans text-left"
+      <span class="text-[10px] text-amber-300 font-normal font-sans text-left"
         >IS PRIVATE</span
       >
     </div>
     <div
-      class="w-full h-full col-start-3 col-span-full rounded-r-full self-center flex justify-center items-center bg-[#151618] px-1"
+      class="w-full h-full col-start-4 col-span-full rounded-r-full self-center flex justify-center items-center bg-[#151618] px-1"
     >
-      <span class="text-2xs text-gray-300 font-semibold">FALSE</span>
+      <span class="text-2xs font-semibold" :class="getStatusColor">{{
+        getPrivateText
+      }}</span>
     </div>
   </div>
 </template>
+
 <script setup>
-import i18n from "@/includes/i18n";
-import { useFooter } from "@/store/theFooter";
+import { computed } from "vue";
+const getPrivateValue = computed(() => {
+  return true;
+});
 
-const t = i18n.global.t;
+const getPrivateText = computed(() => {
+  if (getPrivateValue.value) {
+    return "YES";
+  } else {
+    return "NO";
+  }
+});
 
-const footerStore = useFooter();
-
-const blockProdreward = t("displayValidator.blockProdreward");
-
-// const stakingStore = useStakingStore();
-// const intervalID = ref(null);
-// const lastSlotChecked = ref(0);
-// const totalRewards = ref(0);
-
-// watchEffect(() => {
-//   if (stakingStore.secondsPerSlot > 0 && intervalID.value == null) {
-//     intervalID.value = setInterval(() => {
-//       if (stakingStore.currentSlot != lastSlotChecked.value) {
-//         if (stakingStore.currentSlot % stakingStore.slotsPerEpoch == 0)
-//           totalRewards.value = 0;
-//         lastSlotChecked.value = stakingStore.currentSlot;
-//         ControlService.getBlockRewards(lastSlotChecked.value).then((data) => {
-//           if (
-//             data?.proposer_index &&
-//             stakingStore.keys.map((k) => k.index).includes(data.proposer_index)
-//           )
-//             totalRewards.value += parseInt(data.total);
-//         });
-//       }
-//     }, 1000);
-//   }
-// });
-
-// onUnmounted(() => {
-//   clearInterval(intervalID.value);
-// });
+const getStatusColor = computed(() => {
+  let clr;
+  if (!getPrivateValue.value) {
+    clr = "text-green-500";
+  } else {
+    clr = "text-red-500";
+  }
+  return clr;
+});
 </script>

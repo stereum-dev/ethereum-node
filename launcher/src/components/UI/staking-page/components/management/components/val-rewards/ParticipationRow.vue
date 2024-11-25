@@ -12,7 +12,14 @@
     <div
       class="w-full h-full col-start-4 col-span-full rounded-r-full self-center flex justify-center items-center bg-[#151618] px-1"
     >
-      <span class="text-2xs text-gray-300 font-semibold">4/4</span>
+      <span class="text-2xs text-gray-300 font-semibold">{{ getObolParticipation }}</span>
     </div>
   </div>
 </template>
+
+<script setup>
+import { computed } from "vue";
+const getObolParticipation = computed(() => {
+  return "4/4";
+});
+</script>
