@@ -72,6 +72,14 @@ class ControlService extends EventEmitter {
     await this.promiseIpc.send("setApikey", args);
   }
 
+  async idleTimerCheck(timerStop, win) {
+    return await this.promiseIpc.send("idleTimerCheck", { timerStop, win });
+  }
+
+  async setIdleTime(args) {
+    return await this.promiseIpc.send("setIdleTime", args);
+  }
+
   async readConfig() {
     return await this.promiseIpc.send("readConfig");
   }
@@ -399,6 +407,10 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("getQRCode");
   }
 
+  async getCPUTemperature() {
+    return await this.promiseIpc.send("getCPUTemperature");
+  }
+
   async importRemoteKeys(args) {
     return await this.promiseIpc.send("importRemoteKeys", args);
   }
@@ -676,6 +688,26 @@ class ControlService extends EventEmitter {
     return this.promiseIpc.send("readGasConfigFile", args);
   }
 
+  async writeGenesisJsonDevnet(args) {
+    return this.promiseIpc.send("writeGenesisJsonDevnet", args);
+  }
+
+  async writeConfigYamlDevnet(args) {
+    return this.promiseIpc.send("writeConfigYamlDevnet", args);
+  }
+
+  async initGenesis() {
+    return this.promiseIpc.send("initGenesis");
+  }
+
+  async removeConfigGenesisCopy() {
+    return this.promiseIpc.send("removeConfigGenesisCopy");
+  }
+
+  async startServicesForSetup(args) {
+    return this.promiseIpc.send("startServicesForSetup", args);
+  }
+
   async handleOTPChange(args) {
     return this.promiseIpc.send("handleOTPChange", args);
   }
@@ -683,6 +715,7 @@ class ControlService extends EventEmitter {
   async fetchObolCharonAlerts() {
     return this.promiseIpc.send("fetchObolCharonAlerts");
   }
+
   async fetchCsmAlerts() {
     return this.promiseIpc.send("fetchCsmAlerts");
   }
@@ -699,8 +732,20 @@ class ControlService extends EventEmitter {
     return this.promiseIpc.send("getNewLauncherVersion");
   }
 
+  async getSubnetSubs() {
+    return this.promiseIpc.send("getSubnetSubs");
+  }
+
   async deleteSlasherVolume(args) {
     return this.promiseIpc.send("deleteSlasherVolume", args);
+  }
+
+  async fetchCurrentTimeZone(args) {
+    return this.promiseIpc.send("fetchCurrentTimeZone", args);
+  }
+
+  async getCSMQueue(keysArray) {
+    return this.promiseIpc.send("getCSMQueue", { keysArray });
   }
 }
 if (!instance) {

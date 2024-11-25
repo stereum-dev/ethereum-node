@@ -17,6 +17,7 @@ import { SSHService } from "./backend/SSHService.js";
 import path from "path";
 import { readFileSync } from "fs";
 import url from "url";
+import checkSigningKeys from "./backend/web3/CSM.js";
 const isDevelopment = process.env.NODE_ENV !== "production";
 const nodeConnection = new NodeConnection();
 const storageService = new StorageService();
@@ -101,6 +102,15 @@ ipcMain.handle("closeTunnels", async () => {
 ipcMain.handle("logout", async () => {
   await monitoring.logout();
   return await nodeConnection.logout();
+});
+
+ipcMain.handle("idleTimerCheck", async (event, args) => {
+  const current_window = event.sender;
+  return await monitoring.idleTimerCheck(args.timerStop, current_window);
+});
+
+ipcMain.handle("setIdleTime", async (event, arg) => {
+  return await monitoring.setIdleTime(arg);
 });
 
 // userData storage
@@ -445,6 +455,10 @@ ipcMain.handle("writePrometheusConfig", async (event, args) => {
   return await nodeConnection.writePrometheusConfig(args.serviceID, args.config);
 });
 
+ipcMain.handle("getCPUTemperature", async () => {
+  return await monitoring.getCPUTemperature();
+});
+
 ipcMain.handle("getValidatorStats", async (event, args) => {
   return await monitoring.getValidatorStats(args);
 });
@@ -681,6 +695,26 @@ ipcMain.handle("checkConnectionQuality", async (event, args) => {
   return await nodeConnection.sshService.checkConnectionQuality(args);
 });
 
+ipcMain.handle("writeGenesisJsonDevnet", async (event, args) => {
+  return await serviceManager.writeGenesisJsonDevnet(args);
+});
+
+ipcMain.handle("writeConfigYamlDevnet", async (event, args) => {
+  return await serviceManager.writeConfigYamlDevnet(args);
+});
+
+ipcMain.handle("initGenesis", async () => {
+  return await serviceManager.initGenesis();
+});
+
+ipcMain.handle("removeConfigGenesisCopy", async () => {
+  return await serviceManager.removeConfigGenesisCopy();
+});
+
+ipcMain.handle("startServicesForSetup", async (event, args) => {
+  return await serviceManager.startServicesForSetup(args);
+});
+
 ipcMain.handle("startShell", async (event) => {
   if (!nodeConnection.sshService.shellStream) {
     try {
@@ -748,6 +782,10 @@ ipcMain.handle("fetchObolCharonAlerts", async () => {
   return await monitoring.fetchObolCharonAlerts();
 });
 
+ipcMain.handle("getSubnetSubs", async () => {
+  return await monitoring.getSubnetSubs();
+});
+
 ipcMain.handle("fetchCsmAlerts", async () => {
   return await monitoring.fetchCsmAlerts();
 });
@@ -766,6 +804,14 @@ ipcMain.handle("getNewLauncherVersion", async () => {
 
 ipcMain.handle("deleteSlasherVolume", async (event, args) => {
   return await serviceManager.deleteSlasherVolume(args);
+});
+
+ipcMain.handle("fetchCurrentTimeZone", async () => {
+  return await monitoring.fetchCurrentTimeZone();
+});
+
+ipcMain.handle("getCSMQueue", async (event, args) => {
+  return await checkSigningKeys(args.keysArray, monitoring);
 });
 
 // Scheme must be registered before the app is ready

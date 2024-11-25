@@ -39,7 +39,7 @@ To create your own build you can use `npm run electron:build` and find it in the
 
 If you want to add changes to the global Stereum repository you need to do a pull request.
 
-Pull requests will be reviewed/merged ASAP - please follow this steps:
+Pull requests will be reviewed/merged ASAP - please follow these steps:
 
 1. Open your [local development environment](#getting-started)
 2. Create your feature branch:

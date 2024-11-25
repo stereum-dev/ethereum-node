@@ -9,6 +9,7 @@ import * as crypto from "crypto";
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
+const { powerMonitor } = require("electron");
 
 const globalMonitoringCache = {
   intervalHandler: null,
@@ -16,6 +17,9 @@ const globalMonitoringCache = {
   refreshIntervalSeconds: 5,
   nodestatsInitialized: false,
   storagestatus: {},
+  setTime: 300,
+  idleTimerRunning: false,
+  idleTimerStop: false,
 };
 
 export class Monitoring {
@@ -39,6 +43,8 @@ export class Monitoring {
   async cleanup() {
     this.isLoggedIn = false;
     this.triedCurlInstall = false;
+    this.idleTimerRunning = false;
+    this.idleTimerStop = false;
     this.rpcTunnel = {};
     this.wsTunnel = {};
     this.beaconTunnel = {};
@@ -263,6 +269,7 @@ export class Monitoring {
                 serviceID: config.id,
                 instanceID: newState && newState.hasOwnProperty("Names") ? newState.Names : "N/A",
                 command: config.command,
+                env: config.env,
                 configVersion: config.configVersion,
                 image: config.image,
                 imageVersion: config.imageVersion,
@@ -1267,6 +1274,7 @@ export class Monitoring {
           }
           data.push({
             id: index + 1,
+            serviceID: clt.config.serviceID,
             title: clt.service.replace(/Beacon|Service/gi, "").toUpperCase(),
             frstVal: frstVal ? frstVal : 0,
             scndVal: scndVal ? scndVal : 0,
@@ -1293,7 +1301,7 @@ export class Monitoring {
         data: serviceInfos,
       };
     }
-
+    // console.log("groups", groups);
     // success
     return {
       code: 0,
@@ -1356,8 +1364,12 @@ export class Monitoring {
       };
     }
 
+    // const tenMinutesAgo = Math.floor(Date.now() / 1000) - 10 * 60;
+
     // Query Prometehus for all possible labels
     const prometheus_result = await this.queryPrometheus('{__name__=~"' + serviceLabels.join("|") + '"}');
+
+    // console.log("prometheus_result ========>", prometheus_result.data.result);
     if (typeof prometheus_result !== "object" || !prometheus_result.hasOwnProperty("status") || prometheus_result.status != "success") {
       return {
         code: 223,
@@ -1365,6 +1377,7 @@ export class Monitoring {
         data: prometheus_result,
       };
     }
+
     // Build pairs for the FrontEnd (cc and ec member)
     const clientTypes = Object.keys(services);
     const groups = [];
@@ -1421,6 +1434,7 @@ export class Monitoring {
         details[clientType]["service"] = clt.service;
         details[clientType]["client"] = clt.service.replace(/Beacon|Service/gi, "").toUpperCase();
         details[clientType]["state"] = clt.state;
+        details[clientType]["serviceID"] = clt.config.serviceID;
         opttyp = Object.keys(services).find((key) => services[key].hasOwnProperty(clt.service));
         if (!opttyp) {
           return;
@@ -1710,6 +1724,7 @@ export class Monitoring {
     var storagesizes = result.stdout.trim().split("\n");
     storagesizes.forEach(function (val, index) {
       let svc = index in sshcommands ? sshcommands[index].svc : false;
+
       if (svc) {
         // Prometheus NE does not store data but using "/" as volume, see #1095
         // Likely not queried at all if defined in ignoreServices (see above)
@@ -1725,6 +1740,7 @@ export class Monitoring {
             .replace(/NodeExporter/gi, " ne")
             .toUpperCase(),
           storageValue: (!val || val < 1 ? "0 " : val.replace(/([a-z]+)/is, " $1")) + "B",
+          service: svc.service,
         });
       }
     });
@@ -1739,6 +1755,7 @@ export class Monitoring {
 
   // Get attestation rewards for given validators and epoch
   async getAttestationRewards(validators) {
+    if (validators.length === 0) return [];
     try {
       // Get local beacon port from first available consensus client
       const beaconResult = await this.findBeaconPort();
@@ -1801,6 +1818,7 @@ export class Monitoring {
 
   // Get Sync Committee for given validators and slot (count them together for whole epoch in frontend)
   async getSyncCommitteeRewards(validators, slot) {
+    if (validators.length === 0) return [];
     try {
       // Get local beacon port from first available consensus client
       const beaconResult = await this.findBeaconPort();
@@ -1938,7 +1956,6 @@ export class Monitoring {
 
   // Open RPC tunnel(s) on request
   async openRpcTunnel(args) {
-    // Extract arguments
     var { force_fresh } = Object.assign(
       {
         force_fresh: false,
@@ -1958,56 +1975,74 @@ export class Monitoring {
     });
 
     // Make sure there are enough ports available
-    if (localPorts.length != rpcstatus.data.length) {
+    if (localPorts.length !== rpcstatus.data.length) {
       return {
         code: 1,
-        info: "error: not enough local ports availbe for all RPC services",
+        info: "error: not enough local ports available for all RPC services",
         data: "",
       };
     }
 
-    // Create a tunnel for each service
-    for (let i = 0; i < rpcstatus.data.length; i++) {
-      // Setup details for this service
-      let sid = rpcstatus.data[i].sid;
-      let rpc = rpcstatus.data[i].rpc;
-      let addr = rpc.destinationIp;
-      let port = rpc.destinationPort;
+    // Helper function to open a tunnel
+    const openTunnel = async (service) => {
+      const { sName, sid, rpc } = service;
+      const { destinationIp: addr, destinationPort: port } = rpc;
 
       // Check if the tunnel is already open
       if (this.rpcTunnel[sid] > 0 && !force_fresh) {
-        continue;
+        return;
       }
 
       // Open the tunnel
       try {
-        var localPort = localPorts.shift();
+        const localPort = localPorts.shift();
         await this.nodeConnection.openTunnels([
           {
+            sName: sName,
             dstHost: addr,
             dstPort: port,
             localPort: localPort,
           },
         ]);
+        // Update tunnel with opened port
+        this.rpcTunnel[sid] = localPort;
       } catch (e) {
         // On any error stop opening further tunnels and close all already opened
         await this.closeRpcTunnel();
         const freshrpcstatus = await this.getRpcStatus();
-        freshrpcstatus.info = freshrpcstatus.info + "(fresh after failed attempt to open rpc tunnels)";
+        freshrpcstatus.info += "(fresh after failed attempt to open rpc tunnels)";
         return {
           code: 2,
-          info: "error: failed to open tunnels (" + e + ")",
+          info: `error: failed to open tunnels (${e})`,
           data: freshrpcstatus,
         };
       }
+    };
 
-      // Update tunnel with opened port
-      this.rpcTunnel[sid] = localPort;
+    if (args) {
+      // Create a tunnel for a single service
+      const service = rpcstatus.data.find((service) => service.sid === args);
+      if (!service) {
+        return {
+          code: 1,
+          info: "error: service not found",
+          data: "",
+        };
+      }
+      return openTunnel(service);
+    } else {
+      // Create a tunnel for each service
+      for (const service of rpcstatus.data) {
+        const result = await openTunnel(service);
+        if (result && result.code === 2) {
+          return result;
+        }
+      }
     }
 
     // Respond success with fresh RPC status data
     const freshrpcstatus = await this.getRpcStatus();
-    freshrpcstatus.info = freshrpcstatus.info + "(fresh after opening rpc tunnels)";
+    freshrpcstatus.info += "(fresh after opening rpc tunnels)";
     return {
       code: 0,
       info: "success: tunnels successfully opened",
@@ -2077,6 +2112,7 @@ export class Monitoring {
 
       // Filter the RPC port configuration and get addr/port that is mapped on docker host
       const sid = execution.config.serviceID;
+      const sName = execution.service;
       const rpc = execution.config.ports
         .filter((p) => p.servicePort == services[execution.service])
         .slice(-1)
@@ -2096,6 +2132,7 @@ export class Monitoring {
       // Add valid client to final result
       data.push({
         now: now,
+        sName: sName,
         sid: sid,
         rpc: rpc,
         url: this.rpcTunnel[sid] > 0 ? "http://" + addr + ":" + this.rpcTunnel[sid] : "",
@@ -2142,30 +2179,27 @@ export class Monitoring {
     });
 
     // Make sure there are enough ports available
-    if (localPorts.length != wsstatus.data.length) {
+    if (localPorts.length !== wsstatus.data.length) {
       return {
         code: 1,
-        info: "error: not enough local ports availbe for all WS services",
+        info: "error: not enough local ports available for all WS services",
         data: "",
       };
     }
 
-    // Create a tunnel for each service
-    for (let i = 0; i < wsstatus.data.length; i++) {
-      // Setup details for this service
-      let sid = wsstatus.data[i].sid;
-      let ws = wsstatus.data[i].ws;
-      let addr = ws.destinationIp;
-      let port = ws.destinationPort;
+    // Helper function to open a tunnel
+    const openTunnel = async (service) => {
+      const { sid, ws } = service;
+      const { destinationIp: addr, destinationPort: port } = ws;
 
       // Check if the tunnel is already open
       if (this.wsTunnel[sid] > 0 && !force_fresh) {
-        continue;
+        return;
       }
 
       // Open the tunnel
       try {
-        var localPort = localPorts.shift();
+        const localPort = localPorts.shift();
         await this.nodeConnection.openTunnels([
           {
             dstHost: addr,
@@ -2173,25 +2207,44 @@ export class Monitoring {
             localPort: localPort,
           },
         ]);
+        // Update tunnel with opened port
+        this.wsTunnel[sid] = localPort;
       } catch (e) {
         // On any error stop opening further tunnels and close all already opened
         await this.closeWsTunnel();
         const freshwsstatus = await this.getWsStatus();
-        freshwsstatus.info = freshwsstatus.info + "(fresh after failed attempt to open ws tunnels)";
+        freshwsstatus.info += "(fresh after failed attempt to open ws tunnels)";
         return {
           code: 2,
-          info: "error: failed to open tunnels (" + e + ")",
+          info: `error: failed to open tunnels (${e})`,
           data: freshwsstatus,
         };
       }
+    };
 
-      // Update tunnel with opened port
-      this.wsTunnel[sid] = localPort;
+    if (args) {
+      const service = wsstatus.data.find((service) => service.sid === args);
+      if (!service) {
+        return {
+          code: 1,
+          info: "error: service not found",
+          data: "",
+        };
+      }
+      return openTunnel(service);
+    } else {
+      // Create a tunnel for each service
+      for (const service of wsstatus.data) {
+        const result = await openTunnel(service);
+        if (result && result.code === 2) {
+          return result;
+        }
+      }
     }
 
     // Respond success with fresh WS status data
     const freshwsstatus = await this.getWsStatus();
-    freshwsstatus.info = freshwsstatus.info + "(fresh after opening ws tunnels)";
+    freshwsstatus.info += "(fresh after opening ws tunnels)";
     return {
       code: 0,
       info: "success: tunnels successfully opened",
@@ -2398,30 +2451,27 @@ export class Monitoring {
     });
 
     // Make sure there are enough ports available
-    if (localPorts.length != beaconstatus.data.length) {
+    if (localPorts.length !== beaconstatus.data.length) {
       return {
         code: 1,
-        info: "error: not enough local ports availbe for all BEACON services",
+        info: "error: not enough local ports available for all BEACON services",
         data: "",
       };
     }
 
-    // Create a tunnel for each service
-    for (let i = 0; i < beaconstatus.data.length; i++) {
-      // Setup details for this service
-      let sid = beaconstatus.data[i].sid;
-      let beacon = beaconstatus.data[i].beacon;
-      let addr = beacon.destinationIp;
-      let port = beacon.destinationPort;
+    // Helper function to open a tunnel
+    const openTunnel = async (service) => {
+      const { sid, beacon } = service;
+      const { destinationIp: addr, destinationPort: port } = beacon;
 
       // Check if the tunnel is already open
       if (this.beaconTunnel[sid] > 0 && !force_fresh) {
-        continue;
+        return;
       }
 
       // Open the tunnel
       try {
-        var localPort = localPorts.shift();
+        const localPort = localPorts.shift();
         await this.nodeConnection.openTunnels([
           {
             dstHost: addr,
@@ -2429,25 +2479,44 @@ export class Monitoring {
             localPort: localPort,
           },
         ]);
+        // Update tunnel with opened port
+        this.beaconTunnel[sid] = localPort;
       } catch (e) {
         // On any error stop opening further tunnels and close all already opened
         await this.closeBeaconTunnel();
         const freshbeaconstatus = await this.getBeaconStatus();
-        freshbeaconstatus.info = freshbeaconstatus.info + "(fresh after failed attempt to open beacon tunnels)";
+        freshbeaconstatus.info += "(fresh after failed attempt to open beacon tunnels)";
         return {
           code: 2,
-          info: "error: failed to open tunnels (" + e + ")",
+          info: `error: failed to open tunnels (${e})`,
           data: freshbeaconstatus,
         };
       }
+    };
 
-      // Update tunnel with opened port
-      this.beaconTunnel[sid] = localPort;
+    if (args) {
+      const service = beaconstatus.data.find((service) => service.sid === args);
+      if (!service) {
+        return {
+          code: 1,
+          info: "error: service not found",
+          data: "",
+        };
+      }
+      return openTunnel(service);
+    } else {
+      // Create a tunnel for each service
+      for (const service of beaconstatus.data) {
+        const result = await openTunnel(service);
+        if (result && result.code === 2) {
+          return result;
+        }
+      }
     }
 
     // Respond success with fresh BEACON status data
     const freshbeaconstatus = await this.getBeaconStatus();
-    freshbeaconstatus.info = freshbeaconstatus.info + "(fresh after opening beacon tunnels)";
+    freshbeaconstatus.info += "(fresh after opening beacon tunnels)";
     return {
       code: 0,
       info: "success: tunnels successfully opened",
@@ -2607,11 +2676,13 @@ export class Monitoring {
       for (let n = 0; n < ports.length; n++) {
         if (addr == "public" && addresses.some((w) => ports[n].destinationIp.toLowerCase().includes(w))) continue;
         if ((addr_type == "arr" || addr == "local") && !addresses.some((w) => ports[n].destinationIp.toLowerCase().includes(w))) continue;
+
         data.push({
           name: svc.service.replace(/Beacon|Service/gi, "").toUpperCase(),
           port: ports[n].destinationPort,
           prot: ports[n].servicePortProtocol,
           type: addr_type == "arr" ? addresses.find((w) => ports[n].destinationIp.toLowerCase().includes(w)) : addr,
+          id: svc.config.serviceID,
         });
       }
     }
@@ -2686,6 +2757,84 @@ export class Monitoring {
     };
   }
 
+  // Get the number of subnet subscriptions for consensus clients
+  async getSubnetSubs() {
+    // Service definitions with type and Prometheus labels for subnet subscription
+    const services = {
+      consensus: {
+        TekuBeaconService: ["network_subnet_peer_count"],
+        LighthouseBeaconService: ["gossipsub_mesh_peer_counts"],
+        PrysmBeaconService: ["p2p_topic_peer_count"],
+        NimbusBeaconService: ["libp2p_gossipsub_healthy_peers_topics"],
+        LodestarBeaconService: ["gossipsub_topic_peer_count"],
+      },
+    };
+
+    // Merge all labels for Prometheus query
+    const serviceLabels = Object.values(services)
+      .flatMap((service) => Object.values(service))
+      .flatMap((labels) => labels);
+
+    // Get all service configurations
+    const serviceInfos = await this.getServiceInfos();
+    if (serviceInfos.length < 1) {
+      return {
+        code: 221,
+        info: "error: service infos for subnet-subscription not available",
+        data: "",
+      };
+    }
+
+    // Query Prometehus for all possible labels
+    const prometheus_result = await this.queryPrometheus('{__name__=~"' + serviceLabels.join("|") + '"}');
+    if (typeof prometheus_result !== "object" || !prometheus_result.hasOwnProperty("status") || prometheus_result.status != "success") {
+      return {
+        code: 223,
+        info: "error: prometheus query for subnet-subscription failed",
+        data: prometheus_result,
+      };
+    }
+
+    const instanceCounts = {};
+
+    // Iterate over the result array and count instances
+    prometheus_result.data.result.forEach((item) => {
+      const serviceId = item.metric.instance.replace(/^stereum-/, "").replace(/:\d+$/, "");
+      if (instanceCounts[serviceId]) {
+        instanceCounts[serviceId]++;
+      } else {
+        instanceCounts[serviceId] = 1;
+      }
+    });
+
+    // Check serviceID in serviceInfos and count it
+    const beaconServiceCounts = serviceInfos
+      .filter((serviceInfo) => serviceInfo.service.includes("BeaconService"))
+      .map((serviceInfo) => {
+        const serviceId = serviceInfo.config.serviceID;
+        return {
+          serviceId: serviceId,
+          subnetCount: instanceCounts[serviceId] || 0,
+        };
+      });
+
+    // Make sure at least one consensus service currently running/existing
+    if (beaconServiceCounts.length < 1) {
+      return {
+        code: 225,
+        info: "error: consensus client does not exist/not running (in subnet subscription)",
+        data: serviceInfos,
+      };
+    }
+
+    // success
+    return {
+      code: 0,
+      info: "success: subnet subscription retrieved successfully",
+      data: beaconServiceCounts,
+    };
+  }
+
   // Get node stats (mostly by Prometheus)
   async getNodeStats() {
     try {
@@ -2710,6 +2859,9 @@ export class Monitoring {
       const p2pstatus = await this.getP2PStatus();
       // if(p2pstatus.code)
       //   return p2pstatus;
+      const subnetSubs = await this.getSubnetSubs();
+      const rpcReceivedData = await this.nodeConnection.sshService.getRPCReceivedData();
+
       return {
         code: 0,
         info: "success: data successfully retrieved",
@@ -2721,6 +2873,8 @@ export class Monitoring {
           wsstatus: wsstatus,
           beaconstatus: beaconstatus,
           portstatus: portstatus,
+          subnetSubs: subnetSubs,
+          rpcReceivedData: rpcReceivedData,
         },
       };
     } catch (err) {
@@ -2766,6 +2920,63 @@ export class Monitoring {
     return resp;
   }
 
+  // Get CPU temperature from the remote server using lm-sensors or hwmon
+  async getCPUTemperature() {
+    try {
+      // Check and install lm-sensors if not installed
+      const installed = await this.checkAndInstallLmSensors();
+      if (installed) {
+        const temperature = await this.getTemperatureFromLmSensors();
+        if (temperature && temperature !== null) return temperature;
+      }
+      // Fallback to hwmon if lm-sensors does not provide a valid temperature
+      return await this.getTemperatureFromHwmon();
+    } catch (error) {
+      console.error("Error determining CPU temperature:", error);
+      throw error;
+    }
+  }
+
+  async checkAndInstallLmSensors() {
+    const checkInstalled = await this.nodeConnection.sshService.exec("dpkg -l lm-sensors");
+    if (!checkInstalled.stdout.includes("ii  lm-sensors")) {
+      await this.nodeConnection.sshService.exec("sudo apt-get update && sudo apt-get install -y lm-sensors");
+    }
+    // Run sensors-detect
+    const detectSensor = await this.nodeConnection.sshService.exec("sudo sensors-detect --auto");
+    const lines = detectSensor.stdout.split("\n").map((line) => line.replace(/\s+/g, " ").trim());
+    return lines.some((line) => line.includes("thermal sensor... Success!"));
+  }
+
+  async getTemperatureFromLmSensors() {
+    const tempCPU = await this.nodeConnection.sshService.exec("sudo sensors");
+    const tempCPUMatch = tempCPU.stdout.match(/Package id 0:\s*\+([0-9.]+)°C/);
+    if (tempCPUMatch && tempCPUMatch[1]) {
+      return tempCPUMatch[1];
+    } else {
+      return null;
+    }
+  }
+
+  async getTemperatureFromHwmon() {
+    const hwmonDevices = await this.nodeConnection.sshService.exec("ls /sys/class/hwmon/");
+    const hwmonDirs = hwmonDevices.stdout.trim().split("\n");
+
+    for (const dir of hwmonDirs) {
+      const name = await this.nodeConnection.sshService.exec(`cat /sys/class/hwmon/${dir}/name`);
+      if (name.stdout.trim() === "coretemp" || name.stdout.trim() === "k10temp") {
+        const tempCPUResult = await this.nodeConnection.sshService.exec(`cat /sys/class/hwmon/${dir}/temp1_input`);
+        const tempInMillidegrees = parseInt(tempCPUResult.stdout.trim(), 10);
+
+        if (!isNaN(tempInMillidegrees)) {
+          const cpuTemperature = (tempInMillidegrees / 1000).toFixed(1);
+          return cpuTemperature;
+        }
+      }
+    }
+    return null;
+  }
+
   //serverNmae
   //totalRam, usedRam
   //Total, usedDisk, used%
@@ -2773,35 +2984,36 @@ export class Monitoring {
   //rx tx
   //readSpeed writeSpeed
   async getServerVitals() {
+    const tempCPU = await this.getCPUTemperature();
     const serverVitals = await this.nodeConnection.sshService.exec(`
-        hostname &&
-        free --mega | sed -n '2p' | awk '{print $2" "$3}' &&
-        df --total -BG --exclude-type=overlay | grep ^total | awk '{print $2" "$4" "$5}'
-        sar -u 1 1 | awk '{if ($7 != "%idle") print 100.000-$NF}' | tail -1 &&
-        INTERFACE=\`ip route get 8.8.8.8 | head -n1 | awk '{print $5}'\` &&
-sar -n DEV 1 1 | awk -v var="$INTERFACE" '{ if($2 == var) print $5" "$6}' | sed -n '1p' &&
-        rm -rf disks &&
-rm -rf diskspeeds &&
-rm -rf diskoutput &&
-lsblk -d -o NAME | grep -v '[$!loop|NAME|]' | sed '/sr0/d' > disks &&
-input="disks" &&
-while IFS= read -r line
-do
-iostat -x | grep "$line" | awk '{print $3" "$9}' >> diskspeeds
-done < "$input" &&
-linecount=\`wc -l disks | awk '{print $1}'\` &&
-counter=1 &&
-while [[ $linecount -ge $counter ]]
-do
-linea=$( head -n $counter disks | tail -1)
-lineb=$( head -n $counter diskspeeds | tail -1)
-echo "$linea $lineb"
-counter=$(($counter + 1))
-done &&
-rm -rf disks &&
-rm -rf diskspeeds &&
-rm -rf diskoutput
-        `);
+      hostname &&
+      free --mega | sed -n '2p' | awk '{print $2" "$3}' &&
+      df --total -BG --exclude-type=overlay | grep ^total | awk '{print $2" "$4" "$5}' &&
+      sar -u 1 1 | awk '{if ($7 != "%idle") print 100.000-$NF}' | tail -1 &&
+      INTERFACE=\`ip route get 8.8.8.8 | head -n1 | awk '{print $5}'\` &&
+      sar -n DEV 1 1 | awk -v var="$INTERFACE" '{ if($2 == var) print $5" "$6}' | sed -n '1p' &&
+      rm -rf disks &&
+      rm -rf diskspeeds &&
+      rm -rf diskoutput &&
+      lsblk -d -o NAME | grep -v '[$!loop|NAME|]' | sed '/sr0/d' > disks &&
+      input="disks" &&
+      while IFS= read -r line
+      do
+        iostat -xdmy 2 1 | grep "$line" | awk '{print $3" "$9}' >> diskspeeds
+      done < "$input" &&
+      linecount=\`wc -l disks | awk '{print $1}'\` &&
+      counter=1 &&
+      while [[ $linecount -ge $counter ]]
+      do
+        linea=$( head -n $counter disks | tail -1)
+        lineb=$( head -n $counter diskspeeds | tail -1)
+        echo "$linea $lineb"
+        counter=$(($counter + 1))
+      done &&
+      rm -rf disks &&
+      rm -rf diskspeeds &&
+      rm -rf diskoutput
+    `);
     try {
       let arr = serverVitals.stdout.split(/\n/);
       const data = {
@@ -2814,9 +3026,11 @@ rm -rf diskoutput
         cpu: arr[3],
         rx: arr[4].split(" ")[0],
         tx: arr[4].split(" ")[1],
-        readValue: arr[5].split(" ")[1],
-        writeValue: arr[5].split(" ")[2],
+        readValue: (arr[5] && arr[5].split(" ")[1]) || "0",
+        writeValue: (arr[5] && arr[5].split(" ")[2]) || "0",
+        tempCPU: tempCPU,
       };
+
       return data;
     } catch (e) {
       return null;
@@ -3036,6 +3250,10 @@ rm -rf diskoutput
   async getCurrentEpochSlot(currBeaconService) {
     try {
       let beaconStatus = await this.getBeaconStatus();
+      // Ensure beaconStatus.data is an array
+      if (!Array.isArray(beaconStatus.data)) {
+        beaconStatus.data = [beaconStatus.data];
+      }
       beaconStatus.data = beaconStatus.data.filter((obj) => obj.clt === currBeaconService);
       let currentEpochSlotStatus = {};
       if (beaconStatus.code === 0) {
@@ -3515,5 +3733,32 @@ rm -rf diskoutput
       };
     }
     return [];
+  }
+  async fetchCurrentTimeZone() {
+    return await this.nodeConnection.sshService.exec(`timedatectl | grep "Time zone"`);
+  }
+
+  async setIdleTime(setTime) {
+    this.globalMonitoringCache.setTime = setTime;
+  }
+
+  async idleTimerCheck(timerStop, win) {
+    if (!this.globalMonitoringCache.idleTimerRunning) {
+      this.globalMonitoringCache.idleTimerRunning = true;
+      await this.idleTimerLoop(win);
+    }
+    this.globalMonitoringCache.idleTimerStop = timerStop;
+  }
+
+  async idleTimerLoop(win) {
+    if (powerMonitor.getSystemIdleTime() >= this.globalMonitoringCache.setTime * 60) {
+      win.send("IdleLogout");
+    } else if (this.isLoggedIn && !this.globalMonitoringCache.idleTimerStop) {
+      await new Promise((resolve) => setTimeout(resolve, 60000));
+      await this.idleTimerLoop(win);
+    } else {
+      this.globalMonitoringCache.idleTimerStop = false;
+      this.globalMonitoringCache.idleTimerRunning = false;
+    }
   }
 }

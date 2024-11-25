@@ -8,14 +8,28 @@
     </router-link>
     <router-link
       :to="nextRoute"
-      class="col-start-11 col-span-1 row-start-1 row-span-2 w-[120px] h-12 bg-[#264744] hover:bg-[#447a75] rounded-full py-2 px-4 flex justify-center items-center hover:scale-110 hover:shadow-lg hover:shadow-[#1e2a29] transition-all duration-300 ease-in-out active:scale-100 active:shadow-none cursor-pointer"
+      :class="[
+        'col-start-11 col-span-1 row-start-1 row-span-2 w-[120px] h-12 bg-[#264744] hover:bg-[#447a75] rounded-full py-2 px-4 flex justify-center items-center hover:scale-110 hover:shadow-lg hover:shadow-[#1e2a29] transition-all duration-300 ease-in-out active:scale-100 active:shadow-none cursor-pointer',
+        { deactive: !clickStore.isPathValid },
+      ]"
     >
+      <!-- changed button with disabled class -->
       <span class="text-gray-200 text-xl font-semibold text-center uppercase">{{ $t("customFooter.next") }}</span>
     </router-link>
   </div>
 </template>
 <script setup>
 import { goToNext } from "@/composables/nextRoute";
+import { useClickInstall } from "@/store/clickInstallation";
+
+const clickStore = useClickInstall();
 
 const nextRoute = goToNext();
 </script>
+<style scoped>
+.deactive {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+</style>

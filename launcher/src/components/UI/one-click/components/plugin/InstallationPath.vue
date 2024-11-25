@@ -9,7 +9,13 @@
         <span class="text-sm text-gray-300 font-semibold">{{ $t("pluginName.path") }}</span>
       </div>
       <div class="h-8 col-start-1 col-span-full row-start-2 row-span-1 flex justify-center items-center px-1 pb-1">
-        <input v-model="clickStore.installationPath" type="text" class="w-full h-full rounded-md bg-gray-300 pl-2 text-sm" />
+        <input
+          v-model="clickStore.installationPath"
+          type="text"
+          :class="{ 'invalid-path': !clickStore.isPathValid }"
+          class="path-input w-full h-full rounded-md bg-gray-300 pl-2 text-sm"
+          @input="validatePath"
+        />
       </div>
     </div>
     <div class="w-full col-start-1 col-span-full row-start-3 row-span-2 border rounded-md border-gray-600 mx-auto bg-[#336666]">
@@ -25,6 +31,7 @@
             name="Start up client after installation?"
             class="h-5 w-5 rounded-md border-gray-200 bg-white shadow-sm"
           />
+
           <span class="text-sm text-gray-300 font-semibold">{{ $t("pluginName.startOnInstall") }}</span>
         </div>
       </div>
@@ -66,9 +73,15 @@ import { onMounted } from "vue";
 
 const clickStore = useClickInstall();
 
+const validatePath = () => {
+  const pathRegex = /^\/(?:[^ /\0*?<>|&{}$;][^ /\0]*\/?)*[^ /\0*?<>|&{}$;]{1,}$/;
+  clickStore.isPathValid = pathRegex.test(clickStore.installationPath.trim());
+};
+
 onMounted(() => {
   clickStore.installMonitoring = false;
   clickStore.startServicesAfterInstall = true;
+  clickStore.isPathValid = true;
 });
 </script>
 <style scoped>
@@ -78,5 +91,8 @@ onMounted(() => {
   justify-content: flex-start;
   gap: 0.5rem;
   width: 90%;
+}
+.invalid-path {
+  border: 2px solid red;
 }
 </style>
