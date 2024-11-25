@@ -80,7 +80,8 @@ const buttonState = ref([
     tooltip: t("displayValidator.importRemote"),
     isHidden: false,
   },
-
+  //Testnet https://csm.testnet.fi/?ref=stereum
+  //Mainnet https://csm.lido.fi/
   {
     text: "GO TO CSM WEBSITE",
     icon: "/img/icon/staking-page-icons/remote-key-icon.svg",
@@ -96,14 +97,13 @@ const filteredButtonState = computed(() => {
 
   return buttonState.value.map((button) => {
     if (
-      (selectedService === "CharonService" || selectedService === "SSVNetworkService") &&
-      button.text !== "REMOVE ALL KEYS"
+      selectedService === "CharonService" ||
+      selectedService === "SSVNetworkService" ||
+      stakingStore.displayAllKeysActive
     ) {
       return { ...button, isHidden: true };
     }
-    if (selectedService === "LCOMService" && button.text !== "GO TO CSM WEBSITE") {
-      return { ...button, isHidden: true };
-    }
+
     return { ...button, isHidden: false };
   });
 });

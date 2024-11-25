@@ -6,13 +6,10 @@ import { useStakingStore } from '@/store/theStaking';
     <span
       v-if="stakingStore.selectedServiceToFilter?.service === 'CharonService'"
       class="col-start-1 col-span-2 text-[8px] text-gray-200 font-normal font-sans text-left px-2"
-      >CLUSTER</span
+      >PEER NAME</span
     >
     <span
-      v-if="
-        stakingStore.selectedServiceToFilter?.service === 'SSVNetworkService' ||
-        stakingStore.selectedServiceToFilter?.service === 'LCOMService'
-      "
+      v-if="stakingStore.selectedServiceToFilter?.service === 'SSVNetworkService'"
       class="col-start-1 col-span-2 text-[10px] text-amber-300 font-normal font-sans text-left"
       >ID:</span
     >
@@ -20,10 +17,9 @@ import { useStakingStore } from '@/store/theStaking';
       class="col-start-3 col-span-2 text-[10px] text-amber-300 font-normal font-sans text-left"
     >
       {{
-        stakingStore.selectedServiceToFilter?.service === "SSVNetworkService" ||
-        stakingStore.selectedServiceToFilter?.service === "LCOMService"
+        stakingStore.selectedServiceToFilter?.service === "SSVNetworkService"
           ? "125#"
-          : stakingStore.selectedServiceToFilter?.cluster
+          : stakingStore.selectedServiceToFilter?.peerName
       }}
     </span>
   </div>

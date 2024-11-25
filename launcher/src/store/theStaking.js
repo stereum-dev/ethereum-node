@@ -65,6 +65,7 @@ export const useStakingStore = defineStore("theStaking", {
       validatorDisplayName: "",
       enteredFeeRecipientAddress: "",
       feeRecepientAddress: "",
+      displayAllKeysActive: true,
       // ***** End Validator Keys *****
       selectedSingleKeyToWithdraw: null,
       withdrawAndExitResponse: null,

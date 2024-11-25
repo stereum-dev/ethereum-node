@@ -4,20 +4,24 @@
     @pointerdown.prevent.stop
     @mousedown.prevent.stop
   >
-    <div class="w-full h-full row-start-2 row-span-full grid grid-rows-12 items-center justify-start">
+    <div
+      class="w-full h-full row-start-2 row-span-full grid grid-rows-12 items-center justify-start"
+    >
       <!-- All Keys Button -->
       <div
         class="w-9 h-9 max-h-[35px] row-span-1 py-1 rounded-r-full text-gray-700 transition-colors duration-200 flex justify-center items-center cursor-pointer"
         :class="{
           'bg-[#336666] shadow-md shadow-[#191a1b] animate__animated animate__slideInLeft animate__faster pointer-events-none':
-            displayAllKeysActive,
-          'bg-[#202123] border border-gray-600': !displayAllKeysActive,
+            stakingStore.displayAllKeysActive,
+          'bg-[#202123] border border-gray-600': !stakingStore.displayAllKeysActive,
         }"
         @click="clearServiceFilter"
         @mouseenter="footerStore.cursorLocation = `All Keys`"
         @mouseleave="[(footerStore.cursorLocation = ''), (hoveredIndex = null)]"
       >
-        <span class="w-7 h-7 rounded-full text-center text-xs text-gray-200 p-2">All</span>
+        <span class="w-7 h-7 rounded-full text-center text-xs text-gray-200 p-2"
+          >All</span
+        >
       </div>
 
       <!-- Validator Buttons -->
@@ -28,7 +32,8 @@
         :class="{
           'bg-[#336666] shadow-md shadow-[#191a1b] animate__animated animate__slideInLeft animate__faster pointer-events-none':
             currentService === item.config?.serviceID,
-          'bg-[#202123] border border-gray-600': currentService !== item.config?.serviceID,
+          'bg-[#202123] border border-gray-600':
+            currentService !== item.config?.serviceID,
         }"
         @click="filterByService(item)"
         @mouseenter="footerStore.cursorLocation = `Filter by ${item.name}`"
@@ -62,22 +67,22 @@ const serviceStore = useServices();
 
 const currentService = ref(null);
 const hoveredIndex = ref(null);
-const displayAllKeysActive = ref(true);
 
 // Computed: Filters installed validators based on selected setup
 const installedValidators = computed(() => {
   if (!setupStore.selectedSetup) {
-    return serviceStore.installedServices.filter((s) => s.category === "validator" || s.service === "LCOMService");
+    return serviceStore.installedServices.filter((s) => s.category === "validator");
   }
 
   // Apply setup filter to validators
   return serviceStore.installedServices
     .filter(
       (s) =>
-        (s.category === "validator" && setupStore.selectedSetup.services?.map((s) => s.config.serviceID).includes(s.config.serviceID)) ||
-        (s.category === "service" &&
-          s.service === "LCOMService" &&
-          setupStore.selectedSetup.services?.map((s) => s.config.serviceID).includes(s.config.serviceID))
+        s.category === "validator" &&
+        s.service !== "LCOMService" &&
+        setupStore.selectedSetup.services
+          ?.map((s) => s.config.serviceID)
+          .includes(s.config.serviceID)
     )
     .sort((a, b) => a.name.localeCompare(b.name));
 });
@@ -89,17 +94,24 @@ onMounted(() => {
 
 // Methods
 const filterKeys = () => {
-  if (displayAllKeysActive.value) {
+  if (stakingStore.displayAllKeysActive) {
     // Default: Show all keys, or apply only setup filter if setup is selected
     stakingStore.keys = setupStore.selectedSetup
-      ? stakingStore.keys.filter((key) => setupStore.selectedSetup.services.some((service) => service.config.serviceID === key.validatorID))
+      ? stakingStore.keys.filter((key) =>
+          setupStore.selectedSetup.services.some(
+            (service) => service.config.serviceID === key.validatorID
+          )
+        )
       : stakingStore.keys;
   } else {
     // Apply both selectedServiceToFilter and selectedSetup filtering
     stakingStore.keys = stakingStore.keys.filter(
       (key) =>
         key.validatorID === stakingStore.selectedServiceToFilter?.config?.serviceID &&
-        (!setupStore.selectedSetup || setupStore.selectedSetup.services.some((service) => service.config.serviceID === key.validatorID))
+        (!setupStore.selectedSetup ||
+          setupStore.selectedSetup.services.some(
+            (service) => service.config.serviceID === key.validatorID
+          ))
     );
   }
 };
@@ -107,21 +119,21 @@ const filterKeys = () => {
 const filterByService = (item) => {
   currentService.value = item.config?.serviceID;
   stakingStore.selectedServiceToFilter = item;
-  displayAllKeysActive.value = false;
+  stakingStore.displayAllKeysActive = false;
   filterKeys();
 };
 
 const clearServiceFilter = () => {
   stakingStore.selectedServiceToFilter = null;
   currentService.value = null;
-  displayAllKeysActive.value = true;
+  stakingStore.displayAllKeysActive = true;
   filterKeys();
 };
 
 watch(
   () => setupStore.selectedSetup,
   () => {
-    if (displayAllKeysActive.value) {
+    if (stakingStore.displayAllKeysActive) {
       filterKeys();
     }
   }
