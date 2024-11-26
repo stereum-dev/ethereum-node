@@ -11,13 +11,13 @@ export async function useListKeys(forceRefresh) {
 
   let keyStats = [];
   let clients = serviceStore.installedServices.filter(
-    (s) => s.category == "validator" && s.service != "CharonService" && s.service != "SSVNetworkService"
+    (s) => s.category == "validator" && s.config.network != "devnet" && s.service != "CharonService" && s.service != "SSVNetworkService"
   );
   if ((clients && clients.length > 0 && nodeManageStore.currentNetwork?.network != "") || forceRefresh) {
     for (let client of clients) {
       //if there is already a list of keys ()
       if ((client.config.keys === undefined || client.config.keys.length === 0 || forceRefresh) && client.state === "running") {
-        //refresh validaotr list
+        //refresh validator list
         let result = await ControlService.listValidators(client.config.serviceID);
         if (!client.service.includes("Web3Signer")) {
           let resultRemote = await ControlService.listRemoteKeys(client.config.serviceID);

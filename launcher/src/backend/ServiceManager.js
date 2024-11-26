@@ -844,18 +844,23 @@ export class ServiceManager {
     }
   }
 
-  //args: network, installDir, port, executionClients, checkpointURL, consensusClients, mevboost, relays, // for external -> source, jwtToken
+  //args: network, installDir, port, executionClients, checkpointURL, consensusClients, mevboost, relays // for external -> source, jwtToken // chainId -> for devnet
   getService(name, args) {
     let ports;
     let service;
     switch (name) {
       case "GethService":
         ports = [
-          new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
-          new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
           new ServicePort("127.0.0.1", args.port ? args.port : 8545, 8545, servicePortProtocol.tcp),
           new ServicePort("127.0.0.1", 8546, 8546, servicePortProtocol.tcp),
         ];
+
+        args.network === "devnet"
+          ? ports.push(new ServicePort(null, 8551, 8551, servicePortProtocol.tcp))
+          : ports.push(
+              new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
+              new ServicePort(null, 30303, 30303, servicePortProtocol.udp)
+            );
         return GethService.buildByUserInput(args.network, ports, args.installDir + "/geth");
 
       case "RethService":
@@ -916,22 +921,33 @@ export class ServiceManager {
 
       case "PrysmBeaconService":
         ports = [
-          new ServicePort(null, 13001, 13001, servicePortProtocol.tcp),
-          new ServicePort(null, 12001, 12001, servicePortProtocol.udp),
           new ServicePort("127.0.0.1", 4000, 4000, servicePortProtocol.tcp),
           new ServicePort("127.0.0.1", args.port ? args.port : 3500, 3500, servicePortProtocol.tcp),
         ];
+
+        args.network === "devnet"
+          ? ports.push(
+              new ServicePort(null, 8080, 8080, servicePortProtocol.tcp),
+              new ServicePort(null, 6060, 6060, servicePortProtocol.tcp),
+              new ServicePort(null, 9090, 9090, servicePortProtocol.tcp)
+            )
+          : ports.push(
+              new ServicePort(null, 13001, 13001, servicePortProtocol.tcp),
+              new ServicePort(null, 12001, 12001, servicePortProtocol.udp)
+            );
         return PrysmBeaconService.buildByUserInput(
           args.network,
           ports,
           args.installDir + "/prysm",
           args.executionClients,
           args.mevboost ? args.mevboost : [],
-          args.checkpointURL
+          args.checkpointURL,
+          args.chainId ? args.chainId : 32382
         );
 
       case "PrysmValidatorService":
-        ports = [new ServicePort("127.0.0.1", args.port ? args.port : 7500, 7500, servicePortProtocol.tcp)];
+        ports =
+          args.network === "devnet" ? [] : [new ServicePort("127.0.0.1", args.port ? args.port : 7500, 7500, servicePortProtocol.tcp)];
         return PrysmValidatorService.buildByUserInput(args.network, ports, args.installDir + "/prysm", args.consensusClients);
 
       case "LodestarBeaconService":
@@ -1366,12 +1382,15 @@ export class ServiceManager {
       `);
     }
     newServices.forEach((service) => {
-      if (versions[service.network] && versions[service.network][service.service]) {
-        service.imageVersion = versions[service.network][service.service].slice(-1).pop();
-      } else if (versions["mainnet"] && versions["mainnet"][service.service]) {
-        service.imageVersion = versions["mainnet"][service.service].slice(-1).pop();
-      } else if (versions["prater"] && versions["prater"][service.service]) {
-        service.imageVersion = versions["prater"][service.service].slice(-1).pop();
+      if (service.network !== "devnet") {
+        if (versions[service.network] && versions[service.network][service.service]) {
+          service.imageVersion = versions[service.network][service.service].slice(-1).pop();
+        } else if (versions["mainnet"] && versions["mainnet"][service.service]) {
+          service.imageVersion = versions["mainnet"][service.service].slice(-1).pop();
+        } else if (versions["prater"] && versions["prater"][service.service]) {
+          service.imageVersion = versions["prater"][service.service].slice(-1).pop();
+        }
+        if (service.switchImageTag) service.switchImageTag(this.nodeConnection.settings.stereum.settings.arch);
       }
     });
     for (const service of newServices) {
@@ -2328,5 +2347,127 @@ export class ServiceManager {
     } catch (error) {
       console.error("Failed to fetch GitHub testers:", error);
     }
+  }
+
+  async writeGenesisJsonDevnet(genesis) {
+    const ref = StringUtils.createRandomString();
+    this.nodeConnection.taskManager.otherTasksHandler(ref, `Writing Genesis JSON`);
+    try {
+      const workingDir = await this.getCurrentPath();
+
+      const escapedGenesisJsonString = StringUtils.escapeStringForShell(JSON.stringify(genesis, null, 2));
+
+      await this.nodeConnection.sshService.exec(`
+        mkdir -p ${workingDir}/genesis/execution && \
+        echo ${escapedGenesisJsonString} > ${workingDir}/genesis/execution/genesis.json && \
+        chmod 0777 ${workingDir}/genesis ${workingDir}/genesis/execution ${workingDir}/genesis/execution/genesis.json
+      `);
+
+      console.log("Genesis file has been written successfully.");
+      this.nodeConnection.taskManager.otherTasksHandler(ref, `Genesis JSON Written`, true);
+    } catch (error) {
+      this.nodeConnection.taskManager.otherTasksHandler(
+        ref,
+        `Writing Genesis JSON Failed`,
+        false,
+        `Failed to write genesis file: ${error}`
+      );
+      console.error("Error writing genesis file:", error);
+      throw error;
+    } finally {
+      this.nodeConnection.taskManager.otherTasksHandler(ref);
+    }
+  }
+
+  async writeConfigYamlDevnet(writeConfigData) {
+    const ref = StringUtils.createRandomString();
+    this.nodeConnection.taskManager.otherTasksHandler(ref, `Writing Config YAML`);
+    try {
+      if (!writeConfigData.existDepositContract) {
+        writeConfigData.configYaml = writeConfigData.configYaml?.replace(/^.*DEPOSIT_CONTRACT_ADDRESS.*\n?/gm, "");
+      }
+
+      const workingDir = await this.getCurrentPath();
+
+      const escapedYamlString = StringUtils.escapeStringForShell(writeConfigData.configYaml);
+
+      const command = `
+        mkdir -p ${workingDir}/genesis/consensus && \
+        echo -e ${escapedYamlString} > ${workingDir}/genesis/consensus/config.yml && \
+        chmod 0777 ${workingDir}/genesis/consensus ${workingDir}/genesis/consensus/config.yml
+      `;
+
+      await this.nodeConnection.sshService.exec(command);
+
+      console.log("Config YAML file has been written successfully.");
+      this.nodeConnection.taskManager.otherTasksHandler(ref, `Config YAML Written`, true);
+    } catch (error) {
+      this.nodeConnection.taskManager.otherTasksHandler(
+        ref,
+        `Writing Config YAML Failed`,
+        false,
+        `Failed to write config YAML file: ${error}`
+      );
+      console.error("Error writing config YAML file:", error);
+      throw error;
+    } finally {
+      this.nodeConnection.taskManager.otherTasksHandler(ref);
+    }
+  }
+
+  async initGenesis() {
+    try {
+      const workingDir = await this.getCurrentPath();
+      await this.nodeConnection.runPlaybook("Initiate Devnet Genesis", {
+        stereum_role: "initiate-devnet-genesis",
+        working_dir: workingDir,
+      });
+    } catch (error) {
+      console.error("Error during Initiate Devnet Genesis playbook execution:", error);
+      throw error;
+    }
+  }
+
+  async removeConfigGenesisCopy() {
+    const ref = StringUtils.createRandomString();
+    this.nodeConnection.taskManager.otherTasksHandler(ref, `Remove initial copies`);
+    try {
+      const workingDir = await this.getCurrentPath();
+
+      await this.nodeConnection.sshService.exec(`rm -rf ${workingDir}/genesis/`);
+
+      console.log("Config and Genesis Copy removed successfully.");
+      this.nodeConnection.taskManager.otherTasksHandler(ref, `Config and Genesis Copy removed`, true);
+    } catch (error) {
+      this.nodeConnection.taskManager.otherTasksHandler(
+        ref,
+        `Removing Config and Genesis Copy Failed`,
+        false,
+        `Failed to remove Config and genesis copy: ${error}`
+      );
+      console.error("Error removing Config and genesis copy:", error);
+      throw error;
+    } finally {
+      this.nodeConnection.taskManager.otherTasksHandler(ref);
+    }
+  }
+
+  async startServicesForSetup(setupId) {
+    let setup = await this.configManager.getSetup(setupId);
+
+    const runRefs = [];
+    const services = setup[setupId].services;
+
+    if (services.length > 0) {
+      await Promise.all(
+        services.map(async (serviceId, index) => {
+          await Sleep(index * 1000);
+          const result = await this.manageServiceState(serviceId, "started");
+          runRefs.push(result);
+        })
+      );
+    }
+
+    return runRefs;
   }
 }

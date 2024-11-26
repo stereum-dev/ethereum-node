@@ -1,5 +1,5 @@
 <template>
-  <div class="alert-box_parent">
+  <div class="alert-box_parent rounded-md">
     <div class="alert-box">
       <div class="alert-box_header h-8 w-full flex justify-center items-center">
         <div class="alert-box_icons border border-gray-600 rounded-md bg-[#151618] w-3/4 h-full flex justify-center items-center pt-0.5">
@@ -192,7 +192,7 @@
 
         <!-- csm red end -->
         <!-- csm green start -->
-        <template v-if="notifCsm && !alertShowState.includes('green')">
+        <template v-if="notifCsm && !alertShowState?.includes('green')">
           <div
             v-for="notif in notifCsm"
             :key="notif"
@@ -318,10 +318,11 @@
 import ControlService from "@/store/ControlService";
 import { useTaskManager } from "@/store/taskManager";
 import { useControlStore } from "@/store/theControl";
-import { mapWritableState } from "pinia";
+import { mapWritableState, mapState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useServices } from "@/store/services";
 import { useFooter } from "@/store/theFooter";
+import { useSetups } from "@/store/setups";
 export default {
   data() {
     return {
@@ -375,6 +376,9 @@ export default {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       newUpdates: "newUpdates",
+    }),
+    ...mapState(useSetups, {
+      selectedSetup: "selectedSetup",
     }),
     ...mapWritableState(useFooter, {
       cursorLocation: "cursorLocation",
@@ -569,7 +573,7 @@ export default {
     },
 
     async readService() {
-      const validators = this.installedServices.filter((i) => i.category === "validator");
+      const validators = this.installedServices?.filter((i) => i.category === "validator");
 
       if (validators && validators.length > 0 && validators[0].config) {
         const addresses = [];
@@ -584,12 +588,13 @@ export default {
             continue;
           }
           const pattern = validator.expertOptions[patternIndex].pattern;
-          const match = [...validator.yaml.match(new RegExp(pattern))][2];
-          if (match) {
-            validator.address = match; // Update the address property directly
+          const match = validator.yaml ? validator.yaml.match(new RegExp(pattern)) : null;
+
+          if (match && match.length > 2) {
+            validator.address = match[2]; // Update the address property directly
             addresses.push(validator);
           } else {
-            console.error("Could not find default-fee-recipient address in the service YAML for validator:", validator.name);
+            return;
           }
         }
         const notSetAddresses = addresses.filter((validator) => validator.address === "0x0000000000000000000000000000000000000000");
@@ -678,24 +683,22 @@ export default {
   right: 0 !important;
 }
 .alert-box_parent {
-  width: 161px;
-  max-height: 333px;
-  height: 333px;
-  border-radius: 15px;
+  width: 100%;
+  max-height: 100%;
+  height: 100%;
   background-color: #264744;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 10px 5px;
+
   position: relative;
-  box-shadow: 0px 0px 5px 2px #001717;
   cursor: default;
 }
 .alert-box {
   display: flex;
-  height: 330px;
-  justify-content: space-between;
+  height: 100%;
+  width: 100%;
   align-items: center;
   flex-direction: column;
   padding: 5px;
@@ -743,9 +746,9 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  width: 140px;
-  max-height: 338px;
-  height: 338px;
+  width: 100%;
+
+  height: 92%;
   background: #23272a;
   border: 1px solid #707070;
   border-radius: 5px;
@@ -758,7 +761,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   width: 95%;
-  height: 13%;
+  height: 9%;
   background: #ffd924;
   border: 1px solid #707070;
   border-radius: 5px;
@@ -770,7 +773,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   width: 95%;
-  height: 13%;
+  height: 9%;
   background: rgb(173, 7, 7);
   border: 1px solid #707070;
   border-radius: 5px;
@@ -783,7 +786,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   width: 95%;
-  height: 13%;
+  height: 9%;
   background: #5f7e6a;
   border: 1px solid #707070;
   border-radius: 5px;
@@ -794,15 +797,15 @@ export default {
 }
 
 .icon-box {
-  width: 28%;
-  height: 95%;
+  width: 25%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .icon-box img {
-  width: 95%;
-  height: 99%;
+  width: 1.5rem;
+  height: 1.5rem;
 }
 .message-box {
   width: 90%;

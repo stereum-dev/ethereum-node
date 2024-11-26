@@ -10,51 +10,49 @@ export class PrysmValidatorService extends NodeService {
 
     const image = "prysmaticlabs/prysm-validator";
 
-    const dataDir = "/opt/app/data/db";
+    const dataDir = network === "devnet" ? "/consensus" : "/opt/app/data/db";
     const walletDir = "/opt/app/data/wallets";
     const passwordDir = "/opt/app/data/passwords";
     const graffitiDir = "/opt/app/graffitis";
+    const configYamlDir = "/consensus";
 
-    const volumes = [
-      new ServiceVolume(workingDir + "/data/db", dataDir),
-      new ServiceVolume(workingDir + "/data/wallets", walletDir),
-      new ServiceVolume(workingDir + "/data/passwords", passwordDir),
-      new ServiceVolume(workingDir + "/graffitis", graffitiDir),
-    ];
+    const volumes =
+      network === "devnet"
+        ? []
+        : [
+            new ServiceVolume(workingDir + "/data/db", dataDir),
+            new ServiceVolume(workingDir + "/data/wallets", walletDir),
+            new ServiceVolume(workingDir + "/data/passwords", passwordDir),
+            new ServiceVolume(workingDir + "/graffitis", graffitiDir),
+          ];
 
     const provider = consensusClients
       .map((client) => {
+        if (network === "devnet") {
+          const consensusDir = client.volumes.find((vol) => vol.servicePath.includes("/consensus")).destinationPath;
+          volumes.push(new ServiceVolume(consensusDir, configYamlDir));
+        }
         return client.buildConsensusClientHttpEndpointUrl();
-      })
-      .join();
+      }).join();
+
+    const cmd = service.generatePrysmValidatorCommand(
+      network,
+      dataDir,
+      walletDir,
+      passwordDir,
+      graffitiDir,
+      configYamlDir,
+      provider,
+      providerGateway
+    );
 
     service.init(
       "PrysmValidatorService", //service
       service.id, //id
       1, // configVersion
       image, //image
-      "v5.1.0", //imageVersion
-      [
-        "--accept-terms-of-use=true",
-        "--enable-beacon-rest-api",
-        `--beacon-rest-api-provider=${provider}`,
-        "--web",
-        `--${network}`,
-        `--datadir=${dataDir}`,
-        `--keymanager-token-file=${walletDir + "/auth-token"}`,
-        `--wallet-dir=${walletDir}`,
-        `--wallet-password-file=${passwordDir + "/wallet-password"}`,
-        "--monitoring-host=0.0.0.0",
-        "--http-port=7500",
-        "--http-host=0.0.0.0",
-        '--http-cors-domain="*"',
-        "--monitoring-host=0.0.0.0",
-        "--monitoring-port=8081",
-        "--suggested-fee-recipient=0x0000000000000000000000000000000000000000",
-        `--graffiti-file=${graffitiDir + "/graffitis.yaml"}`,
-        "--enable-builder=true",
-        "--enable-doppelganger=true",
-      ], //command
+      "v5.0.4", //imageVersion
+      cmd, //command
       ["/app/cmd/validator/validator"], // entrypoint
       null, // env
       ports, //ports
@@ -66,6 +64,44 @@ export class PrysmValidatorService extends NodeService {
     );
 
     return service;
+  }
+
+  generatePrysmValidatorCommand(network, dataDir, walletDir, passwordDir, graffitiDir, configYamlDir, provider, providerGateway) {
+    const commonCmd = [
+      "--accept-terms-of-use=true",
+      `--enable-beacon-rest-api`,
+      `--beacon-rest-api-provider=${provider}`,
+      "--monitoring-host=0.0.0.0",
+      "--monitoring-port=8081",
+    ];
+
+    if (network === "devnet") {
+      return [
+        ...commonCmd,
+        `--datadir=${dataDir}/validatordata`,
+        "--interop-num-validators=64",
+        "--interop-start-index=0",
+        `--chain-config-file=${configYamlDir}/config.yml`,
+        "--force-clear-db",
+      ];
+    } else {
+      return [
+        ...commonCmd,
+        "--web",
+        `--${network}`,
+        `--datadir=${dataDir}`,
+        `--keymanager-token-file=${walletDir}/auth-token`,
+        `--wallet-dir=${walletDir}`,
+        `--wallet-password-file=${passwordDir}/wallet-password`,
+        "--http-port=7500",
+        "--http-host=0.0.0.0",
+        '--http-cors-domain="*"',
+        "--suggested-fee-recipient=0x0000000000000000000000000000000000000000",
+        `--graffiti-file=${graffitiDir}/graffitis.yaml`,
+        "--enable-builder=true",
+        "--enable-doppelganger=true",
+      ];
+    }
   }
 
   static buildByConfiguration(config) {

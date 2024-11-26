@@ -10,7 +10,7 @@
 
 <script setup>
 import { computed } from "vue";
-import { useSetups } from "../../../../../store/setups";
+import { useSetups } from "@/store/setups";
 
 const props = defineProps({
   client: { type: Object, required: true },

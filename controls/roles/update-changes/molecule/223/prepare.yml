@@ -102,6 +102,68 @@
             mevboost: []
             otherServices: []
       become: yes
+      
+    - name: Create SSVNetworkService config
+      copy:
+        dest: "/etc/stereum/services/cb941f15-6eef-4e4d-fc81-4d524b627373.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: SSVNetworkService
+          id: cb941f15-6eef-4e4d-fc81-4d524b627373
+          configVersion: 1
+          command: make BUILD_PATH=/go/bin/ssvnode start-node && docker logs ssv_node
+          entrypoint: []
+          env:
+            CONFIG_PATH: /data/config.yaml
+          image: bloxstaking/ssv-node:v1.3.8
+          ports:
+            - 0.0.0.0:12000:12000/udp
+            - 0.0.0.0:13000:13000/tcp
+          volumes:
+            - /opt/stereum/ssv_network-cb941f15-6eef-4e4d-fc81-4d524b627373/data:/data
+            - /opt/stereum/ssv_network-cb941f15-6eef-4e4d-fc81-4d524b627373/secrets:/secrets
+          user: "2000"
+          autoupdate: true
+          network: holesky
+          dependencies:
+            executionClients: []
+            consensusClients: []
+            mevboost: []
+            otherServices: []
+      become: yes
+
+    - name: Create SSVNetworkService config
+      copy:
+        dest: "/etc/stereum/services/611cf17d-adf7-433e-bc4e-2e38c0f502c3.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: SSVNetworkService
+          id: 611cf17d-adf7-433e-bc4e-2e38c0f502c3
+          configVersion: 1
+          command: make BUILD_PATH=/go/bin/ssvnode start-node && docker logs ssv_node
+          entrypoint: []
+          env:
+            CONFIG_PATH: /data/config.yaml
+          image: ssvlabs/ssv-node:v1.3.8
+          ports:
+            - 0.0.0.0:12000:12000/udp
+            - 0.0.0.0:13000:13000/tcp
+          volumes:
+            - /opt/stereum/ssv_network-611cf17d-adf7-433e-bc4e-2e38c0f502c3/data:/data
+            - /opt/stereum/ssv_network-611cf17d-adf7-433e-bc4e-2e38c0f502c3/secrets:/secrets
+          user: "2000"
+          autoupdate: true
+          network: holesky
+          dependencies:
+            executionClients: []
+            consensusClients: []
+            mevboost: []
+            otherServices: []
+      become: yes
 
     - name: Create ErigonService config
       copy:
@@ -255,7 +317,7 @@
             mevboost: []
             otherServices: []
       become: yes
-
+      
     - name: Create FlashbotsMevBoostService config
       copy:
         dest: "/etc/stereum/services/5c9c2120-03dc-ffa3-30a8-7faf61f09a3d.yaml"
