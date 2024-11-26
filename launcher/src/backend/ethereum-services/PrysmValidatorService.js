@@ -36,16 +36,7 @@ export class PrysmValidatorService extends NodeService {
       })
       .join();
 
-    const cmd = service.generatePrysmValidatorCommand(
-      network,
-      dataDir,
-      walletDir,
-      passwordDir,
-      graffitiDir,
-      configYamlDir,
-      provider,
-      providerGateway
-    );
+    const cmd = service.generatePrysmValidatorCommand(network, dataDir, walletDir, passwordDir, graffitiDir, configYamlDir, provider);
 
     service.init(
       "PrysmValidatorService", //service
@@ -67,7 +58,7 @@ export class PrysmValidatorService extends NodeService {
     return service;
   }
 
-  generatePrysmValidatorCommand(network, dataDir, walletDir, passwordDir, graffitiDir, configYamlDir, provider, providerGateway) {
+  generatePrysmValidatorCommand(network, dataDir, walletDir, passwordDir, graffitiDir, configYamlDir, provider) {
     const commonCmd = [
       "--accept-terms-of-use=true",
       `--enable-beacon-rest-api`,
