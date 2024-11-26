@@ -33,7 +33,8 @@ export class PrysmValidatorService extends NodeService {
           volumes.push(new ServiceVolume(consensusDir, configYamlDir));
         }
         return client.buildConsensusClientHttpEndpointUrl();
-      }).join();
+      })
+      .join();
 
     const cmd = service.generatePrysmValidatorCommand(
       network,
