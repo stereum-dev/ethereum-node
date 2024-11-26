@@ -62,7 +62,7 @@ jobs:
         if: matrix.os == 'macos-latest'
         run: echo "BUILD_ARGS=--universal" >> $GITHUB_ENV
       
-      - name: install dep
+      - name: Install Dependencies
         run: |
           cd launcher && npm i
 
