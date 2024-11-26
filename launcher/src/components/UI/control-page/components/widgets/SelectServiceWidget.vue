@@ -30,6 +30,7 @@
           >
             <DropdownOption text="EXECUTION & CONSENSUS CLIENTS" @select="servicePicker('exeCons')" />
             <DropdownOption text="VALIDATOR CLIENT" @select="servicePicker('vld')" />
+            <DropdownOption text="LIDO CSM OPERATOR" @select="servicePicker('csm')" />
           </div>
         </transition>
       </div>
@@ -89,7 +90,11 @@ const isOpen = ref(false);
 const currentIndex = ref(0);
 
 const selectedServiceLabel = computed(() => {
-  return controlStore.pickedService === "exeCons" ? "EXECUTION & CONSENSUS CLIENTS" : "VALIDATOR CLIENT";
+  return controlStore.pickedService === "exeCons"
+    ? "EXECUTION & CONSENSUS CLIENTS"
+    : controlStore.pickedService === "vld"
+    ? "VALIDATOR CLIENT"
+    : "LIDO CSM OPERATOR";
 });
 
 onMounted(() => {
@@ -265,7 +270,7 @@ const toggleDropdown = () => {
 };
 
 const servicePicker = (type) => {
-  controlStore.pickedService = type === "vld" ? "vld" : "exeCons";
+  controlStore.pickedService = type;
   toggleDropdown();
 };
 

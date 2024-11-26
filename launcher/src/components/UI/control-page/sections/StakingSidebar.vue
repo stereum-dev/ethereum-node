@@ -4,18 +4,31 @@
   >
     <WidgetCard class="services-select-widget col-start-1 col-span-6 row-start-1 row-span-3"><SelectServiceWidget /></WidgetCard>
     <WidgetCard class="amsterdam-widget col-start-1 col-span-6 row-start-4 row-span-3">
-      <AmsterdamComponent v-if="pickedService" />
-      <TheStaking v-else />
+      <AmsterdamComponent v-if="controlStore.pickedService == 'exeCons'" />
+      <TheStaking v-else-if="controlStore.pickedService == 'vld'" />
     </WidgetCard>
-    <WidgetCard v-if="pickedService" class="endpoint-widget col-start-1 col-span-6 row-start-7 row-span-3"><EndpointWidget /></WidgetCard>
-    <WidgetCard v-if="pickedService" class="p2pNetwork-widget col-start-1 col-span-6 row-start-10 row-span-3"><PeersOverTime /></WidgetCard>
-    <WidgetCard v-if="pickedService" class="p2p-widget col-start-1 col-span-6 row-start-13 row-span-3"><PeerToPeer /></WidgetCard>
-    <WidgetCard class="connected-validator-widget col-start-7 col-span-12 row-start-1 row-span-3"
-      ><ConnectedValidatorWidget v-if="pickedService" /><ConnectedClientPair v-else
+    <WidgetCard v-if="controlStore.pickedService == 'exeCons'" class="endpoint-widget col-start-1 col-span-6 row-start-7 row-span-3"
+      ><EndpointWidget
     /></WidgetCard>
-    <WidgetCard v-if="pickedService" class="sync-status-widget col-start-7 col-span-12 row-start-4 row-span-3"> <SyncStatus /></WidgetCard>
-    <WidgetCard v-if="pickedService" class="epoch-slot-widget col-start-7 col-span-12 row-start-7 row-span-3"><EpochSlot /></WidgetCard>
-    <WidgetCard v-if="pickedService" class="subscribed-subnet-widget col-start-7 col-span-12 row-start-10 row-span-3"
+    <WidgetCard v-if="controlStore.pickedService == 'exeCons'" class="p2pNetwork-widget col-start-1 col-span-6 row-start-10 row-span-3"
+      ><PeersOverTime
+    /></WidgetCard>
+    <WidgetCard v-if="controlStore.pickedService == 'exeCons'" class="p2p-widget col-start-1 col-span-6 row-start-13 row-span-3"
+      ><PeerToPeer
+    /></WidgetCard>
+    <WidgetCard class="connected-validator-widget col-start-7 col-span-12 row-start-1 row-span-3"
+      ><ConnectedValidatorWidget v-if="controlStore.pickedService == 'exeCons'" /><ConnectedClientPair
+        v-else-if="controlStore.pickedService == 'vld'"
+    /></WidgetCard>
+    <WidgetCard v-if="controlStore.pickedService == 'exeCons'" class="sync-status-widget col-start-7 col-span-12 row-start-4 row-span-3">
+      <SyncStatus
+    /></WidgetCard>
+    <WidgetCard v-if="controlStore.pickedService == 'exeCons'" class="epoch-slot-widget col-start-7 col-span-12 row-start-7 row-span-3"
+      ><EpochSlot
+    /></WidgetCard>
+    <WidgetCard
+      v-if="controlStore.pickedService == 'exeCons'"
+      class="subscribed-subnet-widget col-start-7 col-span-12 row-start-10 row-span-3"
       ><SubscribedSubnets
     /></WidgetCard>
   </div>
@@ -35,19 +48,7 @@ import EpochSlot from "../components/widgets/EpochSlot.vue";
 import ConnectedValidatorWidget from "../components/widgets/ConnectedValidatorWidget.vue";
 import ConnectedClientPair from "../components/widgets/ConnectedClientPair.vue";
 
-import { watch, ref } from "vue";
-
 import { useControlStore } from "@/store/theControl";
 
 const controlStore = useControlStore();
-
-const pickedService = ref(true);
-
-watch(
-  () => controlStore.pickedService,
-  (newValue) => {
-    pickedService.value = newValue === "vld" ? false : true;
-  },
-  { deep: true, immediate: true }
-);
 </script>
