@@ -22,6 +22,7 @@ export class SSHService {
     }, 100);
     this.shellConn = null;
     this.shellStream = null;
+    this.loggingOut = false;
   }
 
   static checkExecError(err, accept_empty_result = false) {
@@ -183,6 +184,7 @@ export class SSHService {
 
   async disconnect(reconnecting = false) {
     log.info("DISCONNECT: connectionInfo", this.connectionInfo.host);
+    this.loggingOut = true;
     try {
       this.connected = false;
       if (!reconnecting) {
@@ -211,6 +213,8 @@ export class SSHService {
       return true;
     } catch (error) {
       return error;
+    } finally {
+      this.loggingOut = false;
     }
   }
 
@@ -220,6 +224,7 @@ export class SSHService {
   }
 
   async execCommand(command) {
+    if (this.loggingOut) return { rc: -1, stdout: "", stderr: "Logging Out!" };
     return new Promise((resolve, reject) => {
       let conn = this.getConnectionFromPool();
 
