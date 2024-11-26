@@ -435,11 +435,16 @@ export class ServiceManager {
           command = "--execution-endpoint=";
         }
         if (service.service.includes("Validator")) {
-          filter = (e) => e.buildConsensusClientEndpoint();
-          command = "--beacon-rpc-provider=";
-          service.command = this.addCommandConnection(service, command, dependencies, filter);
-          filter = (e) => e.buildConsensusClientGateway();
-          command = "--beacon-rpc-gateway-provider=";
+          if (!service.command.includes("--enable-beacon-rest-api")) {
+            filter = (e) => e.buildConsensusClientEndpoint();
+            command = "--beacon-rpc-provider=";
+            service.command = this.addCommandConnection(service, command, dependencies, filter);
+            filter = (e) => e.buildConsensusClientGateway();
+            command = "--beacon-rpc-gateway-provider=";
+          } else {
+            filter = (e) => e.buildConsensusClientHttpEndpointUrl();
+            command = "--beacon-rest-api-provider=";
+          }
         }
         break;
       case "Lodestar":
@@ -682,12 +687,6 @@ export class ServiceManager {
           .filter((e) => !e.includes(serviceToDelete.id))
           .join();
       }
-    }
-    if (service.service.includes("PrysmValidator") && serviceToDelete.service.includes("ExternalConsensus")) {
-      service.command = this.removeCommandConnection(
-        service.command,
-        serviceToDelete.env.gateway ? serviceToDelete.env.gateway : "--beacon-rpc-gateway-provider="
-      );
     }
 
     //update volumes
@@ -1051,12 +1050,7 @@ export class ServiceManager {
         return ExternalExecutionService.buildByUserInput(args.network, args.installDir + "/externalExecution", args.source, args.jwtToken);
       case "ExternalConsensusService":
         ports = [];
-        return ExternalConsensusService.buildByUserInput(
-          args.network,
-          args.installDir + "/externalConsensus",
-          args.source,
-          args.gateway ? args.gateway : ""
-        );
+        return ExternalConsensusService.buildByUserInput(args.network, args.installDir + "/externalConsensus", args.source);
       case "CustomService":
         ports = [];
         return CustomService.buildByUserInput(
@@ -1219,10 +1213,7 @@ export class ServiceManager {
           .destinationPath.split("/")
           .slice(0, -1)
           .join("/");
-        await this.nodeConnection.sshService.exec(
-          `mkdir -p ${extConnDir} && echo -e ${service.env.link} > ${extConnDir}/link.txt` +
-            (service.env.gateway ? ` && echo -e ${service.env.gateway} > ${extConnDir}/gateway.txt` : "")
-        );
+        await this.nodeConnection.sshService.exec(`mkdir -p ${extConnDir} && echo -e ${service.env.link} > ${extConnDir}/link.txt`);
         if (service.service.includes("Execution")) {
           await this.nodeConnection.sshService.exec(`echo -e ${service.env.jwtToken} > ${extConnDir}/engine.jwt`);
         }

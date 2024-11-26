@@ -24,12 +24,7 @@ export class PrysmValidatorService extends NodeService {
 
     const provider = consensusClients
       .map((client) => {
-        return client.buildConsensusClientEndpoint();
-      })
-      .join();
-    const providerGateway = consensusClients
-      .map((client) => {
-        return client.buildConsensusClientGateway();
+        return client.buildConsensusClientHttpEndpointUrl();
       })
       .join();
 
@@ -41,8 +36,8 @@ export class PrysmValidatorService extends NodeService {
       "v5.1.0", //imageVersion
       [
         "--accept-terms-of-use=true",
-        `--beacon-rpc-provider=${provider}`,
-        `--beacon-rpc-gateway-provider=${providerGateway}`,
+        "--enable-beacon-rest-api",
+        `--beacon-rest-api-provider=${provider}`,
         "--web",
         `--${network}`,
         `--datadir=${dataDir}`,
@@ -50,9 +45,9 @@ export class PrysmValidatorService extends NodeService {
         `--wallet-dir=${walletDir}`,
         `--wallet-password-file=${passwordDir + "/wallet-password"}`,
         "--monitoring-host=0.0.0.0",
-        "--grpc-gateway-port=7500",
-        "--grpc-gateway-host=0.0.0.0",
-        '--grpc-gateway-corsdomain="*"',
+        "--http-port=7500",
+        "--http-host=0.0.0.0",
+        '--http-cors-domain="*"',
         "--monitoring-host=0.0.0.0",
         "--monitoring-port=8081",
         "--suggested-fee-recipient=0x0000000000000000000000000000000000000000",

@@ -47,7 +47,7 @@ export class PrysmBeaconService extends NodeService {
         `--datadir=${dataDir}`,
         `--block-batch-limit=512`,
         "--rpc-host=0.0.0.0",
-        "--grpc-gateway-host=0.0.0.0",
+        "--http-host=0.0.0.0",
         "--p2p-max-peers=100",
         `--execution-endpoint=${executionEndpoint}`,
         `--jwt-secret=${JWTDir}`,
