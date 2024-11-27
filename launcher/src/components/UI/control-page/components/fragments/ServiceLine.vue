@@ -8,7 +8,7 @@
       {{ props.label }}
     </div>
     <div
-      class="service-ip w-2/3 h-5/6 flex justify-center items-center border border-gray-400 rounded-md text-[55%] text-gray-200 font-semibold"
+      class="service-ip w-2/3 h-5/6 flex justify-center items-center border border-gray-400 rounded-md text-[55%] bg-gray-900 text-gray-200 font-semibold"
     >
       {{ props.value }}
     </div>
