@@ -455,6 +455,10 @@ ipcMain.handle("writePrometheusConfig", async (event, args) => {
   return await nodeConnection.writePrometheusConfig(args.serviceID, args.config);
 });
 
+ipcMain.handle("getCPUTemperature", async () => {
+  return await monitoring.getCPUTemperature();
+});
+
 ipcMain.handle("getValidatorStats", async (event, args) => {
   return await monitoring.getValidatorStats(args);
 });
@@ -691,6 +695,26 @@ ipcMain.handle("checkConnectionQuality", async (event, args) => {
   return await nodeConnection.sshService.checkConnectionQuality(args);
 });
 
+ipcMain.handle("writeGenesisJsonDevnet", async (event, args) => {
+  return await serviceManager.writeGenesisJsonDevnet(args);
+});
+
+ipcMain.handle("writeConfigYamlDevnet", async (event, args) => {
+  return await serviceManager.writeConfigYamlDevnet(args);
+});
+
+ipcMain.handle("initGenesis", async () => {
+  return await serviceManager.initGenesis();
+});
+
+ipcMain.handle("removeConfigGenesisCopy", async () => {
+  return await serviceManager.removeConfigGenesisCopy();
+});
+
+ipcMain.handle("startServicesForSetup", async (event, args) => {
+  return await serviceManager.startServicesForSetup(args);
+});
+
 ipcMain.handle("startShell", async (event) => {
   if (!nodeConnection.sshService.shellStream) {
     try {
@@ -758,6 +782,10 @@ ipcMain.handle("fetchObolCharonAlerts", async () => {
   return await monitoring.fetchObolCharonAlerts();
 });
 
+ipcMain.handle("getSubnetSubs", async () => {
+  return await monitoring.getSubnetSubs();
+});
+
 ipcMain.handle("fetchCsmAlerts", async () => {
   return await monitoring.fetchCsmAlerts();
 });
@@ -776,6 +804,10 @@ ipcMain.handle("getNewLauncherVersion", async () => {
 
 ipcMain.handle("deleteSlasherVolume", async (event, args) => {
   return await serviceManager.deleteSlasherVolume(args);
+});
+
+ipcMain.handle("fetchCurrentTimeZone", async () => {
+  return await monitoring.fetchCurrentTimeZone();
 });
 
 ipcMain.handle("getCSMQueue", async (event, args) => {

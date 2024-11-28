@@ -84,6 +84,8 @@ const networkFilter = (service) => {
       return service.service !== "SSVNetworkService" && service.service !== "SSVDKGService";
     case "gnosis":
       return /(Lighthouse|Teku|Nethermind|Erigon|Grafana|Prometheus)/.test(service.service);
+    case "devnet":
+      return;
     default:
       return service.service !== "SSVNetworkService";
   }
@@ -91,9 +93,10 @@ const networkFilter = (service) => {
 
 const determineCurrentNetwork = () => {
   const selectedNetwork = setupStore.selectedSetup?.network;
+
   if (selectedNetwork) {
     const foundNetwork = manageStore.networkList.find((network) => network.network === selectedNetwork);
-    currentNetwork.value = foundNetwork ? foundNetwork.network : null;
+    currentNetwork.value = foundNetwork ? foundNetwork.network : selectedNetwork === "devnet" ? selectedNetwork : null;
   }
 };
 

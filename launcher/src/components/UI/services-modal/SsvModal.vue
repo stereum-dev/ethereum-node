@@ -384,7 +384,7 @@ export default {
       this.ssvTotalConfig = await ControlService.getSSVTotalConfig(this.ssvService.config.serviceID);
 
       // TODO: check image min version
-      // const imageTag = 'bloxstaking/ssv-node:v1.0.1-hotfix';
+      // const imageTag = 'ssvlabs/ssv-node:v1.0.1-hotfix';
       // const minimumVersion = '1.1.0';
       const imageTag = this.ssvTotalConfig.ssvServiceConfig.image;
       const minimumVersion = "v1.3.0";

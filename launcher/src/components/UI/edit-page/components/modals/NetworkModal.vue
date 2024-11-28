@@ -38,7 +38,7 @@
                 @mouseleave="networkDropdownOpen = false"
               >
                 <li
-                  v-for="item in manageStore.networkList"
+                  v-for="item in getNetworks"
                   :key="item?.name"
                   class="w-full grid grid-cols-6 px-4 hover:bg-blue-400"
                   :class="item?.state === 'disabled' ? 'pointer-events-none opacity-50' : ''"
@@ -61,13 +61,25 @@
 <script setup>
 import CustomModal from "./CustomModal.vue";
 import { useNodeManage } from "@/store/nodeManage";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
+import { useSetups } from "../../../../../store/setups";
 
 const emit = defineEmits(["closeWindow", "switchConfirm"]);
 
 const networkDropdownOpen = ref(false);
 const manageStore = useNodeManage();
+const setupStore = useSetups();
 const network = ref({});
+
+const getNetworks = computed(() => {
+  let networks = [];
+  if (setupStore.selectedSetup?.network.toLowerCase() === "devnet") {
+    networks = [];
+  } else {
+    networks = manageStore.networkList;
+  }
+  return networks;
+});
 
 onMounted(() => {
   network.value = manageStore.configNetwork?.id ? manageStore.configNetwork : manageStore.currentNetwork;

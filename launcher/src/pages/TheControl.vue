@@ -3,7 +3,7 @@
 </template>
 <script>
 import { useRefreshMetrics } from "@/composables/monitoring";
-import ControlScreen from "../components/UI/the-control/ControlScreen.vue";
+import ControlScreen from "../components/UI/control-page/ControlScreen.vue";
 
 export default {
   components: { ControlScreen },

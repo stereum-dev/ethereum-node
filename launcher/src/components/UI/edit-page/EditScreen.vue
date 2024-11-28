@@ -50,7 +50,7 @@
           <SetupsDrawer
             v-else-if="manageStore.isSetupsDrawerActive"
             @close-window="closeSetupModal"
-            @create-custom="createCustomSetup"
+            @create-devnet="createDevnetModal"
             @get-network="getSetupNetwork"
           />
           <ServicesDrawer v-else-if="manageStore.isServicesDrawerActive" :dragging="startDrag" @add-services="addServices" />
@@ -120,6 +120,9 @@
 
       <!-- Start Setup Infos -->
       <SetupInfos v-if="setupStore.selectedSetupInfos" />
+      <!-- End Setup Infos -->
+      <!-- Start Devnet Configs Modal -->
+      <DevnetSetup v-if="setupStore.isDevnetSetupModalActive" @confirm-devnet="setupDevnet" />
     </TransitionGroup>
     <LoaderAnime v-if="manageStore.disableConfirmButton || setupStore.isImportAnimeActive" :anime="getAimationSrc" />
   </base-layout>
@@ -151,6 +154,7 @@ import ModifyModal from "./components/modals/ModifyModal.vue";
 import NetworkModal from "./components/modals/NetworkModal.vue";
 import NukeModal from "./components/modals/NukeModal.vue";
 import SwitchModal from "./components/modals/SwitchModal.vue";
+import DevnetSetup from "./components/modals/devnet/DevnetSetup.vue";
 import AddCustom from "./components/modals/custom-service/AddCustom.vue";
 import CreateSetup from "./components/modals/setups/CreateSetup.vue";
 import ImportSetup from "./components/modals/setups/ImportSetup.vue";
@@ -159,6 +163,7 @@ import ChangesSection from "./sections/ChangesSection.vue";
 import ServiceSection from "./sections/ServiceSection.vue";
 import SidebarSection from "./sections/SidebarSection.vue";
 import { useFrontendServices } from "@/composables/services";
+import { useGenesis } from "../../../store/genesis";
 
 const setupStore = useSetups();
 const footerStore = useFooter();
@@ -167,6 +172,7 @@ const manageStore = useNodeManage();
 const headerStore = useNodeHeader();
 const stakingStore = useStakingStore();
 const serverStore = useServers();
+const genesisStore = useGenesis();
 
 // Router
 const router = useRouter();
@@ -448,8 +454,94 @@ const openNetworkMenu = () => {
   manageStore.isServicesDrawerActive = false;
   manageStore.isSetupsDrawerActive = true;
 };
-const createCustomSetup = () => {
-  console.log("Create Custom Setup");
+
+const createDevnetModal = () => {
+  setupStore.isDevnetSetupModalActive = true;
+};
+
+//Create Devnet setup  and Install services
+const setupDevnet = async () => {
+  manageStore.disableConfirmButton = true;
+  try {
+    setupStore.genesisFile = useDeepClone(setupStore.uploadedGenesisConfig || genesisStore.genesis);
+
+    setupStore.isDevnetSetupModalActive = false;
+    setupStore.currentStep = 1;
+
+    await ControlService.writeGenesisJsonDevnet(useDeepClone(setupStore.genesisFile));
+    const existDepositContract = setupStore.genesisFile.alloc.hasOwnProperty("4242424242424242424242424242424242424242");
+
+    const writeConfigData = {
+      configYaml: genesisStore.configYaml,
+      existDepositContract,
+    };
+
+    await ControlService.writeConfigYamlDevnet(writeConfigData);
+    await ControlService.initGenesis();
+
+    // Create setup data
+    const { setupName, network, setupColor, services } = setupStore.devnetConfigData;
+
+    const setupData = {
+      name: setupName.trim(),
+      network,
+      color: setupColor,
+      type: "ETH",
+      services: [],
+    };
+
+    await ControlService.createSetup(setupData);
+    await fetchSetups();
+
+    const setupId = setupStore.editSetups.find((s) => s.setupName === setupName)?.setupId;
+    if (!setupId) throw new Error("Setup ID not found after setup creation");
+
+    // Install services in parallel
+    const executionClients = services.filter((e) => e.category === "execution");
+    const consensusClients = services.filter((e) => e.category === "consensus");
+
+    const installPromises = services.map((client) => installService(client, setupId, executionClients, consensusClients));
+
+    await Promise.all(installPromises);
+
+    await ControlService.handleServiceChanges(JSON.parse(JSON.stringify(manageStore.confirmChanges)));
+    await ControlService.startServicesForSetup(setupId);
+    await ControlService.removeConfigGenesisCopy();
+
+    // Reset state
+    manageStore.confirmChanges = [];
+    setupStore.resetDevnetConfigData();
+    manageStore.disableConfirmButton = false;
+  } catch (error) {
+    console.error("Error in setupDevnet:", error);
+  }
+};
+
+const installService = async (client, setupId, executionClients, consensusClients) => {
+  const serviceData = {
+    setupId,
+    network: "devnet",
+    chainId: useDeepClone(setupStore.genesisFile?.config?.chainId),
+    installDir: client.installDir || "/opt/stereum",
+    executionClients: client.category === "consensus" ? executionClients : client.executionClients,
+    consensusClients: client.category === "validator" ? consensusClients : client.consensusClients,
+    otherServices: client.otherServices,
+    relays: null,
+    checkpointURL: client.checkPointSyncUrl || false,
+    image: client.image,
+    entrypoint: client.entrypoint,
+    command: client.command,
+    ports: client.ports,
+    volumes: client.volumes,
+  };
+
+  manageStore.confirmChanges.push({
+    id: randomId,
+    content: "INSTALL",
+    contentIcon: "/img/icon/edit-node-icons/add-service-icon.png",
+    service: client,
+    data: serviceData,
+  });
 };
 
 const getSetupNetwork = (network) => {

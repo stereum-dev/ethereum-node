@@ -1,0 +1,24 @@
+---
+- name: Create beacon chain genesis
+  docker_container:
+    name: create-beacon-chain-genesis
+    image: gcr.io/prysmaticlabs/prysm/cmd/prysmctl:{{ stereum_static.defaults.devnet.prysm }}
+    command:
+      - testnet
+      - generate-genesis
+      - --fork=deneb
+      - --num-validators=64
+      - --genesis-time-delay=15
+      - --output-ssz=/consensus/genesis.ssz
+      - --chain-config-file=/consensus/config.yml
+      - --geth-genesis-json-in=/execution/genesis.json
+      - --geth-genesis-json-out=/execution/genesis.json
+    volumes:
+      - "{{ working_dir }}/genesis/consensus:/consensus"
+      - "{{ working_dir }}/genesis/execution:/execution"
+    auto_remove: true
+
+- name: Wait for 5 seconds
+  pause:
+    seconds: 5
+#EOF

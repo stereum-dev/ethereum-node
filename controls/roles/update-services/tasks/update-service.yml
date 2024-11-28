@@ -17,13 +17,13 @@
 
 - name: Get latest version for this service
   set_fact:
-    new_service_docker_image_tag: "{{ update_data.json[service_configuration.network][service_configuration.service] | default(update_data.json['mainnet'][service_configuration.service]) | last }}"
+    new_service_docker_image_tag: "{{ (update_data.json[service_configuration.network][service_configuration.service] | default(update_data.json['mainnet'][service_configuration.service] | default([]))) | last }}"
   when: service_configuration.autoupdate and service_configuration.service != 'CustomService'
 
 - name: Build new image tag
   set_fact:
     new_service_configuration_fraction:
-      image: "{{ service_docker_image }}:{{ new_service_docker_image_tag }}"
+      image: "{{ service_docker_image }}:{{ new_service_docker_image_tag | default(service_docker_image_tag) }}"
   when: service_configuration.autoupdate
 
 - name: Update configuration
@@ -33,12 +33,11 @@
 
 - name: Write configuration
   copy:
-    content: '{{ new_service_configuration | to_nice_yaml }}'
+    content: "{{ new_service_configuration | to_nice_yaml }}"
     dest: "/etc/stereum/services/{{ item }}.yaml"
     owner: "root"
     group: "root"
     mode: 0644
   when: service_configuration.autoupdate and new_service_docker_image_tag != service_docker_image_tag
   become: yes
-
 # EOF
