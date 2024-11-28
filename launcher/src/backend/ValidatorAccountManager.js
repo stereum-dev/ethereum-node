@@ -1119,7 +1119,7 @@ export class ValidatorAccountManager {
         if (result.status !== 200) throw new Error(`Couldn't get Validator Keys from SSV Network ${result.status} ${result.statusText}`);
 
         //get all pages and concat them
-        for (let i = 1; i <= result.data.pagination.pages; i++) {
+        for (let i = 2; i <= result.data.pagination.pages; i++) {
           const page = await axios.get(
             `https://api.ssv.network/api/v4/${service.network}/validators/in_operator/${operatorID}?page=${i}&perPage=100`
           );

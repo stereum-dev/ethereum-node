@@ -4,9 +4,7 @@
     @pointerdown.prevent.stop
     @mousedown.prevent.stop
   >
-    <div
-      class="w-full h-full row-start-2 row-span-full grid grid-rows-12 items-center justify-start"
-    >
+    <div class="w-full h-full row-start-2 row-span-full grid grid-rows-12 items-center justify-start">
       <!-- All Keys Button -->
       <div
         class="w-9 h-9 max-h-[35px] row-span-1 py-1 rounded-r-full text-gray-700 transition-colors duration-200 flex justify-center items-center cursor-pointer"
@@ -19,9 +17,7 @@
         @mouseenter="footerStore.cursorLocation = `All Keys`"
         @mouseleave="[(footerStore.cursorLocation = ''), (hoveredIndex = null)]"
       >
-        <span class="w-7 h-7 rounded-full text-center text-xs text-gray-200 p-2"
-          >All</span
-        >
+        <span class="w-7 h-7 rounded-full text-center text-xs text-gray-200 p-2">All</span>
       </div>
 
       <!-- Validator Buttons -->
@@ -32,8 +28,7 @@
         :class="{
           'bg-[#336666] shadow-md shadow-[#191a1b] animate__animated animate__slideInLeft animate__faster pointer-events-none':
             currentService === item.config?.serviceID,
-          'bg-[#202123] border border-gray-600':
-            currentService !== item.config?.serviceID,
+          'bg-[#202123] border border-gray-600': currentService !== item.config?.serviceID,
         }"
         @click="filterByService(item)"
         @mouseenter="footerStore.cursorLocation = `Filter by ${item.name}`"
@@ -58,7 +53,8 @@ import { useServices } from "@/store/services";
 import { useSetups } from "@/store/setups";
 import { useFooter } from "@/store/theFooter";
 import { useStakingStore } from "@/store/theStaking";
-import { computed, onMounted, ref, watch, watchEffect } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
+import { useObolStats, useSSVStats } from "../../../../composables/validators";
 
 const setupStore = useSetups();
 const footerStore = useFooter();
@@ -80,9 +76,7 @@ const installedValidators = computed(() => {
       (s) =>
         s.category === "validator" &&
         s.service !== "LCOMService" &&
-        setupStore.selectedSetup.services
-          ?.map((s) => s.config.serviceID)
-          .includes(s.config.serviceID)
+        setupStore.selectedSetup.services?.map((s) => s.config.serviceID).includes(s.config.serviceID)
     )
     .sort((a, b) => a.name.localeCompare(b.name));
 });
@@ -97,21 +91,14 @@ const filterKeys = () => {
   if (stakingStore.displayAllKeysActive) {
     // Default: Show all keys, or apply only setup filter if setup is selected
     stakingStore.keys = setupStore.selectedSetup
-      ? stakingStore.keys.filter((key) =>
-          setupStore.selectedSetup.services.some(
-            (service) => service.config.serviceID === key.validatorID
-          )
-        )
+      ? stakingStore.keys.filter((key) => setupStore.selectedSetup.services.some((service) => service.config.serviceID === key.validatorID))
       : stakingStore.keys;
   } else {
     // Apply both selectedServiceToFilter and selectedSetup filtering
     stakingStore.keys = stakingStore.keys.filter(
       (key) =>
         key.validatorID === stakingStore.selectedServiceToFilter?.config?.serviceID &&
-        (!setupStore.selectedSetup ||
-          setupStore.selectedSetup.services.some(
-            (service) => service.config.serviceID === key.validatorID
-          ))
+        (!setupStore.selectedSetup || setupStore.selectedSetup.services.some((service) => service.config.serviceID === key.validatorID))
     );
   }
 };
@@ -121,6 +108,8 @@ const filterByService = (item) => {
   stakingStore.selectedServiceToFilter = item;
   stakingStore.displayAllKeysActive = false;
   filterKeys();
+  useObolStats();
+  useSSVStats();
 };
 
 const clearServiceFilter = () => {
@@ -138,10 +127,6 @@ watch(
     }
   }
 );
-
-watchEffect(() => {
-  console.log(stakingStore.selectedServiceToFilter);
-});
 </script>
 
 <style scoped>

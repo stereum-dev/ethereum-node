@@ -202,3 +202,21 @@ export async function useUpdateValidatorStats() {
   });
   stakingStore.totalBalance = totalBalance;
 }
+
+export async function useObolStats() {
+  const stakingStore = useStakingStore();
+  if (stakingStore.selectedServiceToFilter?.service === "CharonService") {
+    ControlService.getObolClusterInformation(stakingStore.selectedServiceToFilter?.config?.serviceID).then((data) => {
+      stakingStore.obolStats = data;
+    });
+  }
+}
+
+export async function useSSVStats() {
+  const stakingStore = useStakingStore();
+  if (stakingStore.selectedServiceToFilter?.service === "SSVNetworkService") {
+    ControlService.getSSVClusterInformation(stakingStore.selectedServiceToFilter?.config?.serviceID).then((data) => {
+      stakingStore.ssvStats = data;
+    });
+  }
+}

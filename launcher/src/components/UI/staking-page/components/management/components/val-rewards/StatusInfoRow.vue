@@ -6,7 +6,7 @@ import { useStakingStore } from '@/store/theStaking';
     <span
       v-if="stakingStore.selectedServiceToFilter?.service === 'CharonService'"
       class="col-start-1 col-end-4 text-[8px] text-gray-200 font-normal font-sans text-left pl-2"
-      >PRN</span
+      >Peer-Name</span
     >
     <span
       v-if="stakingStore.selectedServiceToFilter?.service === 'SSVNetworkService'"
@@ -16,16 +16,10 @@ import { useStakingStore } from '@/store/theStaking';
     <span
       class="text-[10px] text-amber-300 font-normal font-sans text-left"
       :class="
-        stakingStore.selectedServiceToFilter?.service === 'SSVNetworkService'
-          ? 'col-start-3 col-span-2'
-          : 'col-start-4 col-span-full'
+        stakingStore.selectedServiceToFilter?.service === 'SSVNetworkService' ? 'col-start-3 col-span-2' : 'col-start-4 col-span-full'
       "
     >
-      {{
-        stakingStore.selectedServiceToFilter?.service === "SSVNetworkService"
-          ? getSSVId
-          : getObolPeerName
-      }}
+      {{ stakingStore.selectedServiceToFilter?.service === "SSVNetworkService" ? getSSVId : getObolPeerName }}
     </span>
   </div>
 </template>
@@ -36,10 +30,10 @@ import { computed } from "vue";
 const stakingStore = useStakingStore();
 
 const getSSVId = computed(() => {
-  return "125#";
+  return stakingStore.ssvStats?.operator ? stakingStore.ssvStats?.operator : "N/A";
 });
 
 const getObolPeerName = computed(() => {
-  return "fbwdefbwerbwrtebwrtb";
+  return stakingStore.obolStats?.peerName ? stakingStore.obolStats?.peerName : "N/A";
 });
 </script>

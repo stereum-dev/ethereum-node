@@ -22,12 +22,8 @@
         stakingStore.selectedServiceToFilter?.service === 'SSVNetworkService'
       "
     />
-    <ParticipationRow
-      v-if="stakingStore.selectedServiceToFilter?.service === 'CharonService'"
-    />
-    <IsPrivate
-      v-if="stakingStore.selectedServiceToFilter?.service === 'SSVNetworkService'"
-    />
+    <ParticipationRow v-if="stakingStore.selectedServiceToFilter?.service === 'CharonService'" />
+    <IsPrivate v-if="stakingStore.selectedServiceToFilter?.service === 'SSVNetworkService'" />
 
     <NodeStatus
       v-if="
@@ -57,6 +53,7 @@
   </div>
 </template>
 <script setup>
+import { onMounted, onUnmounted, ref } from "vue";
 import { useStakingStore } from "../../../../../store/theStaking";
 import AttestationReward from "./components/val-rewards/AttestationReward.vue";
 import BlockReward from "./components/val-rewards/BlockReward.vue";
@@ -67,6 +64,19 @@ import NodeStatus from "./components/val-rewards/NodeStatus.vue";
 import ParticipationRow from "./components/val-rewards/ParticipationRow.vue";
 import PerformanceRow from "./components/val-rewards/PerformanceRow.vue";
 import StatusInfoRow from "./components/val-rewards/StatusInfoRow.vue";
+import { useObolStats, useSSVStats } from "../../../../../composables/validators";
 
 const stakingStore = useStakingStore();
+const pollingInterval = ref(null);
+
+onMounted(() => {
+  pollingInterval.value = setInterval(() => {
+    useObolStats();
+    useSSVStats();
+  }, 120000);
+});
+
+onUnmounted(() => {
+  clearInterval(pollingInterval.value);
+});
 </script>

@@ -93,6 +93,8 @@ export const useStakingStore = defineStore("theStaking", {
       modalGuide: false,
       passPointer: false,
       keyCounter: 0,
+      charonStats: {},
+      ssvStats: {},
     };
   },
   actions: {
