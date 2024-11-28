@@ -11,11 +11,9 @@
         @click="pickValidator(service)"
       >
         <img class="w-5 h-5" :src="service.icon" alt="Service Icon" @mousedown.prevent />
-        <span
-          class="text-[10px] font-semibold hover:text-black transition-all duration-150"
-          :class="getBgColor(service.setupId)?.text"
-          >{{ service.name }}</span
-        >
+        <span class="text-[10px] font-semibold hover:text-black transition-all duration-150" :class="getBgColor(service.setupId)?.text">{{
+          service.name
+        }}</span>
       </div>
     </div>
   </div>

@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="h-full col-start-1 col-span-full row-start-2 row-span-full grid grid-cols-1 grid-rows-5 py-1 px-2"
-  >
+  <div class="h-full col-start-1 col-span-full row-start-2 row-span-full grid grid-cols-1 grid-rows-5 py-1 px-2">
     <ButtonRow
       v-for="button in filteredButtonState"
       v-show="!button.isHidden"
@@ -25,21 +23,14 @@ const t = i18n.global.t;
 const footerStore = useFooter();
 const stakingStore = useStakingStore();
 
-const emit = defineEmits([
-  "removeMultiple",
-  "importRemote",
-  "withdrawMultiple",
-  "graffitiPanel",
-]);
+const emit = defineEmits(["removeMultiple", "importRemote", "withdrawMultiple", "graffitiPanel"]);
 
 // Define Button Functions
 const graffitiPanel = () => {
   emit("graffitiPanel");
 };
 const removeMultiple = () => {
-  const keys = stakingStore.keys.filter(
-    (key) => key.validatorID === stakingStore.selectedServiceToFilter?.config.serviceID
-  );
+  const keys = stakingStore.keys.filter((key) => key.validatorID === stakingStore.selectedServiceToFilter?.config.serviceID);
   stakingStore.removeKeys = [...keys];
   stakingStore.setActiveModal("removeValidator");
 };
@@ -96,11 +87,7 @@ const filteredButtonState = computed(() => {
   const selectedService = stakingStore.selectedServiceToFilter?.service;
 
   return buttonState.value.map((button) => {
-    if (
-      selectedService === "CharonService" ||
-      selectedService === "SSVNetworkService" ||
-      stakingStore.displayAllKeysActive
-    ) {
+    if (selectedService === "CharonService" || selectedService === "SSVNetworkService" || stakingStore.displayAllKeysActive) {
       return { ...button, isHidden: true };
     }
 
