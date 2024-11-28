@@ -2451,6 +2451,30 @@ video {
   width: 100vw;
 }
 
+.w-\[20px\]{
+  width: 20px;
+}
+
+.w-\[30px\]{
+  width: 30px;
+}
+
+.w-3\/12{
+  width: 25%;
+}
+
+.w-2\/12{
+  width: 16.666667%;
+}
+
+.w-4\/12{
+  width: 33.333333%;
+}
+
+.w-3\/6{
+  width: 50%;
+}
+
 .min-w-\[100px\]{
   min-width: 100px;
 }
@@ -4297,6 +4321,11 @@ video {
 .bg-zinc-700{
   --tw-bg-opacity: 1;
   background-color: rgb(63 63 70 / var(--tw-bg-opacity));
+}
+
+.bg-yellow-500{
+  --tw-bg-opacity: 1;
+  background-color: rgb(234 179 8 / var(--tw-bg-opacity));
 }
 
 .bg-opacity-80{
