@@ -3773,7 +3773,7 @@ export class Monitoring {
 
     const queries = {
       app_monitoring_readyz: `app_monitoring_readyz{instance=~".*${serviceID}.*"}`, // for Cluster Peer
-      cluster_attestation_performance: `core_tracker_success_duties_total{instance=~".*${serviceID}.*",duty="attester"} / core_tracker_expect_duties_total{instance=~".*${serviceID}.*",duty="attester"} * 100`,
+      cluster_attestation_performance: `(sum(increase(core_tracker_success_duties_total{instance=~".*${serviceID}.*",duty="attester"}[1h])) / sum(increase(core_tracker_expect_duties_total{instance=~".*${serviceID}.*",duty="attester"}[1h])) > 0) * 100`,
       cluster_attestation_participation: `core_tracker_participation{instance=~".*${serviceID}.*",duty="attester"}`,
       cluster_operators: `cluster_operators{instance=~".*${serviceID}.*"}`,
       cluster_threshold: `cluster_threshold{instance=~".*${serviceID}.*"}`,
