@@ -82,7 +82,7 @@ import { computed } from 'vue';
       <img class="w-6 h-6" :src="getKeyState" alt="icon" @mousedown.prevent />
     </div>
     <div
-      v-if="checkValidatorKeyType === 'obol' || checkValidatorKeyType === 'ssv'"
+      v-if="props.item?.inQueue"
       class="w-full col-start-13 col-end-14 self-center overflow-hidden flex justify-center items-center"
       @mouseenter="footerStore.cursorLocation = `${state}`"
       @mouseleave="footerStore.cursorLocation = ''"

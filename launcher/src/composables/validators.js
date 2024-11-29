@@ -14,8 +14,10 @@ export async function useListKeys(forceRefresh) {
   let clients = serviceStore.installedServices.filter((s) => s.category == "validator" && s.config.network != "devnet");
 
   if ((clients && clients.length > 0 && nodeManageStore.currentNetwork?.network != "") || forceRefresh) {
+    // Get queue keys
+    const keysInQueue = await ControlService.getCSMQueue();
+
     for (let client of clients) {
-      //if there is already a list of keys ()
       if ((client.config.keys === undefined || client.config.keys.length === 0 || forceRefresh) && client.state === "running") {
         //refresh validator list
         let result = await ControlService.listValidators(client.config.serviceID);
@@ -54,6 +56,9 @@ export async function useListKeys(forceRefresh) {
       if (client.config.keys) {
         keyStats = keyStats.concat(
           client.config.keys.map((key) => {
+            // Check if the key is in queue here
+            const inQueue = keysInQueue.includes(key.key);
+
             return {
               key: key.key,
               validatorID: client.config.serviceID,
@@ -64,6 +69,7 @@ export async function useListKeys(forceRefresh) {
               network: client.config.network,
               isRemote: key.isRemote,
               dvt: key.dvt ? key.dvt : false,
+              inQueue: inQueue,
             };
           })
         );
