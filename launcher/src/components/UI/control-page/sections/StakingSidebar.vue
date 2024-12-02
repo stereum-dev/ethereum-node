@@ -25,7 +25,7 @@
     /></WidgetCard>
     <WidgetCard class="connected-validator-widget col-start-7 col-span-12 row-start-1 row-span-3 text-white"
       ><ConnectedValidatorWidget v-if="controlStore.pickedService == 'exeCons'" /><ConnectedClientPair
-        v-else-if="controlStore.pickedService == 'vld'" /><CsmStateWidget v-else-if="controlStore.pickedService == 'csm'"
+        v-else-if="controlStore.pickedService == 'vld'" /><CsmStateWidget v-else-if="controlStore.pickedService == 'csm'" csm-box="true"
     /></WidgetCard>
     <WidgetCard
       v-if="controlStore.pickedService == 'exeCons'"

@@ -20,14 +20,18 @@
       hover-text="
          c
         "
+      :csm-box="props.csmBox"
     />
   </div>
 </template>
 
 <script setup>
 import ServiceLine from "../fragments/ServiceLine.vue";
-// import { useSetups } from "@/store/setups";
-// import { useControlStore } from "@/store/theControl";
-// import { useFooter } from "@/store/theFooter";
-// import { computed } from "vue";
+
+const props = defineProps({
+  csmBox: {
+    type: Boolean,
+    default: false,
+  },
+});
 </script>

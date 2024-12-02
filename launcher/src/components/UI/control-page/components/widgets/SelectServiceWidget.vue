@@ -288,6 +288,17 @@ const nextCSM = () => {
 };
 
 watch(
+  selectedLCOMService,
+  (newPair, oldPair) => {
+    if (JSON.stringify(newPair) !== JSON.stringify(oldPair)) {
+      setupStore.selectedLCOMService = newPair;
+      console.log("selectedLCOMService", setupStore.selectedLCOMService);
+    }
+  },
+  { immediate: true, deep: true }
+);
+
+watch(
   setupStoreRelatedValidatorPairs,
   (newPairs) => {
     setupStore.relatedValidatorPairs = newPairs;
@@ -302,6 +313,7 @@ watch(
       currentIndex.value = 0;
     }
 
+    // console.log(selectedLCOMService.value);
     if (controlStore.pickedService === "csm" && !selectedLCOMService.value) {
       controlStore.pickedService = "exeCons";
       isOpen.value = false;

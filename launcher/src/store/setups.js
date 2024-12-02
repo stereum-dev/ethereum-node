@@ -13,6 +13,7 @@ export const useSetups = defineStore("setups", {
     clientPairsLength: 0,
     relatedValidators: null,
     relatedValidatorPairs: null,
+    selectedLCOMService: null,
     //DEVNET NETWORK CONFIGURATION
     uploadedGenesisConfig: null,
     genesisFile: null,
