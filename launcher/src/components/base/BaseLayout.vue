@@ -190,6 +190,11 @@ const checkSettings = async () => {
         await ControlService.idleTimerCheck(false);
       }
     }
+    if (typeof savedConfig.logBackups.value !== "undefined") {
+      await ControlService.deleteLogBackups(savedConfig.logBackups.value);
+    } else {
+      await ControlService.deleteLogBackups(3);
+    }
   } catch (error) {
     console.error("Failed to load saved settings:", error);
   }

@@ -14,6 +14,7 @@ import { ConfigManager } from "./backend/ConfigManager.js";
 import { AuthenticationService } from "./backend/AuthenticationService.js";
 import { TekuGasLimitConfig } from "./backend/TekuGasLimitConfig.js";
 import { SSHService } from "./backend/SSHService.js";
+import { LogFileBackup } from "./backend/LogFileBackup.js";
 import path from "path";
 import { readFileSync } from "fs";
 import url from "url";
@@ -33,6 +34,8 @@ const tekuGasLimitConfig = new TekuGasLimitConfig(nodeConnection);
 const sshService = new SSHService();
 const { globalShortcut } = require("electron");
 const log = require("electron-log");
+const logFileBackup = new LogFileBackup();
+logFileBackup.backupLogFiles();
 const stereumUpdater = new StereumUpdater(log, createWindow, isDevelopment);
 stereumUpdater.initUpdater();
 log.transports.console.level = process.env.LOG_LEVEL || "info";
@@ -111,6 +114,10 @@ ipcMain.handle("idleTimerCheck", async (event, args) => {
 
 ipcMain.handle("setIdleTime", async (event, arg) => {
   return await monitoring.setIdleTime(arg);
+});
+
+ipcMain.handle("deleteLogBackups", async (event, arg) => {
+  return await logFileBackup.deleteLogBackups(arg);
 });
 
 // userData storage

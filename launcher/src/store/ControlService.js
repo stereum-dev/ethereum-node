@@ -80,6 +80,10 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("setIdleTime", args);
   }
 
+  async deleteLogBackups(args) {
+    return await this.promiseIpc.send("deleteLogBackups", args);
+  }
+
   async readConfig() {
     return await this.promiseIpc.send("readConfig");
   }
