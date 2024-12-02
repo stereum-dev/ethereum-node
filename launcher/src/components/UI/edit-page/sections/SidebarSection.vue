@@ -23,6 +23,7 @@
       <button
         v-if="setupStore.isEditConfigViewActive && setupStore.selectedSetup"
         class="col-span-1 row-start-2 row-end-3 p-1 rounded-md text-gray-700 focus:outline-nones transition-colors duration-200 hover:bg-[#23272a] flex justify-center items-center"
+        :class="disabledForDevnet ? 'pointer-events-none opacity-50' : ''"
         @click="hoverNetwork"
         @mouseenter="footerStore.cursorLocation = `${setchNet}`"
         @mouseleave="footerStore.cursorLocation = ''"
@@ -33,6 +34,7 @@
         <button
           v-if="networkHovered"
           class="w-fit h-9 absolute row-start-2 row-end-3 py-1 px-2 rounded-md duration-200 bg-gray-700 border border-gray-500 flex justify-between items-center z-10 space-x-2 ml-1"
+          :class="disabledForDevnet ? 'pointer-events-none opacity-50' : ''"
           @mouseleave="networkHovered = false"
           @click="networkModal"
         >
@@ -65,7 +67,7 @@
   </aside>
 </template>
 <script setup>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { useFooter } from "@/store/theFooter";
 import i18n from "@/includes/i18n";
 import { useSetups } from "../../../../store/setups";
@@ -83,6 +85,10 @@ const footerStore = useFooter();
 const setupStore = useSetups();
 
 const emit = defineEmits(["nukeNode", "networkModal"]);
+
+const disabledForDevnet = computed(() => {
+  return setupStore.selectedSetup?.network.toLowerCase() === "devnet";
+});
 
 const nukeNode = () => {
   emit("nukeNode");

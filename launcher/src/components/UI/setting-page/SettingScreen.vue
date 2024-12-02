@@ -121,7 +121,7 @@ const itemConfigurations = computed(() => {
   return items;
 });
 </script>
-<style>
+<style scoped>
 .setting-parent {
   max-height: 488px;
 }

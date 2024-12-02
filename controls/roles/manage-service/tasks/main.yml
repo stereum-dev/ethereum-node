@@ -31,6 +31,12 @@
       become: yes
       when: stereum.manage_service.state == "stopped" or stereum.manage_service.state == "restarted"
 
+    - include_tasks: copy-devnet-genesis.yml
+      when: >
+        (stereum_service_configuration.network == "devnet") and
+        (stereum.manage_service.state == "started") and
+        ("Validator" not in stereum_service_configuration.service)
+
     - name: Set directory permissions
       file:
         path: "{{ item.split(':') | first }}"
@@ -42,7 +48,7 @@
       changed_when: false
       become: yes
       when: (stereum.manage_service.state == "started" or stereum.manage_service.state == "restarted") and item.split(':') | first != '/' and item.split(':') | first != '/sys' and item.split(':') | first != '/proc'
-      with_items: "{{ stereum_service_configuration.volumes | reject('search', ':/engine.jwt') }}"
+      with_items: "{{ stereum_service_configuration.volumes | reject('search', ':/engine.jwt|:/execution/engine.jwt') }}"
 
     - name: Get Nimbus key secret files
       find:
@@ -62,7 +68,7 @@
 
     - name: Set directory permissions for engine.jwt
       file:
-        path: "{{ item.split(':') | first | replace('/engine.jwt', '') }}"
+        path: "{{ item.split(':') | first | replace('/engine.jwt', '') | replace('/execution/engine.jwt', '') }}"
         state: directory
         owner: "{{ stereum_service_configuration.user }}"
         group: "{{ stereum_service_configuration.user }}"
@@ -71,7 +77,7 @@
       changed_when: false
       become: yes
       when: stereum.manage_service.state == "started" or stereum.manage_service.state == "restarted"
-      with_items: "{{ stereum_service_configuration.volumes | select('search', ':/engine.jwt') }}"
+      with_items: "{{ stereum_service_configuration.volumes | select('search', ':/engine.jwt|:/execution/engine.jwt') }}"
 
     - name: Stereum's docker network
       docker_network:
@@ -89,7 +95,7 @@
         PATH: /sbin:{{ ansible_env.PATH }}
       with_items: "{{ stereum_service_configuration.ports }}"
       when: stereum.manage_service.state != "restarted" and stereum_service_configuration.ports is defined
-    
+
     - name: Download genesis file
       ansible.builtin.get_url:
         url: https://github.com/eth-clients/{{ stereum_service_configuration.network }}/raw/main/metadata/genesis.ssz
@@ -108,7 +114,7 @@
       copy:
         # besu prevents the use of tokens starting with '0x', so we start always with 'ff'
         content: "ff{{ query('community.general.random_string', override_all=hex_chars, length=62) | first }}"
-        dest: "{{ stereum_service_configuration.volumes | select('search', ':/engine.jwt') | first | split(':') | first }}"
+        dest: "{{ stereum_service_configuration.volumes | select('search', ':/engine.jwt|/execution/engine.jwt') | first | split(':') | first }}"
         force: no
         mode: 0444
       vars:
@@ -116,7 +122,7 @@
       become: yes
       when:
         - stereum_service_configuration.service in ['BesuService', 'GethService', 'RethService', 'NethermindService', 'ErigonService', 'LighthouseBeaconService', 'NimbusBeaconService', 'PrysmBeaconService', 'TekuBeaconService', 'LodestarBeaconService']
-        - stereum_service_configuration.volumes | select('search', ':/engine.jwt') | length > 0
+        - stereum_service_configuration.volumes | select('search', ':/engine.jwt|/execution/engine.jwt') | length > 0
 
     - include_tasks: write-graffiti-files.yml
       when: >

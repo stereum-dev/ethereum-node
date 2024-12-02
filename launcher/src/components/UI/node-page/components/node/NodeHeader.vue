@@ -1,7 +1,7 @@
 <template>
   <div class="w-full h-[55px] grid grid-cols-9 gap-1 py-1">
     <ServerDetails />
-    <SetupDetails :list="setupsList" @select-setup="selectSetup" @server-view="serverView" />
+    <SetupDetails class="col-start-4 col-end-7 p-2" :list="setupsList" @select-setup="selectSetup" @server-view="serverView" />
     <NetworkDetails />
   </div>
 </template>
