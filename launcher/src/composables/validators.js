@@ -14,9 +14,6 @@ export async function useListKeys(forceRefresh) {
   let clients = serviceStore.installedServices.filter((s) => s.category == "validator" && s.config.network != "devnet");
 
   if ((clients && clients.length > 0 && nodeManageStore.currentNetwork?.network != "") || forceRefresh) {
-    // Get queue keys
-    const keysInQueue = await ControlService.getCSMQueue();
-
     for (let client of clients) {
       if ((client.config.keys === undefined || client.config.keys.length === 0 || forceRefresh) && client.state === "running") {
         //refresh validator list
@@ -56,9 +53,6 @@ export async function useListKeys(forceRefresh) {
       if (client.config.keys) {
         keyStats = keyStats.concat(
           client.config.keys.map((key) => {
-            // Check if the key is in queue here
-            const inQueue = keysInQueue.includes(key.key);
-
             return {
               key: key.key,
               validatorID: client.config.serviceID,
@@ -69,7 +63,6 @@ export async function useListKeys(forceRefresh) {
               network: client.config.network,
               isRemote: key.isRemote,
               dvt: key.dvt ? key.dvt : false,
-              inQueue: inQueue,
             };
           })
         );
@@ -108,7 +101,6 @@ export async function useListKeys(forceRefresh) {
 }
 
 export async function useUpdateValidatorStats() {
-  console.log("test");
   const nodeManageStore = useNodeManage();
   const stakingStore = useStakingStore();
   let totalBalance = 0;
@@ -148,7 +140,8 @@ export async function useUpdateValidatorStats() {
     });
     return;
   }
-
+  // Get queue keys
+  const keysInQueue = await ControlService.getCSMQueue(stakingStore.keys.map((key) => key.key));
   stakingStore.keys.forEach((key) => {
     let info = data.find((k) => k.pubkey === key.key);
 
@@ -163,6 +156,9 @@ export async function useUpdateValidatorStats() {
       let exitEpoch = parseInt(info.exitEpoch);
       let elgibilityEpoch = parseInt(info.activationElgibilityEpoch);
       let withdrawableEpoch = parseInt(info.withdrawableEpoch);
+      // Check if the key is in queue here
+      let inQueue = false;
+      if (Array.isArray(keysInQueue)) inQueue = keysInQueue.includes(key.key);
 
       if (key.network === "gnosis") {
         dateActive.setMilliseconds(dateActive.getMilliseconds() - (latestEpoch - activationEpoch) * 80000);
@@ -185,7 +181,7 @@ export async function useUpdateValidatorStats() {
             : new Date(dateWithdrawable.setMilliseconds(dateWithdrawable.getMilliseconds() - (latestEpoch - withdrawableEpoch) * 384000));
         dateEligibility.setMilliseconds(dateEligibility.getMilliseconds() - (latestEpoch - elgibilityEpoch) * 384000);
       }
-
+      key.inQueue = inQueue;
       key.index = info.validatorindex;
       key.status = info.status;
       key.balance = info.balance / 1000000000;
