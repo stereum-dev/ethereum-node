@@ -6,19 +6,13 @@
       ><ClientPairWidget v-if="controlStore.pickedService == 'exeCons'" /><GasWidget
         v-else-if="controlStore.pickedService == 'vld'" /><IdKweyCsm v-else
     /></MiniCard>
-    <MiniCard
-      v-if="controlStore.pickedService == 'exeCons'"
-      class="col-start-1 col-span-3 row-start-4 row-span-3"
+    <MiniCard v-if="controlStore.pickedService == 'exeCons'" class="col-start-1 col-span-3 row-start-4 row-span-3"
       ><PairStatusWidget
     /></MiniCard>
-    <MiniCard
-      v-if="controlStore.pickedService == 'exeCons'"
-      class="col-start-1 col-span-3 row-start-7 row-span-3"
+    <MiniCard v-if="controlStore.pickedService == 'exeCons'" class="col-start-1 col-span-3 row-start-7 row-span-3"
       ><RPCRecievedOverTime
     /></MiniCard>
-    <MiniCard
-      v-if="controlStore.pickedService == 'exeCons'"
-      class="col-start-1 col-span-3 row-start-10 row-span-3"
+    <MiniCard v-if="controlStore.pickedService == 'exeCons'" class="col-start-1 col-span-3 row-start-10 row-span-3"
       ><ServicePort
     /></MiniCard>
   </div>
