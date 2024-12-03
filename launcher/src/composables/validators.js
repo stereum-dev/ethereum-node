@@ -145,6 +145,10 @@ export async function useUpdateValidatorStats() {
   stakingStore.keys.forEach((key) => {
     let info = data.find((k) => k.pubkey === key.key);
 
+    // Check if the key is in queue here
+    let inQueue = false;
+    if (Array.isArray(keysInQueue)) inQueue = keysInQueue.includes(key.key);
+
     if (info) {
       let dateActive = new Date();
       let dateExit = new Date();
@@ -156,9 +160,6 @@ export async function useUpdateValidatorStats() {
       let exitEpoch = parseInt(info.exitEpoch);
       let elgibilityEpoch = parseInt(info.activationElgibilityEpoch);
       let withdrawableEpoch = parseInt(info.withdrawableEpoch);
-      // Check if the key is in queue here
-      let inQueue = false;
-      if (Array.isArray(keysInQueue)) inQueue = keysInQueue.includes(key.key);
 
       if (key.network === "gnosis") {
         dateActive.setMilliseconds(dateActive.getMilliseconds() - (latestEpoch - activationEpoch) * 80000);
@@ -181,9 +182,8 @@ export async function useUpdateValidatorStats() {
             : new Date(dateWithdrawable.setMilliseconds(dateWithdrawable.getMilliseconds() - (latestEpoch - withdrawableEpoch) * 384000));
         dateEligibility.setMilliseconds(dateEligibility.getMilliseconds() - (latestEpoch - elgibilityEpoch) * 384000);
       }
-      key.inQueue = inQueue;
       key.index = info.validatorindex;
-      key.status = info.status;
+      key.status = inQueue ? "inQueue" : info.status;
       key.balance = info.balance / 1000000000;
       key.activeSince = ((now.getTime() - dateActive.getTime()) / 86400000).toFixed(1) + " Days";
       key.exitSince = dateExit === null ? null : ((now.getTime() - dateExit.getTime()) / 86400000).toFixed(1) + " Days";
@@ -198,7 +198,7 @@ export async function useUpdateValidatorStats() {
         totalBalance += key.balance;
       }
     } else {
-      key.status = "deposit";
+      key.status = inQueue ? "inQueue" : "deposit";
       key.balance = "-";
     }
   });
