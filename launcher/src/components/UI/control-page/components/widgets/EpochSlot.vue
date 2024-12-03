@@ -1,5 +1,7 @@
 <template>
-  <div class="volume-Parent flex w-full h-full justify-center items-center flex-col p-1 gap-1 relative">
+  <div
+    class="volume-Parent flex w-full h-full justify-center items-center flex-col p-1 gap-1 relative"
+  >
     <NoData
       v-if="
         !setupsStore?.selectedServicePairs ||
@@ -12,30 +14,36 @@
     <template v-else>
       <ServiceLine
         :label="t('controlPage.currentEpoch')"
-        :value="flag ? beaconControler : controlStore?.currentResult?.currentEpoch"
+        :value="
+          String(flag ? beaconControler : controlStore?.currentResult?.currentEpoch)
+        "
         :hover-text="
           t('controlPage.currentEpochIs', {
-            epoch: flag ? beaconControler : controlStore?.currentResult?.currentEpoch,
+            epoch: String(
+              flag ? beaconControler : controlStore?.currentResult?.currentEpoch
+            ),
           })
         "
       />
       <ServiceLine
         label="INDEX"
-        :value="flag ? beaconControler : controlStore?.slotIndex + 1"
+        :value="String(flag ? beaconControler : controlStore?.slotIndex + 1)"
         :hover-text="
           controlStore.slotIndex < 0
             ? ''
             : t('controlPage.currentSlotIs', {
-                slot: controlStore.slotIndex + 1,
+                slot: String(controlStore.slotIndex + 1),
               })
         "
       />
       <ServiceLine
         :label="t('controlPage.currentSlot')"
-        :value="flag ? beaconControler : controlStore?.currentResult?.currentSlot"
+        :value="String(flag ? beaconControler : controlStore?.currentResult?.currentSlot)"
         :hover-text="
           t('controlPage.currentSlotIs', {
-            slot: flag ? beaconControler : controlStore?.currentResult?.currentSlot,
+            slot: String(
+              flag ? beaconControler : controlStore?.currentResult?.currentSlot
+            ),
           })
         "
       />
@@ -58,13 +66,22 @@ const footerStore = useFooter();
 const setupsStore = useSetups();
 
 const beaconControler = computed(() => {
-  if (!controlStore.currentResult || controlStore.currentResult.beaconStatus === undefined) {
+  if (
+    !controlStore.currentResult ||
+    controlStore.currentResult.beaconStatus === undefined
+  ) {
     return "Checking Beacon Status...";
   }
-  return controlStore.currentResult.beaconStatus !== 0 ? "No Running Beacon Node!" : "Loading...";
+  return controlStore.currentResult.beaconStatus !== 0
+    ? "No Running Beacon Node!"
+    : "Loading...";
 });
 
-const isConsensusMissing = computed(() => footerStore?.missingServices?.includes("consensus"));
+const isConsensusMissing = computed(() =>
+  footerStore?.missingServices?.includes("consensus")
+);
 
-const flag = computed(() => !controlStore?.currentResult || controlStore?.currentResult?.beaconStatus !== 0);
+const flag = computed(
+  () => !controlStore?.currentResult || controlStore?.currentResult?.beaconStatus !== 0
+);
 </script>
