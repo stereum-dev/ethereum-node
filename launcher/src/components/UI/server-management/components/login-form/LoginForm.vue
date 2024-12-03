@@ -354,8 +354,8 @@ const removeButtonDisabled = computed(() => {
 
 const exportConnections = async () => {
   const zip = new JSZip();
-  const conectionsJSON = JSON.stringify(serverStore.connections);
-  zip.file("connections.json", conectionsJSON);
+  const connectionsJSON = JSON.stringify(serverStore.connections, null, 2);
+  zip.file("connections.json", connectionsJSON);
 
   const blob = await zip.generateAsync({ type: "blob" });
 
@@ -371,7 +371,6 @@ const importConnections = async (event) => {
   const zip = new JSZip();
   try {
     const connect = await file.arrayBuffer();
-
     const zipContent = await zip.loadAsync(connect);
 
     const connectionsFile = zipContent.file("connections.json");
@@ -382,21 +381,31 @@ const importConnections = async (event) => {
 
     const jsonData = await connectionsFile.async("string");
 
-    console.log("jsonData======>", jsonData);
-
-    // Parse the JSON data
     const newConnections = JSON.parse(jsonData);
 
     if (Array.isArray(newConnections) && newConnections.length > 0) {
-      // Clear existing connections and replace with new ones
-      serverStore.savedServers.savedConnections.splice(0, serverStore.connections.length, ...newConnections);
-      console.log("seaved savedServers", serverStore.savedServers);
-      console.log("Updated connections:", serverStore.connections);
+      const existingConnections = serverStore.savedServers.savedConnections;
+
+      const uniqueConnections = newConnections.filter(
+        (newConnection) =>
+          !existingConnections.some((existingConnection) => JSON.stringify(existingConnection) === JSON.stringify(newConnection))
+      );
+
+      existingConnections.push(...uniqueConnections);
+
+      const prevConf = await ControlService.readConfig();
+
+      const conf = {
+        ...prevConf,
+        savedConnections: JSON.parse(JSON.stringify(existingConnections)),
+      };
+
+      await ControlService.writeConfig(conf);
     } else {
       console.error("Invalid or empty connections data.");
     }
 
-    await loadStoredConnections();
+    await loadStoredConnections(serverStore.savedServers);
   } catch (error) {
     console.error("An error occurred:", error);
   }
