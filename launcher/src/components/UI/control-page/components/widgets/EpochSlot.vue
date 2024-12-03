@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="volume-Parent flex w-full h-full justify-center items-center flex-col p-1 gap-1 relative"
-  >
+  <div class="volume-Parent flex w-full h-full justify-center items-center flex-col p-1 gap-1 relative">
     <NoData
       v-if="
         !setupsStore?.selectedServicePairs ||
@@ -14,14 +12,10 @@
     <template v-else>
       <ServiceLine
         :label="t('controlPage.currentEpoch')"
-        :value="
-          String(flag ? beaconControler : controlStore?.currentResult?.currentEpoch)
-        "
+        :value="String(flag ? beaconControler : controlStore?.currentResult?.currentEpoch)"
         :hover-text="
           t('controlPage.currentEpochIs', {
-            epoch: String(
-              flag ? beaconControler : controlStore?.currentResult?.currentEpoch
-            ),
+            epoch: String(flag ? beaconControler : controlStore?.currentResult?.currentEpoch),
           })
         "
       />
@@ -41,9 +35,7 @@
         :value="String(flag ? beaconControler : controlStore?.currentResult?.currentSlot)"
         :hover-text="
           t('controlPage.currentSlotIs', {
-            slot: String(
-              flag ? beaconControler : controlStore?.currentResult?.currentSlot
-            ),
+            slot: String(flag ? beaconControler : controlStore?.currentResult?.currentSlot),
           })
         "
       />
@@ -66,22 +58,13 @@ const footerStore = useFooter();
 const setupsStore = useSetups();
 
 const beaconControler = computed(() => {
-  if (
-    !controlStore.currentResult ||
-    controlStore.currentResult.beaconStatus === undefined
-  ) {
+  if (!controlStore.currentResult || controlStore.currentResult.beaconStatus === undefined) {
     return "Checking Beacon Status...";
   }
-  return controlStore.currentResult.beaconStatus !== 0
-    ? "No Running Beacon Node!"
-    : "Loading...";
+  return controlStore.currentResult.beaconStatus !== 0 ? "No Running Beacon Node!" : "Loading...";
 });
 
-const isConsensusMissing = computed(() =>
-  footerStore?.missingServices?.includes("consensus")
-);
+const isConsensusMissing = computed(() => footerStore?.missingServices?.includes("consensus"));
 
-const flag = computed(
-  () => !controlStore?.currentResult || controlStore?.currentResult?.beaconStatus !== 0
-);
+const flag = computed(() => !controlStore?.currentResult || controlStore?.currentResult?.beaconStatus !== 0);
 </script>
