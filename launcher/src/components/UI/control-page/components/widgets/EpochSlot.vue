@@ -12,30 +12,30 @@
     <template v-else>
       <ServiceLine
         :label="t('controlPage.currentEpoch')"
-        :value="flag ? beaconControler : controlStore?.currentResult?.currentEpoch"
+        :value="String(flag ? beaconControler : controlStore?.currentResult?.currentEpoch)"
         :hover-text="
           t('controlPage.currentEpochIs', {
-            epoch: flag ? beaconControler : controlStore?.currentResult?.currentEpoch,
+            epoch: String(flag ? beaconControler : controlStore?.currentResult?.currentEpoch),
           })
         "
       />
       <ServiceLine
         label="INDEX"
-        :value="flag ? beaconControler : controlStore?.slotIndex + 1"
+        :value="String(flag ? beaconControler : controlStore?.slotIndex + 1)"
         :hover-text="
           controlStore.slotIndex < 0
             ? ''
             : t('controlPage.currentSlotIs', {
-                slot: controlStore.slotIndex + 1,
+                slot: String(controlStore.slotIndex + 1),
               })
         "
       />
       <ServiceLine
         :label="t('controlPage.currentSlot')"
-        :value="flag ? beaconControler : controlStore?.currentResult?.currentSlot"
+        :value="String(flag ? beaconControler : controlStore?.currentResult?.currentSlot)"
         :hover-text="
           t('controlPage.currentSlotIs', {
-            slot: flag ? beaconControler : controlStore?.currentResult?.currentSlot,
+            slot: String(flag ? beaconControler : controlStore?.currentResult?.currentSlot),
           })
         "
       />
