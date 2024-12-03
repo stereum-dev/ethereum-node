@@ -16,7 +16,7 @@ import { TekuGasLimitConfig } from "./backend/TekuGasLimitConfig.js";
 import { SSHService } from "./backend/SSHService.js";
 import { LogFileBackup } from "./backend/LogFileBackup.js";
 import path from "path";
-import { readFileSync } from "fs";
+import { readFileSync, existsSync, mkdirSync, copyFileSync, unlinkSync } from "fs";
 import url from "url";
 import checkSigningKeys from "./backend/web3/CSM.js";
 const isDevelopment = process.env.NODE_ENV !== "production";
@@ -35,11 +35,23 @@ const sshService = new SSHService();
 const { globalShortcut } = require("electron");
 const log = require("electron-log");
 const logFileBackup = new LogFileBackup();
-logFileBackup.backupLogFiles();
 const stereumUpdater = new StereumUpdater(log, createWindow, isDevelopment);
 stereumUpdater.initUpdater();
 log.transports.console.level = process.env.LOG_LEVEL || "info";
 log.transports.file.level = "debug";
+log.transports.file.archiveLogFn = (file) => {
+  file = file.toString();
+  const info = path.parse(file);
+  let backupPath = info.dir + "/backups/";
+  if (!existsSync(backupPath)) {
+    mkdirSync(backupPath);
+  }
+
+  copyFileSync(file, `${backupPath}main-${Date.now()}.log`);
+  unlinkSync(file, (err) => {
+    if (err) throw err;
+  });
+};
 
 let remoteHost = {};
 
