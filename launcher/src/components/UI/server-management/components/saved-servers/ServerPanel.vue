@@ -88,8 +88,7 @@ const getFilteredServers = () => {
 
   return serverStore.savedServers.savedConnections.filter((server) => server.name.toLowerCase().includes(searchQuery.value.toLowerCase()));
 };
-console.log("=====>", serverStore.savedServers);
-// Watch for changes in both searchQuery and serverStore.refreshServers
+
 watch(
   [searchQuery, () => serverStore.refreshServers],
   async ([, refreshTrigger], [, oldRefreshTrigger]) => {

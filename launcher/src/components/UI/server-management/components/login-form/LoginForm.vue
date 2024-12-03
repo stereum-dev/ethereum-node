@@ -602,8 +602,6 @@ const IpScanner = async () => {
 };
 
 const saveServer = async () => {
-  console.log("saveServer");
-
   if (isFormValid.value) {
     await add();
     serverStore.selectedServerToConnect = null;
