@@ -27,12 +27,19 @@
         src: "/etc/stereum/services/0f8ae6ed-4fb1-ad08-7219-9078373f957b.yaml"
       register: PrysmValdiator_service_configuration_raw
 
+    # RethService
+    - name: Read RethService file
+      slurp:
+        src: "/etc/stereum/services/a9c5f8d8-7487-3038-46da-b72f71caa105.yaml"
+      register: Reth_service_configuration_raw
+
     - name: Parse Service configurations
       set_fact:
         Ejector_service_configuration: "{{ Ejector_service_configuration_raw['content'] | b64decode | from_yaml }}"
         Ejector_service_configuration2: "{{ Ejector_service_configuration2_raw['content'] | b64decode | from_yaml }}"
         PrysmBeacon_service_configuration: "{{ PrysmBeacon_service_configuration_raw['content'] | b64decode | from_yaml }}"
         PrysmValdiator_service_configuration: "{{ PrysmValdiator_service_configuration_raw['content'] | b64decode | from_yaml }}"
+        Reth_service_configuration: "{{ Reth_service_configuration_raw['content'] | b64decode | from_yaml }}"
 
     - debug:
         msg: "{{ Ejector_service_configuration }}"
@@ -54,6 +61,11 @@
     - debug:
         msg: "{{ PrysmValdiator_service_configuration_raw['content'] | b64decode }}"
 
+    - debug:
+        msg: "{{ Reth_service_configuration }}"
+    - debug:
+        msg: "{{ Reth_service_configuration_raw['content'] | b64decode }}"
+
     - assert:
         that:
           - Ejector_service_configuration.env.ORACLE_ADDRESSES_ALLOWLIST | from_yaml | select('match', '0x73181107c8D9ED4ce0bbeF7A0b4ccf3320C41d12') | length == 1
@@ -65,4 +77,5 @@
           - PrysmValdiator_service_configuration.command | select('match', '--beacon-rest-api-provider') | length == 1
           - PrysmValdiator_service_configuration.command | select('match', '--enable-beacon-rest-api') | length == 1
           - PrysmValdiator_service_configuration.command | select('match', '--beacon-rpc-gateway-provider') | length == 0
+          - Reth_service_configuration.command | select('match', '--engine.legacy') | length == 1
 # EOF

@@ -209,4 +209,55 @@
             mevboost: []
             otherServices: []
       become: yes
+
+    - name: Create RethService config
+      copy:
+        dest: "/etc/stereum/services/a9c5f8d8-7487-3038-46da-b72f71caa105.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: RethService
+          id: a9c5f8d8-7487-3038-46da-b72f71caa105
+          configVersion: 1
+          command:
+            - node
+            - --chain=holesky
+            - --datadir=/opt/data/reth
+            - --http
+            - --http.port=8545
+            - --http.addr=0.0.0.0
+            - --http.api=debug,web3,eth,net
+            - --http.corsdomain=*
+            - --ws
+            - --ws.port=8546
+            - --ws.addr=0.0.0.0
+            - --ws.api=debug,web3,eth,net
+            - --ws.origins=*
+            - --authrpc.port=8551
+            - --authrpc.addr=0.0.0.0
+            - --authrpc.jwtsecret=/engine.jwt
+            - --metrics=0.0.0.0:6060
+            - --color=never
+          entrypoint:
+            - /usr/local/bin/reth
+          env: {}
+          image: ghcr.io/paradigmxyz/reth:v1.0.8
+          ports:
+            - 0.0.0.0:30304:30303/tcp
+            - 0.0.0.0:30304:30303/udp
+            - 127.0.0.1:8547:8545/tcp
+            - 127.0.0.1:8548:8546/tcp
+          volumes:
+            - /opt/stereum/reth-a9c5f8d8-7487-3038-46da-b72f71caa105/data:/opt/data/reth
+            - /opt/stereum/reth-a9c5f8d8-7487-3038-46da-b72f71caa105/engine.jwt:/engine.jwt
+          user: root
+          autoupdate: true
+          network: holesky
+          dependencies:
+            executionClients: []
+            consensusClients: []
+            mevboost: []
+            otherServices: []
+      become: yes
 #EOF
