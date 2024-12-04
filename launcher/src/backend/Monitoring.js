@@ -3384,8 +3384,12 @@ export class Monitoring {
     }
 
     try {
-      const beaconAPIPort = beaconStatus.data[0].beacon.servicePort;
-      const serviceId = beaconStatus.data[0].sid;
+      //Check if connected to CharonService
+      const vc = await this.nodeConnection.readServiceConfiguration(serviceID);
+      const connectedCharon = vc?.dependencies.consensusClients.find((client) => client.service === "CharonService");
+
+      const beaconAPIPort = connectedCharon ? 3600 : beaconStatus.data[0].beacon.servicePort;
+      const serviceId = connectedCharon ? connectedCharon.id : beaconStatus.data[0].sid;
       if (!Array.isArray(pubkey)) {
         pubkey = [pubkey];
       }
