@@ -114,6 +114,10 @@ export class CharonService extends NodeService {
     return `ls -1 -a ${this.getDataDir()}/.charon`;
   }
 
+  getReadClusterLockCommand() {
+    return `cat ${this.getDataDir()}/.charon/cluster-lock.json`;
+  }
+
   //definitionFile as URL or Path to file (default ".charon/cluster-definition.json" by dkg command)
   getDKGCommand(definitionFile) {
     return `docker run -u 0 --name "dkg-container" -d -v "${this.getDataDir()}:/opt/charon" ${this.image + ":" + this.imageVersion} dkg ${

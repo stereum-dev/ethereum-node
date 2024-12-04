@@ -814,6 +814,14 @@ ipcMain.handle("getCSMQueue", async (event, args) => {
   return await checkSigningKeys(args.keysArray, monitoring);
 });
 
+ipcMain.handle("getObolClusterInformation", async (event, args) => {
+  return await monitoring.getObolClusterInformation(args.serviceID);
+});
+
+ipcMain.handle("getSSVClusterInformation", async (event, args) => {
+  return await monitoring.getSSVClusterInformation(args.serviceID);
+});
+
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { secure: true, standard: true } }]);
 

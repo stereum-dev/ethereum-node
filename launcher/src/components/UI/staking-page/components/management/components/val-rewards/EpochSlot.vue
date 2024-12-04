@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="max-h-9 col-start-1 col-span-full row-start-1 row-span-1 border border-gray-500 rounded-md grid grid-cols-7 items-center bg-[#334B3F]"
-  >
+  <div class="max-h-9 col-start-1 col-span-full row-span-1 border border-gray-500 rounded-md grid grid-cols-7 items-center bg-[#334B3F]">
     <div
       class="col-start-1 col-end-4 flex justify-between items-center px-1 space-x-1"
       @mouseenter="footerStore.cursorLocation = `epoch: ${stakingStore.currentEpoch}`"

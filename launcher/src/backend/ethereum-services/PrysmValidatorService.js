@@ -32,25 +32,11 @@ export class PrysmValidatorService extends NodeService {
           const consensusDir = client.volumes.find((vol) => vol.servicePath.includes("/consensus")).destinationPath;
           volumes.push(new ServiceVolume(consensusDir, configYamlDir));
         }
-        return client.buildConsensusClientEndpoint();
-      })
-      .join();
-    const providerGateway = consensusClients
-      .map((client) => {
-        return client.buildConsensusClientGateway();
+        return client.buildConsensusClientHttpEndpointUrl();
       })
       .join();
 
-    const cmd = service.generatePrysmValidatorCommand(
-      network,
-      dataDir,
-      walletDir,
-      passwordDir,
-      graffitiDir,
-      configYamlDir,
-      provider,
-      providerGateway
-    );
+    const cmd = service.generatePrysmValidatorCommand(network, dataDir, walletDir, passwordDir, graffitiDir, configYamlDir, provider);
 
     service.init(
       "PrysmValidatorService", //service
@@ -72,10 +58,11 @@ export class PrysmValidatorService extends NodeService {
     return service;
   }
 
-  generatePrysmValidatorCommand(network, dataDir, walletDir, passwordDir, graffitiDir, configYamlDir, provider, providerGateway) {
+  generatePrysmValidatorCommand(network, dataDir, walletDir, passwordDir, graffitiDir, configYamlDir, provider) {
     const commonCmd = [
       "--accept-terms-of-use=true",
-      `--beacon-rpc-provider=${provider}`,
+      `--enable-beacon-rest-api`,
+      `--beacon-rest-api-provider=${provider}`,
       "--monitoring-host=0.0.0.0",
       "--monitoring-port=8081",
     ];
@@ -92,16 +79,15 @@ export class PrysmValidatorService extends NodeService {
     } else {
       return [
         ...commonCmd,
-        `--beacon-rpc-gateway-provider=${providerGateway}`,
         "--web",
         `--${network}`,
         `--datadir=${dataDir}`,
         `--keymanager-token-file=${walletDir}/auth-token`,
         `--wallet-dir=${walletDir}`,
         `--wallet-password-file=${passwordDir}/wallet-password`,
-        "--grpc-gateway-port=7500",
-        "--grpc-gateway-host=0.0.0.0",
-        '--grpc-gateway-corsdomain="*"',
+        "--http-port=7500",
+        "--http-host=0.0.0.0",
+        '--http-cors-domain="*"',
         "--suggested-fee-recipient=0x0000000000000000000000000000000000000000",
         `--graffiti-file=${graffitiDir}/graffitis.yaml`,
         "--enable-builder=true",
