@@ -2,7 +2,7 @@
 - name: Prepare
   hosts: all
   roles:
-    - role: '../'
+    - role: "../"
   vars_files:
     - ../../../../defaults/stereum_defaults.yaml
   vars:
@@ -62,4 +62,5 @@
             - "/opt/stereum/lighthouse/beacon:/opt/app/beacon"
             - "/opt/stereum/lighthouse/slasher:/opt/app/slasher"
           user: 2000
+          network: prater
       become: yes

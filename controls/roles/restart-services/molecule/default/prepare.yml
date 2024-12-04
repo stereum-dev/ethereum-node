@@ -2,9 +2,9 @@
 - name: Prepare
   hosts: all
   roles:
-    - role: '../'
+    - role: "../"
   vars_files:
-  - ../../../../defaults/stereum_defaults.yaml
+    - ../../../../defaults/stereum_defaults.yaml
   vars:
     lighthouse_service1: f227371a-a233-46c3-9eaf-523ada2e8cb1
     lighthouse_service2: 834fb30b-7529-4259-8957-bfd43fb212dc
@@ -62,14 +62,15 @@
           volumes:
             - "/opt/app/services/{{ geth_service1 }}/data:/opt/app/geth"
             - "/opt/app/services/{{ geth_service1 }}/engine.jwt:/engine.jwt"
+          network: goerli
       become: yes
 
     - block:
-      - set_fact:
-          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
-      - name: "Include manage-service"
-        include_role:
-          name: "manage-service"
+        - set_fact:
+            stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+        - name: "Include manage-service"
+          include_role:
+            name: "manage-service"
       vars:
         stereum_args:
           manage_service:
@@ -108,14 +109,15 @@
           volumes:
             - "/opt/app/services/{{ geth_service2 }}/data:/opt/app/geth"
             - "/opt/app/services/{{ geth_service2 }}/engine.jwt:/engine.jwt"
+          network: goerli
       become: yes
 
     - block:
-      - set_fact:
-          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
-      - name: "Include manage-service"
-        include_role:
-          name: "manage-service"
+        - set_fact:
+            stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+        - name: "Include manage-service"
+          include_role:
+            name: "manage-service"
       vars:
         stereum_args:
           manage_service:
@@ -162,14 +164,15 @@
             - "/opt/app/services/{{ lighthouse_service1 }}/beacon/lighthouse:/opt/app/beacon"
             - "/opt/app/services/{{ lighthouse_service1 }}/slasher:/opt/app/slasher"
             - "/opt/app/services/{{ geth_service1 }}/engine.jwt:/engine.jwt"
+          network: prater
       become: yes
 
     - block:
-      - set_fact:
-          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
-      - name: "Include manage-service"
-        include_role:
-          name: "manage-service"
+        - set_fact:
+            stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+        - name: "Include manage-service"
+          include_role:
+            name: "manage-service"
       vars:
         stereum_args:
           manage_service:
@@ -216,14 +219,15 @@
             - "/opt/app/services/{{ lighthouse_service2 }}/beacon/lighthouse:/opt/app/beacon"
             - "/opt/app/services/{{ lighthouse_service2 }}/slasher:/opt/app/slasher"
             - "/opt/app/services/{{ geth_service2 }}/engine.jwt:/engine.jwt"
+          network: prater
       become: yes
 
     - block:
-      - set_fact:
-          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
-      - name: "Include manage-service"
-        include_role:
-          name: "manage-service"
+        - set_fact:
+            stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+        - name: "Include manage-service"
+          include_role:
+            name: "manage-service"
       vars:
         stereum_args:
           manage_service:
@@ -237,5 +241,4 @@
 
     - pause:
         seconds: 30
-
 # EOF
