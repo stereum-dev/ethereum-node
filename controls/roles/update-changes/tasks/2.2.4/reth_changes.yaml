@@ -12,18 +12,18 @@
   ansible.utils.update_fact:
     updates:
       - path: service_configuration.command
-        value: "{{ service_configuration.command + '  --keymanager-token-file=/opt/app/data/wallets/auth-token' }}"
+        value: "{{ service_configuration.command + ['--engine.legacy'] }}"
   register: updated
   when:
-    - service_configuration.service == "PrysmValidatorService"
-    - "'--keymanager-token-file=/opt/app/data/wallets/auth-token' not in service_configuration.command"
+    - service_configuration.service == "RethService"
+    - "'--engine.legacy' not in service_configuration.command"
 
 - name: update config
   set_fact:
     service_configuration: "{{ updated.service_configuration }}"
   when:
-    - service_configuration.service == "PrysmValidatorService"
-    - "'--keymanager-token-file=/opt/app/data/wallets/auth-token' not in service_configuration.command"
+    - service_configuration.service == "RethService"
+    - "'--engine.legacy' not in service_configuration.command"
 
 - name: Write Config
   copy:
@@ -33,5 +33,5 @@
     group: "root"
     mode: 0644
   when:
-    - service_configuration.service == "PrysmValidatorService"
+    - service_configuration.service == "RethService"
     - updated.changed
