@@ -14,9 +14,8 @@ import { ConfigManager } from "./backend/ConfigManager.js";
 import { AuthenticationService } from "./backend/AuthenticationService.js";
 import { TekuGasLimitConfig } from "./backend/TekuGasLimitConfig.js";
 import { SSHService } from "./backend/SSHService.js";
-import { LogFileBackup } from "./backend/LogFileBackup.js";
 import path from "path";
-import { readFileSync, existsSync, mkdirSync, copyFileSync, unlinkSync } from "fs";
+import { readFileSync, existsSync, mkdirSync, renameSync, readdir, rmSync } from "fs";
 import url from "url";
 import checkSigningKeys from "./backend/web3/CSM.js";
 const isDevelopment = process.env.NODE_ENV !== "production";
@@ -34,12 +33,11 @@ const tekuGasLimitConfig = new TekuGasLimitConfig(nodeConnection);
 const sshService = new SSHService();
 const { globalShortcut } = require("electron");
 const log = require("electron-log");
-const logFileBackup = new LogFileBackup();
 const stereumUpdater = new StereumUpdater(log, createWindow, isDevelopment);
 stereumUpdater.initUpdater();
 log.transports.console.level = process.env.LOG_LEVEL || "info";
 log.transports.file.level = "debug";
-log.transports.file.archiveLogFn = (file) => {
+log.transports.file.archiveLogFn = async (file) => {
   file = file.toString();
   const info = path.parse(file);
   let backupPath = info.dir + "/backups/";
@@ -47,9 +45,24 @@ log.transports.file.archiveLogFn = (file) => {
     mkdirSync(backupPath);
   }
 
-  copyFileSync(file, `${backupPath}main-${Date.now()}.log`);
-  unlinkSync(file, (err) => {
-    if (err) throw err;
+  renameSync(file, `${backupPath}main-${Date.now()}.log`);
+
+  let backupLogs = [];
+
+  const storedConfig = await storageService.readConfig();
+
+  readdir(backupPath, (err, files) => {
+    files.forEach((file) => {
+      backupLogs.push(file);
+    });
+    if (backupLogs.length > storedConfig.logBackups.value) {
+      backupLogs.reverse();
+      for (let i = storedConfig.logBackups.value; i < backupLogs.length; i++) {
+        rmSync(backupPath + backupLogs[i], { force: true }, (err) => {
+          if (err) throw err;
+        });
+      }
+    }
   });
 };
 
@@ -126,10 +139,6 @@ ipcMain.handle("idleTimerCheck", async (event, args) => {
 
 ipcMain.handle("setIdleTime", async (event, arg) => {
   return await monitoring.setIdleTime(arg);
-});
-
-ipcMain.handle("deleteLogBackups", async (event, arg) => {
-  return await logFileBackup.deleteLogBackups(arg);
 });
 
 // userData storage
