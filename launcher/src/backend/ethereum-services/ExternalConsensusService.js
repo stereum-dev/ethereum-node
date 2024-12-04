@@ -2,15 +2,12 @@ import { NodeService } from "./NodeService";
 import { ServiceVolume } from "./ServiceVolume";
 
 export class ExternalConsensusService extends NodeService {
-  static buildByUserInput(network, dir, source, gateway) {
+  static buildByUserInput(network, dir, source) {
     const service = new ExternalConsensusService();
     service.setId();
 
     const workingDir = service.buildWorkingDir(dir);
-    const volumes = [
-      new ServiceVolume(workingDir + "/link.txt", ""),
-      ...(gateway ? [new ServiceVolume(workingDir + "/gateway.txt", "")] : []),
-    ];
+    const volumes = [new ServiceVolume(workingDir + "/link.txt", "")];
     service.init(
       "ExternalConsensusService", // service
       service.id, // id
@@ -19,7 +16,7 @@ export class ExternalConsensusService extends NodeService {
       null, // imageVersion
       [], // command
       [], // entrypoint
-      gateway ? { link: source, gateway: gateway } : { link: source }, // env
+      { link: source }, // env
       [], // ports
       volumes, // volumes
       null, // user

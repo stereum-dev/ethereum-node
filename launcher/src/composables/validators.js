@@ -101,7 +101,6 @@ export async function useListKeys(forceRefresh) {
 }
 
 export async function useUpdateValidatorStats() {
-  console.log("test");
   const nodeManageStore = useNodeManage();
   const stakingStore = useStakingStore();
   let totalBalance = 0;
