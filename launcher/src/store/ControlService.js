@@ -747,6 +747,14 @@ class ControlService extends EventEmitter {
   async getCSMQueue(keysArray) {
     return this.promiseIpc.send("getCSMQueue", { keysArray });
   }
+
+  async getObolClusterInformation(serviceID) {
+    return this.promiseIpc.send("getObolClusterInformation", { serviceID });
+  }
+
+  async getSSVClusterInformation(serviceID) {
+    return this.promiseIpc.send("getSSVClusterInformation", { serviceID });
+  }
 }
 if (!instance) {
   instance = new ControlService(window.electron);

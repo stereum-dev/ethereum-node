@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full h-full max-h-8 col-start-1 col-span-full row-start-3 row-span-1 border border-gray-500 rounded-full grid grid-cols-6 bg-[#313539] items-center p-[1px]"
+    class="w-full h-full max-h-8 col-start-1 col-span-full row-span-1 border border-gray-500 rounded-full grid grid-cols-6 bg-[#313539] items-center p-[1px]"
     @mouseenter="footerStore.cursorLocation = `${syncCommitteeReward}`"
     @mouseleave="footerStore.cursorLocation = ''"
   >
