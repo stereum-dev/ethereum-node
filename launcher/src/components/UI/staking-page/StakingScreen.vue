@@ -562,6 +562,11 @@ const withdrawModalHandler = () => {
 const withdrawValidatorKey = async () => {
   stakingStore.withdrawAndExitResponse = null;
   const key = stakingStore.selectedSingleKeyToWithdraw;
+  if (!stakingStore.selectedServiceToFilter) {
+    stakingStore.selectedServiceToFilter = serviceStore.installedServices.find(
+      (service) => service?.config?.serviceID === key?.validatorID
+    );
+  }
 
   try {
     let res;
