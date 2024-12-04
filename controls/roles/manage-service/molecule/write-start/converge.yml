@@ -34,7 +34,7 @@
             - --slasher
             - --slasher-dir=/opt/app/slasher
             - --slasher-max-db-size=16
-          entrypoint: []k
+          entrypoint: []
           user: "2000"
           volumes:
             - "/opt/stereum/services/{{ beacon_service }}/beacon:/opt/app/beacon"
