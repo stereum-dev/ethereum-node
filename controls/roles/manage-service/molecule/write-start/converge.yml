@@ -2,7 +2,7 @@
 - name: Converge
   hosts: all
   vars_files:
-  - ../../../../defaults/stereum_defaults.yaml
+    - ../../../../defaults/stereum_defaults.yaml
 
   vars:
     beacon_service: 587c7432-e01a-11ec-8d93-6b4ba42e911c
@@ -39,6 +39,7 @@
           volumes:
             - "/opt/stereum/services/{{ beacon_service }}/beacon:/opt/app/beacon"
             - "/opt/stereum/services/{{ beacon_service }}/slasher:/opt/app/slasher"
+          network: prater
 
   tasks:
     - set_fact:

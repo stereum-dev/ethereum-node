@@ -2,7 +2,7 @@
 - name: Converge
   hosts: all
   vars_files:
-  - ../../../../defaults/stereum_defaults.yaml
+    - ../../../../defaults/stereum_defaults.yaml
   vars:
     grafana_service: 62aa1873-7b62-410b-ae8e-2cd8615165b9
     notification_service: 1738844e-3164-47de-85a8-ac7d07f2ee31
@@ -10,11 +10,11 @@
   tasks:
     # notification service
     - block:
-      - set_fact:
-          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
-      - name: "Include manage-service"
-        include_role:
-          name: "manage-service"
+        - set_fact:
+            stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+        - name: "Include manage-service"
+          include_role:
+            name: "manage-service"
       vars:
         stereum_args:
           manage_service:
@@ -33,13 +33,14 @@
               user: "2000"
               volumes:
                 - "/opt/app/services/{{ notification_service }}/qrcode:/opt/app/qrcode/"
+              network: prater
     # grafana service
     - block:
-      - set_fact:
-          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
-      - name: "Include manage-service"
-        include_role:
-          name: "manage-service"
+        - set_fact:
+            stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+        - name: "Include manage-service"
+          include_role:
+            name: "manage-service"
       vars:
         stereum_args:
           manage_service:
@@ -57,3 +58,4 @@
                 - "/opt/app/services/{{ grafana_service }}/grafana/provisioning:/etc/grafana/provisioning"
                 - "/opt/app/services/{{ grafana_service }}/grafana/data:/var/lib/grafana"
                 - "/opt/app/services/{{ grafana_service }}/grafana:/etc/grafana"
+              network: prater
