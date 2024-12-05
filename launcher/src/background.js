@@ -1,6 +1,6 @@
 "use strict";
 
-import { app, protocol, BrowserWindow, shell, dialog, Menu, ipcMain } from "electron";
+import { app, protocol, BrowserWindow, shell, dialog, ipcMain } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import { StorageService } from "./storageservice.js";
 import { NodeConnection } from "./backend/NodeConnection.js";
@@ -999,24 +999,58 @@ app.on("web-contents-created", (event, contents) => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on("ready", async () => {
-  // workaround for linux whitescreen
-  // if(process.platform === "linux"){
-  //   app.commandLine.appendSwitch('--no-sandbox')
-  // }
+  // Register the protocol on app launch
+  app.setAsDefaultProtocolClient("myapp");
 
-  // Disable "View" and "Window" Menu items in build (since CTRL+R and F5 is disabled also)
-  if (!isDevelopment) {
-    const hideMenuItems = ["viewmenu", "windowmenu"];
-    var menu = Menu.getApplicationMenu();
-    menu.items.filter((item) => hideMenuItems.includes(item.role)).map((item) => (item.visible = false));
-    Menu.setApplicationMenu(menu);
-    stereumUpdater.checkForUpdates();
-  } else {
-    // remove the comment if you try to debug the updater in dev mode
-    // await stereumUpdater.runDebug()
-    createWindow();
+  // Handle custom protocol in different scenarios
+  if (process.platform === "win32") {
+    // Windows: Handle protocol via `argv`
+    const url = process.argv.find((arg) => arg.startsWith("myapp://"));
+    if (url) {
+      handleCustomUrl(url);
+    }
+  } else if (process.platform === "linux") {
+    // Linux: Protocol passed in `process.argv`
+    const url = process.argv.find((arg) => arg.startsWith("myapp://"));
+    if (url) {
+      handleCustomUrl(url);
+    }
+  } else if (process.platform === "darwin") {
+    app.on("open-url", (event, url) => {
+      event.preventDefault();
+      console.log("Custom URL received:", url);
+      // Handle the URL or pass it to the renderer process
+      const mainWindow = BrowserWindow.getAllWindows()[0];
+      if (mainWindow) {
+        mainWindow.webContents.send("handle-custom-url", url);
+      }
+    });
+  }
+
+  createWindow();
+});
+
+// Ensure single instance for protocol handling
+app.on("second-instance", (event, argv) => {
+  if (process.platform === "win32" || process.platform === "linux") {
+    const url = argv.find((arg) => arg.startsWith("myapp://"));
+    if (url) {
+      handleCustomUrl(url);
+    }
   }
 });
+
+// Function to handle custom URL
+function handleCustomUrl(url) {
+  const mainWindow = BrowserWindow.getAllWindows()[0];
+  if (mainWindow) {
+    mainWindow.webContents.send("handle-custom-url", url);
+    mainWindow.focus();
+  } else {
+    // Optionally, create a new window if none exist
+    createWindow();
+  }
+}
 
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {

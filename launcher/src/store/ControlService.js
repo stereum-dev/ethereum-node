@@ -755,6 +755,13 @@ class ControlService extends EventEmitter {
   async getSSVClusterInformation(serviceID) {
     return this.promiseIpc.send("getSSVClusterInformation", { serviceID });
   }
+
+  onCustomUrl(callback) {
+    this.addListener("handle-custom-url", (_, url) => {
+      console.log("Custom URL received:", url);
+      if (callback) callback(url);
+    });
+  }
 }
 if (!instance) {
   instance = new ControlService(window.electron);
