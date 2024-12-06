@@ -1,8 +1,6 @@
 <template>
   <div class="service-line w-full h-1/3 flex justify-start items-center">
-    <div
-      class="service-name w-1/4 h-full text-gray-200 uppercase text-[45%] font-semibold flex justify-start items-center"
-    >
+    <div class="service-name w-1/4 h-full text-gray-200 uppercase text-[45%] font-semibold flex justify-start items-center">
       {{ name }}
     </div>
     <div
