@@ -1,9 +1,17 @@
 <template>
-  <div class="col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-12 grid-rows-12 items-center bg-[#1b1b1d] p-2 rounded-md">
-    <div class="col-start-1 col-end-7 row-start-1 row-span-1 flex justify-start items-center">
-      <span class="text-md font-semibold text-gray-200 uppercase">{{ $t("multiServer.saveServerCon") }}</span>
+  <div
+    class="col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-12 grid-rows-12 items-center bg-[#1b1b1d] p-2 rounded-md"
+  >
+    <div
+      class="col-start-1 col-end-7 row-start-1 row-span-1 flex justify-start items-center"
+    >
+      <span class="text-md font-semibold text-gray-200 uppercase">{{
+        $t("multiServer.saveServerCon")
+      }}</span>
     </div>
-    <div class="col-start-7 col-span-full row-start-1 row-span-1 flex justify-start items-center relative">
+    <div
+      class="col-start-7 col-span-full row-start-1 row-span-1 flex justify-start items-center relative"
+    >
       <label for="Search" class="sr-only"> {{ $t("multiServer.serch") }} </label>
 
       <input
@@ -21,7 +29,14 @@
         <button type="button" class="text-gray-600 hover:text-gray-700">
           <span class="sr-only">{{ $t("multiServer.serch") }} </span>
 
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="h-4 w-4"
+          >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -33,7 +48,7 @@
     </div>
 
     <div
-      class="w-full h-full max-h-[300px] col-start-1 col-span-full row-start-2 row-end-11 overflow-x-hidden overflow-y-auto flex flex-col justify-start items-center p-3 bg-black rounded-md space-y-2"
+      class="w-full h-full max-h-[300px] col-start-1 col-span-full row-start-2 row-end-11 overflow-x-hidden overflow-y-auto flex flex-col justify-start items-center p-1 bg-black rounded-md space-y-2"
     >
       <ServerRow
         v-for="(server, index) in filteredServers"
@@ -46,9 +61,35 @@
         @mouseleave="footerStore.cursorLocation = ''"
       />
     </div>
-    <div class="col-start-1 col-span-full row-start-11 row-span-2 self-end grid grid-cols-12 gap-x-2">
+    <div
+      class="col-start-1 col-span-full row-start-11 row-span-2 self-end grid grid-cols-12 gap-x-2"
+    >
       <button
-        class="w-full h-[50px] self-end col-start-6 col-span-full row-start-11 row-span-2 bg-gray-200 rounded-md px-4 py-2 flex justify-start items-center shadow-lg shadow-black active:shadow-none active:scale-95 cursor-pointer space-x-4 transition-all duration-200 ease-in-out hover:bg-[#336666] text-gray-800 hover:text-gray-100"
+        class="w-full h-[50px] self-end col-start-1 col-span-3 row-start-11 row-span-2 bg-gray-200 rounded-md px-1 flex justify-start items-center shadow-lg shadow-black active:shadow-none active:scale-95 cursor-pointer transition-all duration-200 pr-2 ease-in-out hover:bg-[#336666] text-gray-800 hover:text-gray-100"
+        @mouseenter="footerStore.cursorLocation = `click to import server list`"
+        @mouseleave="footerStore.cursorLocation = ''"
+      >
+        <img
+          class="w-16 h-7"
+          src="/img/icon/server-management-icons/import-config.png"
+          alt="Add Icon"
+        />
+        <span class="text-sm text-left uppercase font-bold">import</span>
+      </button>
+      <button
+        class="w-full h-[50px] self-end col-start-4 col-span-3 row-start-11 row-span-2 bg-gray-200 rounded-md px-1 pr-2 flex justify-start items-center shadow-lg shadow-black active:shadow-none active:scale-95 cursor-pointer transition-all duration-200 ease-in-out hover:bg-[#336666] text-gray-800 hover:text-gray-100"
+        @mouseenter="footerStore.cursorLocation = `click to export server list`"
+        @mouseleave="footerStore.cursorLocation = ''"
+      >
+        <img
+          class="w-16 h-7"
+          src="/img/icon/server-management-icons/export-config.png"
+          alt="Add Icon"
+        />
+        <span class="text-sm text-left uppercase font-bold">export</span>
+      </button>
+      <button
+        class="w-full h-[50px] self-end col-start-10 col-span-full row-start-11 row-span-2 bg-gray-200 rounded-md px-4 py-2 flex justify-start items-center shadow-lg shadow-black active:shadow-none active:scale-95 cursor-pointer space-x-4 transition-all duration-200 ease-in-out hover:bg-[#336666] text-gray-800 hover:text-gray-100"
         @click="serverLogin"
         @mouseenter="footerStore.cursorLocation = `${t('serverList.addServer')}`"
         @mouseleave="footerStore.cursorLocation = ''"
@@ -58,15 +99,14 @@
           src="/img/icon/server-management-icons/plus.png"
           alt="Add Icon"
         />
-        <span class="text-sm text-left uppercase font-bold">{{ $t("multiServer.addServer") }}</span>
+        <span class="text-sm text-left uppercase font-bold">new</span>
       </button>
 
       <div
-        class="w-full h-[50px] self-end col-start-1 col-end-6 row-start-11 row-span-2 flex justify-center items-center bg-[#093A4C] rounded-md px-4 py-2 cursor-pointer space-x-2 transition-all duration-200 ease-in-out hover:bg-[#336666] shadow-lg shadow-black active:shadow-none"
+        class="w-full h-[50px] self-end col-start-7 col-end-10 row-start-11 row-span-2 flex justify-center items-center bg-[#093A4C] rounded-md px-2 py-1 cursor-pointer space-x-2 transition-all duration-200 ease-in-out hover:bg-[#336666] shadow-lg shadow-black active:shadow-none"
         @click="getToStereumPlusLogin"
       >
-        <span class="text-xs text-gray-200 font-normal font-sans"> GET SERVER </span>
-        <img class="w-auto h-6 border rounded-[4px]" src="/img/stereumPlus/logo.png" alt="Server Icon" />
+        <img class="w-full" src="/img/stereumPlus/logo.png" alt="Server Icon" />
       </div>
     </div>
   </div>
@@ -96,7 +136,9 @@ const getFilteredServers = () => {
     return serverStore.savedServers?.savedConnections;
   }
 
-  return serverStore.savedServers.savedConnections.filter((server) => server.name.toLowerCase().includes(searchQuery.value.toLowerCase()));
+  return serverStore.savedServers.savedConnections.filter((server) =>
+    server.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+  );
 };
 
 watch(
@@ -133,7 +175,9 @@ const getToStereumPlusLogin = () => {
 const loadStoredConnections = async () => {
   serverStore.savedServers = await ControlService.readConfig();
 
-  serverStore.selectedServerConnection = serverStore.savedServers?.savedConnections?.find((item) => item.host === controlStore.ipAddress);
+  serverStore.selectedServerConnection = serverStore.savedServers?.savedConnections?.find(
+    (item) => item.host === controlStore.ipAddress
+  );
 
   serverStore.refreshServers = false;
 };
