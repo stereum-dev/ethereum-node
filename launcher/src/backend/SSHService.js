@@ -350,7 +350,7 @@ export class SSHService {
   /**
    * Handles the received data by storing it in the rpcReceivedDatas array.
    * @param {number} dataLength - The length of the received data (byte).
-   * @param {number} dstPort - The destination port.
+   * @param {number} srcPort - The source port.
    */
   async handleReceivedData(dataLength, srcPort) {
     try {
