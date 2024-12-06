@@ -163,7 +163,7 @@
 }
 
 /*
-! tailwindcss v3.4.14 | MIT License | https://tailwindcss.com
+! tailwindcss v3.4.13 | MIT License | https://tailwindcss.com
 */
 
 /*
@@ -631,7 +631,7 @@ video {
 
 /* Make elements with the HTML hidden attribute stay hidden by default */
 
-[hidden]:where(:not([hidden="until-found"])) {
+[hidden] {
   display: none;
 }
 
@@ -1943,10 +1943,6 @@ video {
   max-height: 15rem;
 }
 
-.max-h-7{
-  max-height: 1.75rem;
-}
-
 .max-h-8{
   max-height: 2rem;
 }
@@ -2077,6 +2073,10 @@ video {
 
 .max-h-full{
   max-height: 100%;
+}
+
+.max-h-7{
+  max-height: 1.75rem;
 }
 
 .min-h-11{
@@ -2435,10 +2435,6 @@ video {
   width: 90%;
 }
 
-.w-auto{
-  width: auto;
-}
-
 .w-fit{
   width: -webkit-fit-content;
   width: -moz-fit-content;
@@ -2457,6 +2453,10 @@ video {
 
 .w-screen{
   width: 100vw;
+}
+
+.w-auto{
+  width: auto;
 }
 
 .min-w-\[100px\]{
@@ -3247,11 +3247,6 @@ video {
   border-bottom-left-radius: 0.125rem;
 }
 
-.rounded-l-full{
-  border-top-left-radius: 9999px;
-  border-bottom-left-radius: 9999px;
-}
-
 .rounded-l-md{
   border-top-left-radius: 0.375rem;
   border-bottom-left-radius: 0.375rem;
@@ -3300,6 +3295,11 @@ video {
 .rounded-t-md{
   border-top-left-radius: 0.375rem;
   border-top-right-radius: 0.375rem;
+}
+
+.rounded-l-full{
+  border-top-left-radius: 9999px;
+  border-bottom-left-radius: 9999px;
 }
 
 .rounded-bl-\[37px\]{
@@ -3628,11 +3628,6 @@ video {
   border-top-color: rgb(255 255 255 / var(--tw-border-opacity));
 }
 
-.bg-\[\#093A4C\]{
-  --tw-bg-opacity: 1;
-  background-color: rgb(9 58 76 / var(--tw-bg-opacity));
-}
-
 .bg-\[\#0F1217\]{
   --tw-bg-opacity: 1;
   background-color: rgb(15 18 23 / var(--tw-bg-opacity));
@@ -3888,11 +3883,6 @@ video {
   background-color: rgb(41 46 50 / var(--tw-bg-opacity));
 }
 
-.bg-\[\#2a2c30\]{
-  --tw-bg-opacity: 1;
-  background-color: rgb(42 44 48 / var(--tw-bg-opacity));
-}
-
 .bg-\[\#2a2e30\]{
   --tw-bg-opacity: 1;
   background-color: rgb(42 46 48 / var(--tw-bg-opacity));
@@ -3976,11 +3966,6 @@ video {
 .bg-\[\#343434\]{
   --tw-bg-opacity: 1;
   background-color: rgb(52 52 52 / var(--tw-bg-opacity));
-}
-
-.bg-\[\#363934\]{
-  --tw-bg-opacity: 1;
-  background-color: rgb(54 57 52 / var(--tw-bg-opacity));
 }
 
 .bg-\[\#387272\]{
@@ -4327,9 +4312,19 @@ video {
   background-color: rgb(63 63 70 / var(--tw-bg-opacity));
 }
 
-.bg-teal-900{
+.bg-\[\#093A4C\]{
   --tw-bg-opacity: 1;
-  background-color: rgb(19 78 74 / var(--tw-bg-opacity));
+  background-color: rgb(9 58 76 / var(--tw-bg-opacity));
+}
+
+.bg-\[\#2a2c30\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(42 44 48 / var(--tw-bg-opacity));
+}
+
+.bg-\[\#363934\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(54 57 52 / var(--tw-bg-opacity));
 }
 
 .bg-opacity-80{
