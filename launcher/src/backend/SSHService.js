@@ -310,14 +310,34 @@ export class SSHService {
                   log.error("Forwarding error: ", err);
                   return;
                 }
-
-                // Pipe the connection to the stream and vice versa
-                connection.pipe(stream).pipe(connection);
-
-                // Listen for data on the stream
-                stream.on("data", (data) => {
-                  // Call the handleReceivedData method to handle the received data
+                // Track data size for el rpc
+                connection.on("data", (data) => {
+                  stream.write(data);
                   this.handleReceivedData(data.length, forwardOptions.srcPort);
+                });
+
+                connection.on("end", () => {
+                  stream.end();
+                });
+                stream.on("end", () => {
+                  connection.end();
+                });
+
+                connection.on("error", (error) => {
+                  log.error("Connection error: ", error);
+                  stream.end();
+                });
+
+                stream.on("error", (error) => {
+                  log.error("Stream error: ", error);
+                  connection.end();
+                });
+
+                connection.on("close", () => {
+                  stream.destroy();
+                });
+                stream.on("close", () => {
+                  connection.destroy();
                 });
               }
             );
