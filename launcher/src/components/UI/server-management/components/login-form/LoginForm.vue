@@ -4,7 +4,6 @@
   >
     <div class="w-full h-full col-start-1 col-span-full row-start-1 row-span-1 flex justify-start items-center">
       <span class="text-md font-semibold text-gray-300 uppercase">Login to server</span>
-      <input type="file" @change="importConnections" />
     </div>
     <form
       class="w-full h-full col-start-1 col-span-full row-start-3 row-span-full grid grid-cols-12 grid-rows-6 space-y-1"
@@ -63,21 +62,6 @@
             class="absolute -top-11 -right-5 w-28 rounded-sm uppercase bg-[#202632] px-3 py-2 text-center text-xs font-medium text-white outline-none"
           >
             {{ $t("multiServer.saveServer") }}
-          </div>
-          <img
-            class="w-7 hover:scale-110 active:scale-100 transition-all ease-in-out duration-200 cursor-pointer self-center border-4 border-gray-400 rounded-full shadow-md shadow-[#141414]"
-            src="/img/icon/server-management-icons/plus-icon.png"
-            alt="icon"
-            @mousedown.prevent
-            @mouseenter="(expHovered = true), (footerStore.cursorLocation = `${t('loginForm.save')}`)"
-            @mouseleave="(expHovered = false), (footerStore.cursorLocation = '')"
-            @click="exportConnections"
-          />
-          <div
-            v-if="expHovered"
-            class="absolute -top-11 -right-5 w-28 rounded-sm uppercase bg-[#202632] px-3 py-2 text-center text-xs font-medium text-white outline-none"
-          >
-            export
           </div>
         </div>
       </div>
@@ -288,8 +272,6 @@ import ControlService from "@/store/ControlService";
 import { useRouter } from "vue-router";
 import { useFooter } from "@/store/theFooter";
 import i18n from "@/includes/i18n";
-import JSZip from "jszip";
-import { saveAs } from "file-saver";
 
 const t = i18n.global.t;
 
@@ -299,7 +281,7 @@ const footerStore = useFooter();
 const serverStore = useServers();
 const router = useRouter();
 
-const { add, loadStoredConnections } = useServerLogin();
+const { add } = useServerLogin();
 
 //Refs
 
@@ -311,7 +293,7 @@ const sshError = ref("");
 const devices = ref([]);
 const removeHovered = ref(false);
 const addHovered = ref(false);
-const expHovered = ref(false);
+
 const isFormValid = ref(false);
 const useSSHKey = ref(false);
 const usePassword = ref(false);
@@ -351,65 +333,6 @@ const addButtonDisabled = computed(() => {
 const removeButtonDisabled = computed(() => {
   return !serverStore.selectedServerToConnect;
 });
-
-const exportConnections = async () => {
-  const zip = new JSZip();
-  const connectionsJSON = JSON.stringify(serverStore.connections, null, 2);
-  zip.file("connections.json", connectionsJSON);
-
-  const blob = await zip.generateAsync({ type: "blob" });
-
-  saveAs(blob, "connections.zip");
-};
-
-const importConnections = async (event) => {
-  const file = event.target.files[0];
-  if (!file) {
-    return;
-  }
-
-  const zip = new JSZip();
-  try {
-    const connect = await file.arrayBuffer();
-    const zipContent = await zip.loadAsync(connect);
-
-    const connectionsFile = zipContent.file("connections.json");
-    if (!connectionsFile) {
-      alert("No connections.json file found in the zip.");
-      return;
-    }
-
-    const jsonData = await connectionsFile.async("string");
-
-    const newConnections = JSON.parse(jsonData);
-
-    if (Array.isArray(newConnections) && newConnections.length > 0) {
-      const existingConnections = serverStore.savedServers.savedConnections;
-
-      const uniqueConnections = newConnections.filter(
-        (newConnection) =>
-          !existingConnections.some((existingConnection) => JSON.stringify(existingConnection) === JSON.stringify(newConnection))
-      );
-
-      existingConnections.push(...uniqueConnections);
-
-      const prevConf = await ControlService.readConfig();
-
-      const conf = {
-        ...prevConf,
-        savedConnections: JSON.parse(JSON.stringify(existingConnections)),
-      };
-
-      await ControlService.writeConfig(conf);
-    } else {
-      console.error("Invalid or empty connections data.");
-    }
-
-    await loadStoredConnections(serverStore.savedServers);
-  } catch (error) {
-    console.error("An error occurred:", error);
-  }
-};
 
 //*********** Watchers ***********//
 

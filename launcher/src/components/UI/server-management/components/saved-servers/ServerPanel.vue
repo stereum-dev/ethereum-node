@@ -1,17 +1,9 @@
 <template>
-  <div
-    class="col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-12 grid-rows-12 items-center bg-[#1b1b1d] p-2 rounded-md"
-  >
-    <div
-      class="col-start-1 col-end-7 row-start-1 row-span-1 flex justify-start items-center"
-    >
-      <span class="text-md font-semibold text-gray-200 uppercase">{{
-        $t("multiServer.saveServerCon")
-      }}</span>
+  <div class="col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-12 grid-rows-12 items-center bg-[#1b1b1d] p-2 rounded-md">
+    <div class="col-start-1 col-end-7 row-start-1 row-span-1 flex justify-start items-center">
+      <span class="text-md font-semibold text-gray-200 uppercase">{{ $t("multiServer.saveServerCon") }}</span>
     </div>
-    <div
-      class="col-start-7 col-span-full row-start-1 row-span-1 flex justify-start items-center relative"
-    >
+    <div class="col-start-7 col-span-full row-start-1 row-span-1 flex justify-start items-center relative">
       <label for="Search" class="sr-only"> {{ $t("multiServer.serch") }} </label>
 
       <input
@@ -29,14 +21,7 @@
         <button type="button" class="text-gray-600 hover:text-gray-700">
           <span class="sr-only">{{ $t("multiServer.serch") }} </span>
 
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="h-4 w-4"
-          >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -61,31 +46,25 @@
         @mouseleave="footerStore.cursorLocation = ''"
       />
     </div>
-    <div
-      class="col-start-1 col-span-full row-start-11 row-span-2 self-end grid grid-cols-12 gap-x-2"
-    >
+    <div class="col-start-1 col-span-full row-start-11 row-span-2 self-end grid grid-cols-12 gap-x-2">
       <button
         class="w-full h-[50px] self-end col-start-1 col-span-3 row-start-11 row-span-2 bg-gray-200 rounded-md px-1 flex justify-start items-center shadow-lg shadow-black active:shadow-none active:scale-95 cursor-pointer transition-all duration-200 pr-2 ease-in-out hover:bg-[#336666] text-gray-800 hover:text-gray-100"
-        @mouseenter="footerStore.cursorLocation = `click to import server list`"
+        @click="openFileInput"
+        @mouseenter="footerStore.cursorLocation = 'click to import server list'"
         @mouseleave="footerStore.cursorLocation = ''"
       >
-        <img
-          class="w-16 h-7"
-          src="/img/icon/server-management-icons/import-config.png"
-          alt="Add Icon"
-        />
+        <img class="w-16 h-7" src="/img/icon/server-management-icons/import-config.png" alt="Add Icon" />
         <span class="text-sm text-left uppercase font-bold">import</span>
       </button>
+      <input ref="fileInput" type="file" class="hidden" accept=".zip" @change="importConnections" />
+
       <button
         class="w-full h-[50px] self-end col-start-4 col-span-3 row-start-11 row-span-2 bg-gray-200 rounded-md px-1 pr-2 flex justify-start items-center shadow-lg shadow-black active:shadow-none active:scale-95 cursor-pointer transition-all duration-200 ease-in-out hover:bg-[#336666] text-gray-800 hover:text-gray-100"
+        @click="exportConnections"
         @mouseenter="footerStore.cursorLocation = `click to export server list`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
-        <img
-          class="w-16 h-7"
-          src="/img/icon/server-management-icons/export-config.png"
-          alt="Add Icon"
-        />
+        <img class="w-16 h-7" src="/img/icon/server-management-icons/export-config.png" alt="Add Icon" />
         <span class="text-sm text-left uppercase font-bold">export</span>
       </button>
       <button
@@ -119,6 +98,8 @@ import { useControlStore } from "@/store/theControl";
 import { useFooter } from "@/store/theFooter";
 import { onMounted, ref, watch } from "vue";
 import ServerRow from "./ServerRow.vue";
+import JSZip from "jszip";
+import { saveAs } from "file-saver";
 
 const t = i18n.global.t;
 
@@ -136,9 +117,7 @@ const getFilteredServers = () => {
     return serverStore.savedServers?.savedConnections;
   }
 
-  return serverStore.savedServers.savedConnections.filter((server) =>
-    server.name.toLowerCase().includes(searchQuery.value.toLowerCase())
-  );
+  return serverStore.savedServers.savedConnections.filter((server) => server.name.toLowerCase().includes(searchQuery.value.toLowerCase()));
 };
 
 watch(
@@ -168,6 +147,73 @@ onMounted(async () => {
 
 //Methods
 
+const exportConnections = async () => {
+  const zip = new JSZip();
+  const connectionsJSON = JSON.stringify(serverStore.connections, null, 2);
+  zip.file("connections.json", connectionsJSON);
+
+  const blob = await zip.generateAsync({ type: "blob" });
+
+  saveAs(blob, "connections.zip");
+};
+
+const fileInput = ref(null);
+
+const openFileInput = () => {
+  if (fileInput.value) {
+    fileInput.value.click();
+  }
+};
+
+const importConnections = async (event) => {
+  const file = event.target.files[0];
+  if (!file) {
+    return;
+  }
+
+  const zip = new JSZip();
+  try {
+    const connect = await file.arrayBuffer();
+    const zipContent = await zip.loadAsync(connect);
+
+    const connectionsFile = zipContent.file("connections.json");
+    if (!connectionsFile) {
+      alert("No connections.json file found in the zip.");
+      return;
+    }
+
+    const jsonData = await connectionsFile.async("string");
+
+    const newConnections = JSON.parse(jsonData);
+
+    if (Array.isArray(newConnections) && newConnections.length > 0) {
+      const existingConnections = serverStore.savedServers.savedConnections;
+
+      const uniqueConnections = newConnections.filter(
+        (newConnection) =>
+          !existingConnections.some((existingConnection) => JSON.stringify(existingConnection) === JSON.stringify(newConnection))
+      );
+
+      existingConnections.push(...uniqueConnections);
+
+      const prevConf = await ControlService.readConfig();
+
+      const conf = {
+        ...prevConf,
+        savedConnections: JSON.parse(JSON.stringify(existingConnections)),
+      };
+
+      await ControlService.writeConfig(conf);
+    } else {
+      console.error("Invalid or empty connections data.");
+    }
+
+    await loadStoredConnections(serverStore.savedServers);
+  } catch (error) {
+    console.error("An error occurred:", error);
+  }
+};
+
 const getToStereumPlusLogin = () => {
   window.open("https://stereumplus.com/", "_blank");
 };
@@ -175,9 +221,7 @@ const getToStereumPlusLogin = () => {
 const loadStoredConnections = async () => {
   serverStore.savedServers = await ControlService.readConfig();
 
-  serverStore.selectedServerConnection = serverStore.savedServers?.savedConnections?.find(
-    (item) => item.host === controlStore.ipAddress
-  );
+  serverStore.selectedServerConnection = serverStore.savedServers?.savedConnections?.find((item) => item.host === controlStore.ipAddress);
 
   serverStore.refreshServers = false;
 };
