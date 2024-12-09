@@ -95,7 +95,7 @@ export class PrysmBeaconService extends NodeService {
       "--accept-terms-of-use=true",
       `--datadir=${dataDir}`,
       "--rpc-host=0.0.0.0",
-      "--grpc-gateway-host=0.0.0.0",
+      "--http-host=0.0.0.0",
       `--execution-endpoint=${executionEndpoint}`,
       `--jwt-secret=${JWTDir}`,
       "--monitoring-host=0.0.0.0",

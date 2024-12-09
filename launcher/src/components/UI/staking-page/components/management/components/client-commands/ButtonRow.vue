@@ -28,6 +28,8 @@ const displayButtonByCondition = computed(() => {
 
   //Web3SignerService is selected in filter
   const isSelectedFilterWeb3Signer = stakingStore.selectedServiceToFilter?.service === "Web3SignerService";
+  const isSelectedFilterObol = stakingStore.selectedServiceToFilter?.service === "CharonService";
+  const isSelectedFilterSSV = stakingStore.selectedServiceToFilter?.service === "SSVNetworkService";
 
   // Remote Key btn
   const isImportRemoteButton = props.button.text === "Import Remote Keys";
@@ -39,11 +41,11 @@ const displayButtonByCondition = computed(() => {
     return true;
   }
 
-  if (isSelectedFilterWeb3Signer) {
+  if (isSelectedFilterWeb3Signer || isSelectedFilterObol || isSelectedFilterSSV || stakingStore.displayAllKeysActive) {
     if (isImportRemoteButton || !matchingKeyForService || !isValidatorFilterRunning) {
       return true;
     }
-  } else if (!isSelectedFilterWeb3Signer) {
+  } else if (!isSelectedFilterWeb3Signer && !isSelectedFilterObol && !isSelectedFilterSSV) {
     if ((!matchingKeyForService || !isValidatorFilterRunning) && !isImportRemoteButton) {
       return true;
     }

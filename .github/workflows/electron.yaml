@@ -15,6 +15,11 @@ jobs:
       - name: Check out Git repository
         uses: actions/checkout@v3
 
+      - name: Ensure Node Version
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
       - name: Set Version from package.json
         id: variables
         run: |
@@ -56,6 +61,10 @@ jobs:
       - name: macOS build args
         if: matrix.os == 'macos-latest'
         run: echo "BUILD_ARGS=--universal" >> $GITHUB_ENV
+      
+      - name: Install Dependencies
+        run: |
+          cd launcher && npm i
 
       - name: Build Electron app
         uses: samuelmeuli/action-electron-builder@v1

@@ -7,9 +7,9 @@
 </template>
 
 <script setup>
-import ValidatorRewards from "../components/management/ValidatorRewards.vue";
 import ClientCommands from "../components/management/ClientCommands.vue";
 import EpochDuty from "../components/management/EpochDuty.vue";
+import ValidatorRewards from "../components/management/ValidatorRewards.vue";
 
 const emit = defineEmits(["graffitiPanel", "importRemote", "withdrawMultiple"]);
 

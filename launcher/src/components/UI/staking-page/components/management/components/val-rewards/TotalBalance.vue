@@ -36,18 +36,21 @@ const ttlBal = t("displayValidator.ttlBal");
 
 const stakingStore = useStakingStore();
 
-// Computed property to get the total number of keys based on validatorID
 const totalKeys = computed(() => {
-  return stakingStore.keyNumbers;
+  return stakingStore.keys?.filter((key) => key.key && key.key.trim() !== "").length || 0;
 });
 
-// Computed property to calculate the total balance for the validator service
 const totalBalance = computed(() => {
   const validatorID = stakingStore.selectedServiceToFilter?.config?.serviceID;
-  if (!validatorID) return 0;
-  const keysForValidator = stakingStore.keys.filter((key) => key.validatorID === validatorID);
-  return keysForValidator.reduce((sum, key) => {
-    return !isNaN(key.balance) ? (sum += key.balance) : (sum += 0);
+
+  if (validatorID) {
+    const keysForValidator = stakingStore.keys.filter((key) => key.validatorID === validatorID);
+    return keysForValidator.reduce((sum, key) => {
+      return !isNaN(key.balance) ? (sum += key.balance) : sum;
+    }, 0);
+  }
+  return stakingStore.keys.reduce((sum, key) => {
+    return !isNaN(key.balance) ? (sum += key?.balance) : sum;
   }, 0);
 });
 </script>

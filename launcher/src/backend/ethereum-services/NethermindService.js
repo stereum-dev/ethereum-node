@@ -37,17 +37,6 @@ export class NethermindService extends NodeService {
         "--HealthChecks.Enabled=true",
         "--Pruning.Mode=Hybrid",
         "--Pruning.FullPruningTrigger=StateDbSize",
-        "--Pruning.AvailableSpaceCheckEnabled=true",
-        "--Pruning.CacheMb=1024",
-        "--Pruning.PersistenceInterval=8192",
-        "--Pruning.PruningBoundary=64",
-        "--Pruning.TrackedPastKeyCountMemoryRatio=0.1",
-        "--Pruning.FullPruningCompletionBehavior=None",
-        "--Pruning.FullPruningDisableLowPriorityWrites=false",
-        "--Pruning.FullPruningMaxDegreeOfParallelism=0",
-        "--Pruning.FullPruningMemoryBudgetMb=4000",
-        "--Pruning.FullPruningMinimumDelayHours=240",
-        "--Pruning.FullPruningThresholdMb=256000",
       ], // command
       ["./nethermind"], // entrypoint
       null, // env

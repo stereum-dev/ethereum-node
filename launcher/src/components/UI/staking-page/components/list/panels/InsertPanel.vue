@@ -36,7 +36,7 @@ const fileInput = ref(null);
 
 // Check if there is a doppelganger key processing
 const isUploadDisabled = computed(() => {
-  return stakingStore.doppelgangerKeys.some((doppelKey) => doppelKey.serviceID === stakingStore.selectedServiceToFilter.config.serviceID);
+  return stakingStore.doppelgangerKeys.some((doppelKey) => doppelKey.serviceID === stakingStore.selectedServiceToFilter?.config?.serviceID);
 });
 
 const openUploadHandler = () => {

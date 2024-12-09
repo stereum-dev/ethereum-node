@@ -9,6 +9,7 @@ import * as crypto from "crypto";
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
+import axios from "axios";
 const { powerMonitor } = require("electron");
 
 const globalMonitoringCache = {
@@ -3384,8 +3385,12 @@ export class Monitoring {
     }
 
     try {
-      const beaconAPIPort = beaconStatus.data[0].beacon.servicePort;
-      const serviceId = beaconStatus.data[0].sid;
+      //Check if connected to CharonService
+      const vc = await this.nodeConnection.readServiceConfiguration(serviceID);
+      const connectedCharon = vc?.dependencies.consensusClients.find((client) => client.service === "CharonService");
+
+      const beaconAPIPort = connectedCharon ? 3600 : beaconStatus.data[0].beacon.servicePort;
+      const serviceId = connectedCharon ? connectedCharon.id : beaconStatus.data[0].sid;
       if (!Array.isArray(pubkey)) {
         pubkey = [pubkey];
       }
@@ -3760,5 +3765,87 @@ export class Monitoring {
       this.globalMonitoringCache.idleTimerStop = false;
       this.globalMonitoringCache.idleTimerRunning = false;
     }
+  }
+
+  async getObolClusterInformation(serviceID) {
+    const serviceInfos = await this.getServiceInfos("CharonService");
+    const charon = serviceInfos.find((service) => service.config.serviceID === serviceID);
+    if (!charon) {
+      log.info("No such Charon found!");
+      return {};
+    }
+
+    const queries = {
+      app_monitoring_readyz: `app_monitoring_readyz{instance=~".*${serviceID}.*"}`, // for Cluster Peer
+      cluster_attestation_performance: `(sum(increase(core_tracker_success_duties_total{instance=~".*${serviceID}.*",duty="attester"}[1h])) / sum(increase(core_tracker_expect_duties_total{instance=~".*${serviceID}.*",duty="attester"}[1h])) > 0) * 100`,
+      cluster_attestation_participation: `core_tracker_participation{instance=~".*${serviceID}.*",duty="attester"}`,
+      cluster_operators: `cluster_operators{instance=~".*${serviceID}.*"}`,
+      cluster_threshold: `cluster_threshold{instance=~".*${serviceID}.*"}`,
+      cluster_validators: `cluster_validators{instance=~".*${serviceID}.*"}`,
+    };
+
+    const queryPromises = Object.entries(queries).map(([key, query]) => {
+      return this.queryPrometheus(encodeURIComponent(query)).then((result) => ({ key, result }));
+    });
+
+    const results = await Promise.all(queryPromises);
+
+    const stats = {};
+
+    results.forEach((metric) => {
+      if (metric.result.status != "success") {
+        return;
+      }
+      switch (metric.key) {
+        case "app_monitoring_readyz":
+          stats.nodeStatus = metric.result.data.result[0].value[1] === "1" ? "ACTIVE" : "INACTIVE";
+          stats.peerName = metric.result.data.result[0].metric.cluster_peer;
+          break;
+        case "cluster_attestation_performance":
+          stats.attestationPerformance = metric.result.data.result[0].value[1];
+          break;
+        case "cluster_attestation_participation":
+          stats.attestationParticipation = metric.result.data.result.reduce((acc, curr) => acc + parseInt(curr.value[1]), 0);
+          break;
+        case "cluster_operators":
+          stats.operators = parseInt(metric.result.data.result[0].value[1]);
+          break;
+        case "cluster_threshold":
+          stats.threshold = parseInt(metric.result.data.result[0].value[1]);
+          break;
+        case "cluster_validators":
+          stats.validators = parseInt(metric.result.data.result[0].value[1]);
+          break;
+      }
+    });
+    return stats;
+  }
+
+  async getSSVClusterInformation(serviceID) {
+    const serviceInfos = await this.getServiceInfos("SSVNetworkService");
+    const ssv = serviceInfos.find((service) => service.config.serviceID === serviceID);
+    if (!ssv) {
+      log.info("No such SSV found!");
+      return {};
+    }
+    const operator = await this.nodeConnection.getSSVLastKnownOperatorId(serviceID);
+    if (!operator) {
+      log.info("No SSV Operator found!");
+      return {};
+    }
+    const stats = {};
+
+    stats.operator = operator;
+
+    const data = await axios.get(`https://api.ssv.network/api/v4/${ssv.config.network}/operators/` + operator);
+    if (data.status !== 200) {
+      log.error("Error fetching SSV Operator Information:\n" + JSON.stringify(data.data, null, 2));
+      return {};
+    }
+
+    stats.private = data.data.is_private;
+    stats.status = data.data.status;
+    stats.performance = data.data.performance["24h"];
+    return stats;
   }
 }

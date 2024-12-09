@@ -3,6 +3,7 @@
     class="w-full h-full col-start-1 col-span-full row-start-1 row-span-1 bg-black rounded-md grid grid-cols-6 grid-rows-1 items-center px-2"
   >
     <img
+      v-if="getServiceIcon !== null"
       class="w-5 h-5 col-start-1 col-span-1"
       :src="getServiceIcon"
       alt="Service Icon"
@@ -10,8 +11,18 @@
       @mouseenter="footerStore.cursorLocation = `${valClint}`"
       @mouseleave="footerStore.cursorLocation = ''"
     />
+    <img
+      v-else
+      class="w-5 h-5 col-start-1 col-span-1"
+      src="/animation/loading/loading-circle.gif"
+      alt="Service Icon"
+      @mousedown.prevent
+      @mouseenter="footerStore.cursorLocation = `${valClint}`"
+      @mouseleave="footerStore.cursorLocation = ''"
+    />
 
     <div
+      v-if="getServiceIcon !== null"
       class="col-start-2 col-end-5 flex justify-center items-center space-x-1 relative"
       @mouseenter="footerStore.cursorLocation = `${valStat}`"
       @mouseleave="footerStore.cursorLocation = ''"
@@ -58,11 +69,11 @@ const numValidator = t("displayValidator.numValidator");
 const stakingStore = useStakingStore();
 
 const getServiceState = computed(() => {
-  return stakingStore.selectedServiceToFilter?.state;
+  return stakingStore.selectedServiceToFilter?.state ?? null;
 });
 
 const getServiceIcon = computed(() => {
-  return stakingStore.selectedServiceToFilter?.icon;
+  return stakingStore.selectedServiceToFilter?.icon ?? null;
 });
 
 const getTextColor = computed(() => {

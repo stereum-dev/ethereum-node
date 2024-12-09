@@ -77,8 +77,8 @@
 </template>
 
 <script setup>
-import { useStakingStore } from "@/store/theStaking";
 import { useDeepClone, useTruncate } from "@/composables/utils";
+import { useStakingStore } from "@/store/theStaking";
 import { computed, ref, watch } from "vue";
 
 const emit = defineEmits(["confirmWithdraw", "exportMessage"]);

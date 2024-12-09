@@ -4,14 +4,14 @@
 driver:
   name: docker
 platforms:
-  - name: 'update-changes--2.2.3--ubuntu-23.04'
-    image: ubuntu:lunar
+  - name: "update-changes--2.2.3--ubuntu-24.04"
+    image: ubuntu:noble
   # - name: "configure-updates--default--centos-8"
   #   image: geerlingguy/docker-centos8-ansible
 provisioner:
   name: ansible
   env:
-    ANSIBLE_PIPELINING: 'True'
+    ANSIBLE_PIPELINING: "True"
 lint: |
   set -e
   yamllint .

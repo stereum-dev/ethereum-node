@@ -10,16 +10,15 @@ export async function useListKeys(forceRefresh) {
   const stakingStore = useStakingStore();
 
   let keyStats = [];
-  let clients = serviceStore.installedServices.filter(
-    (s) => s.category == "validator" && s.config.network != "devnet" && s.service != "CharonService" && s.service != "SSVNetworkService"
-  );
+
+  let clients = serviceStore.installedServices.filter((s) => s.category == "validator" && s.config.network != "devnet");
+
   if ((clients && clients.length > 0 && nodeManageStore.currentNetwork?.network != "") || forceRefresh) {
     for (let client of clients) {
-      //if there is already a list of keys ()
       if ((client.config.keys === undefined || client.config.keys.length === 0 || forceRefresh) && client.state === "running") {
         //refresh validator list
         let result = await ControlService.listValidators(client.config.serviceID);
-        if (!client.service.includes("Web3Signer")) {
+        if (!/Web3Signer|CharonService|SSVNetwork/.test(client.service)) {
           let resultRemote = await ControlService.listRemoteKeys(client.config.serviceID);
           let remoteKeys = resultRemote.data
             ? resultRemote.data.map((e) => {
@@ -38,7 +37,7 @@ export async function useListKeys(forceRefresh) {
         //update service config (pinia)
         client.config.keys = result.data
           ? result.data.map((e) => {
-              return { key: e.validating_pubkey, isRemote: e.readonly };
+              return { key: e.validating_pubkey, isRemote: e.readonly, dvt: e.dvt ? e.dvt : false };
             })
           : [];
 
@@ -63,6 +62,7 @@ export async function useListKeys(forceRefresh) {
               balance: "-",
               network: client.config.network,
               isRemote: key.isRemote,
+              dvt: key.dvt ? key.dvt : false,
             };
           })
         );
@@ -101,7 +101,6 @@ export async function useListKeys(forceRefresh) {
 }
 
 export async function useUpdateValidatorStats() {
-  console.log("test");
   const nodeManageStore = useNodeManage();
   const stakingStore = useStakingStore();
   let totalBalance = 0;
@@ -141,9 +140,14 @@ export async function useUpdateValidatorStats() {
     });
     return;
   }
-
+  // Get queue keys
+  const keysInQueue = await ControlService.getCSMQueue(stakingStore.keys.map((key) => key.key));
   stakingStore.keys.forEach((key) => {
     let info = data.find((k) => k.pubkey === key.key);
+
+    // Check if the key is in queue here
+    let inQueue = false;
+    if (Array.isArray(keysInQueue)) inQueue = keysInQueue.includes(key.key);
 
     if (info) {
       let dateActive = new Date();
@@ -178,9 +182,8 @@ export async function useUpdateValidatorStats() {
             : new Date(dateWithdrawable.setMilliseconds(dateWithdrawable.getMilliseconds() - (latestEpoch - withdrawableEpoch) * 384000));
         dateEligibility.setMilliseconds(dateEligibility.getMilliseconds() - (latestEpoch - elgibilityEpoch) * 384000);
       }
-
       key.index = info.validatorindex;
-      key.status = info.status;
+      key.status = inQueue ? "inQueue" : info.status;
       key.balance = info.balance / 1000000000;
       key.activeSince = ((now.getTime() - dateActive.getTime()) / 86400000).toFixed(1) + " Days";
       key.exitSince = dateExit === null ? null : ((now.getTime() - dateExit.getTime()) / 86400000).toFixed(1) + " Days";
@@ -195,9 +198,27 @@ export async function useUpdateValidatorStats() {
         totalBalance += key.balance;
       }
     } else {
-      key.status = "deposit";
+      key.status = inQueue ? "inQueue" : "deposit";
       key.balance = "-";
     }
   });
   stakingStore.totalBalance = totalBalance;
+}
+
+export async function useObolStats() {
+  const stakingStore = useStakingStore();
+  if (stakingStore.selectedServiceToFilter?.service === "CharonService") {
+    ControlService.getObolClusterInformation(stakingStore.selectedServiceToFilter?.config?.serviceID).then((data) => {
+      stakingStore.obolStats = data;
+    });
+  }
+}
+
+export async function useSSVStats() {
+  const stakingStore = useStakingStore();
+  if (stakingStore.selectedServiceToFilter?.service === "SSVNetworkService") {
+    ControlService.getSSVClusterInformation(stakingStore.selectedServiceToFilter?.config?.serviceID).then((data) => {
+      stakingStore.ssvStats = data;
+    });
+  }
 }

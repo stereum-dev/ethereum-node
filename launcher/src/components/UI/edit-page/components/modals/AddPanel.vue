@@ -98,16 +98,6 @@ import { onMounted, watch, onUnmounted, ref } from 'vue';
         </div>
       </div>
     </div>
-    <div v-if="selectedService === 'prysm'" class="w-full grid grid-cols-12 items-center text-md">
-      <img class="col-start-1 w-8" src="/img/icon/edit-node-icons/service-port.png" alt="Path Icon" />
-      <span class="col-start-2 col-span-3 text-gray-400 text-left">Gateway</span>
-      <input
-        v-model="gateway"
-        class="col-start-6 col-span-7 min-h-[30px] border border-gray-500 px-2 py-1 text-left text-gray-400 text-xs rounded bg-[#141516] focus:border-teal-500"
-        type="text"
-        autofocus
-      />
-    </div>
   </div>
 </template>
 
@@ -131,7 +121,6 @@ const props = defineProps({
 const manageStore = useNodeManage();
 const sourceLink = ref("");
 const jwtToken = ref("");
-const gateway = ref("");
 const selectedService = ref("");
 const isOpen = ref(false);
 const services = ["prysm", "lighthouse", "teku", "nimbus", "lodestar"];
@@ -141,7 +130,6 @@ const services = ["prysm", "lighthouse", "teku", "nimbus", "lodestar"];
 watchEffect(() => {
   props.client.config.source = sourceLink.value;
   props.client.config.jwtToken = jwtToken.value;
-  props.client.config.gateway = gateway.value;
 });
 
 //Lifecycle Hooks
@@ -150,7 +138,6 @@ onMounted(() => {
   sourceLink.value = "";
   jwtToken.value = "";
   props.properties.installDir = "";
-  gateway.value = "";
   selectedService.value = "";
   getInstallPath();
 });

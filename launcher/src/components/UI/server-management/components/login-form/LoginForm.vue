@@ -293,6 +293,7 @@ const sshError = ref("");
 const devices = ref([]);
 const removeHovered = ref(false);
 const addHovered = ref(false);
+
 const isFormValid = ref(false);
 const useSSHKey = ref(false);
 const usePassword = ref(false);
