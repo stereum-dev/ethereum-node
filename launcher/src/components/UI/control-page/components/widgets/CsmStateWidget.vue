@@ -2,14 +2,14 @@
   <div class="volume-Parent flex w-full h-full justify-center items-center flex-col p-1 gap-1 relative">
     <ServiceLine
       label="Active"
-      value="1"
+      :value="setupStore.runningServicesCount"
       hover-text="
         a
         "
     />
     <ServiceLine
       label="in queue"
-      value="2"
+      value="dummy"
       hover-text="
           b
         "
@@ -26,7 +26,10 @@
 </template>
 
 <script setup>
+import { useSetups } from "@/store/setups";
 import ServiceLine from "../fragments/ServiceLine.vue";
+
+const setupStore = useSetups();
 
 const props = defineProps({
   csmBox: {

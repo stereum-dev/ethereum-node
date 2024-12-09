@@ -14,6 +14,7 @@ export const useSetups = defineStore("setups", {
     relatedValidators: null,
     relatedValidatorPairs: null,
     selectedLCOMService: null,
+    runningServicesCount: 0,
     //DEVNET NETWORK CONFIGURATION
     uploadedGenesisConfig: null,
     genesisFile: null,
