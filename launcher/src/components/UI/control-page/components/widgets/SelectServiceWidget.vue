@@ -1,34 +1,18 @@
 <template>
-  <div
-    class="select-service-widget-parent flex flex-col w-full h-full justify-center items-center"
-  >
-    <div
-      v-if="servicePairs.length === 0"
-      class="wrapper flex w-full h-full justify-center items-center relative"
-    >
+  <div class="select-service-widget-parent flex flex-col w-full h-full justify-center items-center">
+    <div v-if="servicePairs.length === 0" class="wrapper flex w-full h-full justify-center items-center relative">
       <NoData />
     </div>
 
     <template v-else>
       <div class="h-1/2 w-full justify-center items-center flex p-1">
-        <div
-          class="selector-services w-full h-full flex rounded-md border border-gray-500"
-          @click="toggleDropdown"
-        >
-          <div
-            class="selected-service-name flex justify-center items-center w-[90%] h-full text-gray-200 text-2xs font-semibold uppercase"
-          >
+        <div class="selector-services w-full h-full flex rounded-md border border-gray-500" @click="toggleDropdown">
+          <div class="selected-service-name flex justify-center items-center w-[90%] h-full text-gray-200 text-2xs font-semibold uppercase">
             {{ selectedServiceLabel }}
           </div>
 
-          <div
-            class="arrow-box flex justify-center items-center w-[10%] h-full text-gray-200 text-lg font-semibold uppercase"
-          >
-            <ServiceArrow
-              direction="next"
-              :class="{ 'rotate-[270deg]': isOpen, 'rotate-90': !isOpen }"
-              class="z-10"
-            />
+          <div class="arrow-box flex justify-center items-center w-[10%] h-full text-gray-200 text-lg font-semibold uppercase">
+            <ServiceArrow direction="next" :class="{ 'rotate-[270deg]': isOpen, 'rotate-90': !isOpen }" class="z-10" />
           </div>
         </div>
 
@@ -44,127 +28,58 @@
             v-if="isOpen"
             class="absolute top-[25%] z-20 min-h-20 mt-1 origin-top-right shadow-md bg-gray-200 transition-all duration-100 divide-y divide-gray-600 shadow-black rounded-md p-1 w-[24%]"
           >
-            <DropdownOption
-              text="EXECUTION & CONSENSUS CLIENTS"
-              @select="servicePicker('exeCons')"
-            />
+            <DropdownOption text="EXECUTION & CONSENSUS CLIENTS" @select="servicePicker('exeCons')" />
             <DropdownOption text="VALIDATOR CLIENT" @select="servicePicker('vld')" />
-            <DropdownOption
-              v-if="selectedLCOMService"
-              text="LIDO CSM OPERATOR"
-              @select="servicePicker('csm')"
-            />
+            <DropdownOption v-if="selectedLCOMService" text="LIDO CSM OPERATOR" @select="servicePicker('csm')" />
           </div>
         </transition>
       </div>
 
-      <div
-        v-if="controlStore.pickedService === 'vld'"
-        class="h-1/2 w-full flex justify-center items-center"
-      >
-        <ServiceArrow
-          v-if="filteredValidatorServices.length > 1"
-          direction="prev"
-          class="z-10"
-          @prev="prevValidator"
-        />
+      <div v-if="controlStore.pickedService === 'vld'" class="h-1/2 w-full flex justify-center items-center">
+        <ServiceArrow v-if="filteredValidatorServices.length > 1" direction="prev" class="z-10" @prev="prevValidator" />
         <div class="validator-info w-4/5 h-full flex justify-center items-center">
           <ServiceIcon
-            :icon="
-              selectedValidatorService?.icon || '/img/icon/stereum-icons/stereum-logo.png'
-            "
+            :icon="selectedValidatorService?.icon || '/img/icon/stereum-icons/stereum-logo.png'"
             :alt-text="selectedValidatorService?.name || 'Stereum'"
           />
           <div class="vld-info h-full w-2/6 flex justify-center items-center flex-col">
-            <div
-              class="name-val h-full w-2/6 flex justify-center items-center text-2xs text-gray-200 font-semibold"
-            >
+            <div class="name-val h-full w-2/6 flex justify-center items-center text-2xs text-gray-200 font-semibold">
               {{ selectedValidatorService?.name || "" }}
             </div>
-            <div
-              class="id-val h-full w-2/6 flex justify-center items-center text-[60%] text-gray-200"
-            >
-              {{
-                selectedValidatorService?.config?.serviceID
-                  ? formatServiceId(selectedValidatorService.config.serviceID)
-                  : ""
-              }}
+            <div class="id-val h-full w-2/6 flex justify-center items-center text-[60%] text-gray-200">
+              {{ selectedValidatorService?.config?.serviceID ? formatServiceId(selectedValidatorService.config.serviceID) : "" }}
             </div>
           </div>
-          <div
-            class="vld-keys h-1/2 w-2/6 flex justify-center items-center text-gray-200 text-lg font-semibold uppercase"
-          >
+          <div class="vld-keys h-1/2 w-2/6 flex justify-center items-center text-gray-200 text-lg font-semibold uppercase">
             {{ formattedValidatorNo }}
           </div>
           <ServiceIcon icon="/img/icon/control-page-icons/key-eth.svg" alt-text="key" />
         </div>
-        <ServiceArrow
-          v-if="filteredValidatorServices.length > 1"
-          direction="next"
-          class="z-10"
-          @next="nextValidator"
-        />
+        <ServiceArrow v-if="filteredValidatorServices.length > 1" direction="next" class="z-10" @next="nextValidator" />
       </div>
 
-      <div
-        v-else-if="controlStore.pickedService === 'exeCons'"
-        class="h-1/2 w-full flex justify-center items-center"
-      >
-        <ServiceArrow
-          v-if="servicePairs.length > 1"
-          direction="prev"
-          class="z-10"
-          @prev="prevPair"
-        />
+      <div v-else-if="controlStore.pickedService === 'exeCons'" class="h-1/2 w-full flex justify-center items-center">
+        <ServiceArrow v-if="servicePairs.length > 1" direction="prev" class="z-10" @prev="prevPair" />
         <div class="pairs-info w-4/5 h-full flex justify-center items-center">
           <ServiceDetails :service="selectedPair?.executionService" service-type="exec" />
           <ServiceDetails :service="selectedPair?.consensusService" service-type="cons" />
         </div>
-        <ServiceArrow
-          v-if="servicePairs.length > 1"
-          direction="next"
-          class="z-10"
-          @next="nextPair"
-        />
+        <ServiceArrow v-if="servicePairs.length > 1" direction="next" class="z-10" @next="nextPair" />
       </div>
       <div v-else class="h-1/2 w-full flex justify-center items-center">
-        <ServiceArrow
-          v-if="filteredLCOMServices.length > 1"
-          direction="prev"
-          class="z-10"
-          @prev="prevCSM"
-        />
+        <ServiceArrow v-if="filteredLCOMServices.length > 1" direction="prev" class="z-10" @prev="prevCSM" />
         <div class="icon-csm w-2/12 h-full flex justify-center items-center">
-          <img
-            class="w-3/4"
-            :src="selectedLCOMService?.icon"
-            :alt="selectedLCOMService?.name"
-          />
+          <img class="w-3/4" :src="selectedLCOMService?.icon" :alt="selectedLCOMService?.name" />
         </div>
-        <div
-          class="id-csm h-full w-8/12 flex justify-center items-center text-[60%] text-gray-200 flex-col"
-        >
-          <div
-            class="title w-full h-1/2 flex justify-center items-center text-xs text-gray-200 font-semibold"
-          >
+        <div class="id-csm h-full w-8/12 flex justify-center items-center text-[60%] text-gray-200 flex-col">
+          <div class="title w-full h-1/2 flex justify-center items-center text-xs text-gray-200 font-semibold">
             {{ selectedLCOMService?.name }}
           </div>
-          <div
-            class="title w-full h-1/2 flex justify-center items-center text-xs text-gray-200 font-semibold"
-          >
-            {{
-              selectedLCOMService?.config?.serviceID
-                ? formatServiceId(selectedLCOMService.config.serviceID)
-                : ""
-            }}
+          <div class="title w-full h-1/2 flex justify-center items-center text-xs text-gray-200 font-semibold">
+            {{ selectedLCOMService?.config?.serviceID ? formatServiceId(selectedLCOMService.config.serviceID) : "" }}
           </div>
         </div>
-        <ServiceArrow
-          v-if="filteredLCOMServices.length > 1"
-          direction="next"
-          class="z-10"
-          @next="nextCSM"
-        />
+        <ServiceArrow v-if="filteredLCOMServices.length > 1" direction="next" class="z-10" @next="nextCSM" />
       </div>
     </template>
   </div>
@@ -210,15 +125,8 @@ const servicePairs = computed(() => {
         setup.services
           .filter((service) => service.category === "consensus")
           .flatMap((consensusService) =>
-            (
-              consensusService.config?.dependencies?.executionClients || []
-            ).map((executionClient) =>
-              createServicePair(
-                consensusService,
-                executionClient,
-                setup.services,
-                setup.network
-              )
+            (consensusService.config?.dependencies?.executionClients || []).map((executionClient) =>
+              createServicePair(consensusService, executionClient, setup.services, setup.network)
             )
           )
       );
@@ -230,31 +138,20 @@ const servicePairs = computed(() => {
   return setup.services
     .filter((service) => service.category === "consensus")
     .flatMap((consensusService) =>
-      (
-        consensusService.config?.dependencies?.executionClients || []
-      ).map((executionClient) =>
-        createServicePair(
-          consensusService,
-          executionClient,
-          setup.services,
-          setup.network
-        )
+      (consensusService.config?.dependencies?.executionClients || []).map((executionClient) =>
+        createServicePair(consensusService, executionClient, setup.services, setup.network)
       )
     );
 });
 
 const createServicePair = (consensusService, executionClient, services, network) => {
   const executionDetails = services.find(
-    (service) =>
-      service.service === executionClient.service &&
-      service.config?.serviceID === executionClient.id
+    (service) => service.service === executionClient.service && service.config?.serviceID === executionClient.id
   ) || { name: executionClient.service, config: { serviceID: executionClient.id } };
 
   const consensusDetails =
     services.find(
-      (service) =>
-        service.service === consensusService.service &&
-        service.config?.serviceID === consensusService.config?.serviceID
+      (service) => service.service === consensusService.service && service.config?.serviceID === consensusService.config?.serviceID
     ) || {};
 
   return {
@@ -273,12 +170,9 @@ const formatServiceDetails = (service, details) => ({
   ports: service.config?.ports || [],
 });
 
-const formatServiceId = (id) =>
-  id && id.length >= 7 ? `${id.slice(0, 5)}...${id.slice(-5)}` : id;
+const formatServiceId = (id) => (id && id.length >= 7 ? `${id.slice(0, 5)}...${id.slice(-5)}` : id);
 
-const selectedPair = computed(
-  () => servicePairs.value[setupStore.currentPairIndex] || null
-);
+const selectedPair = computed(() => servicePairs.value[setupStore.currentPairIndex] || null);
 
 const relatedValidators = computed(() => {
   if (!selectedPair.value?.consensusService) return [];
@@ -292,8 +186,7 @@ const relatedValidators = computed(() => {
       service.category === "validator" &&
       service.config?.dependencies?.consensusClients?.some(
         (dependency) =>
-          dependency.service === selectedPair.value.consensusService.service &&
-          dependency.id === selectedPair.value.consensusService.id
+          dependency.service === selectedPair.value.consensusService.service && dependency.id === selectedPair.value.consensusService.id
       )
   );
 });
@@ -314,11 +207,7 @@ const allValidatorPairs = computed(() => {
 
     const validators = setupsToCheck.flatMap(({ services, network }) => {
       if (!Array.isArray(services)) {
-        console.warn(
-          `Services list is missing or malformed in setup with network: ${
-            network || "Unknown"
-          }`
-        );
+        console.warn(`Services list is missing or malformed in setup with network: ${network || "Unknown"}`);
         return [];
       }
       return services.filter((service) => service.category === "validator");
@@ -328,32 +217,22 @@ const allValidatorPairs = computed(() => {
       const relatedPairs = servicePairs.value
         ? servicePairs.value.filter((pair) =>
             validator.config?.dependencies?.consensusClients?.some(
-              (dependency) =>
-                dependency.service === pair.consensusService.service &&
-                dependency.id === pair.consensusService.id
+              (dependency) => dependency.service === pair.consensusService.service && dependency.id === pair.consensusService.id
             )
           )
         : [];
 
       if (relatedPairs.length === 0) {
-        console.warn(
-          `No related pairs found for validator ${validator.service} in network ${
-            validator.network || "Unknown"
-          }`
-        );
+        console.warn(`No related pairs found for validator ${validator.service} in network ${validator.network || "Unknown"}`);
       }
 
       return {
         validator,
         pairs: relatedPairs.map((pair) => ({
           ...pair,
-          network:
-            setupsToCheck.find((setup) => setup.services.includes(validator))?.network ||
-            "Unknown",
+          network: setupsToCheck.find((setup) => setup.services.includes(validator))?.network || "Unknown",
         })),
-        network:
-          setupsToCheck.find((setup) => setup.services.includes(validator))?.network ||
-          "Unknown",
+        network: setupsToCheck.find((setup) => setup.services.includes(validator))?.network || "Unknown",
       };
     });
   } catch (error) {
@@ -371,17 +250,13 @@ const filteredValidatorServices = computed(() => {
 });
 
 const selectedValidatorService = computed(() => {
-  return filteredValidatorServices.value.length > 0
-    ? filteredValidatorServices.value[currentIndex.value]
-    : null;
+  return filteredValidatorServices.value.length > 0 ? filteredValidatorServices.value[currentIndex.value] : null;
 });
 
 const setupStoreRelatedValidatorPairs = computed(() => {
   if (!selectedValidatorService.value) return null;
 
-  const relatedPairs = allValidatorPairs.value.find(
-    (pair) => pair.validator.id === selectedValidatorService.value.id
-  );
+  const relatedPairs = allValidatorPairs.value.find((pair) => pair.validator.id === selectedValidatorService.value.id);
 
   return relatedPairs || null;
 });
@@ -391,9 +266,7 @@ const filteredLCOMServices = computed(() => {
     ? setupStore.selectedSetup.services
     : setupStore.allSetups.flatMap((setup) => setup.services || []);
 
-  const filteredServices = servicesToCheck.filter(
-    (service) => service.service === "LCOMService"
-  );
+  const filteredServices = servicesToCheck.filter((service) => service.service === "LCOMService");
 
   updateRunningServicesCount(filteredServices);
 
@@ -401,29 +274,22 @@ const filteredLCOMServices = computed(() => {
 });
 
 const updateRunningServicesCount = (services) => {
-  setupStore.runningServicesCount = services.filter(
-    (service) => service.state === "running"
-  ).length;
+  setupStore.runningServicesCount = services.filter((service) => service.state === "running").length;
 };
 
 const selectedLCOMService = computed(() => {
-  return filteredLCOMServices.value.length > 0
-    ? filteredLCOMServices.value[currentCSMIndex.value]
-    : null;
+  return filteredLCOMServices.value.length > 0 ? filteredLCOMServices.value[currentCSMIndex.value] : null;
 });
 
 const prevCSM = () => {
   if (filteredLCOMServices.value.length) {
-    currentCSMIndex.value =
-      (currentCSMIndex.value - 1 + filteredLCOMServices.value.length) %
-      filteredLCOMServices.value.length;
+    currentCSMIndex.value = (currentCSMIndex.value - 1 + filteredLCOMServices.value.length) % filteredLCOMServices.value.length;
   }
 };
 
 const nextCSM = () => {
   if (filteredLCOMServices.value.length) {
-    currentCSMIndex.value =
-      (currentCSMIndex.value + 1) % filteredLCOMServices.value.length;
+    currentCSMIndex.value = (currentCSMIndex.value + 1) % filteredLCOMServices.value.length;
   }
 };
 
@@ -462,9 +328,7 @@ watch(
   { immediate: true }
 );
 
-const formattedValidatorNo = computed(() =>
-  stakingStore.keys.length.toString().padStart(3, "0")
-);
+const formattedValidatorNo = computed(() => stakingStore.keys.length.toString().padStart(3, "0"));
 
 const toggleDropdown = () => {
   isOpen.value = !isOpen.value;
@@ -477,31 +341,25 @@ const servicePicker = (type) => {
 
 const prevPair = () => {
   if (servicePairs.value.length) {
-    setupStore.currentPairIndex =
-      (setupStore.currentPairIndex - 1 + servicePairs.value.length) %
-      servicePairs.value.length;
+    setupStore.currentPairIndex = (setupStore.currentPairIndex - 1 + servicePairs.value.length) % servicePairs.value.length;
   }
 };
 
 const nextPair = () => {
   if (servicePairs.value.length) {
-    setupStore.currentPairIndex =
-      (setupStore.currentPairIndex + 1) % servicePairs.value.length;
+    setupStore.currentPairIndex = (setupStore.currentPairIndex + 1) % servicePairs.value.length;
   }
 };
 
 const prevValidator = () => {
   if (filteredValidatorServices.value.length) {
-    currentIndex.value =
-      (currentIndex.value - 1 + filteredValidatorServices.value.length) %
-      filteredValidatorServices.value.length;
+    currentIndex.value = (currentIndex.value - 1 + filteredValidatorServices.value.length) % filteredValidatorServices.value.length;
   }
 };
 
 const nextValidator = () => {
   if (filteredValidatorServices.value.length) {
-    currentIndex.value =
-      (currentIndex.value + 1) % filteredValidatorServices.value.length;
+    currentIndex.value = (currentIndex.value + 1) % filteredValidatorServices.value.length;
   }
 };
 
