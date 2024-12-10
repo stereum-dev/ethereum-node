@@ -10,7 +10,7 @@
       @mouseenter="setCursorLocation(`${service.name} toggle`)"
       @mouseleave="clearCursorLocation"
     >
-      {{ isActive ? "open" : "close" }}
+      {{ isActive ? "open" : "closed" }}
     </div>
     <div
       class="service-icon w-6 h-full flex justify-center items-center p-[0.10rem]"

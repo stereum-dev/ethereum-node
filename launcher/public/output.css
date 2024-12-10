@@ -163,7 +163,9 @@
 }
 
 /*
+
 ! tailwindcss v3.4.16 | MIT License | https://tailwindcss.com
+
 */
 
 /*
@@ -631,7 +633,7 @@ video {
 
 /* Make elements with the HTML hidden attribute stay hidden by default */
 
-[hidden]:where(:not([hidden="until-found"])) {
+[hidden] {
   display: none;
 }
 
@@ -4324,7 +4326,9 @@ video {
 
 .bg-zinc-700{
   --tw-bg-opacity: 1;
-  background-color: rgb(63 63 70 / var(--tw-bg-opacity, 1));
+
+  background-color: rgb(63 63 70 / var(--tw-bg-opacity));
+
 }
 
 .bg-opacity-80{

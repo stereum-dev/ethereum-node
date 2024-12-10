@@ -16,7 +16,7 @@ import { TekuGasLimitConfig } from "./backend/TekuGasLimitConfig.js";
 import { SSHService } from "./backend/SSHService.js";
 import { ProtocolHandler } from "./backend/CustomUrlProtocol.js";
 import path from "path";
-import { readFileSync } from "fs";
+import { readFileSync, existsSync, mkdirSync, renameSync, readdir, rmSync } from "fs";
 import url from "url";
 import checkSigningKeys from "./backend/web3/CSM.js";
 const isDevelopment = process.env.NODE_ENV !== "production";
@@ -39,6 +39,34 @@ const protocolHandler = new ProtocolHandler(storageService);
 stereumUpdater.initUpdater();
 log.transports.console.level = process.env.LOG_LEVEL || "info";
 log.transports.file.level = "debug";
+log.transports.file.archiveLogFn = async (file) => {
+  file = file.toString();
+  const info = path.parse(file);
+  let backupPath = info.dir + "/backups/";
+  if (!existsSync(backupPath)) {
+    mkdirSync(backupPath);
+  }
+
+  renameSync(file, `${backupPath}main-${Date.now()}.log`);
+
+  let backupLogs = [];
+
+  const storedConfig = await storageService.readConfig();
+
+  readdir(backupPath, (err, files) => {
+    files.forEach((file) => {
+      backupLogs.push(file);
+    });
+    if (backupLogs.length > storedConfig.logBackups.value) {
+      backupLogs.reverse();
+      for (let i = storedConfig.logBackups.value; i < backupLogs.length; i++) {
+        rmSync(backupPath + backupLogs[i], { force: true }, (err) => {
+          if (err) throw err;
+        });
+      }
+    }
+  });
+};
 
 let remoteHost = {};
 
