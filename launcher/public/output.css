@@ -2439,10 +2439,6 @@ video {
   width: 90%;
 }
 
-.w-auto{
-  width: auto;
-}
-
 .w-fit{
   width: -webkit-fit-content;
   width: -moz-fit-content;

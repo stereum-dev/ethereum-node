@@ -12,12 +12,36 @@
         <img class="w-1/4 mr-1" src="/img/icon/control-page-icons/key-eth.svg" alt="key icon" />
         total
       </div>
-      <span>1233</span>
+      <span>{{ dvtWithRelatedValidatorCount }}</span>
     </div>
   </div>
 </template>
 <script setup>
 import { useSetups } from "@/store/setups";
+import { useStakingStore } from "@/store/theStaking";
+import { computed } from "vue";
 
+const stakingStore = useStakingStore();
 const setupStore = useSetups();
+
+const dvtWithRelatedValidatorCount = computed(() => {
+  if (!stakingStore?.keys || !setupStore?.allSetups || !setupStore?.selectedLCOMService) {
+    return 0;
+  }
+
+  return stakingStore?.keys.filter((key) => {
+    if (key?.dvt !== true || !key?.validatorID) {
+      return false;
+    }
+
+    const relatedValidator = setupStore?.allSetups.some((setup) => {
+      return (
+        setup?.setupId === setupStore?.selectedLCOMService.setupId &&
+        setup?.services.some((service) => service?.category === "validator" && service?.validatorID === key?.validatorID)
+      );
+    });
+
+    return relatedValidator;
+  }).length;
+});
 </script>

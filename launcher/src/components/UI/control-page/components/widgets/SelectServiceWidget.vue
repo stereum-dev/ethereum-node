@@ -298,7 +298,7 @@ watch(
   (newPair, oldPair) => {
     if (JSON.stringify(newPair) !== JSON.stringify(oldPair)) {
       setupStore.selectedLCOMService = newPair;
-      console.log("selectedLCOMService", setupStore.selectedLCOMService);
+      // console.log("selectedLCOMService", setupStore.selectedLCOMService);
     }
   },
   { immediate: true, deep: true }
