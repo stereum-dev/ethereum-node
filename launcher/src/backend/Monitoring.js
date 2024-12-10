@@ -3769,7 +3769,7 @@ export class Monitoring {
 
   async getObolClusterInformation(serviceID) {
     const serviceInfos = await this.getServiceInfos("CharonService");
-    const charon = serviceInfos.find((service) => service.config.serviceID === serviceID);
+    const charon = serviceInfos.find((service) => service.config?.serviceID === serviceID);
     if (!charon) {
       log.info("No such Charon found!");
       return {};

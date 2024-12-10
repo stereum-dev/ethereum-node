@@ -15,20 +15,16 @@
 <script setup>
 import { computed } from "vue";
 
-// Define props
 const props = defineProps({
-  direction: String, // "prev" or "next"
+  direction: String,
 });
 
-// Define emits
 const emit = defineEmits(["prev", "next"]);
 
-// Compute the rotation class based on the direction
 const directionClass = computed(() => {
   return props.direction === "next" ? "rotate-[270deg]" : "rotate-90";
 });
 
-// Emit the custom event based on the direction
 const emitDirection = () => {
   if (props.direction === "prev") {
     emit("prev");

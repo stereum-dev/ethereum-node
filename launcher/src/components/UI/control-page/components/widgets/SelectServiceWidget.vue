@@ -30,6 +30,7 @@
           >
             <DropdownOption text="EXECUTION & CONSENSUS CLIENTS" @select="servicePicker('exeCons')" />
             <DropdownOption text="VALIDATOR CLIENT" @select="servicePicker('vld')" />
+            <DropdownOption v-if="selectedLCOMService" text="LIDO CSM OPERATOR" @select="servicePicker('csm')" />
           </div>
         </transition>
       </div>
@@ -57,13 +58,28 @@
         <ServiceArrow v-if="filteredValidatorServices.length > 1" direction="next" class="z-10" @next="nextValidator" />
       </div>
 
-      <div v-else class="h-1/2 w-full flex justify-center items-center">
+      <div v-else-if="controlStore.pickedService === 'exeCons'" class="h-1/2 w-full flex justify-center items-center">
         <ServiceArrow v-if="servicePairs.length > 1" direction="prev" class="z-10" @prev="prevPair" />
         <div class="pairs-info w-4/5 h-full flex justify-center items-center">
           <ServiceDetails :service="selectedPair?.executionService" service-type="exec" />
           <ServiceDetails :service="selectedPair?.consensusService" service-type="cons" />
         </div>
         <ServiceArrow v-if="servicePairs.length > 1" direction="next" class="z-10" @next="nextPair" />
+      </div>
+      <div v-else class="h-1/2 w-full flex justify-center items-center">
+        <ServiceArrow v-if="filteredLCOMServices.length > 1" direction="prev" class="z-10" @prev="prevCSM" />
+        <div class="icon-csm w-2/12 h-full flex justify-center items-center">
+          <img class="w-3/4" :src="selectedLCOMService?.icon" :alt="selectedLCOMService?.name" />
+        </div>
+        <div class="id-csm h-full w-8/12 flex justify-center items-center text-[60%] text-gray-200 flex-col">
+          <div class="title w-full h-1/2 flex justify-center items-center text-xs text-gray-200 font-semibold">
+            {{ selectedLCOMService?.name }}
+          </div>
+          <div class="title w-full h-1/2 flex justify-center items-center text-xs text-gray-200 font-semibold">
+            {{ selectedLCOMService?.config?.serviceID ? formatServiceId(selectedLCOMService.config.serviceID) : "" }}
+          </div>
+        </div>
+        <ServiceArrow v-if="filteredLCOMServices.length > 1" direction="next" class="z-10" @next="nextCSM" />
       </div>
     </template>
   </div>
@@ -87,9 +103,14 @@ const stakingStore = useStakingStore();
 
 const isOpen = ref(false);
 const currentIndex = ref(0);
+const currentCSMIndex = ref(0);
 
 const selectedServiceLabel = computed(() => {
-  return controlStore.pickedService === "exeCons" ? "EXECUTION & CONSENSUS CLIENTS" : "VALIDATOR CLIENT";
+  return controlStore.pickedService === "exeCons"
+    ? "EXECUTION & CONSENSUS CLIENTS"
+    : controlStore.pickedService === "vld"
+    ? "VALIDATOR CLIENT"
+    : "LIDO CSM OPERATOR";
 });
 
 onMounted(() => {
@@ -240,6 +261,58 @@ const setupStoreRelatedValidatorPairs = computed(() => {
   return relatedPairs || null;
 });
 
+const filteredLCOMServices = computed(() => {
+  const servicesToCheck = setupStore.selectedSetup
+    ? setupStore.selectedSetup.services
+    : setupStore.allSetups.flatMap((setup) => setup.services || []);
+
+  const filteredServices = servicesToCheck.filter((service) => service.service === "LCOMService");
+
+  updateRunningServicesCount(filteredServices);
+
+  return filteredServices;
+});
+
+const updateRunningServicesCount = (services) => {
+  setupStore.runningServicesCount = services.filter((service) => service.state === "running").length;
+};
+
+const selectedLCOMService = computed(() => {
+  return filteredLCOMServices.value.length > 0 ? filteredLCOMServices.value[currentCSMIndex.value] : null;
+});
+
+watch(
+  () => currentCSMIndex.value,
+  (newIndex, oldIndex) => {
+    if (newIndex !== oldIndex) {
+      setupStore.selectedLCOMService = filteredLCOMServices.value[newIndex] || null;
+    }
+  },
+  { immediate: true }
+);
+
+const prevCSM = () => {
+  if (filteredLCOMServices.value.length) {
+    currentCSMIndex.value = (currentCSMIndex.value - 1 + filteredLCOMServices.value.length) % filteredLCOMServices.value.length;
+  }
+};
+
+const nextCSM = () => {
+  if (filteredLCOMServices.value.length) {
+    currentCSMIndex.value = (currentCSMIndex.value + 1) % filteredLCOMServices.value.length;
+  }
+};
+
+watch(
+  selectedLCOMService,
+  (newPair, oldPair) => {
+    if (JSON.stringify(newPair) !== JSON.stringify(oldPair)) {
+      setupStore.selectedLCOMService = newPair;
+    }
+  },
+  { immediate: true, deep: true }
+);
+
 watch(
   setupStoreRelatedValidatorPairs,
   (newPairs) => {
@@ -253,6 +326,12 @@ watch(
   (newSetup) => {
     if (newSetup) {
       currentIndex.value = 0;
+      currentCSMIndex.value = 0;
+    }
+
+    if (controlStore.pickedService === "csm" && !selectedLCOMService.value) {
+      controlStore.pickedService = "exeCons";
+      isOpen.value = false;
     }
   },
   { immediate: true }
@@ -262,22 +341,25 @@ const formattedValidatorNo = computed(() => stakingStore.keys.length.toString().
 
 const toggleDropdown = () => {
   isOpen.value = !isOpen.value;
+  if (controlStore?.pickedService === "csm" && !selectedLCOMService.value) {
+    controlStore.pickedService = "exeCons";
+  }
 };
 
 const servicePicker = (type) => {
-  controlStore.pickedService = type === "vld" ? "vld" : "exeCons";
+  controlStore.pickedService = type;
   toggleDropdown();
 };
 
 const prevPair = () => {
   if (servicePairs.value.length) {
-    setupStore.currentPairIndex = (setupStore.currentPairIndex - 1 + servicePairs.value.length) % servicePairs.value.length;
+    setupStore.currentPairIndex = (setupStore?.currentPairIndex - 1 + servicePairs.value.length) % servicePairs.value.length;
   }
 };
 
 const nextPair = () => {
   if (servicePairs.value.length) {
-    setupStore.currentPairIndex = (setupStore.currentPairIndex + 1) % servicePairs.value.length;
+    setupStore.currentPairIndex = (setupStore?.currentPairIndex + 1) % servicePairs.value.length;
   }
 };
 
@@ -317,7 +399,7 @@ watch(
   () => servicePairs.value.length,
   (newLength) => {
     setupStore.clientPairsLength = newLength;
-    if (setupStore.currentPairIndex >= newLength) {
+    if (setupStore?.currentPairIndex >= newLength) {
       setupStore.currentPairIndex = 0;
     }
   },
