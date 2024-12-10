@@ -1,74 +1,9 @@
-import { app, BrowserWindow } from "electron";
+import { BrowserWindow } from "electron";
 import { URL } from "url";
 
 export class ProtocolHandler {
   constructor(storageService) {
     this.storageService = storageService;
-    this.initializeProtocolHandler();
-  }
-
-  /**
-   * Initialize protocol handlers for all platforms
-   */
-  initializeProtocolHandler() {
-    if (app.isReady()) {
-      app.setAsDefaultProtocolClient("stereumlauncher");
-    } else {
-      app.on("ready", () => {
-        app.setAsDefaultProtocolClient("stereumlauncher");
-      });
-    }
-
-    // Handle protocol activation for Windows
-    if (process.platform === "win32") {
-      const gotTheLock = app.requestSingleInstanceLock();
-      if (!gotTheLock) {
-        app.quit();
-        return;
-      }
-
-      app.on("second-instance", (event, argv) => {
-        const url = argv.find((arg) => arg.startsWith("stereumlauncher://"));
-        if (url) {
-          this.handleCustomUrl(url);
-        }
-        this.focusWindow();
-      });
-
-      // Handle protocol for Windows when app starts
-      const protocolUrl = process.argv.find((arg) => arg.startsWith("stereumlauncher://"));
-      if (protocolUrl) {
-        this.handleCustomUrl(protocolUrl);
-      }
-    }
-
-    // Handle protocol activation for macOS
-    if (process.platform === "darwin") {
-      app.on("open-url", (event, url) => {
-        event.preventDefault();
-        this.handleCustomUrl(url);
-      });
-    }
-
-    // Handle protocol activation for Linux
-    if (process.platform === "linux") {
-      app.on("ready", () => {
-        // Handle any URLs passed on startup
-        const protocolUrl = process.argv.find((arg) => arg.startsWith("stereumlauncher://"));
-        if (protocolUrl) {
-          this.handleCustomUrl(protocolUrl);
-        }
-      });
-
-      // Linux also uses second-instance like Windows
-      app.on("second-instance", (event, argv) => {
-        const url = argv.find((arg) => arg.startsWith("stereumlauncher://"));
-        if (url) {
-          this.handleCustomUrl(url);
-        }
-        this.focusWindow();
-      });
-    }
   }
 
   /**
@@ -134,26 +69,26 @@ export class ProtocolHandler {
         return false;
       }
 
-      // Parse server data
+      // Parse data
       const serverArray = JSON.parse(decodeURIComponent(data));
       if (!Array.isArray(serverArray)) {
         console.error("Data is not an array");
         return false;
       }
 
-      // Read existing config using storageService
+      // Read existing config
       const existingConfig = (await this.storageService.readConfig()) || this.getDefaultConfig();
 
-      // Ensure savedConnections exists
+      // savedConnections exists
       if (!existingConfig.savedConnections) {
         existingConfig.savedConnections = [];
       }
 
-      // Process and validate servers
+      // validate srvers
       let addedServers = 0;
       for (const newServer of serverArray) {
         if (this.validateServerData(newServer)) {
-          // Check for duplicates
+          // Chck for duplicates
           const isDuplicate = existingConfig.savedConnections.some((conn) => conn.host === newServer.host && conn.name === newServer.name);
 
           if (!isDuplicate) {
@@ -174,13 +109,12 @@ export class ProtocolHandler {
         }
       }
 
-      // Save if we added any servers
+      // Write config
       if (addedServers > 0) {
         await this.storageService.writeConfig(existingConfig);
         console.log(`Successfully added ${addedServers} server(s)`);
       }
 
-      // Focus the window
       this.focusWindow();
 
       return addedServers > 0;
