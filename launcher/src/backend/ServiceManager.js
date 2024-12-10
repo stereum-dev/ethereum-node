@@ -1815,6 +1815,25 @@ export class ServiceManager {
         await this.nodeConnection.nodeUpdates.restartServices(after - before);
       }
     }
+    let services = await this.readServiceConfigurations();
+    let prometheusServiceID;
+    let grafanaServiceID;
+    services.forEach((service) => {
+      if (service.service == "PrometheusService") {
+        prometheusServiceID = service.id;
+      }
+      if (service.service == "GrafanaService") {
+        grafanaServiceID = service.id;
+      }
+    });
+    if (prometheusServiceID != null) {
+      await this.manageServiceState(prometheusServiceID, "stopped");
+      await this.manageServiceState(prometheusServiceID, "started");
+    }
+    if (grafanaServiceID != null) {
+      await this.manageServiceState(grafanaServiceID, "stopped");
+      await this.manageServiceState(grafanaServiceID, "started");
+    }
   }
 
   async exportSingleSetup(setupId) {
