@@ -1097,5 +1097,9 @@
   },
   "setupServicesWidget": {
     "text": "total services on setup"
+  },
+  "csmStateWidget": {
+    "servceCount": "{count} Monitoring services {isAre} running.",
+    "inque": "The number of keys in the queueis {number}."
   }
 }
