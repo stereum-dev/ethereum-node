@@ -14,44 +14,27 @@ module.exports = {
         buildDependenciesFromSource: false,
         nodeGypRebuild: false,
         npmRebuild: false,
+        // Define protocols once here at the root level
+        protocols: [
+          {
+            name: "Stereum Launcher Protocol",
+            schemes: ["stereumlauncher"],
+          },
+        ],
         linux: {
           target: "AppImage",
           artifactName: "Stereum-Launcher-${version}.${ext}",
-          protocols: [
-            {
-              name: "Stereum Launcher Protocol",
-              schemes: ["stereum"],
-            },
-          ],
         },
         mac: {
           hardenedRuntime: true,
           entitlements: "./node_modules/@sapien99/vue-cli-plugin-electron-builder-notarize/entitlements.mac.inherit.plist",
           gatekeeperAssess: false,
           artifactName: "Stereum-Launcher-${version}.${ext}",
-          protocols: [
-            {
-              name: "Stereum Launcher Protocol",
-              schemes: ["stereum"],
-            },
-          ],
         },
         win: {
-          sign: "./customsign.js",
+          sign: "./customsign.js", //change to windows-signing.js
           artifactName: "Stereum-Launcher-Setup-${version}.${ext}",
-          protocols: [
-            {
-              name: "Stereum Launcher Protocol",
-              schemes: ["stereum"],
-            },
-          ],
         },
-        protocols: [
-          {
-            name: "Stereum Launcher Protocol",
-            schemes: ["stereum"],
-          },
-        ],
       },
     },
   },
