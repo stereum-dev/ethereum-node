@@ -2,23 +2,28 @@
   <div class="volume-Parent flex w-full h-full justify-center items-center flex-col p-1 gap-1 relative">
     <ServiceLine
       label="Active"
-      :value="setupStore.runningServicesCount"
-      hover-text="
-        a
-        "
+      :value="String(setupStore.runningServicesCount)"
+      :hover-text="
+        t('csmStateWidget.servceCount', {
+          count: setupStore.runningServicesCount,
+          isAre: setupStore.runningServicesCount > 1 ? 'are' : 'is',
+        })
+      "
     />
     <ServiceLine
       label="in queue"
-      :value="dvtInQueueWithRelatedValidatorCount"
-      hover-text="
-          b
-        "
+      :value="String(dvtInQueueWithRelatedValidatorCount)"
+      :hover-text="
+        t('csmStateWidget.nodeStatus', {
+          number: String(dvtInQueueWithRelatedValidatorCount),
+        })
+      "
     />
     <ServiceLine
       label="node status"
-      value="3"
+      value=""
       hover-text="
-         c
+         
         "
       :csm-box="props.csmBox"
     />
@@ -30,6 +35,9 @@ import { useSetups } from "@/store/setups";
 import ServiceLine from "../fragments/ServiceLine.vue";
 import { useStakingStore } from "@/store/theStaking";
 import { computed } from "vue";
+import i18n from "@/includes/i18n";
+
+const t = i18n.global.t;
 
 const setupStore = useSetups();
 const stakingStore = useStakingStore();

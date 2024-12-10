@@ -78,7 +78,7 @@ export const useStakingStore = defineStore("theStaking", {
       stats: {},
       selectedValidatorService: {},
       totalBalance: 0,
-      keys: [], //  tamame key ha
+      keys: [],
       keyFiles: [],
       keyImages: [],
       forceRefresh: false,

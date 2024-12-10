@@ -281,6 +281,16 @@ const selectedLCOMService = computed(() => {
   return filteredLCOMServices.value.length > 0 ? filteredLCOMServices.value[currentCSMIndex.value] : null;
 });
 
+watch(
+  () => currentCSMIndex.value,
+  (newIndex, oldIndex) => {
+    if (newIndex !== oldIndex) {
+      setupStore.selectedLCOMService = filteredLCOMServices.value[newIndex] || null;
+    }
+  },
+  { immediate: true }
+);
+
 const prevCSM = () => {
   if (filteredLCOMServices.value.length) {
     currentCSMIndex.value = (currentCSMIndex.value - 1 + filteredLCOMServices.value.length) % filteredLCOMServices.value.length;
@@ -298,7 +308,6 @@ watch(
   (newPair, oldPair) => {
     if (JSON.stringify(newPair) !== JSON.stringify(oldPair)) {
       setupStore.selectedLCOMService = newPair;
-      // console.log("selectedLCOMService", setupStore.selectedLCOMService);
     }
   },
   { immediate: true, deep: true }
@@ -317,9 +326,9 @@ watch(
   (newSetup) => {
     if (newSetup) {
       currentIndex.value = 0;
+      currentCSMIndex.value = 0;
     }
 
-    // console.log(selectedLCOMService.value);
     if (controlStore.pickedService === "csm" && !selectedLCOMService.value) {
       controlStore.pickedService = "exeCons";
       isOpen.value = false;
@@ -332,6 +341,9 @@ const formattedValidatorNo = computed(() => stakingStore.keys.length.toString().
 
 const toggleDropdown = () => {
   isOpen.value = !isOpen.value;
+  if (controlStore?.pickedService === "csm" && !selectedLCOMService.value) {
+    controlStore.pickedService = "exeCons";
+  }
 };
 
 const servicePicker = (type) => {
@@ -341,13 +353,13 @@ const servicePicker = (type) => {
 
 const prevPair = () => {
   if (servicePairs.value.length) {
-    setupStore.currentPairIndex = (setupStore.currentPairIndex - 1 + servicePairs.value.length) % servicePairs.value.length;
+    setupStore.currentPairIndex = (setupStore?.currentPairIndex - 1 + servicePairs.value.length) % servicePairs.value.length;
   }
 };
 
 const nextPair = () => {
   if (servicePairs.value.length) {
-    setupStore.currentPairIndex = (setupStore.currentPairIndex + 1) % servicePairs.value.length;
+    setupStore.currentPairIndex = (setupStore?.currentPairIndex + 1) % servicePairs.value.length;
   }
 };
 
@@ -387,7 +399,7 @@ watch(
   () => servicePairs.value.length,
   (newLength) => {
     setupStore.clientPairsLength = newLength;
-    if (setupStore.currentPairIndex >= newLength) {
+    if (setupStore?.currentPairIndex >= newLength) {
       setupStore.currentPairIndex = 0;
     }
   },
