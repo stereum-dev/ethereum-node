@@ -46,9 +46,6 @@ import i18n from "@/includes/i18n";
 
 const t = i18n.global.t;
 
-const machineName = t("serverDetails.machineName");
-const machineIp = t("serverDetails.machineIp");
-
 const controlStore = useControlStore();
 const footerStore = useFooter();
 
