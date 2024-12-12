@@ -24,7 +24,6 @@ module.exports = {
         linux: {
           target: ["AppImage", "deb"],
           artifactName: "Stereum-Launcher-${version}.${ext}",
-          maintainer: "Stereum Launcher Team <team@stereum.net>", //Added test email to package.json
         },
         mac: {
           hardenedRuntime: true,

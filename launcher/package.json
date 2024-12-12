@@ -4,8 +4,7 @@
   "private": true,
   "description": "Stereum Ethereum Node Setup Launcher",
   "author": {
-    "name": "Stereum Launcher Team",
-    "email": "team@stereum.net"
+    "name": "Stereum Launcher Team"
   },
   "scripts": {
     "serve": "vue-cli-service serve --port 8081",
