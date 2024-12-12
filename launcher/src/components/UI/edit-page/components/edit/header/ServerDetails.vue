@@ -5,7 +5,11 @@
   >
     <div
       class="w-full px-2 h-[25px] grid grid-cols-24 items-center"
-      @mouseenter="footerStore.cursorLocation = `${machineName}`"
+      @mouseenter="
+        footerStore.cursorLocation = `${t('serverDetail.machine', {
+          machineName: controlStore?.ServerName,
+        })}`
+      "
       @mouseleave="footerStore.cursorLocation = ''"
     >
       <span class="col-start-2 col-end-8 text-xs text-left text-gray-100 overflow-hidden whitespace-pre ml-[5px]">Mach</span>
@@ -14,7 +18,11 @@
     <div
       v-if="controlStore.ipAddress"
       class="w-full px-2 h-[25px] grid grid-cols-24 items-center"
-      @mouseenter="footerStore.cursorLocation = `${machineIp}`"
+      @mouseenter="
+        footerStore.cursorLocation = `${t('serverDetail.serverIp', {
+          serverIp: controlStore?.ipAddress,
+        })}`
+      "
       @mouseleave="footerStore.cursorLocation = ''"
     >
       <span class="col-start-2 col-end-7 text-xs text-left text-gray-100 overflow-hidden whitespace-pre ml-[5px]">IP </span>
@@ -37,9 +45,6 @@ import { useFooter } from "@/store/theFooter";
 import i18n from "@/includes/i18n";
 
 const t = i18n.global.t;
-
-const machineName = t("serverDetails.machineName");
-const machineIp = t("serverDetails.machineIp");
 
 const controlStore = useControlStore();
 const footerStore = useFooter();
