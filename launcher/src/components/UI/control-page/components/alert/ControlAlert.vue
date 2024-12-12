@@ -705,8 +705,8 @@ export default {
 }
 
 .icon_alarm {
-  width: 26%;
-  height: 100%;
+  width: 1.75rem;
+  height: 1.75rem;
   display: flex;
   justify-content: center;
   align-items: center;
