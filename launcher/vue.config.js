@@ -22,7 +22,7 @@ module.exports = {
           },
         ],
         linux: {
-          target: "AppImage",
+          target: ["AppImage", "deb", "rpm"],
           artifactName: "Stereum-Launcher-${version}.${ext}",
         },
         mac: {
