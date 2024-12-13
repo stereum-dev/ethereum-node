@@ -1,6 +1,6 @@
 "use strict";
 
-import { app, protocol, BrowserWindow, shell, dialog, ipcMain } from "electron";
+import { app, protocol, BrowserWindow, shell, dialog, ipcMain, Menu } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import { StorageService } from "./storageservice.js";
 import { NodeConnection } from "./backend/NodeConnection.js";
@@ -1026,7 +1026,17 @@ app.on("ready", async () => {
   } else {
     // Production mode
     app.setAsDefaultProtocolClient("stereumlauncher");
+
+    // Disable "View" and "Window" Menu items in build
+    const hideMenuItems = ["viewmenu", "windowmenu"];
+    var menu = Menu.getApplicationMenu();
+    menu.items.filter((item) => hideMenuItems.includes(item.role)).map((item) => (item.visible = false));
+    Menu.setApplicationMenu(menu);
+
+    // Check for updates in production
+    stereumUpdater.checkForUpdates();
   }
+
   await createWindow();
 });
 
