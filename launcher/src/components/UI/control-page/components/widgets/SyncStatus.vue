@@ -30,12 +30,10 @@
           </div>
           <div class="progressBox">
             <sync-circular-progress :color="consensusColor" :sync-percent="consensusCyrcle" />
+            <img class="w-9 h-9 absolute" :src="setupsStore?.selectedServicePairs?.consensusService?.icon" alt="consensus" />
           </div>
           <div class="syncStatusStatus">
             <span :style="{ color: consensusColor }">{{ consensusState }}</span>
-          </div>
-          <div class="consensusIconCons">
-            <img :src="setupsStore?.selectedServicePairs?.consensusService?.icon" alt="consensus" />
           </div>
         </div>
 
@@ -49,12 +47,10 @@
           </div>
           <div class="progressBox">
             <sync-circular-progress :color="executionColor" :sync-percent="executionCyrcle" />
+            <img class="w-9 h-9 absolute" :src="setupsStore?.selectedServicePairs?.executionService?.icon" alt="execution" />
           </div>
           <div class="syncStatusStatus">
             <span :style="{ color: executionColor }">{{ executionState }}</span>
-          </div>
-          <div class="executionIconCons">
-            <img :src="setupsStore?.selectedServicePairs?.executionService?.icon" alt="execution" />
           </div>
         </div>
       </div>
@@ -199,13 +195,6 @@ const formatSyncData = (arg) => {
   align-items: center;
   text-transform: uppercase;
 }
-
-.executionIconCons,
-.consensusIconCons {
-  position: absolute;
-  width: 44%;
-  top: 26%;
-}
 .consensusPer {
   position: absolute;
   left: 10%;
@@ -222,6 +211,8 @@ const formatSyncData = (arg) => {
   display: flex;
   justify-content: center;
   align-items: center;
+
+  position: relative;
 }
 .syncStatusStatus {
   width: 100%;

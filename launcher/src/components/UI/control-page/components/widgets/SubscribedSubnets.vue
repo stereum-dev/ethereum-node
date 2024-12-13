@@ -82,7 +82,7 @@ const chartOptions = {
     strokeDashArray: 5,
     xaxis: { lines: { show: true } },
     yaxis: { lines: { show: true } },
-    padding: { top: 0, bottom: 0, left: -5, right: 5 },
+    padding: { top: 4, bottom: 4, left: -5, right: 10 },
   },
   stroke: { width: 1, colors: ["#00ff00"] },
   fill: {

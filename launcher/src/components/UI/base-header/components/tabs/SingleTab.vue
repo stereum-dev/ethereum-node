@@ -27,7 +27,7 @@ const serviceStore = useServices();
 const router = useRouter();
 
 const pagesTabsHandler = computed(() => {
-  return serviceStore.installedServices.length === 0;
+  return serviceStore.installedServices.length === 0 && props.tab.page !== "Node" && props.tab.page !== "Control";
 });
 
 const isActiveTab = computed(() => {
