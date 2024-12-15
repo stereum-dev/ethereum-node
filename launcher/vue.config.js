@@ -1,5 +1,3 @@
-// const path = require("path");
-
 module.exports = {
   parallel: false,
   pluginOptions: {
@@ -13,12 +11,18 @@ module.exports = {
         appId: "com.stereum.launcher",
         productName: "Stereum-Launcher",
         afterSign: "@sapien99/vue-cli-plugin-electron-builder-notarize",
-        // options placed here will be merged with default configuration and passed to electron-builder
         buildDependenciesFromSource: false,
         nodeGypRebuild: false,
         npmRebuild: false,
+        // Define protocols once here at the root level
+        protocols: [
+          {
+            name: "Stereum Launcher Protocol",
+            schemes: ["stereumlauncher"],
+          },
+        ],
         linux: {
-          target: "AppImage",
+          target: ["AppImage", "deb"],
           artifactName: "Stereum-Launcher-${version}.${ext}",
         },
         mac: {
@@ -28,7 +32,7 @@ module.exports = {
           artifactName: "Stereum-Launcher-${version}.${ext}",
         },
         win: {
-          sign: "./customsign.js", // use custom sign hook on windows
+          sign: "./customsign.js", //change to windows-signing.js
           artifactName: "Stereum-Launcher-Setup-${version}.${ext}",
         },
       },
