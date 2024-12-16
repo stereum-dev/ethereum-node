@@ -12,4 +12,7 @@ module.exports = {
     "vue/no-v-for-template-key": "off",
     "no-empty": ["error", { allowEmptyCatch: true }],
   },
+  globals: {
+    BigInt: true,
+  },
 };

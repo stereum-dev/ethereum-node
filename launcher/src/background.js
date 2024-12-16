@@ -842,7 +842,7 @@ ipcMain.handle("getCSMQueue", async (event, args) => {
   return await checkSigningKeys(args.keysArray, monitoring);
 });
 
-ipcMain.handle("getSigningKeysWithQueueInfo", async (event, args) => {
+ipcMain.handle("getSigningKeysWithQueueInfo", async () => {
   return await getSigningKeysWithQueueInfo(monitoring);
 });
 

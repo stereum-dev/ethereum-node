@@ -147,7 +147,7 @@ async function getSigningKeys(contract, nodeOperatorId, startIndex, keysCount) {
 async function getDepositQueue(contract) {
   try {
     if (!contract) {
-      throw new Error('Contract is not initialized.');
+      throw new Error("Contract is not initialized.");
     }
     const queueInfo = await contract.methods.depositQueue().call();
 
@@ -156,7 +156,7 @@ async function getDepositQueue(contract) {
 
     return { head, tail };
   } catch (error) {
-    log.error('Error calling getDepositQueue:', error);
+    log.error("Error calling getDepositQueue:", error);
     return null;
   }
 }
@@ -164,16 +164,16 @@ async function getDepositQueue(contract) {
 async function getDepositQueueItem(contract, index) {
   try {
     if (!contract) {
-      throw new Error('Contract is not initialized.');
+      throw new Error("Contract is not initialized.");
     }
     // Fetch the batch item from the contract
     const batchItem = await contract.methods.depositQueueItem(index).call();
 
     // Function to extract batch information
     const extractBatchInfo = (batch) => ({
-      nodeId: (batch >> 192n) & ((1n << 64n) - 1n),   // Extract the 64 bits for nodeId
+      nodeId: (batch >> 192n) & ((1n << 64n) - 1n), // Extract the 64 bits for nodeId
       keysCount: (batch >> 128n) & ((1n << 64n) - 1n), // Extract the next 64 bits for keysCount
-      nextBatch: batch & ((1n << 128n) - 1n),         // Extract the lower 128 bits for nextBatch
+      nextBatch: batch & ((1n << 128n) - 1n), // Extract the lower 128 bits for nextBatch
     });
 
     // Extract details from the batch item
@@ -182,7 +182,7 @@ async function getDepositQueueItem(contract, index) {
     // Return extracted information
     return { nodeId, keysCount, nextBatch };
   } catch (error) {
-    log.error('Error calling getDepositQueueItem:', error);
+    log.error("Error calling getDepositQueueItem:", error);
     return null;
   }
 }
@@ -193,7 +193,7 @@ async function getDepositQueueItem(contract, index) {
  * @async
  * @function getSigningKeysWithQueueInfo
  * @param {Object} monitoring - Monitoring Object
- * @returns {Promise<Array<{key: string, queuePosition: bigint}>> | Promise<null>} 
+ * @returns {Promise<Array<{key: string, queuePosition: bigint}>> | Promise<null>}
  *          Returns an array of signing keys with queue positions or null on failure.
  * @throws {Error} Logs and returns `null` if:
  * - The RPC tunnel could not be opened.
@@ -302,8 +302,7 @@ async function getSigningKeysWithQueueInfo(monitoring) {
   } catch (error) {
     log.error("Error in getSigningKeysWithQueueInfo:", error);
     return null;
-  }
-  finally {
+  } finally {
     log.info("Closing RPC tunnel...");
     await monitoring.closeRpcTunnel();
   }
@@ -421,5 +420,5 @@ async function checkSigningKeys(keysArray, monitoring) {
 
 export default {
   checkSigningKeys,
-  getSigningKeysWithQueueInfo
+  getSigningKeysWithQueueInfo,
 };
