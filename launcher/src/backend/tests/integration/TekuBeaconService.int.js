@@ -8,7 +8,7 @@ import { TaskManager } from "../../TaskManager.js";
 import { ValidatorAccountManager } from "../../ValidatorAccountManager.js";
 const log = require("electron-log");
 
-jest.setTimeout(1000000);
+jest.setTimeout(1800000);
 
 test("teku validator import", async () => {
   const testServer = new HetznerServer();
