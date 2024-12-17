@@ -8,7 +8,7 @@ import { ServiceManager } from "../../ServiceManager.js";
 import { TaskManager } from "../../TaskManager.js";
 const log = require("electron-log");
 
-jest.setTimeout(1000000);
+jest.setTimeout(1800000);
 
 test("lighthouse validator import", async () => {
   const testServer = new HetznerServer();
