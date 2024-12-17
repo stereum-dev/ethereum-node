@@ -18,7 +18,7 @@ import { ProtocolHandler } from "./backend/CustomUrlProtocol.js";
 import path from "path";
 import { readFileSync, existsSync, mkdirSync, renameSync, readdir, rmSync } from "fs";
 import url from "url";
-import checkSigningKeys from "./backend/web3/CSM.js";
+import { checkSigningKeys, getSigningKeysWithQueueInfo } from "./backend/web3/CSM.js";
 const isDevelopment = process.env.NODE_ENV !== "production";
 const nodeConnection = new NodeConnection();
 const storageService = new StorageService();
@@ -846,6 +846,10 @@ ipcMain.handle("fetchCurrentTimeZone", async () => {
 
 ipcMain.handle("getCSMQueue", async (event, args) => {
   return await checkSigningKeys(args.keysArray, monitoring);
+});
+
+ipcMain.handle("getSigningKeysWithQueueInfo", async () => {
+  return await getSigningKeysWithQueueInfo(monitoring);
 });
 
 ipcMain.handle("getObolClusterInformation", async (event, args) => {

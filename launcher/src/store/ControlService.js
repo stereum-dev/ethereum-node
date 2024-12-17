@@ -748,6 +748,10 @@ class ControlService extends EventEmitter {
     return this.promiseIpc.send("getCSMQueue", { keysArray });
   }
 
+  async getSigningKeysWithQueueInfo() {
+    return this.promiseIpc.send("getSigningKeysWithQueueInfo");
+  }
+
   async getObolClusterInformation(serviceID) {
     return this.promiseIpc.send("getObolClusterInformation", { serviceID });
   }
