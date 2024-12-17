@@ -1,10 +1,12 @@
 {
   "name": "stereum-launcher",
-  "version": "2.3.1",
+  "version": "2.3.2",
   "private": true,
   "description": "Stereum Ethereum Node Setup Launcher",
   "author": {
-    "name": "Stereum Launcher Team"
+    "name": "Stereum Launcher Team",
+    "email": "office@stereum.com",
+    "url": "https://stereum.com/"
   },
   "scripts": {
     "serve": "vue-cli-service serve --port 8081",
