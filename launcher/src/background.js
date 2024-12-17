@@ -50,16 +50,20 @@ log.transports.file.archiveLogFn = async (file) => {
   renameSync(file, `${backupPath}main-${Date.now()}.log`);
 
   let backupLogs = [];
+  let backupAmount = 3;
 
   const storedConfig = await storageService.readConfig();
+  if (storedConfig.logBackups) {
+    backupAmount = storedConfig.logBackups.value;
+  }
 
   readdir(backupPath, (err, files) => {
     files.forEach((file) => {
       backupLogs.push(file);
     });
-    if (backupLogs.length > storedConfig.logBackups.value) {
+    if (backupLogs.length > backupAmount) {
       backupLogs.reverse();
-      for (let i = storedConfig.logBackups.value; i < backupLogs.length; i++) {
+      for (let i = backupAmount; i < backupLogs.length; i++) {
         rmSync(backupPath + backupLogs[i], { force: true }, (err) => {
           if (err) throw err;
         });
