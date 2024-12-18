@@ -32,7 +32,7 @@ export class PrysmValidatorService extends NodeService {
           const consensusDir = client.volumes.find((vol) => vol.servicePath.includes("/consensus")).destinationPath;
           volumes.push(new ServiceVolume(consensusDir, configYamlDir));
         }
-        return client.buildConsensusClientHttpEndpointUrl();
+        return client.buildConsensusClientEndpoint();
       })
       .join();
 
@@ -59,13 +59,7 @@ export class PrysmValidatorService extends NodeService {
   }
 
   generatePrysmValidatorCommand(network, dataDir, walletDir, passwordDir, graffitiDir, configYamlDir, provider) {
-    const commonCmd = [
-      "--accept-terms-of-use=true",
-      `--enable-beacon-rest-api`,
-      `--beacon-rest-api-provider=${provider}`,
-      "--monitoring-host=0.0.0.0",
-      "--monitoring-port=8081",
-    ];
+    const commonCmd = ["--accept-terms-of-use=true", "--monitoring-host=0.0.0.0", "--monitoring-port=8081"];
 
     if (network === "devnet") {
       return [
@@ -75,6 +69,7 @@ export class PrysmValidatorService extends NodeService {
         "--interop-start-index=0",
         `--chain-config-file=${configYamlDir}/config.yml`,
         "--force-clear-db",
+        `--beacon-rpc-provider=${provider}`,
       ];
     } else {
       return [
@@ -88,6 +83,8 @@ export class PrysmValidatorService extends NodeService {
         "--http-port=7500",
         "--http-host=0.0.0.0",
         '--http-cors-domain="*"',
+        `--enable-beacon-rest-api`,
+        `--beacon-rest-api-provider=${provider}`,
         "--suggested-fee-recipient=0x0000000000000000000000000000000000000000",
         `--graffiti-file=${graffitiDir}/graffitis.yaml`,
         "--enable-builder=true",

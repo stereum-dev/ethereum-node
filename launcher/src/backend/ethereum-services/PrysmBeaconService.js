@@ -95,7 +95,6 @@ export class PrysmBeaconService extends NodeService {
       "--accept-terms-of-use=true",
       `--datadir=${dataDir}`,
       "--rpc-host=0.0.0.0",
-      "--http-host=0.0.0.0",
       `--execution-endpoint=${executionEndpoint}`,
       `--jwt-secret=${JWTDir}`,
       "--monitoring-host=0.0.0.0",
@@ -114,6 +113,7 @@ export class PrysmBeaconService extends NodeService {
         "--suggested-fee-recipient=0x0000000000000000000000000000000000000000",
         "--minimum-peers-per-subnet=0",
         "--force-clear-db",
+        "--grpc-gateway-host=0.0.0.0",
       ];
     } else {
       return [
@@ -123,6 +123,7 @@ export class PrysmBeaconService extends NodeService {
         "--p2p-max-peers=100",
         "--p2p-tcp-port=13001",
         "--p2p-udp-port=12001",
+        "--http-host=0.0.0.0",
       ];
     }
   }

@@ -25,13 +25,12 @@
     </div>
 
     <div
-      class="col-start-1 col-span-full row-start-14 row-span-full w-full h-full bg-[#151618] rounded-md flex flex-col justify-between items-center p-1 shadow-sm shadow-black border border-gray-700"
+      class="col-start-1 col-span-full row-start-14 row-span-full w-full h-full bg-[#151618] rounded-md flex flex-col justify-between items-center p-1 shadow-sm shadow-black active:shadow-none border border-gray-700"
     >
       <span class="text-2xs text-center text-gray-100 font-semibold font-sans uppercase mt-1">Custom Network</span>
 
       <div
         class="w-full h-8 bg-teal-700 rounded-sm text-center p-1 cursor-pointer hover:bg-teal-900 transition-all duration-100"
-        :class="{ 'cursor-not-allowed pointer-events-none opacity-40': isDisabled }"
         @click="createDevnet"
       >
         <span class="text-sm text-gray-200">Setup Devnet</span>
@@ -41,12 +40,12 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+// import { ref } from "vue";
 import { useNodeManage } from "../../../../../store/nodeManage";
 
 const emit = defineEmits(["getNetwork", "createDevnet"]);
 const manageStore = useNodeManage();
-const isDisabled = ref(true);
+// const isDisabled = ref(true);
 
 const getNetwork = (network) => {
   emit("getNetwork", network);
