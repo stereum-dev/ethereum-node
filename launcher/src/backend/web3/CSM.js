@@ -418,7 +418,4 @@ async function checkSigningKeys(keysArray, monitoring) {
   }
 }
 
-export default {
-  checkSigningKeys,
-  getSigningKeysWithQueueInfo,
-};
+export { checkSigningKeys, getSigningKeysWithQueueInfo };

@@ -10,7 +10,6 @@ export class StorageService {
   async writeConfig(config) {
     try {
       this.store.set("config-v2", config);
-      log.info("Config written:", config);
     } catch (error) {
       log.error("Error writing config:", error);
     }
@@ -19,7 +18,6 @@ export class StorageService {
   async readConfig() {
     try {
       const config = this.store.get("config-v2");
-      log.info("Config read:", config);
       return new Promise((resolve) => resolve(config));
     } catch (error) {
       log.error("Error reading config:", error);

@@ -141,13 +141,13 @@ export async function useUpdateValidatorStats() {
     return;
   }
   // Get queue keys
-  const keysInQueue = await ControlService.getCSMQueue(stakingStore.keys.map((key) => key.key));
+  const keysInQueue = await ControlService.getSigningKeysWithQueueInfo();
   stakingStore.keys.forEach((key) => {
     let info = data.find((k) => k.pubkey === key.key);
 
     // Check if the key is in queue here
     let inQueue = false;
-    if (Array.isArray(keysInQueue)) inQueue = keysInQueue.includes(key.key);
+    if (Array.isArray(keysInQueue)) inQueue = keysInQueue.some((k) => k.key === key.key && k.queuePosition != 0);
 
     if (info) {
       let dateActive = new Date();
