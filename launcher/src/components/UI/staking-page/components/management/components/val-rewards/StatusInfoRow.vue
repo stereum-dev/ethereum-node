@@ -5,7 +5,7 @@ import { useStakingStore } from '@/store/theStaking';
   >
     <span
       v-if="stakingStore.selectedServiceToFilter?.service === 'CharonService'"
-      class="col-start-1 col-end-4 text-[8px] text-gray-200 font-normal font-sans text-left pl-2"
+      class="col-start-1 col-end-5 text-[8px] text-gray-200 font-normal font-sans text-left pl-2"
       >Peer-Name</span
     >
     <span
@@ -16,10 +16,16 @@ import { useStakingStore } from '@/store/theStaking';
     <span
       class="text-[10px] text-amber-300 font-normal font-sans text-left"
       :class="
-        stakingStore.selectedServiceToFilter?.service === 'SSVNetworkService' ? 'col-start-3 col-span-2' : 'col-start-4 col-span-full'
+        stakingStore.selectedServiceToFilter?.service === 'SSVNetworkService'
+          ? 'col-start-3 col-span-2'
+          : 'col-start-5 col-span-full'
       "
     >
-      {{ stakingStore.selectedServiceToFilter?.service === "SSVNetworkService" ? getSSVId : getObolPeerName }}
+      {{
+        stakingStore.selectedServiceToFilter?.service === "SSVNetworkService"
+          ? getSSVId
+          : getObolPeerName
+      }}
     </span>
   </div>
 </template>
