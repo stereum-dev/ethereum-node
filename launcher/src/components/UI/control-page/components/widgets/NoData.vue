@@ -9,8 +9,6 @@
 
 <style scoped>
 .no-data_box {
-  position: absolute;
-
   width: 100%;
   height: 100%;
   display: flex;
