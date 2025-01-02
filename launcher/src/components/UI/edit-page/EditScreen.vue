@@ -171,7 +171,7 @@ import { useServers } from "@/store/servers";
 import { useServices } from "@/store/services";
 import { useFooter } from "@/store/theFooter";
 import { useStakingStore } from "@/store/theStaking";
-import { computed, onMounted, onUnmounted, ref, watch, watchEffect } from "vue";
+import { computed, onMounted, onUnmounted, ref, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 import { useMultiSetups } from "../../../composables/multiSetups";
 import { useSetups } from "../../../store/setups";
@@ -267,15 +267,15 @@ watchEffect(() => {
   }
 });
 
-watch(
-  () => setupStore.selectedSetup,
-  async (newValue) => {
-    if (!newValue || Object.keys(newValue).length === 0) {
-      await fetchSetups();
-    }
-  },
-  { immediate: true }
-);
+// watch(
+//   () => setupStore.selectedSetup,
+//   async (newValue) => {
+//     if (!newValue || Object.keys(newValue).length === 0) {
+//       await fetchSetups();
+//     }
+//   },
+//   { immediate: true }
+// );
 
 // Methods
 
