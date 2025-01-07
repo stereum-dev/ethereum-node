@@ -311,6 +311,7 @@ export default {
     bgOpacity: {
       type: String,
       required: false,
+      default: "opacity-100",
     },
     leftDistance: {
       type: String,

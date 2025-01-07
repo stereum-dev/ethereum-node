@@ -3,9 +3,10 @@
     <div class="Control-screen w-full h-full grid grid-cols-24 grid-rows-12 items-center bg-[#242529]">
       <ControlHeader />
       <CommonSidebar />
-      <AlertSection />
+      <AlertSection @expert-handler="expertModeHandlerAlert" />
       <StakingSidebar />
       <SidebarRight />
+      <ExpertWindow v-if="isExpertWindowOpen" :item="expertModeClient" bg-opacity="opacity-25" @hide-modal="hideExpertMode(item)" />
     </div>
   </base-layout>
 </template>
@@ -15,17 +16,31 @@ import { useSetups } from "@/store/setups";
 import { useFooter } from "@/store/theFooter";
 import { useServices } from "@/store/services";
 
-import { watch, computed } from "vue";
+import { watch, computed, ref } from "vue";
 
 import ControlHeader from "./sections/ControlHeader.vue";
 import CommonSidebar from "./sections/CommonSidebar.vue";
 import AlertSection from "./sections/AlertSection.vue";
 import StakingSidebar from "./sections/StakingSidebar.vue";
 import SidebarRight from "./sections/SidebarRight.vue";
+import ExpertWindow from "../node-page/sections/ExpertWindow.vue";
 
 const setupStore = useSetups();
 const footerStore = useFooter();
 const serviceStore = useServices();
+
+const isExpertWindowOpen = ref(false);
+const expertModeClient = ref(null);
+
+const hideExpertMode = (el) => {
+  expertModeClient.value = el;
+  isExpertWindowOpen.value = false;
+};
+
+const expertModeHandlerAlert = (validator) => {
+  expertModeClient.value = validator;
+  isExpertWindowOpen.value = true;
+};
 
 const selectedConfigServices = computed(() => {
   let services = [];
