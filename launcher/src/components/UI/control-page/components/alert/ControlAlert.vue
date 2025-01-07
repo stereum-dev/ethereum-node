@@ -215,6 +215,7 @@
         </template>
 
         <!-- csm green end -->
+
         <div
           v-if="synchronizationErrorControl && !alertShowState.includes('red')"
           class="alert-message_red"
