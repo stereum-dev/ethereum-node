@@ -33,7 +33,11 @@
       >
       </span>
 
-      <span class="text-xs font-semibold text-center col-start-3 col-end-5 capitalize" :class="getTextColor">{{ getServiceState }}</span>
+      <span
+        class="text-xs font-semibold text-center col-start-3 col-end-5 capitalize"
+        :class="getTextColor"
+        >{{ getServiceState }}</span
+      >
     </div>
 
     <img
@@ -53,10 +57,10 @@
 </template>
 
 <script setup>
-import { computed, watch } from "vue";
-import { useStakingStore } from "@/store/theStaking";
-import { useFooter } from "@/store/theFooter";
 import i18n from "@/includes/i18n";
+import { useFooter } from "@/store/theFooter";
+import { useStakingStore } from "@/store/theStaking";
+import { computed, watch } from "vue";
 
 const t = i18n.global.t;
 
@@ -68,21 +72,25 @@ const numValidator = t("displayValidator.numValidator");
 
 const stakingStore = useStakingStore();
 
-const getServiceState = computed(() => {
-  return stakingStore.selectedServiceToFilter?.state ?? null;
-});
-
 const getServiceIcon = computed(() => {
   return stakingStore.selectedServiceToFilter?.icon ?? null;
+});
+
+const getServiceState = computed(() => {
+  let state;
+  if (stakingStore.selectedServiceToFilter?.state === "running") {
+    state = "running";
+  } else {
+    state = "offline";
+  }
+  return state;
 });
 
 const getTextColor = computed(() => {
   if (getServiceState.value === "running") {
     return "text-green-500";
-  } else if (getServiceState.value === "off") {
+  } else if (getServiceState.value === "offline") {
     return "text-red-500";
-  } else if (getServiceState.value === "restarting") {
-    return "text-amber-400";
   }
 
   return "text-gray-500";
@@ -91,10 +99,8 @@ const getTextColor = computed(() => {
 const getStateColor = computed(() => {
   if (getServiceState.value === "running") {
     return "bg-green-400";
-  } else if (getServiceState.value === "off") {
+  } else if (getServiceState.value === "offline") {
     return "bg-red-500";
-  } else if (getServiceState.value === "restarting") {
-    return "bg-amber-400";
   }
 
   return "bg-gray-500";
@@ -107,7 +113,9 @@ watch(
       stakingStore.keyNumbers = 0;
       return;
     }
-    stakingStore.keyNumbers = stakingStore.keys.filter((key) => key.validatorID === service.config.serviceID).length;
+    stakingStore.keyNumbers = stakingStore.keys.filter(
+      (key) => key.validatorID === service.config.serviceID
+    ).length;
   },
   { immediate: true }
 );
