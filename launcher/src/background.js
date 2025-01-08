@@ -1034,7 +1034,31 @@ app.on("ready", async () => {
     Menu.setApplicationMenu(menu);
 
     // Check for updates in production
-    stereumUpdater.checkForUpdates();
+    const storedConfig = await storageService.readConfig();
+    if (!storedConfig.lastUpdateCheck) {
+      try {
+        const conf = {
+          ...storedConfig,
+          lastUpdateCheck: { value: Date.now() },
+        };
+        await storageService.writeConfig(conf);
+      } catch (error) {
+        console.error("Failed to update settings:", error);
+      }
+    }
+
+    if (storedConfig.lastUpdateCheck + storedConfig.updateTimer * 86400000 + storedConfig.updateTimerTime * 3600000 <= Date.now()) {
+      try {
+        const conf = {
+          ...storedConfig,
+          lastUpdateCheck: { value: Date.now() },
+        };
+        await storageService.writeConfig(conf);
+      } catch (error) {
+        console.error("Failed to update settings:", error);
+      }
+      stereumUpdater.checkForUpdates();
+    }
   }
 
   await createWindow();
