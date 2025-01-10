@@ -61,7 +61,7 @@
         @click="nukeNode"
       >
         <img
-          class="w-6"
+          class="w-5"
           src="/img/icon/edit-node-icons/nuke-node.png"
           alt="Export Icon"
         />
