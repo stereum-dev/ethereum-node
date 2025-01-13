@@ -150,8 +150,8 @@ const getServiceSyncStatus = (serviceType, syncData) => {
   return syncData.flat().find((data) => data.serviceID === serviceId) || null;
 };
 
-const consensusSyncData = computed(() => getServiceSyncStatus("consensusService", controlStore.syncstatus.data));
-const executionSyncData = computed(() => getServiceSyncStatus("executionService", controlStore.syncstatus.data));
+const consensusSyncData = computed(() => getServiceSyncStatus("consensusService", controlStore?.syncstatus?.data));
+const executionSyncData = computed(() => getServiceSyncStatus("executionService", controlStore?.syncstatus?.data));
 
 watch(
   () => consensusSyncData.value,
