@@ -264,7 +264,7 @@ const onDragLeave = () => {
 };
 
 const normalizeKey = (key) => {
-  return key.startsWith("0x") ? key.substring(2) : key;
+  return key?.startsWith("0x") ? key.substring(2) : key;
 };
 
 const removeDuplicatedDoppelgangerKeys = () => {
