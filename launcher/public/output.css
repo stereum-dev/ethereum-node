@@ -995,10 +995,6 @@ video {
   top: 33%;
 }
 
-.top-\[42\%\]{
-  top: 42%;
-}
-
 .top-\[50\%\]{
   top: 50%;
 }
@@ -3401,6 +3397,11 @@ video {
   border-color: rgb(28 54 52 / var(--tw-border-opacity, 1));
 }
 
+.border-\[\#23272a\]{
+  --tw-border-opacity: 1;
+  border-color: rgb(35 39 42 / var(--tw-border-opacity, 1));
+}
+
 .border-\[\#2c3136\]{
   --tw-border-opacity: 1;
   border-color: rgb(44 49 54 / var(--tw-border-opacity, 1));
@@ -3568,11 +3569,6 @@ video {
 .border-white{
   --tw-border-opacity: 1;
   border-color: rgb(255 255 255 / var(--tw-border-opacity, 1));
-}
-
-.border-\[\#23272a\]{
-  --tw-border-opacity: 1;
-  border-color: rgb(35 39 42 / var(--tw-border-opacity, 1));
 }
 
 .border-b-transparent{
@@ -3855,6 +3851,11 @@ video {
 .bg-\[\#232528\]{
   --tw-bg-opacity: 1;
   background-color: rgb(35 37 40 / var(--tw-bg-opacity, 1));
+}
+
+.bg-\[\#23272a\]{
+  --tw-bg-opacity: 1;
+  background-color: rgb(35 39 42 / var(--tw-bg-opacity, 1));
 }
 
 .bg-\[\#242529\]{
@@ -4329,11 +4330,6 @@ video {
 .bg-zinc-700{
   --tw-bg-opacity: 1;
   background-color: rgb(63 63 70 / var(--tw-bg-opacity, 1));
-}
-
-.bg-\[\#23272a\]{
-  --tw-bg-opacity: 1;
-  background-color: rgb(35 39 42 / var(--tw-bg-opacity, 1));
 }
 
 .bg-opacity-80{
@@ -5876,11 +5872,6 @@ html body {
   background-color: rgb(34 65 65 / var(--tw-bg-opacity, 1));
 }
 
-.hover\:bg-\[\#23272a\]:hover{
-  --tw-bg-opacity: 1;
-  background-color: rgb(35 39 42 / var(--tw-bg-opacity, 1));
-}
-
 .hover\:bg-\[\#234545\]:hover{
   --tw-bg-opacity: 1;
   background-color: rgb(35 69 69 / var(--tw-bg-opacity, 1));
@@ -6273,13 +6264,6 @@ html body {
 .active\:scale-95:active{
   --tw-scale-x: .95;
   --tw-scale-y: .95;
-  -webkit-transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-          transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-}
-
-.active\:scale-110:active{
-  --tw-scale-x: 1.1;
-  --tw-scale-y: 1.1;
   -webkit-transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
           transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }

@@ -79,7 +79,7 @@ const getServiceIcon = computed(() => {
 const getServiceState = computed(() => {
   let state;
   if (stakingStore.selectedServiceToFilter?.state === "running") {
-    state = "running";
+    state = "online";
   } else {
     state = "offline";
   }
@@ -87,7 +87,7 @@ const getServiceState = computed(() => {
 });
 
 const getTextColor = computed(() => {
-  if (getServiceState.value === "running") {
+  if (getServiceState.value === "online") {
     return "text-green-500";
   } else if (getServiceState.value === "offline") {
     return "text-red-500";
@@ -97,7 +97,7 @@ const getTextColor = computed(() => {
 });
 
 const getStateColor = computed(() => {
-  if (getServiceState.value === "running") {
+  if (getServiceState.value === "online") {
     return "bg-green-400";
   } else if (getServiceState.value === "offline") {
     return "bg-red-500";
