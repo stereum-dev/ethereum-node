@@ -5,7 +5,9 @@ import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
     :class="[
       stakingStore.isOverDropZone ? 'border-dashed  border-blue-500 ' : 'border-gray-600',
       stakingStore.inputWrongKey ? 'border-red-500' : '',
-      stakingStore.isPreviewListActive || stakingStore.isRemoteListActive || stakingStore.isGroupListActive
+      stakingStore.isPreviewListActive ||
+      stakingStore.isRemoteListActive ||
+      stakingStore.isGroupListActive
         ? 'row-start-2 row-end-12'
         : 'row-start-1 row-end-12 rounded-t-md',
     ]"
@@ -25,7 +27,10 @@ import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
       <span
         v-if="stakingStore.isOverDropZone"
         class="w-full h-full self-center justify-self-center flex justify-center items-center text-2xl"
-        :class="[stakingStore.inputWrongKey ? 'text-red-500' : 'text-blue-400', isDropZoneDisabled ? 'cursor-not-allowed ' : '']"
+        :class="[
+          stakingStore.inputWrongKey ? 'text-red-500' : 'text-blue-400',
+          isDropZoneDisabled ? 'cursor-not-allowed ' : '',
+        ]"
         >+</span
       >
       <div
@@ -43,19 +48,16 @@ import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
           class="text-lg font-bold text-gray-300 text-center uppercase select-none"
           >{{ $t("stakingPage.noVal") }}</span
         >
-        <span v-if="searchNotFound && getFilteredValidators?.length > 0" class="text-lg font-bold text-gray-300 text-center uppercase">{{
-          $t("stakingPage.noMatch")
-        }}</span>
-        <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
-        <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
-        <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
-        <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
-        <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
-        <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
-        <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
-        <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
-        <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
-        <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
+        <span
+          v-if="searchNotFound && getFilteredValidators?.length > 0"
+          class="text-lg font-bold text-gray-300 text-center uppercase"
+          >{{ $t("stakingPage.noMatch") }}</span
+        >
+        <SkeletonRow
+          v-for="i in skeletons"
+          v-show="!stakingStore.isPreviewListActive && isLoading"
+          :key="i"
+        />
 
         <PreviewKey
           v-for="item in stakingStore.previewKeys"
@@ -79,7 +81,11 @@ import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
 
         <GroupRow
           v-for="group in getCorrectValidatorGroups"
-          v-show="!stakingStore.isPreviewListActive && stakingStore.validatorKeyGroups?.length > 0 && !isLoading"
+          v-show="
+            !stakingStore.isPreviewListActive &&
+            stakingStore.validatorKeyGroups?.length > 0 &&
+            !isLoading
+          "
           :key="group.groupID"
           :item="group"
           @open-group="openGroup"
@@ -89,7 +95,12 @@ import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
 
         <KeyRow
           v-for="key in getFilteredValidators"
-          v-show="!isKeyInGroup(key) && !stakingStore.isPreviewListActive && stakingStore.keys?.length > 0 && !isLoading"
+          v-show="
+            !isKeyInGroup(key) &&
+            !stakingStore.isPreviewListActive &&
+            stakingStore.keys?.length > 0 &&
+            !isLoading
+          "
           :key="key.pubkey"
           :item="key"
           @remove-single="removeSingle"
@@ -129,22 +140,37 @@ const { listGroups } = useListGroups();
 const isLoading = ref(true);
 const dropZoneRef = ref(null);
 const isDropZoneActive = ref(true);
+const skeletons = ref([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 
 // Computed
 stakingStore.filteredKeys = computed(() => {
-  if (stakingStore.searchContent === "") {
-    return stakingStore.keys;
+  let filteredKeys = stakingStore.keys;
+  if (stakingStore.searchContent !== "") {
+    filteredKeys = stakingStore.keys.filter(
+      (key) =>
+        (key.key &&
+          key.key.toLowerCase().includes(stakingStore.searchContent.toLowerCase())) ||
+        (key.displayName &&
+          key.displayName !== "" &&
+          key.displayName
+            .toLowerCase()
+            ?.includes(stakingStore.searchContent.toLowerCase()))
+    );
   }
 
-  return stakingStore.keys.filter(
-    (key) =>
-      (key.key && key.key.toLowerCase().includes(stakingStore.searchContent.toLowerCase())) ||
-      (key.displayName && key.displayName !== "" && key.displayName.toLowerCase()?.includes(stakingStore.searchContent.toLowerCase()))
-  );
-});
+  // Prevent Deduplicate keys based on pubkey
+  const uniqueKeys = [];
+  const seenKeys = new Set();
 
-console.log(stakingStore.filteredKeys);
-console.log("All keys", stakingStore.keys);
+  for (const key of filteredKeys) {
+    if (key.key && !seenKeys.has(key.key)) {
+      uniqueKeys.push(key);
+      seenKeys.add(key.key);
+    }
+  }
+
+  return uniqueKeys;
+});
 
 const getFilteredValidators = computed(() => {
   // No setup and no service filter
@@ -154,13 +180,19 @@ const getFilteredValidators = computed(() => {
 
   // No setup but a service filter exists
   if (!setupStore.selectedSetup && stakingStore.selectedServiceToFilter) {
-    return stakingStore.filteredKeys.filter((key) => key.validatorID === stakingStore.selectedServiceToFilter?.config?.serviceID);
+    return stakingStore.filteredKeys.filter(
+      (key) => key.validatorID === stakingStore.selectedServiceToFilter?.config?.serviceID
+    );
   }
 
   // Setup exists but no service filter
   if (setupStore.selectedSetup && !stakingStore.selectedServiceToFilter) {
-    const serviceIds = setupStore.selectedSetup?.services?.map((service) => service.config?.serviceID);
-    return stakingStore.filteredKeys.filter((key) => serviceIds?.includes(key.validatorID));
+    const serviceIds = setupStore.selectedSetup?.services?.map(
+      (service) => service.config?.serviceID
+    );
+    return stakingStore.filteredKeys.filter((key) =>
+      serviceIds?.includes(key.validatorID)
+    );
   }
 
   // Both setup and service filter exist
@@ -170,13 +202,18 @@ const getFilteredValidators = computed(() => {
 
 const getCorrectValidatorGroups = computed(() => {
   return stakingStore.validatorKeyGroups.filter(
-    (group) => group.keys.length > 0 && group.validatorClientID === stakingStore.selectedServiceToFilter?.config?.serviceID
+    (group) =>
+      group.keys.length > 0 &&
+      group.validatorClientID === stakingStore.selectedServiceToFilter?.config?.serviceID
   );
 });
 
 const searchNotFound = computed(() => {
   return (
-    !stakingStore.isPreviewListActive && !isLoading.value && stakingStore.searchContent !== "" && stakingStore.filteredKeys.length === 0
+    !stakingStore.isPreviewListActive &&
+    !isLoading.value &&
+    stakingStore.searchContent !== "" &&
+    stakingStore.filteredKeys.length === 0
   );
 });
 
@@ -199,9 +236,9 @@ watchEffect(() => {
 });
 
 watchEffect(() => {
-  if (stakingStore.keys.length === 0) {
+  if (stakingStore.filteredKeys.length === 0) {
     isLoading.value = true;
-  } else if (stakingStore.keys.length > 0) {
+  } else {
     isLoading.value = false;
   }
 
@@ -209,7 +246,7 @@ watchEffect(() => {
     if (isLoading.value) {
       isLoading.value = false;
     }
-  }, 2000);
+  }, 5000);
 });
 
 watch(
@@ -235,7 +272,8 @@ watch(
       await listKeys();
       removeDuplicatedDoppelgangerKeys();
     }
-  }
+  },
+  { deep: true }
 );
 
 // Lifecycle Hooks
@@ -291,7 +329,9 @@ const listKeys = async () => {
 };
 
 const isKeyInGroup = (key) => {
-  return stakingStore.validatorKeyGroups.some((group) => group.keys.some((groupKey) => groupKey.key === key.key));
+  return stakingStore.validatorKeyGroups.some((group) =>
+    group.keys.some((groupKey) => groupKey.key === key.key)
+  );
 };
 
 const onDrop = (event) => {

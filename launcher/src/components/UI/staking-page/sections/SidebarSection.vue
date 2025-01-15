@@ -29,12 +29,16 @@
         v-for="item in installedValidators"
         :key="item.config?.serviceID"
         class="w-9 h-9 max-h-[35px] row-span-1 py-1 rounded-r-full text-gray-700 transition-colors duration-200 flex justify-center items-center cursor-pointer"
-        :class="{
-          'bg-[#336666] shadow-md shadow-[#191a1b] animate__animated animate__slideInLeft animate__faster pointer-events-none':
-            currentService === item.config?.serviceID,
-          'bg-[#202123] border border-gray-600':
-            currentService !== item.config?.serviceID,
-        }"
+        :class="[
+          // Dynamic background color based on setupColor
+          item.setupColor === 'default'
+            ? 'bg-[#336666]'
+            : setupStore.getBGColor(item.setupColor),
+          // Conditional shadow and animation when the current service matches
+          currentService === item.config?.serviceID
+            ? 'shadow-md shadow-[#191a1b] animate__animated animate__slideInLeft animate__faster pointer-events-none'
+            : 'bg-[#202123] border border-gray-600',
+        ]"
         @click="filterByService(item)"
         @mouseenter="footerStore.cursorLocation = `Filter by ${item.name}`"
         @mouseleave="[(footerStore.cursorLocation = ''), (hoveredIndex = null)]"

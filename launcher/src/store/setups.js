@@ -104,6 +104,18 @@ export const useSetups = defineStore("setups", {
       brown: { text: "text-gray-100", background: "bg-[#503C3C]" },
       gray: { text: "text-white", background: "bg-zinc-700" }, //#3f3f46
     },
+    borderColorMappings: {
+      default: { border: "border border-[#336666]" },
+      blue: { border: "border border-blue-900" }, //#172554
+      red: { border: "border border-red-300" }, //#fca5a5
+      yellow: { border: "border border-[#dc9105]" },
+      orange: { border: "border border-[#fb923c]" },
+      green: { border: "border border-lime-900" }, //#365314
+      beige: { border: "border border-[#D1BB9E]" },
+      purple: { border: "border border-violet-900" }, //#4c1d95
+      brown: { border: "border border-[#503C3C]" },
+      gray: { border: "border border-zinc-700" }, //#3f3f46
+    },
   }),
   getters: {
     //Setup layouts
@@ -118,6 +130,9 @@ export const useSetups = defineStore("setups", {
     },
     getTextColor: (state) => (color) => {
       return state.colorMappings[color]?.text || "text-gray-300";
+    },
+    getBorderColor: (state) => (color) => {
+      return state.borderColorMappings[color]?.border || "border border-[#33393E]";
     },
   },
   actions: {
