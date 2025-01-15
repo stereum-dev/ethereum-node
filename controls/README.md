@@ -1,6 +1,6 @@
 # Molecule Test Environment
 ## Requirements
-You'll need to have `docker` and `python` with `pip` intalled. You can then install poetry with the following command:
+You'll need to have `docker` and `python` with `pip` installed. You can then install poetry with the following command:
 ```bash
 pip install poetry
 ```
@@ -31,7 +31,7 @@ export HCLOUD_TOKEN=<YOUR_API_TOKEN> # on macOS and Linux
 To run tests, cd into `./roles/<role-to-test>` and run:
 ```bash
 molecule test
-molcule test -s <scenario-name>
+molecule test -s <scenario-name>
 ```
 ### Extra Information
 - The roles `update-changes`, `configure-updates` and `configure-firewall` use the `docker` driver. This means that the tests will run in a docker container on your machine. Therefore, you'll need to have docker installed and running.
