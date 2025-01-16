@@ -13,11 +13,11 @@ import { computed } from 'vue';
     >
       <div
         class="w-6 h-6 rounded-full cursor-pointer p-[2px]"
-        @mouseenter="footerStore.cursorLocation = `${props.item.isRemote ? rm : pk}`"
+        @mouseenter="footerStore.cursorLocation = `${props.item?.isRemote ? rm : pk}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
         <img
-          v-if="props.item.isRemote"
+          v-if="props.item?.isRemote"
           class="w-full h-full"
           src="/img/icon/staking-page-icons/remote-key-icon.svg"
           alt="Key Icon"
@@ -88,7 +88,7 @@ import { computed } from 'vue';
 
     <span
       class="col-start-9 col-end-12 self-center text-center text-[10px] overflow-hidden"
-      :class="props.item.selected ? 'text-gray-800' : ''"
+      :class="props.item?.selected ? 'text-gray-800' : ''"
       :style="{ color: getStatusColor }"
       @mouseenter="
         footerStore.cursorLocation = `${t('displayValidator.activeExpl', {
@@ -109,7 +109,7 @@ import { computed } from 'vue';
 
     <span
       class="col-start-14 col-end-17 self-center text-center text-[10px] overflow-hidden"
-      :class="props.item.selected ? 'text-gray-800' : ''"
+      :class="props.item?.selected ? 'text-gray-800' : ''"
       @mouseenter="footerStore.cursorLocation = `${balExpl}`"
       @mouseleave="footerStore.cursorLocation = ''"
       >{{ props.item.balance }}</span
@@ -120,7 +120,7 @@ import { computed } from 'vue';
       @mousedown.prevent
     >
       <div
-        v-if="getValidatorClients.service !== 'LCOMService'"
+        v-if="getValidatorClients?.service !== 'LCOMService'"
         class="col-span-1 w-full h-full rounded-md justify-self-center flex justify-center items-center"
         @mouseenter="footerStore.cursorLocation = `Beaconcha.in`"
         @mouseleave="footerStore.cursorLocation = ''"
@@ -130,7 +130,7 @@ import { computed } from 'vue';
           src="/img/icon/staking-page-icons/beaconcha.png"
           alt="Icon"
           @mousedown.prevent
-          @click="navToBeaconcha(props.item.network)"
+          @click="navToBeaconcha(props.item?.network)"
         />
       </div>
       <div
@@ -161,9 +161,9 @@ import { computed } from 'vue';
       </div>
       <div
         v-if="
-          getValidatorClients.service !== 'CharonService' &&
-          getValidatorClients.service !== 'SSVNetworkService' &&
-          getValidatorClients.service !== 'LCOMService'
+          getValidatorClients?.service !== 'CharonService' &&
+          getValidatorClients?.service !== 'SSVNetworkService' &&
+          getValidatorClients?.service !== 'LCOMService'
         "
         class="col-start-4 col-span-1 w-full h-full rounded-md justify-self-center flex justify-center items-center"
         @mouseenter="footerStore.cursorLocation = `${setFee}`"
@@ -179,9 +179,9 @@ import { computed } from 'vue';
       </div>
       <div
         v-if="
-          getValidatorClients.service !== 'LCOMService' &&
-          getValidatorClients.service !== 'CharonService' &&
-          getValidatorClients.service !== 'SSVNetworkService'
+          getValidatorClients?.service !== 'LCOMService' &&
+          getValidatorClients?.service !== 'CharonService' &&
+          getValidatorClients?.service !== 'SSVNetworkService'
         "
         class="col-span-1 w-full h-full rounded-md justify-self-center flex justify-center items-center"
         @mouseenter="footerStore.cursorLocation = `${removVal}`"
@@ -197,9 +197,9 @@ import { computed } from 'vue';
       </div>
       <div
         v-if="
-          getValidatorClients.service !== 'CharonService' &&
-          getValidatorClients.service !== 'SSVNetworkService' &&
-          getValidatorClients.service !== 'LCOMService'
+          getValidatorClients?.service !== 'CharonService' &&
+          getValidatorClients?.service !== 'SSVNetworkService' &&
+          getValidatorClients?.service !== 'LCOMService'
         "
         class="col-start-6 col-span-1 w-full h-full rounded-md justify-self-center flex justify-center items-center"
         @mouseenter="footerStore.cursorLocation = `${exitChain}`"
@@ -385,8 +385,6 @@ const getKeyStyleBySetupColor = computed(() => {
     setupStore.getTextColor(getValidatorClients.value?.setupColor)
   );
 });
-
-console.log("get key color", getKeyStyleBySetupColor.value);
 
 const checkValidatorKeyType = computed(() => {
   const { item } = props;

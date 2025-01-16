@@ -235,19 +235,19 @@ watchEffect(() => {
   }
 });
 
-watchEffect(() => {
-  if (stakingStore.filteredKeys.length === 0) {
-    isLoading.value = true;
-  } else {
-    isLoading.value = false;
-  }
+// watchEffect(() => {
+//   if (stakingStore.filteredKeys.length === 0) {
+//     isLoading.value = true;
+//   } else {
+//     isLoading.value = false;
+//   }
 
-  setTimeout(() => {
-    if (isLoading.value) {
-      isLoading.value = false;
-    }
-  }, 5000);
-});
+//   setTimeout(() => {
+//     if (isLoading.value) {
+//       isLoading.value = false;
+//     }
+//   }, 5000);
+// });
 
 watch(
   () => stakingStore.selectedServiceToFilter,
