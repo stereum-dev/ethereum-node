@@ -66,8 +66,8 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, onUnmounted } from "vue";
 import { useStakingStore } from "@/store/theStaking";
+import { onMounted, onUnmounted, ref } from "vue";
 
 const emit = defineEmits(["confirmPassword"]);
 
@@ -77,15 +77,6 @@ let isPasswordVisible = ref(false);
 let isDragging = ref(false);
 
 // Methods
-
-watch(
-  () => enteredPassword.value,
-  (newValue) => {
-    if (newValue) {
-      console.log("Password entered: ", newValue.trim());
-    }
-  }
-);
 
 const togglePasswordVisibility = () => {
   isPasswordVisible.value = !isPasswordVisible.value;
