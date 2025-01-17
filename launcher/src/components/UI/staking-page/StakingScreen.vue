@@ -436,6 +436,7 @@ const removeGroupConfirm = async (item) => {
 
 //Confirm Rename Validator Key
 const confirmValidatorKeyRename = async (name) => {
+  stakingStore.isRenameKeyActive = true;
   stakingStore.keys.find((key) => key.key === stakingStore.selectKeyToRename.key).selected = false;
   let el = stakingStore.selectKeyToRename;
 
@@ -449,6 +450,8 @@ const confirmValidatorKeyRename = async (name) => {
   } else {
     console.log("Couldn't read KeyFile!");
   }
+  await useListKeys(stakingStore.forceRefresh);
+  stakingStore.isRenameKeyActive = false;
 };
 
 const resetValidatorKeyName = async (el) => {
@@ -851,6 +854,11 @@ watchEffect(() => {
 });
 
 //Lifecycle Hooks
+// onMounted(async () => {
+//   console.log("Listing keys on mounted");
+//   await listKeys();
+//   listGroups();
+// });
 
 onUnmounted(() => {
   setupStore.selectedSetup = null;

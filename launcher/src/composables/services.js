@@ -124,6 +124,7 @@ export async function useFrontendServices() {
                   ...service,
                   setupId: setup.setupId,
                   setupName: setup.setupName,
+                  setupColor: setup.color,
                 };
               }
             }

@@ -1,6 +1,10 @@
 <template>
   <div
     class="animate__animated animate__fadeIn w-full h-full max-h-[32px] col-start-1 col-span-full bg-[#3e4347] rounded-sm grid grid-cols-12 items-center cursor-pointer shadow-md shadow-gray-800 border border-gray-600"
+    :class="{ 'border-blue-500': isDragging, 'border-gray-600': !isDragging }"
+    @dragover.prevent="onDragOver"
+    @dragleave.prevent="onDragLeave"
+    @drop.prevent="onDrop"
   >
     <div class="w-full h-full col-start-1 col-end-11 relative flex justify-start items-center">
       <button class="absolute right-2 focus:outline-none rtl:left-0 rtl:right-auto" @click="togglePasswordVisibility">
@@ -9,9 +13,9 @@
       </button>
 
       <input
-        v-model="eneteredPassword"
+        v-model="enteredPassword"
         :type="isPasswordVisible ? 'text' : 'password'"
-        placeholder="Enter password"
+        placeholder="Enter password or drop a file"
         class="w-full max-h-[28px] text-gray-400 placeholder-gray-400/70 rounded-sm items-center py-1 pl-4 bg-[#171D22]"
       />
     </div>
@@ -41,17 +45,18 @@ import { onMounted, onUnmounted, ref } from "vue";
 const emit = defineEmits(["confirmPassword"]);
 
 const stakingStore = useStakingStore();
-let eneteredPassword = ref("");
+let enteredPassword = ref("");
 let isPasswordVisible = ref(false);
+let isDragging = ref(false);
 
-//Methods
+// Methods
 
 const togglePasswordVisibility = () => {
   isPasswordVisible.value = !isPasswordVisible.value;
 };
 
 const cancelPassword = () => {
-  eneteredPassword.value = "";
+  enteredPassword.value = "";
   stakingStore.isPreviewListActive = false;
   stakingStore.setActivePanel(null);
   stakingStore.previewKeys = [];
@@ -59,16 +64,42 @@ const cancelPassword = () => {
 };
 
 const confirmPassword = () => {
-  emit("confirmPassword", eneteredPassword.value.trim());
-  eneteredPassword.value = "";
+  emit("confirmPassword", enteredPassword.value.trim());
+  enteredPassword.value = "";
   isPasswordVisible.value = false;
 };
 
+const onDragOver = () => {
+  isDragging.value = true;
+};
+
+const onDragLeave = () => {
+  isDragging.value = false;
+};
+
+const onDrop = (event) => {
+  isDragging.value = false;
+  const files = event.dataTransfer.files;
+  if (files.length > 0) {
+    const file = files[0];
+    if (file.type === "text/plain") {
+      const reader = new FileReader();
+      reader.onload = () => {
+        enteredPassword.value = reader.result.trim();
+        console.log("Password from file:", enteredPassword.value);
+      };
+      reader.readAsText(file);
+    } else {
+      alert("Only plain text files are allowed!");
+    }
+  }
+};
+
 onMounted(() => {
-  eneteredPassword.value = "";
+  enteredPassword.value = "";
 });
 
 onUnmounted(() => {
-  eneteredPassword.value = "";
+  enteredPassword.value = "";
 });
 </script>

@@ -12,16 +12,16 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
 import { useStakingStore } from "@/store/theStaking";
+import { computed } from "vue";
 
 const stakingStore = useStakingStore();
 
 const getPerformance = computed(() => {
   if (stakingStore.selectedServiceToFilter?.service === "SSVNetworkService") {
-    return stakingStore.ssvStats?.performance ? stakingStore.ssvStats?.performance + "%" : "N/A";
+    return stakingStore.ssvStats?.performance ? Math.floor(stakingStore.ssvStats?.performance) + "%" : "N/A";
   } else if (stakingStore.selectedServiceToFilter?.service === "CharonService") {
-    return stakingStore.obolStats?.attestationPerformance ? stakingStore.obolStats?.attestationPerformance.substring(0, 5) + "%" : "N/A";
+    return stakingStore.obolStats?.attestationPerformance ? Math.floor(stakingStore.obolStats?.attestationPerformance) + "%" : "N/A";
   }
   return "N/A";
 });

@@ -46,16 +46,7 @@ import { ref, computed, watchEffect, watch, onMounted, onUnmounted } from 'vue';
         <span v-if="searchNotFound && getFilteredValidators?.length > 0" class="text-lg font-bold text-gray-300 text-center uppercase">{{
           $t("stakingPage.noMatch")
         }}</span>
-        <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
-        <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
-        <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
-        <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
-        <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
-        <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
-        <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
-        <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
-        <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
-        <SkeletonRow v-if="!stakingStore.isPreviewListActive && isLoading" />
+        <SkeletonRow v-for="i in skeletons" v-show="!stakingStore.isPreviewListActive && isLoading" :key="i" />
 
         <PreviewKey
           v-for="item in stakingStore.previewKeys"
@@ -129,22 +120,32 @@ const { listGroups } = useListGroups();
 const isLoading = ref(true);
 const dropZoneRef = ref(null);
 const isDropZoneActive = ref(true);
+const skeletons = ref([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 
 // Computed
 stakingStore.filteredKeys = computed(() => {
-  if (stakingStore.searchContent === "") {
-    return stakingStore.keys;
+  let filteredKeys = stakingStore.keys;
+  if (stakingStore.searchContent !== "") {
+    filteredKeys = stakingStore.keys.filter(
+      (key) =>
+        (key.key && key.key.toLowerCase().includes(stakingStore.searchContent.toLowerCase())) ||
+        (key.displayName && key.displayName !== "" && key.displayName.toLowerCase()?.includes(stakingStore.searchContent.toLowerCase()))
+    );
   }
 
-  return stakingStore.keys.filter(
-    (key) =>
-      (key.key && key.key.toLowerCase().includes(stakingStore.searchContent.toLowerCase())) ||
-      (key.displayName && key.displayName !== "" && key.displayName.toLowerCase()?.includes(stakingStore.searchContent.toLowerCase()))
-  );
-});
+  // Prevent Deduplicate keys based on pubkey
+  const uniqueKeys = [];
+  const seenKeys = new Set();
 
-console.log(stakingStore.filteredKeys);
-console.log("All keys", stakingStore.keys);
+  for (const key of filteredKeys) {
+    if (key.key && !seenKeys.has(key.key)) {
+      uniqueKeys.push(key);
+      seenKeys.add(key.key);
+    }
+  }
+
+  return uniqueKeys;
+});
 
 const getFilteredValidators = computed(() => {
   // No setup and no service filter
@@ -198,19 +199,19 @@ watchEffect(() => {
   }
 });
 
-watchEffect(() => {
-  if (stakingStore.keys.length === 0) {
-    isLoading.value = true;
-  } else if (stakingStore.keys.length > 0) {
-    isLoading.value = false;
-  }
+// watchEffect(() => {
+//   if (stakingStore.filteredKeys.length === 0) {
+//     isLoading.value = true;
+//   } else {
+//     isLoading.value = false;
+//   }
 
-  setTimeout(() => {
-    if (isLoading.value) {
-      isLoading.value = false;
-    }
-  }, 2000);
-});
+//   setTimeout(() => {
+//     if (isLoading.value) {
+//       isLoading.value = false;
+//     }
+//   }, 5000);
+// });
 
 watch(
   () => stakingStore.selectedServiceToFilter,
@@ -235,7 +236,8 @@ watch(
       await listKeys();
       removeDuplicatedDoppelgangerKeys();
     }
-  }
+  },
+  { deep: true }
 );
 
 // Lifecycle Hooks
@@ -264,7 +266,7 @@ const onDragLeave = () => {
 };
 
 const normalizeKey = (key) => {
-  return key.startsWith("0x") ? key.substring(2) : key;
+  return key?.startsWith("0x") ? key.substring(2) : key;
 };
 
 const removeDuplicatedDoppelgangerKeys = () => {

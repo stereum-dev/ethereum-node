@@ -62,6 +62,7 @@ export const useStakingStore = defineStore("theStaking", {
       selectedKeyToRemove: null,
       selectKeyToRename: null,
       selectKeyForFee: null,
+      isRenameKeyActive: false,
       validatorDisplayName: "",
       enteredFeeRecipientAddress: "",
       feeRecepientAddress: "",
