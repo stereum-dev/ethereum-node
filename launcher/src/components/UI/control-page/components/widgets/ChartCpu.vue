@@ -50,7 +50,7 @@ let pollingInterval;
 const chartSeries = computed(() => [
   {
     name: "CPU Usage",
-    data: chartData.value.length ? chartData.value : [[Date.now(), 0]],
+    data: chartData.value?.length ? chartData.value : [[Date.now(), 0]],
   },
 ]);
 
@@ -127,7 +127,7 @@ const updateChartData = () => {
   const currentTime = Date.now();
   chartData.value.push([currentTime, cpu.value]);
 
-  if (chartData.value.length > 200) {
+  if (chartData.value?.length > 200) {
     chartData.value.shift();
   }
 };

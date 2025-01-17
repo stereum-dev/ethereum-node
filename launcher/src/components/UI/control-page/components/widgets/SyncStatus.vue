@@ -101,18 +101,19 @@ const handleSyncStatus = (client, colorRef, cyrcleRef, stateRef) => {
     setSyncValues("grey", 100, "on-hold", colorRef, cyrcleRef, stateRef);
     return;
   }
-
   const { frstVal: lo, scndVal: hi, state: st } = client;
+  const low = parseInt(lo);
+  const high = parseInt(hi);
   if (st !== "running") {
     setSyncValues("red", 100, "error", colorRef, cyrcleRef, stateRef);
-  } else if (lo > hi) {
+  } else if (low > high) {
     setSyncValues("orange", 100, "unknown", colorRef, cyrcleRef, stateRef);
-  } else if (lo < 1 && hi < 1) {
+  } else if (low < 1 && high < 1) {
     setSyncValues("grey", 100, "on-hold", colorRef, cyrcleRef, stateRef);
-  } else if (lo < hi) {
-    setSyncValues("lightblue", getSyncPercentage(lo, hi), "syncing", colorRef, cyrcleRef, stateRef);
+  } else if (low < high) {
+    setSyncValues("lightblue", getSyncPercentage(low, high), "syncing", colorRef, cyrcleRef, stateRef);
   } else {
-    setSyncValues("green", getSyncPercentage(lo, hi), "synced", colorRef, cyrcleRef, stateRef);
+    setSyncValues("green", getSyncPercentage(low, high), "synced", colorRef, cyrcleRef, stateRef);
   }
 };
 
@@ -149,8 +150,8 @@ const getServiceSyncStatus = (serviceType, syncData) => {
   return syncData.flat().find((data) => data.serviceID === serviceId) || null;
 };
 
-const consensusSyncData = computed(() => getServiceSyncStatus("consensusService", controlStore.syncstatus.data));
-const executionSyncData = computed(() => getServiceSyncStatus("executionService", controlStore.syncstatus.data));
+const consensusSyncData = computed(() => getServiceSyncStatus("consensusService", controlStore?.syncstatus?.data));
+const executionSyncData = computed(() => getServiceSyncStatus("executionService", controlStore?.syncstatus?.data));
 
 watch(
   () => consensusSyncData.value,
