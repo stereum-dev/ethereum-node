@@ -102,6 +102,7 @@
     "write": "الكتابة",
     "read": "القراءة",
     "inclusionDistance": "مسافة الإدراج",
+    "ipAddressIs": "IP ADDRESS IS",
     "rpc": "نقطة النهاية RPC",
     "ws": "نقطة النهاية WS",
     "syncStatus": "حالة التزامن",
