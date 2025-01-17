@@ -202,15 +202,15 @@ const serviceStateController = (serviceName, stateProperty) => {
 
   if (serviceName.toLowerCase() === "prometheus") {
     servicesToCheck = servicesStore.installedServices;
-  } else if (setupsStore.selectedSetup && setupsStore.selectedSetup.services) {
-    servicesToCheck = setupsStore.selectedSetup.services;
+  } else if (setupsStore?.selectedSetup && setupsStore.selectedSetup?.services) {
+    servicesToCheck = setupsStore.selectedSetup?.services;
   } else {
-    servicesToCheck = setupsStore.allSetups.flatMap((setup) => setup.services || []);
+    servicesToCheck = setupsStore?.allSetups.flatMap((setup) => setup.services || []);
   }
 
   for (let service of servicesToCheck) {
     if (service.name.toLowerCase() === serviceName.toLowerCase()) {
-      isServiceOff = service.state === "exited";
+      isServiceOff = service?.state === "exited";
       break;
     }
   }
@@ -266,10 +266,10 @@ watch(servicesStore.installedServices, (newVal) => {
 
 const currentEpochSlot = async (consensusName) => {
   try {
-    let res = await ControlService.getCurrentEpochSlot(consensusName);
+    let res = await ControlService?.getCurrentEpochSlot(consensusName);
 
-    controlStore.currentSlotData = res.currentSlot;
-    controlStore.currentEpochData = res.currentEpoch;
+    controlStore.currentSlotData = res?.currentSlot;
+    controlStore.currentEpochData = res?.currentEpoch;
     controlStore.currentResult = res;
   } catch (error) {
     console.error("An error occurred while fetching currentEpochSlot:", error);
