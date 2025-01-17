@@ -36,8 +36,10 @@ export class ValidatorAccountManager {
     //escape all passwords for shell
     passwords = passwords.map((p) => {
       let pass = p;
-      if (pass.includes('"')) pass = pass.replaceAll(/"/g, '\\"');
-      if (pass.includes("'")) pass = pass.replaceAll(/'/g, `'\\''`);
+      if (pass.includes("\\")) pass = pass.replaceAll(/\\/g, "\\\\");
+      // eslint-disable-next-line no-useless-escape
+      if (pass.includes('"')) pass = pass.replaceAll(/"/g, `\"`);
+      if (pass.includes("'")) pass = pass.replaceAll(/'/g, `'\\''`); // yes i tried to escape with \'
       return pass;
     });
     for (let i = 0; i < content.length; i += chunkSize) {
