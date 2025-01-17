@@ -102,6 +102,7 @@
     "write": "TULIS",
     "read": "BACA",
     "inclusionDistance": "JARAK PENYERTAAN",
+    "ipAddressIs": "IP ADDRESS IS",
     "rpc": "RPC-ENDPOINT",
     "ws": "WS-ENDPOINT",
     "syncStatus": "STATUS SINCRON",
