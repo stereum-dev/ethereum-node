@@ -102,6 +102,7 @@
     "write": "ЗАПИСВАНЕ",
     "read": "ПРОЧИТАНЕ",
     "inclusionDistance": "РАЗСТОЯНИЕ НА ВКЛЮЧВАНЕ",
+    "ipAddressIs": "IP ADDRESS IS",
     "rpc": "RPC-крайна връзка",
     "ws": "RPC-крайна връзка",
     "syncStatus": "СТАТУС СИНХРОНИЗАЦИЯ",

@@ -102,6 +102,7 @@
     "write": "쓰기",
     "read": "읽기",
     "inclusionDistance": "포함 거리",
+    "ipAddressIs": "IP ADDRESS IS",
     "rpc": "RPC-엔드포인트",
     "ws": "WS-엔드포인트",
     "syncStatus": "동기화 상태",

@@ -102,6 +102,7 @@
     "write": "ZÁPIS",
     "read": "ČTENÍ",
     "inclusionDistance": "VZDÁLENOST ZÁVĚRU",
+    "ipAddressIs": "IP ADDRESS IS",
     "rpc": "RPC-ENDPOINT",
     "ws": "WS-ENDPOINT",
     "syncStatus": "STAV SYNCHRONIZACE",
