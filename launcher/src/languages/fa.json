@@ -102,6 +102,7 @@
     "write": "نوشتن",
     "read": "خواندن",
     "inclusionDistance": "فاصله گنجاندن",
+    "ipAddressIs": "IP ADDRESS IS",
     "rpc": "RPC - نقطه پایانی",
     "ws": "WS - نقطه پایانی",
     "syncStatus": "وضعیت همگام‌سازی",
