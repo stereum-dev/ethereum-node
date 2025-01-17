@@ -1,25 +1,13 @@
 <template>
-  <aside
-    class="flex flex-col items-center w-18 h-full custom-gradient"
-    @pointerdown.prevent.stop
-    @mousedown.prevent.stop
-  >
+  <aside class="flex flex-col items-center w-18 h-full custom-gradient" @pointerdown.prevent.stop @mousedown.prevent.stop>
     <div class="w-full grid grid-rows-3 mt-20 p-1 gap-y-5">
       <div
         class="col-span-1 row-start-1 row-end-2 p-1 rounded-md text-gray-700 bg-[#23272a] flex justify-center items-center scale-90 hover:scale-105 active:scale-100 border border-[#23272a] hover:border-gray-500 duration-150 hover:shadow-md shadow-[#23272a] transition-all"
         @mouseenter="footerStore.cursorLocation = `${toNode}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
-        <router-link
-          to="/node"
-          class="w-fit h-full flex justify-between items-center"
-          @mouseleave="routerHovered = false"
-        >
-          <img
-            class="w-6 h-4 mr-1"
-            src="/img/icon/edit-node-icons/back-to-node.png"
-            alt="Manage Icon"
-          />
+        <router-link to="/node" class="w-fit h-full flex justify-between items-center" @mouseleave="routerHovered = false">
+          <img class="w-6 h-4 mr-1" src="/img/icon/edit-node-icons/back-to-node.png" alt="Manage Icon" />
         </router-link>
       </div>
 
@@ -31,11 +19,7 @@
         @mouseenter="footerStore.cursorLocation = `${setchNet}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
-        <img
-          class="w-6"
-          src="/img/icon/edit-node-icons/change-network.png"
-          alt="Network"
-        />
+        <img class="w-6" src="/img/icon/edit-node-icons/change-network.png" alt="Network" />
       </button>
       <!-- <Transition name="slide-fade">
         <button
@@ -60,11 +44,7 @@
         @mouseleave="footerStore.cursorLocation = ''"
         @click="nukeNode"
       >
-        <img
-          class="w-5"
-          src="/img/icon/edit-node-icons/nuke-node.png"
-          alt="Export Icon"
-        />
+        <img class="w-5" src="/img/icon/edit-node-icons/nuke-node.png" alt="Export Icon" />
       </button>
       <!-- <Transition name="slide-fade">
         <button

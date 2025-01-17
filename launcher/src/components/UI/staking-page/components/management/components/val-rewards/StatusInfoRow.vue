@@ -16,16 +16,10 @@ import { useStakingStore } from '@/store/theStaking';
     <span
       class="text-[10px] text-amber-300 font-normal font-sans text-left"
       :class="
-        stakingStore.selectedServiceToFilter?.service === 'SSVNetworkService'
-          ? 'col-start-3 col-span-2'
-          : 'col-start-5 col-span-full'
+        stakingStore.selectedServiceToFilter?.service === 'SSVNetworkService' ? 'col-start-3 col-span-2' : 'col-start-5 col-span-full'
       "
     >
-      {{
-        stakingStore.selectedServiceToFilter?.service === "SSVNetworkService"
-          ? getSSVId
-          : getObolPeerName
-      }}
+      {{ stakingStore.selectedServiceToFilter?.service === "SSVNetworkService" ? getSSVId : getObolPeerName }}
     </span>
   </div>
 </template>

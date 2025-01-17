@@ -2,15 +2,10 @@ import { computed } from 'vue';
 <template>
   <div
     class="w-full h-8 rounded-full grid grid-cols-24 items-center p-1 cursor-pointer animate__animated animate__slideInLeft animate__delay-0.5s mt-1"
-    :class="[
-      props.item?.selected ? 'bg-blue-400 ' : getKeyStyleBySetupColor,
-      props.item?.showExitText ? 'bg-red-500 z-10' : '',
-    ]"
+    :class="[props.item?.selected ? 'bg-blue-400 ' : getKeyStyleBySetupColor, props.item?.showExitText ? 'bg-red-500 z-10' : '']"
     @click="selectKey(props.item)"
   >
-    <div
-      class="col-start-1 col-span-2 self-center overflow-hidden flex justify-start items-center space-x-2"
-    >
+    <div class="col-start-1 col-span-2 self-center overflow-hidden flex justify-start items-center space-x-2">
       <div
         class="w-6 h-6 rounded-full cursor-pointer p-[2px]"
         @mouseenter="footerStore.cursorLocation = `${props.item?.isRemote ? rm : pk}`"
@@ -23,13 +18,7 @@ import { computed } from 'vue';
           alt="Key Icon"
           @mousedown.prevent
         />
-        <img
-          v-else
-          class="w-full h-full"
-          src="/img/icon/staking-page-icons/key-icon.png"
-          alt="Key Icon"
-          @mousedown.prevent
-        />
+        <img v-else class="w-full h-full" src="/img/icon/staking-page-icons/key-icon.png" alt="Key Icon" @mousedown.prevent />
       </div>
       <div
         class="w-6 h-6 rounded-full cursor-pointer p-[2px]"
@@ -58,10 +47,7 @@ import { computed } from 'vue';
       @mouseenter="footerStore.cursorLocation = `${props.item.key}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <svg
-        class="animate-spin h-3 w-3 border rounded-full border-t-transparent border-r-transparent mr-2"
-        viewBox="0 0 24 24"
-      ></svg>
+      <svg class="animate-spin h-3 w-3 border rounded-full border-t-transparent border-r-transparent mr-2" viewBox="0 0 24 24"></svg>
       Processing...
     </div>
     <div
@@ -70,11 +56,7 @@ import { computed } from 'vue';
       @mouseenter="footerStore.cursorLocation = `${props.item.key}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <span
-        class="text-center font-semibold text-[10px]"
-        :class="props.item?.selected ? 'text-gray-800' : ''"
-        >{{ displayText }}</span
-      >
+      <span class="text-center font-semibold text-[10px]" :class="props.item?.selected ? 'text-gray-800' : ''">{{ displayText }}</span>
     </div>
 
     <img
@@ -115,10 +97,7 @@ import { computed } from 'vue';
       >{{ props.item.balance }}</span
     >
 
-    <div
-      class="h-full col-start-17 col-span-full bg-[#151618] rounded-full grid grid-cols-6 items-center"
-      @mousedown.prevent
-    >
+    <div class="h-full col-start-17 col-span-full bg-[#151618] rounded-full grid grid-cols-6 items-center" @mousedown.prevent>
       <div
         v-if="getValidatorClients?.service !== 'LCOMService'"
         class="col-span-1 w-full h-full rounded-md justify-self-center flex justify-center items-center"
@@ -241,11 +220,9 @@ const t = i18n.global.t;
 //Key Status Icons
 const activeStatusIcon = "/img/icon/staking-page-icons/validator-state-active.png";
 const slashedStatusIcon = "/img/icon/staking-page-icons/validator-state-slashed.png";
-const depositStatusIcon =
-  "/img/icon/staking-page-icons/validator-state-not-deposited.png";
+const depositStatusIcon = "/img/icon/staking-page-icons/validator-state-not-deposited.png";
 const offlineStatusIcon = "/img/icon/staking-page-icons/validator-state-offline.png";
-const pendingStatusIcon =
-  "/img/icon/staking-page-icons/validator-state-in-activation-queue.png";
+const pendingStatusIcon = "/img/icon/staking-page-icons/validator-state-in-activation-queue.png";
 const exitedStatusIcon = "/img/icon/staking-page-icons/validator-state-exited.png";
 const apiProblems = "/img/icon/staking-page-icons/validator-state-unknown.png";
 const queuedStatusIcon = "/img/icon/staking-page-icons/csm-q.png";
@@ -380,9 +357,7 @@ const getValidatorClients = computed(() => {
 
 const getKeyStyleBySetupColor = computed(() => {
   return (
-    setupStore.getBGColor(getValidatorClients.value?.setupColor) +
-    " " +
-    setupStore.getTextColor(getValidatorClients.value?.setupColor)
+    setupStore.getBGColor(getValidatorClients.value?.setupColor) + " " + setupStore.getTextColor(getValidatorClients.value?.setupColor)
   );
 });
 
@@ -390,9 +365,7 @@ const checkValidatorKeyType = computed(() => {
   const { item } = props;
   if (!item?.dvt) return null;
 
-  const service = serviceStore.installedServices.find(
-    (service) => service?.config?.serviceID === item?.validatorID
-  );
+  const service = serviceStore.installedServices.find((service) => service?.config?.serviceID === item?.validatorID);
 
   const serviceKeyTypes = {
     LCOMService: "csm",

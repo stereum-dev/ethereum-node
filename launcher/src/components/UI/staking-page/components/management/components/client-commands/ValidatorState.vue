@@ -33,11 +33,7 @@
       >
       </span>
 
-      <span
-        class="text-xs font-semibold text-center col-start-3 col-end-5 capitalize"
-        :class="getTextColor"
-        >{{ getServiceState }}</span
-      >
+      <span class="text-xs font-semibold text-center col-start-3 col-end-5 capitalize" :class="getTextColor">{{ getServiceState }}</span>
     </div>
 
     <img
@@ -113,9 +109,7 @@ watch(
       stakingStore.keyNumbers = 0;
       return;
     }
-    stakingStore.keyNumbers = stakingStore.keys.filter(
-      (key) => key.validatorID === service.config.serviceID
-    ).length;
+    stakingStore.keyNumbers = stakingStore.keys.filter((key) => key.validatorID === service.config.serviceID).length;
   },
   { immediate: true }
 );
