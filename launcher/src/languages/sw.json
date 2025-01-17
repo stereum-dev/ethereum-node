@@ -102,6 +102,7 @@
     "write": "ANDIKA",
     "read": "SOMA",
     "inclusionDistance": "UMBALI WA KUJUMUISHA",
+    "ipAddressIs": "IP ADDRESS IS",
     "rpc": "MWISHO-RPC",
     "ws": "MWISHO-WS",
     "syncStatus": "HALI YA USANIFU",
