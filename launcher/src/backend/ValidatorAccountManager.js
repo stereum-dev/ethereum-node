@@ -33,7 +33,15 @@ export class ValidatorAccountManager {
       }
       return readFileSync(file.path, { encoding: "utf8" });
     });
-
+    //escape all passwords for shell
+    passwords = passwords.map((p) => {
+      let pass = p;
+      if (pass.includes("\\")) pass = pass.replaceAll(/\\/g, "\\\\");
+      // eslint-disable-next-line no-useless-escape
+      if (pass.includes('"')) pass = pass.replaceAll(/"/g, `\"`);
+      if (pass.includes("'")) pass = pass.replaceAll(/'/g, `'\\''`); // yes i tried to escape with \'
+      return pass;
+    });
     for (let i = 0; i < content.length; i += chunkSize) {
       const contentChunk = content.slice(i, i + chunkSize);
       const passwordChunk = passwords.slice(i, i + chunkSize);
@@ -315,7 +323,7 @@ export class ValidatorAccountManager {
       apiToken ? `-H 'Authorization: Bearer ${apiToken}'` : "",
       `-s`,
     ];
-    if (data) command.push(`-d '${JSON.stringify(data)}'`);
+    if (data) command.push(`-d '${JSON.stringify(data).replaceAll(/\\\\/g, "\\")}'`);
     command = command.concat(args);
     return await this.nodeConnection.sshService.exec(command.join(" "));
   }
