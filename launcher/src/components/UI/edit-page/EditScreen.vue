@@ -233,9 +233,20 @@ watchEffect(() => {
   }
 });
 
+// watch(
+//   () => setupStore.selectedSetup,
+//   async (newValue) => {
+//     if (!newValue || Object.keys(newValue).length === 0) {
+//       await fetchSetups();
+//     }
+//   },
+//   { immediate: true }
+// );
+
 // Methods
 
 onMounted(async () => {
+  manageStore.newConfiguration = useDeepClone(serviceStore.installedServices);
   await fetchSetups();
   if (!manageStore.architecture) setArchitecture();
   editSetupsPrepration();
@@ -387,7 +398,7 @@ const serviceModifyHandler = (item) => {
 const hideModifyModal = () => {
   manageStore.isLineHidden = false;
   isModifyModalOpen.value = false;
-  manageStore.newConfiguration = JSON.parse(JSON.stringify(serviceStore.installedServices));
+  manageStore.newConfiguration = useDeepClone(serviceStore.installedServices);
 };
 const confirmConsensusConnection = (item) => {
   clientToConnect.value.isNotConnectedToConsensus = false;
@@ -504,7 +515,7 @@ const setupDevnet = async () => {
 
     await Promise.all(installPromises);
 
-    await ControlService.handleServiceChanges(JSON.parse(JSON.stringify(manageStore.confirmChanges)));
+    await ControlService.handleServiceChanges(useDeepClone(manageStore.confirmChanges));
     await ControlService.startServicesForSetup(setupId);
     await ControlService.removeConfigGenesisCopy();
 
@@ -572,7 +583,7 @@ const cancelChangeHandler = (item) => {
       const event = manageStore.newConfiguration.find((e) => e.id === item.service.id);
       const eventIdx = manageStore.newConfiguration.indexOf(event);
       manageStore.newConfiguration.splice(eventIdx, 1);
-      manageStore.newConfiguration = JSON.parse(JSON.stringify(serviceStore.installedServices));
+      manageStore.newConfiguration = useDeepClone(serviceStore.installedServices);
     }
 
     if (item.content === "MODIFY") {
@@ -720,7 +731,6 @@ const cancelInstallation = (item) => {
   const eventIdx2 = manageStore.newConfiguration.indexOf(event);
   manageStore.newConfiguration.splice(eventIdx2, 1);
   manageStore.isLineHidden = false;
-  // manageStore.newConfiguration = JSON.parse(JSON.stringify(serviceStore.installedServices));
 };
 
 // Network switch methods
@@ -882,17 +892,18 @@ const confirmHandler = async () => {
       await handleSetupChanges();
     } else if (manageStore.confirmChanges.some((e) => e.content === "NETWORK")) {
       await handleSwitchSetupNetwork();
-      await ControlService.handleServiceChanges(JSON.parse(JSON.stringify(manageStore.confirmChanges)));
+      await ControlService.handleServiceChanges(useDeepClone(manageStore.confirmChanges));
     } else if (manageStore.confirmChanges.some((e) => e.content === "MODIFY")) {
-      await ControlService.handleServiceChanges(JSON.parse(JSON.stringify(manageStore.confirmChanges)));
+      await ControlService.handleServiceChanges(useDeepClone(manageStore.confirmChanges));
     } else {
-      await ControlService.handleServiceChanges(JSON.parse(JSON.stringify(manageStore.confirmChanges)));
+      await ControlService.handleServiceChanges(useDeepClone(manageStore.confirmChanges));
     }
   } catch (error) {
     console.error("Error processing changes:", error);
   } finally {
     await useFrontendServices();
     await resetState();
+    await fetchSetups();
   }
 };
 
@@ -901,7 +912,7 @@ const handleServerServiceChanges = async () => {
   manageStore.confirmChanges.forEach((change) => {
     change.data.setupId = commonServicesId ?? change.data.setupId;
   });
-  await ControlService.handleServiceChanges(JSON.parse(JSON.stringify(manageStore.confirmChanges)));
+  await ControlService.handleServiceChanges(useDeepClone(manageStore.confirmChanges));
 };
 
 const handleSetupChanges = async () => {
@@ -910,7 +921,7 @@ const handleSetupChanges = async () => {
   setupStore.editSetups = setupStore.editSetups.filter((e) => !setupsToRemoveIds.has(e.setupId));
 
   let subtasks = manageStore.confirmChanges.flatMap((e) => e.subTasks);
-  await ControlService.handleServiceChanges(JSON.parse(JSON.stringify(subtasks)));
+  await ControlService.handleServiceChanges(useDeepClone(subtasks));
   for (const setup of setupStore.selectedSetupToRemove) {
     await ControlService.deleteSetup(setup.setupId);
   }
@@ -974,7 +985,6 @@ const deleteSetup = async (item) => {
   const subtasks =
     item?.services.flatMap((service) => {
       const matchedServices = manageStore.newConfiguration.filter((e) => e.config?.serviceID === service.config?.serviceID);
-
       return matchedServices.map((e) => ({
         id: e.config?.serviceID,
         content: "DELETE",
@@ -1017,7 +1027,7 @@ const closeNetworkModal = () => {
 const closeSwitchModal = () => {
   isSwitchModalOpen.value = false;
   manageStore.isLineHidden = false;
-  manageStore.newConfiguration = JSON.parse(JSON.stringify(serviceStore.installedServices));
+  manageStore.newConfiguration = useDeepClone(serviceStore.installedServices);
 };
 
 const closeInfoModal = () => {

@@ -112,7 +112,8 @@ watchEffect(() => {
 
 onMounted(async () => {
   await updateDom();
-  nodeSetupsPrepration();
+  openDefaultSetup();
+  // nodeSetupsPrepration();
 
   updateConnectionStats();
 
@@ -136,10 +137,13 @@ onUnmounted(() => {
 
 //*************  Methods *************
 
-//get all configs and services
-const nodeSetupsPrepration = () => {
-  setupStore.allSetups.forEach((s) => (s.isActive = false));
+const openDefaultSetup = () => {
   setupStore.selectedSetup = null;
+  if (setupStore.allSetups.filter((s) => s.setupName !== "commonServices").length == 1) {
+    setupStore.allSetups[0].isActive = true;
+    setupStore.selectedSetup = setupStore.allSetups[0];
+    setupStore.isConfigViewActive = true;
+  }
 };
 
 const exportSetup = async (setup) => {
