@@ -96,6 +96,7 @@ export const useStakingStore = defineStore("theStaking", {
       keyCounter: 0,
       obolStats: {},
       ssvStats: {},
+      isSkeletonActive: true,
     };
   },
   actions: {
