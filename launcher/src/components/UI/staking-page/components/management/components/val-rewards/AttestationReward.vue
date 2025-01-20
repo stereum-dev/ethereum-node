@@ -1,14 +1,26 @@
 <template>
   <div
-    class="w-full h-full max-h-8 col-start-1 col-span-full row-span-1 border border-gray-500 rounded-full grid grid-cols-6 bg-[#313539] items-center p-[1px]"
+    class="w-full h-full max-h-5 col-start-1 col-span-full row-start-5 row-span-1 grid grid-cols-6 items-center p-[1px]"
     @mouseenter="footerStore.cursorLocation = `${attestReward}`"
     @mouseleave="footerStore.cursorLocation = ''"
   >
-    <div class="h-full col-start-1 col-end-3 self-center grid grid-cols-3 justify-center items-center gap-1 px-[2px]">
-      <img class="col-start-1 col-span-1 w-4 h-4" src="/img/icon/staking-page-icons/eye.png" alt="Block Icon" @mousedown.prevent />
-      <span class="col-start-2 col-span-full text-[9px] text-amber-300 font-semibold">{{ $t("stakingPage.reward") }}</span>
+    <div
+      class="h-full col-start-1 col-end-3 self-center grid grid-cols-3 justify-center items-center gap-1 px-[2px]"
+    >
+      <img
+        class="col-start-1 col-span-1 w-3 h-3"
+        src="/img/icon/staking-page-icons/eye.png"
+        alt="Block Icon"
+        @mousedown.prevent
+      />
+      <span
+        class="col-start-2 col-span-full text-[8px] text-amber-300 font-normal font-sans"
+        >{{ $t("stakingPage.reward") }}</span
+      >
     </div>
-    <div class="w-full h-full col-start-3 col-span-full rounded-r-full self-center flex justify-center items-center bg-[#151618] px-1">
+    <div
+      class="w-full h-full col-start-3 col-span-full rounded-full self-center flex justify-center items-center bg-black px-1"
+    >
       <span class="text-2xs text-gray-300 font-semibold">{{ totalRewards }}</span>
     </div>
   </div>
@@ -43,8 +55,13 @@ watchEffect(() => {
 });
 
 const getStats = () => {
-  ControlService.getAttestationRewards(stakingStore.keys.map((k) => k.index).filter((k) => k)).then((data) => {
-    if (data.rewards?.length > 0) totalRewards.value = data.rewards.map((item) => item.total_rewards).reduce((a, b) => a + b, 0);
+  ControlService.getAttestationRewards(
+    stakingStore.keys.map((k) => k.index).filter((k) => k)
+  ).then((data) => {
+    if (data.rewards?.length > 0)
+      totalRewards.value = data.rewards
+        .map((item) => item.total_rewards)
+        .reduce((a, b) => a + b, 0);
   });
 };
 

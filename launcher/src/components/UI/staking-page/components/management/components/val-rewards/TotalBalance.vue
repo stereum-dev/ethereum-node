@@ -1,22 +1,17 @@
 <template>
-  <div class="w-full h-full border border-gray-600 rounded-[4px] grid grid-cols-7 items-center">
-    <div
-      class="col-start-1 col-end-4 flex justify-between items-center px-1 space-x-1"
-      @mouseenter="footerStore.cursorLocation = `${ttlKeys}`"
-      @mouseleave="footerStore.cursorLocation = ''"
-    >
-      <div class="w-full flex justify-between items-center">
-        <img class="w-4 -rotate-90" src="/img/icon/staking-page-icons/keyIcon.png" alt="Key Icon" @mousedown.prevent />
-        <span class="w-full text-[12px] text-green-600 font-semibold text-center">{{ totalKeys }}</span>
-      </div>
-      <span class="w-1/3 text-[10px] text-amber-300 font-semibold text-center">{{ $t("stakingPage.ttl") }}</span>
+  <div
+    class="w-full max-h-5 col-start-1 col-span-full row-start-4 row-span-1 grid grid-cols-6 items-center p-[1px]"
+    @mouseenter="footerStore.cursorLocation = `${ttlBal}`"
+    @mouseleave="footerStore.cursorLocation = ''"
+  >
+    <div class="h-full col-start-1 col-end-3 self-center grid grid-cols-3 justify-center items-center gap-1 px-[2px]">
+      <img class="col-start-1 col-span-1 w-3 h-3" src="/img/icon/staking-page-icons/balance.png" alt="Block Icon" @mousedown.prevent />
+      <span class="col-start-2 col-span-full text-[10px] text-amber-300 font-normal font-sans">{{ $t("stakingPage.ttl") }}</span>
     </div>
     <div
-      class="w-full h-full col-start-4 col-span-full bg-[#151618] rounded-r-sm overflow-hidden flex justify-center items-center px-1 text-center"
-      @mouseenter="footerStore.cursorLocation = `${ttlBal}`"
-      @mouseleave="footerStore.cursorLocation = ''"
+      class="w-full h-full col-start-3 col-span-full rounded-full self-center flex justify-center items-center bg-black px-1 min-h-[18px]"
     >
-      <span class="text-[11px] text-gray-300 font-normal self-center text-center">{{ totalBalance }}</span>
+      <span class="w-full text-[10px] text-green-600 font-medium text-center">{{ totalBalance }}</span>
     </div>
   </div>
 </template>
@@ -31,14 +26,9 @@ const t = i18n.global.t;
 
 const footerStore = useFooter();
 
-const ttlKeys = t("displayValidator.ttlKeys");
 const ttlBal = t("displayValidator.ttlBal");
 
 const stakingStore = useStakingStore();
-
-const totalKeys = computed(() => {
-  return stakingStore.keys?.filter((key) => key.key && key.key.trim() !== "").length || 0;
-});
 
 const totalBalance = computed(() => {
   const validatorID = stakingStore.selectedServiceToFilter?.config?.serviceID;
