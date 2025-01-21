@@ -1,15 +1,28 @@
 <template>
   <div
-    class="w-full h-full col-start-1 col-span-full row-start-1 row-span-1 grid grid-cols-24 items-center rounded-md bg-[#151618] border border-gray-600 px-[2px] space-x-1"
+    class="w-full h-7 col-start-1 col-span-full row-start-1 row-span-1 grid grid-cols-24 items-center rounded-xs bg-[#151618] py-0 divide-x divide-gray-600"
   >
-    <div class="col-start-1 col-end-8 h-8 flex justify-end items-center">
-      <TotalBalance />
+    <div
+      class="col-start-1 col-end-11 h-full flex justify-start items-center bg-[#232426] divide-x divide-gray-600"
+    >
+      <p class="w-2/5 text-[10px] text-gray-400 font-medium font-sans uppercase px-2">
+        Page Filter
+      </p>
+      <SetupDropdown
+        :list="setupList"
+        :new-height="newHeight"
+        new-border=""
+        @select-setup="selectSetup"
+        @server-view="serverView"
+      />
     </div>
-    <div class="col-start-8 col-end-18 h-8 flex justify-center items-center relative">
-      <NetworkStatus :copatible-size="getNetworkSize" />
+    <div class="col-start-11 col-end-22 h-full flex justify-center items-center">
+      <SearchKeys />
     </div>
-    <div class="col-start-18 col-span-full h-8 flex justify-end items-center">
-      <SetupDropdown :list="setupList" :new-height="newHeight" @select-setup="selectSetup" @server-view="serverView" />
+    <div class="col-start-22 col-span-full h-7 flex justify-end items-center">
+      <p class="w-full text-[10px] font-medium text-gray-400 uppercase pl-1">
+        Selected Client
+      </p>
     </div>
   </div>
 </template>
@@ -17,21 +30,17 @@
 import { useMultiSetups } from "@/composables/multiSetups";
 import { computed } from "vue";
 import { useSetups } from "../../../../../store/setups";
-import NetworkStatus from "../../../../layers/NetworkStatus.vue";
 import SetupDropdown from "../../../edit-page/components/edit/setups/SetupDropdown.vue";
-import TotalBalance from "../management/components/val-rewards/TotalBalance.vue";
+import SearchKeys from "./SearchKeys.vue";
 
 const setupStore = useSetups();
+
 const { getSelectedSetup, getServerView } = useMultiSetups();
 
-const newHeight = "h-8";
+const newHeight = "h-7";
 
 const setupList = computed(() => {
   return setupStore.stakingSetups;
-});
-
-const getNetworkSize = computed(() => {
-  return "w-full h-full flex justify-center items-center";
 });
 
 const selectSetup = (setup) => {
