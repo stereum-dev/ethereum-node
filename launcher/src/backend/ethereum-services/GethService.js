@@ -43,6 +43,7 @@ export class GethService extends NodeService {
       "--http.port=8545",
       "--http.addr=0.0.0.0",
       "--http.corsdomain=*",
+      "--http.vhosts=*",
       "--ws",
       "--ws.api=eth,net,web3",
       "--ws.port=8546",
