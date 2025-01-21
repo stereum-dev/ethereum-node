@@ -2,10 +2,14 @@
   <div
     class="w-full h-full min-h-9 col-start-1 col-span-full row-start-12 row-span-1 grid grid-cols-12 items-center border border-gray-600 rounded-b-md bg-[#151618] px-1 pr-0"
   >
-    <div class="w-full h-full col-start-1 col-end-4 grid grid-cols-3 py-1">
+    <div class="w-full h-full col-start-1 col-end-3 grid grid-cols-3 py-1">
       <div
         class="w-2/3 h-full col-start-1 col-span-1 flex justify-center items-center rounded-sm bg-[#336666] hover:bg-[#234545] transition-all duration-100 cursor-pointer px-1 active:scale-95"
-        :class="stakingStore.isPreviewListActive || stakingStore.isStakingDisabled ? 'opacity-50 pointer-events-none ' : ''"
+        :class="
+          stakingStore.isPreviewListActive || stakingStore.isStakingDisabled
+            ? 'opacity-50 pointer-events-none '
+            : ''
+        "
       >
         <img
           v-if="stakingStore.isGroupListActive"
@@ -28,34 +32,37 @@
           @mouseleave="footerStore.cursorLocation = ''"
         />
       </div>
+
       <div
         class="w-2/3 h-full col-start-2 col-span-1 flex justify-center items-center rounded-sm bg-[#336666] hover:bg-[#234545] transition-all duration-100 cursor-pointer active:scale-95 px-1"
         :class="
-          stakingStore.isGroupListActive || stakingStore.isPreviewListActive || stakingStore.isStakingDisabled
-            ? 'opacity-50 pointer-events-none '
-            : ''
-        "
-        @mouseenter="footerStore.cursorLocation = `${openSrch}`"
-        @mouseleave="footerStore.cursorLocation = ''"
-      >
-        <img class="h-6" src="/img/icon/staking-page-icons/filter.png" alt="Insert Icon" @click="searchPanel" @mousedown.prevent />
-      </div>
-      <div
-        class="w-2/3 h-full col-start-3 col-span-1 flex justify-center items-center rounded-sm bg-[#336666] hover:bg-[#234545] transition-all duration-100 cursor-pointer active:scale-95 px-1"
-        :class="
-          stakingStore.isGroupListActive || stakingStore.isPreviewListActive || stakingStore.isStakingDisabled
+          stakingStore.isGroupListActive ||
+          stakingStore.isPreviewListActive ||
+          stakingStore.isStakingDisabled
             ? 'opacity-50 pointer-events-none '
             : ''
         "
         @mouseenter="footerStore.cursorLocation = `${nameNumber}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
-        <img class="h-6" :src="aliasIcon" alt="Insert Icon" @click="displayKeyAlias" @mousedown.prevent />
+        <img
+          class="h-6"
+          :src="aliasIcon"
+          alt="Insert Icon"
+          @click="displayKeyAlias"
+          @mousedown.prevent
+        />
       </div>
     </div>
 
-    <div class="w-full h-full col-start-4 col-end-13 grid grid-cols-12 items-center self-center px-1 relative">
-      <component :is="activePanel.component" v-bind="activePanel.props" v-on="activePanel.events" />
+    <div
+      class="w-full h-full col-start-3 col-end-13 grid grid-cols-12 items-center self-center px-1 relative"
+    >
+      <component
+        :is="activePanel.component"
+        v-bind="activePanel.props"
+        v-on="activePanel.events"
+      />
     </div>
   </div>
 </template>
@@ -73,7 +80,6 @@ const stakingStore = useStakingStore();
 
 const crteGrp = t("displayValidator.crteGrp");
 const removGrp = t("displayValidator.removGrp");
-const openSrch = t("displayValidator.openSrch");
 const showValKey = t("displayValidator.showValKey");
 const showKeyNam = t("displayValidator.showKeyNam");
 
@@ -165,7 +171,9 @@ watchEffect(() => {
 const displayKeyAlias = () => {
   stakingStore.isPubkeyVisible = !stakingStore.isPubkeyVisible;
   footerStore.cursorLocation = "";
-  !stakingStore.isPubkeyVisible ? (footerStore.cursorLocation = `${showValKey}`) : (footerStore.cursorLocation = `${showKeyNam}`);
+  !stakingStore.isPubkeyVisible
+    ? (footerStore.cursorLocation = `${showValKey}`)
+    : (footerStore.cursorLocation = `${showKeyNam}`);
 };
 
 const groupingPanel = () => {
@@ -178,16 +186,6 @@ const removeGroup = () => {
     stakingStore.isGroupListActive = false;
     stakingStore.setActivePanel("insert");
     emit("removeGroup", stakingStore.currentGroup);
-  }
-};
-
-const searchPanel = () => {
-  stakingStore.isPreviewListActive = false;
-  if (stakingStore.activePanel === "search") {
-    stakingStore.setActivePanel(null);
-    stakingStore.searchContent = "";
-  } else {
-    stakingStore.setActivePanel("search");
   }
 };
 </script>
