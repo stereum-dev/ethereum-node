@@ -1,6 +1,6 @@
 <template>
   <div
-    class="max-h-6 col-start-1 col-span-full row-start-2 row-span-1 grid grid-cols-7 items-center bg-[#334B3F]"
+    class="h-full col-start-1 col-span-full row-start-2 row-span-1 grid grid-cols-7 items-center bg-[#334B3F]"
   >
     <div
       class="col-start-1 col-end-4 flex justify-between items-center px-1 space-x-1"
@@ -18,7 +18,7 @@
       >
     </div>
     <div
-      class="w-full h-full col-start-4 col-span-full bg-black  overflow-hidden grid grid-cols-3 divide-x divide-gray-600"
+      class="w-full h-full col-start-4 col-span-full bg-black overflow-hidden grid grid-cols-3 divide-x divide-gray-600"
     >
       <span
         class="col-start-1 col-span-1 text-[8px] text-amber-300 font-semibold self-center text-center overflow-hidden"

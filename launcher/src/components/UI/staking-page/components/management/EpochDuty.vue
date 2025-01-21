@@ -1,7 +1,7 @@
 import { ref } from 'vue';
 <template>
   <div class="col-start-1 col-span-full row-start-10 row-span-full flex justify-center items-center">
-    <div class="w-full h-full border border-gray-600 rounded-md grid grid-cols-12 grid-rows-4 items-center bg-[#151618]">
+    <div class="w-full h-full border border-gray-600 rounded-md grid grid-cols-12 grid-rows-4 items-center bg-[#232426]">
       <DutyHeader />
       <DutyBody :epoch="epoch" />
       <DutyFooter :client="{ name: stakingStore.selectedServiceToFilter?.name }" />
