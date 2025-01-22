@@ -1,23 +1,40 @@
-import { ref, computed, onMounted, watch } from 'vue';
 <template>
-  <div class="w-full h-full col-start-1 col-span-full row-start-3 row-end-11 grid grid-cols-12 grid-rows-7 p-2 mx-auto">
+  <div
+    class="w-full h-full col-start-1 col-span-full row-start-3 row-end-11 grid grid-cols-12 grid-rows-7 p-2 mx-auto"
+  >
     <div
       class="w-full h-full col-start-3 col-end-11 row-start-1 row-span-full bg-[#1E2429] rounded-md grid grid-cols-12 grid-rows-7 p-4 gap-1"
     >
-      <div class="col-start-1 col-span-full row-start-1 row-span-1 grid grid-cols-2 gap-1">
+      <div
+        class="col-start-1 col-span-full row-start-1 row-span-1 grid grid-cols-2 gap-1"
+      >
         <div class="w-full h-10 col-start-1 col-span-1 flex justify-center items-center">
-          <div class="w-full h-8 border border-gray-600 rounded-md p-1 flex justify-center items-center">
-            <span class="text-center text-gray-400 text-md font-normal">{{ $t("oneClick.installedService") }}</span>
+          <div
+            class="w-full h-8 border border-gray-600 rounded-md p-1 flex justify-center items-center"
+          >
+            <span class="text-center text-gray-400 text-md font-normal">{{
+              $t("oneClick.installedService")
+            }}</span>
           </div>
         </div>
-        <div class="w-full h-10 col-start-2 col-span-1 flex justify-center items-center relative">
-          <div class="w-full h-8 border border-gray-600 rounded-md p-1 flex flex-col justify-between items-center">
-            <span class="text-center text-gray-400 text-md font-normal">{{ $t("oneClick.addOption") }}</span>
+        <div
+          class="w-full h-10 col-start-2 col-span-1 flex justify-center items-center relative"
+        >
+          <div
+            class="w-full h-8 border border-gray-600 rounded-md p-1 flex flex-col justify-between items-center"
+          >
+            <span class="text-center text-gray-400 text-md font-normal">{{
+              $t("oneClick.addOption")
+            }}</span>
           </div>
         </div>
       </div>
 
-      <PluginRows :filtered-plugin="filteredPluginsOnCategory" @change-handler="pluginChangeHandler" @plugin-exchange="pluginExChange" />
+      <PluginRows
+        :filtered-plugin="filteredPluginsOnCategory"
+        @change-handler="pluginChangeHandler"
+        @plugin-exchange="pluginExChange"
+      />
 
       <InstallationPath />
     </div>
@@ -53,12 +70,14 @@ watch(
 //Lifecycle Hooks
 
 onMounted(() => {
-  clickStore.selectedPreset.includedPlugins = clickStore.selectedPreset.includedPlugins.map((item) => {
-    return {
-      ...item,
-      openReplaceModal: false,
-    };
-  });
+  clickStore.selectedPreset.includedPlugins = clickStore.selectedPreset.includedPlugins.map(
+    (item) => {
+      return {
+        ...item,
+        openReplaceModal: false,
+      };
+    }
+  );
 });
 onMounted(() => {
   getInstallPath();
@@ -72,12 +91,23 @@ const filterMonitoringServices = () => {
   if (clickStore.installMonitoring) {
     clickStore.selectedPreset.includedPlugins = clickStore.selectedPreset.includedPlugins.concat(
       serviceStore.allServices.filter((s) =>
-        ["GrafanaService", "PrometheusNodeExporterService", "PrometheusService", "MetricsExporterService"].includes(s.service)
+        [
+          "GrafanaService",
+          "PrometheusNodeExporterService",
+          "PrometheusService",
+          "MetricsExporterService",
+        ].includes(s.service)
       )
     );
   } else {
     clickStore.selectedPreset.includedPlugins = clickStore.selectedPreset.includedPlugins.filter(
-      (s) => !["GrafanaService", "PrometheusNodeExporterService", "PrometheusService", "MetricsExporterService"].includes(s.service)
+      (s) =>
+        ![
+          "GrafanaService",
+          "PrometheusNodeExporterService",
+          "PrometheusService",
+          "MetricsExporterService",
+        ].includes(s.service)
     );
   }
 };
@@ -89,7 +119,9 @@ const selectedPluginsValidation = () => {
 };
 const pluginChangeHandler = (plugin, item, idx) => {
   plugin.openReplaceModal = false;
-  const oldPluginIndex = clickStore.selectedPreset.includedPlugins.findIndex((e) => e.id === plugin?.id);
+  const oldPluginIndex = clickStore.selectedPreset.includedPlugins.findIndex(
+    (e) => e.id === plugin?.id
+  );
 
   if (oldPluginIndex !== -1) {
     clickStore.selectedPreset.includedPlugins.splice(oldPluginIndex, 1);
@@ -97,15 +129,25 @@ const pluginChangeHandler = (plugin, item, idx) => {
 
   clickStore.selectedPreset.includedPlugins.splice(idx, 0, item);
 
-  if (["staking", "mev boost", "stereum on arm", "archive", "lidocsm"].includes(clickStore.selectedPreset.name)) {
+  if (
+    ["staking", "mev boost", "stereum on arm", "archive", "lidocsm"].includes(
+      clickStore.selectedPreset.name
+    )
+  ) {
     if (item.category === "consensus") {
-      let valIndex = clickStore.selectedPreset.includedPlugins.findIndex((e) => e.category === "validator");
+      let valIndex = clickStore.selectedPreset.includedPlugins.findIndex(
+        (e) => e.category === "validator"
+      );
       clickStore.selectedPreset.includedPlugins[valIndex] = serviceStore.allServices.find(
         (e) => e.service === item.name + "ValidatorService"
       );
     } else if (item.category === "validator") {
-      let conIndex = clickStore.selectedPreset.includedPlugins.findIndex((e) => e.category === "consensus");
-      clickStore.selectedPreset.includedPlugins[conIndex] = serviceStore.allServices.find((e) => e.service === item.name + "BeaconService");
+      let conIndex = clickStore.selectedPreset.includedPlugins.findIndex(
+        (e) => e.category === "consensus"
+      );
+      clickStore.selectedPreset.includedPlugins[conIndex] = serviceStore.allServices.find(
+        (e) => e.service === item.name + "BeaconService"
+      );
     }
   }
   sortPlugins();
@@ -113,10 +155,18 @@ const pluginChangeHandler = (plugin, item, idx) => {
 
 const sortPlugins = () => {
   if (clickStore.selectedPreset.includedPlugins) {
-    const ec = clickStore.selectedPreset.includedPlugins.filter((p) => p.category === "execution");
-    const cc = clickStore.selectedPreset.includedPlugins.filter((p) => p.category === "consensus");
-    const vc = clickStore.selectedPreset.includedPlugins.filter((p) => p.category === "validator");
-    const services = clickStore.selectedPreset.includedPlugins.filter((p) => p.category === "service");
+    const ec = clickStore.selectedPreset.includedPlugins.filter(
+      (p) => p.category === "execution"
+    );
+    const cc = clickStore.selectedPreset.includedPlugins.filter(
+      (p) => p.category === "consensus"
+    );
+    const vc = clickStore.selectedPreset.includedPlugins.filter(
+      (p) => p.category === "validator"
+    );
+    const services = clickStore.selectedPreset.includedPlugins.filter(
+      (p) => p.category === "service"
+    );
     clickStore.selectedPreset.includedPlugins = new Array().concat(ec, cc, vc, services);
   }
 };
@@ -138,9 +188,13 @@ const checkPluginCategory = (element) => {
   switch (clickStore.selectedPreset.name) {
     case "lidocsm":
     case "staking":
-      filter = (item) => item.category === element.category && !/(SSVNetwork|Web3Signer|Charon)/.test(item.service);
+      filter = (item) =>
+        item.category === element.category &&
+        !/(SSVNetwork|Web3Signer|Charon)/.test(item.service);
       if (manageStore.currentNetwork.network == "gnosis") {
-        filter = (item) => item.category === element.category && /(Lighthouse|Teku|Nethermind|Erigon|Nimbus|Lodestar)/.test(item.service);
+        filter = (item) =>
+          item.category === element.category &&
+          /(Lighthouse|Teku|Nethermind|Erigon|Nimbus|Lodestar)/.test(item.service);
       }
       break;
     case "ssv.network":
@@ -159,8 +213,11 @@ const checkPluginCategory = (element) => {
     case "obol":
     case "lidoobol":
       filter = (item) => {
-        if (element.category === "validator" && element.service !== "CharonService") {
-          return /Teku|Lodestar|Lighthouse|Nimbus/.test(item.service) && item.category === element.category;
+        if (element.category === "execution" && element.service !== "CharonService") {
+          return (
+            /Teku|Lodestar|Lighthouse|Nimbus/.test(item.service) &&
+            item.category === element.category
+          );
         } else if (element.category === "validator") {
           return item.service === "CharonService";
         } else {
@@ -172,20 +229,68 @@ const checkPluginCategory = (element) => {
       //filter = (item) => item.category === element.category
       break;
     case "mev boost":
-      filter = (item) => item.category === element.category && !/(SSVNetwork|Reth|Web3Signer|Charon)/.test(item.service);
+      filter = (item) =>
+        item.category === element.category &&
+        !/(SSVNetwork|Reth|Web3Signer|Charon)/.test(item.service);
       break;
     case "stereum on arm":
-      filter = (item) => item.category === element.category && !/(Prysm|Reth|SSVNetwork|Web3Signer|Charon)/.test(item.service);
+      filter = (item) =>
+        item.category === element.category &&
+        !/(Prysm|Reth|SSVNetwork|Web3Signer|Charon)/.test(item.service);
       if (manageStore.currentNetwork.network == "gnosis") {
-        filter = (item) => item.category === element.category && /(Lighthouse|Teku|Nethermind)/.test(item.service);
+        filter = (item) =>
+          item.category === element.category &&
+          /(Lighthouse|Teku|Nethermind)/.test(item.service);
       }
       break;
     case "archive":
-      filter = (item) => item.category === element.category && !/(SSVNetwork|Web3Signer|Charon)/.test(item.service);
+      filter = (item) =>
+        item.category === element.category &&
+        !/(SSVNetwork|Web3Signer|Charon)/.test(item.service);
       if (manageStore.currentNetwork.network == "gnosis") {
-        filter = (item) => item.category === element.category && /(Lighthouse|Teku|Nethermind|Erigon|Nimbus|Lodestar)/.test(item.service);
+        filter = (item) =>
+          item.category === element.category &&
+          /(Lighthouse|Teku|Nethermind|Erigon|Nimbus|Lodestar)/.test(item.service);
       }
       break;
+    case "optimism":
+      filter = (item) => {
+        const isExecution = element.category === "execution";
+        const isConsensus = element.category === "consensus";
+        const isValidator = element.category === "validator";
+
+        if (isExecution) {
+          if (element.service !== "OpGethService") {
+            return (
+              /Geth|Reth/.test(item.service) &&
+              item.category === "execution" &&
+              item.service !== "OpGethService"
+            );
+          }
+          return item.service === "OpGethService" && item.category === "execution";
+        }
+
+        if (isConsensus) {
+          if (element.service !== "OpNodeBeaconService") {
+            return (
+              item.category === "consensus" && item.service !== "OpNodeBeaconService"
+            );
+          }
+
+          return item.service === "OpNodeBeaconService" && item.category === "consensus";
+        }
+
+        if (isValidator) {
+          return (
+            /Lighthouse|Teku|Prysm|Nimbus|Lodestar/.test(item.service) &&
+            item.category === "validator"
+          );
+        }
+
+        return item.category === element.category;
+      };
+      break;
+
     default:
       break;
   }
@@ -195,7 +300,9 @@ const checkPluginCategory = (element) => {
 const getInstallPath = async () => {
   let largestVolumePath = await ControlService.getLargestVolumePath();
   if (largestVolumePath === "/") largestVolumePath = largestVolumePath + "opt";
-  const stereumInstallationPath = [largestVolumePath, "/stereum"].join("/").replace(/\/{2,}/, "/");
+  const stereumInstallationPath = [largestVolumePath, "/stereum"]
+    .join("/")
+    .replace(/\/{2,}/, "/");
   clickStore.installationPath = stereumInstallationPath;
 };
 </script>
