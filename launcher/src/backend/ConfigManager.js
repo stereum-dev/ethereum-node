@@ -8,6 +8,8 @@ export class ConfigManager {
     this.serviceManager = null;
     this.multiSetupPath = "/etc/stereum/multisetup.yaml";
     this.commonServices = ["PrometheusService", "GrafanaService", "PrometheusNodeExporterService", "NotificationService"];
+    // this.opServices = ["OpGethService", "OpNodeBeaconService"];
+    this.opServices = ["GethService"];
   }
   setServiceManager(serviceManager) {
     this.serviceManager = serviceManager;
@@ -103,21 +105,47 @@ export class ConfigManager {
    * @param {string} network - The network of the setup.
    * @returns {Object} - An object representing the setup configuration.
    */
+
   async createSetupContent(services, network) {
-    const setupServices = services.filter((item) => !this.commonServices.includes(item.service));
     let setupServicesObj = {};
-    if (setupServices.length > 0) {
-      let setupId = uuid.v4();
-      setupServicesObj = {
-        [setupId]: {
-          name: "setup1",
-          network: network,
-          color: "default",
-          type: "ETH",
-          services: setupServices.map((service) => service.id),
-        },
+    let ethServices = [];
+    let opServices = [];
+
+    // Categorize services
+    services.forEach((item) => {
+      if (!this.commonServices.includes(item.service)) {
+        if (this.opServices.includes(item.service)) {
+          opServices.push(item.id);
+        } else {
+          ethServices.push(item.id);
+        }
+      }
+    });
+
+    // Create ETH setup if there are ETH services
+    if (ethServices.length > 0) {
+      let ethsetupId = uuid.v4();
+      setupServicesObj[ethsetupId] = {
+        name: "ethSetup1",
+        network: network,
+        color: "default",
+        type: "ETH",
+        services: ethServices,
       };
     }
+
+    // Create OP setup if there are OP services
+    if (opServices.length > 0) {
+      let opSetupId = uuid.v4();
+      setupServicesObj[opSetupId] = {
+        name: "opSetup1",
+        network: "op-" + network,
+        color: "default",
+        type: "OP",
+        services: opServices,
+      };
+    }
+
     return setupServicesObj;
   }
 
@@ -152,7 +180,7 @@ export class ConfigManager {
           name: "commonServices",
           network: "default",
           color: "default",
-          type: "default",
+          type: "common",
           services: [],
         },
       };

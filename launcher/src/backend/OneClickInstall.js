@@ -291,6 +291,19 @@ export class OneClickInstall {
       this.extraServices.push(SSVDKGService);
     }
 
+    if (constellation.includes("OpGethService")) {
+      //GethService
+      this.executionClient = this.serviceManager.getService("OpGethService", args);
+    }
+
+    if (constellation.includes("OpNodeBeaconService")) {
+      //LighthouseBeaconService
+      this.beaconService = this.serviceManager.getService("OpNodeBeaconService", {
+        ...args,
+        executionClients: [this.executionClient],
+      });
+    }
+
     this.handleArchiveTags(selectedPreset);
     this.handleLidoTags(selectedPreset);
 
@@ -502,6 +515,9 @@ export class OneClickInstall {
         break;
       case "lidocsm":
         services.push("FlashbotsMevBoostService", "KeysAPIService", "ValidatorEjectorService", "KuboIPFSService", "LCOMService");
+        break;
+      case "optimism":
+        services.push("OpGethService", "OpNodeBeaconService");
     }
     return services;
   }

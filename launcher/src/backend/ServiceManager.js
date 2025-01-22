@@ -35,6 +35,8 @@ import { LidoObolExitService } from "./ethereum-services/LidoObolExitService";
 import { ConfigManager } from "./ConfigManager";
 import { LCOMService } from "./ethereum-services/LCOMService";
 import { KuboIPFSService } from "./ethereum-services/KuboIPFSService";
+import { OpGethService } from "./ethereum-services/OpGethService";
+import { OpNodeBeaconService } from "./ethereum-services/OpNodeBeaconService";
 
 import YAML from "yaml";
 // import { file } from "jszip";
@@ -179,6 +181,10 @@ export class ServiceManager {
               services.push(LCOMService.buildByConfiguration(config));
             } else if (config.service == "KuboIPFSService") {
               services.push(KuboIPFSService.buildByConfiguration(config));
+            } else if (config.service == "OpGethService") {
+              services.push(OpGethService.buildByConfiguration(config));
+            } else if (config.service == "OpNodeBeaconService") {
+              services.push(OpNodeBeaconService.buildByConfiguration(config));
             }
           } else {
             log.error("found configuration without service!");
@@ -1115,6 +1121,29 @@ export class ServiceManager {
           new ServicePort("127.0.0.1", 8080, 8080, servicePortProtocol.tcp),
         ];
         return KuboIPFSService.buildByUserInput(args.network, ports, args.installDir + "/ipfs");
+
+      case "OpGethService":
+        ports = [
+          new ServicePort("127.0.0.1", args.port ? args.port : 9993, 8545, servicePortProtocol.tcp),
+          new ServicePort("127.0.0.1", 9994, 8546, servicePortProtocol.tcp),
+          new ServicePort(null, 39393, 39393, servicePortProtocol.tcp),
+          new ServicePort(null, 39393, 39393, servicePortProtocol.udp),
+        ];
+        return OpGethService.buildByUserInput(args.network, ports, args.installDir + "/op-geth");
+
+      case "OpNodeBeaconService":
+        ports = [
+          new ServicePort(null, 9003, 9003, servicePortProtocol.tcp),
+          new ServicePort(null, 9003, 9003, servicePortProtocol.udp),
+          new ServicePort("127.0.0.1", args.port ? args.port : 9545, 9545, servicePortProtocol.tcp),
+        ];
+        return OpNodeBeaconService.buildByUserInput(
+          args.network,
+          ports,
+          args.installDir + "/op-node",
+          args.executionClients,
+          args.consensusClients
+        );
     }
   }
 
@@ -1698,8 +1727,8 @@ export class ServiceManager {
       }
     } else {
       command = command.map((c) => {
-        if (/mainnet|prater|goerli|sepolia|holesky/.test(c)) {
-          c = c.replace(/mainnet|prater|goerli|sepolia|holesky/, newNetwork);
+        if (/mainnet|prater|goerli|sepolia|holesky|op-mainnet|op-sepolia/.test(c)) {
+          c = c.replace(/mainnet|prater|goerli|sepolia|holesky|op-mainnet|op-sepolia/, newNetwork);
         }
         return c;
       });
