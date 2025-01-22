@@ -1,6 +1,6 @@
 <template>
   <div
-    class="max-h-[165px] col-start-1 col-span-full row-start-1 row-end-5 grid grid-cols-6 justify-normal items-center bg-[#232426] gap-y-0"
+    class="max-h-[165px] col-start-1 col-span-full row-start-1 row-end-5 grid grid-cols-6 justify-normal items-center bg-[#232426] space-y-[2px]"
     :class="
       stakingStore?.selectedServiceToFilter?.service === 'CharonService' ||
       stakingStore?.selectedServiceToFilter?.service === 'SSVNetworkService'
@@ -25,12 +25,8 @@
         stakingStore.selectedServiceToFilter?.service === 'SSVNetworkService'
       "
     />
-    <ParticipationRow
-      v-if="stakingStore.selectedServiceToFilter?.service === 'CharonService'"
-    />
-    <IsPrivate
-      v-if="stakingStore.selectedServiceToFilter?.service === 'SSVNetworkService'"
-    />
+    <ParticipationRow v-if="stakingStore.selectedServiceToFilter?.service === 'CharonService'" />
+    <IsPrivate v-if="stakingStore.selectedServiceToFilter?.service === 'SSVNetworkService'" />
 
     <NodeStatus
       v-if="

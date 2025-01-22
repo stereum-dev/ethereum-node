@@ -1602,11 +1602,6 @@ video {
   margin-top: 9.5rem;
 }
 
-.ms-4{
-  -webkit-margin-start: 1rem;
-          margin-inline-start: 1rem;
-}
-
 .box-border{
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
@@ -1679,11 +1674,6 @@ video {
 .size-8{
   width: 2rem;
   height: 2rem;
-}
-
-.size-12{
-  width: 3rem;
-  height: 3rem;
 }
 
 .h-1\/2{
@@ -2130,6 +2120,10 @@ video {
 
 .max-h-full{
   max-height: 100%;
+}
+
+.max-h-4{
+  max-height: 1rem;
 }
 
 .min-h-11{
@@ -3108,6 +3102,12 @@ video {
   --tw-space-y-reverse: 0;
   margin-top: calc(1px * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(1px * var(--tw-space-y-reverse));
+}
+
+.space-y-\[2px\] > :not([hidden]) ~ :not([hidden]){
+  --tw-space-y-reverse: 0;
+  margin-top: calc(2px * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(2px * var(--tw-space-y-reverse));
 }
 
 .divide-x > :not([hidden]) ~ :not([hidden]){
@@ -4214,11 +4214,6 @@ video {
   background-color: rgb(247 197 102 / var(--tw-bg-opacity, 1));
 }
 
-.bg-\[\#a3a6ac\]{
-  --tw-bg-opacity: 1;
-  background-color: rgb(163 166 172 / var(--tw-bg-opacity, 1));
-}
-
 .bg-\[\#a7aeb5\]{
   --tw-bg-opacity: 1;
   background-color: rgb(167 174 181 / var(--tw-bg-opacity, 1));
@@ -4491,9 +4486,20 @@ video {
   background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
 }
 
+.bg-gradient-to-r{
+  background-image: -webkit-gradient(linear, left top, right top, from(var(--tw-gradient-stops)));
+  background-image: linear-gradient(to right, var(--tw-gradient-stops));
+}
+
 .from-\[\#264744\]{
   --tw-gradient-from: #264744 var(--tw-gradient-from-position);
   --tw-gradient-to: rgb(38 71 68 / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+.from-gray-200{
+  --tw-gradient-from: #e5e7eb var(--tw-gradient-from-position);
+  --tw-gradient-to: rgb(229 231 235 / 0) var(--tw-gradient-to-position);
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
 
@@ -4506,8 +4512,17 @@ video {
   --tw-gradient-stops: var(--tw-gradient-from), #325d5a var(--tw-gradient-via-position), var(--tw-gradient-to);
 }
 
+.via-gray-300{
+  --tw-gradient-to: rgb(209 213 219 / 0)  var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), #d1d5db var(--tw-gradient-via-position), var(--tw-gradient-to);
+}
+
 .to-\[\#264744\]{
   --tw-gradient-to: #264744 var(--tw-gradient-to-position);
+}
+
+.to-gray-200{
+  --tw-gradient-to: #e5e7eb var(--tw-gradient-to-position);
 }
 
 .to-95\%{
@@ -4714,6 +4729,10 @@ video {
   padding-left: 1rem;
 }
 
+.pl-6{
+  padding-left: 1.5rem;
+}
+
 .pr-0{
   padding-right: 0px;
 }
@@ -4764,6 +4783,10 @@ video {
 
 .pt-8{
   padding-top: 2rem;
+}
+
+.pt-\[2px\]{
+  padding-top: 2px;
 }
 
 .text-left{
@@ -5266,31 +5289,6 @@ video {
   color: rgb(107 114 128 / var(--tw-placeholder-opacity, 1));
 }
 
-.placeholder-gray-800::-webkit-input-placeholder{
-  --tw-placeholder-opacity: 1;
-  color: rgb(31 41 55 / var(--tw-placeholder-opacity, 1));
-}
-
-.placeholder-gray-800::-moz-placeholder{
-  --tw-placeholder-opacity: 1;
-  color: rgb(31 41 55 / var(--tw-placeholder-opacity, 1));
-}
-
-.placeholder-gray-800:-ms-input-placeholder{
-  --tw-placeholder-opacity: 1;
-  color: rgb(31 41 55 / var(--tw-placeholder-opacity, 1));
-}
-
-.placeholder-gray-800::-ms-input-placeholder{
-  --tw-placeholder-opacity: 1;
-  color: rgb(31 41 55 / var(--tw-placeholder-opacity, 1));
-}
-
-.placeholder-gray-800::placeholder{
-  --tw-placeholder-opacity: 1;
-  color: rgb(31 41 55 / var(--tw-placeholder-opacity, 1));
-}
-
 .placeholder-red-500::-webkit-input-placeholder{
   --tw-placeholder-opacity: 1;
   color: rgb(239 68 68 / var(--tw-placeholder-opacity, 1));
@@ -5314,31 +5312,6 @@ video {
 .placeholder-red-500::placeholder{
   --tw-placeholder-opacity: 1;
   color: rgb(239 68 68 / var(--tw-placeholder-opacity, 1));
-}
-
-.placeholder-gray-300::-webkit-input-placeholder{
-  --tw-placeholder-opacity: 1;
-  color: rgb(209 213 219 / var(--tw-placeholder-opacity, 1));
-}
-
-.placeholder-gray-300::-moz-placeholder{
-  --tw-placeholder-opacity: 1;
-  color: rgb(209 213 219 / var(--tw-placeholder-opacity, 1));
-}
-
-.placeholder-gray-300:-ms-input-placeholder{
-  --tw-placeholder-opacity: 1;
-  color: rgb(209 213 219 / var(--tw-placeholder-opacity, 1));
-}
-
-.placeholder-gray-300::-ms-input-placeholder{
-  --tw-placeholder-opacity: 1;
-  color: rgb(209 213 219 / var(--tw-placeholder-opacity, 1));
-}
-
-.placeholder-gray-300::placeholder{
-  --tw-placeholder-opacity: 1;
-  color: rgb(209 213 219 / var(--tw-placeholder-opacity, 1));
 }
 
 .opacity-0{
@@ -6637,11 +6610,6 @@ html body {
   .dark\:text-gray-400{
     --tw-text-opacity: 1;
     color: rgb(156 163 175 / var(--tw-text-opacity, 1));
-  }
-
-  .dark\:text-gray-800{
-    --tw-text-opacity: 1;
-    color: rgb(31 41 55 / var(--tw-text-opacity, 1));
   }
 
   .dark\:text-neutral-200{

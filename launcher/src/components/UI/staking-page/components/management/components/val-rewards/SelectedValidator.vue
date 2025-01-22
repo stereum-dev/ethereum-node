@@ -23,13 +23,15 @@
     </div>
     <div
       v-else
-      class="animate-pulse w-10/12 h-5 col-start-1 col-span-full flex justify-center items-center p-1 opacity-40 space-x-3 mx-auto mb-1"
+      class="w-10/12 h-5 col-start-1 col-span-full flex justify-center items-center p-1 space-x-3 mx-auto mb-1"
     >
-      <div class="flex justify-center items-center">
-        <span class="w-4 h-4 rounded-full bg-white"></span>
+      <div class="shrink-0 flex justify-center items-center">
+        <span
+          class="w-4 h-4 rounded-full bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 skeleton-pulse"
+        ></span>
       </div>
       <div
-        class="w-full col-start-2 col-end-9 h-2 bg-slate-200 self-center overflow-hidden flex justify-center items-center rounded-xl"
+        class="w-full col-start-2 col-end-9 h-2 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 self-center overflow-hidden flex justify-center items-center rounded-xl skeleton-pulse"
       ></div>
     </div>
   </div>
@@ -55,3 +57,18 @@ const getBackgroundColor = computed(() => {
 
 console.log(stakingStore.selectedServiceToFilter);
 </script>
+<style scoped>
+.skeleton-pulse {
+  background-size: 200% 100%;
+  animation: pulse 1.5s infinite linear;
+}
+
+@keyframes pulse {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+</style>

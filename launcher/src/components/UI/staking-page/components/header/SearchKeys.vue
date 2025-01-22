@@ -1,7 +1,7 @@
 <template>
-  <div class="w-full h-full rounded-sm flex justify-start items-center cursor-pointer">
+  <div class="w-full h-full rounded-md flex justify-start items-center cursor-pointer">
     <div
-      class="w-full h-full flex justify-evenly items-center px-2 relative rounded-sm bg-[#232426]"
+      class="w-full h-full flex justify-evenly items-center px-2 relative rounded-md bg-[#232426]"
     >
       <div class="flex items-center pointer-events-none" @mousedown.prevent>
         <svg
