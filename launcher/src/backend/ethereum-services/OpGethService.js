@@ -43,7 +43,7 @@ export class OpGethService extends NodeService {
         `--port=39393`,
         `--discovery.port=39393`,
         `--db.engine=pebble`,
-        `--op-network=${network}`,
+        `--op-network=op-${network}`,
         `--metrics`,
         `--metrics.expensive`,
         `--metrics.port=6060`,
