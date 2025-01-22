@@ -473,7 +473,7 @@ export class OneClickInstall {
     services.push(selectedCC_VC + "ValidatorService");
     services.push(selectedCC_VC + "BeaconService");
 
-    const selectedEC = this.chooseClient(["GETH", "BESU", "NETHERMIND"]);
+    const selectedEC = setup === "optimism" ? this.chooseClient(["GETH", "RETH"]) : this.chooseClient(["GETH", "BESU", "NETHERMIND"]);
 
     services.push(selectedEC + "Service");
 
