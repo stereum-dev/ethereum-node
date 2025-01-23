@@ -6,29 +6,16 @@
     <div
       v-if="stakingStore.selectedServiceToFilter"
       class="col-start-1 col-end-4 flex justify-start items-center px-1 space-x-3"
-      @mouseenter="
-        footerStore.cursorLocation = `Selected Client: ${stakingStore.selectedServiceToFilter?.service}`
-      "
+      @mouseenter="footerStore.cursorLocation = `Selected Client: ${stakingStore.selectedServiceToFilter?.service}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <img
-        :src="stakingStore.selectedServiceToFilter?.icon"
-        alt="Client Icon"
-        class="w-4 h-4"
-      />
+      <img :src="stakingStore.selectedServiceToFilter?.icon" alt="Client Icon" class="w-4 h-4" />
 
-      <span class="w-1/2 text-[10px] font-semibold text-center">
-        {{ stakingStore.selectedServiceToFilter?.service }}</span
-      >
+      <span class="w-1/2 text-[10px] font-semibold text-center"> {{ stakingStore.selectedServiceToFilter?.service }}</span>
     </div>
-    <div
-      v-else
-      class="w-10/12 h-5 col-start-1 col-span-full flex justify-center items-center p-1 space-x-3 mx-auto mb-1"
-    >
+    <div v-else class="w-10/12 h-5 col-start-1 col-span-full flex justify-center items-center p-1 space-x-3 mx-auto mb-1">
       <div class="shrink-0 flex justify-center items-center">
-        <span
-          class="w-4 h-4 rounded-full bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 skeleton-pulse"
-        ></span>
+        <span class="w-4 h-4 rounded-full bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 skeleton-pulse"></span>
       </div>
       <div
         class="w-full col-start-2 col-end-9 h-2 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 self-center overflow-hidden flex justify-center items-center rounded-xl skeleton-pulse"
@@ -50,12 +37,9 @@ const getBackgroundColor = computed(() => {
   return (
     setupStore.getBGColor(stakingStore.selectedServiceToFilter?.setupColor) +
       " " +
-      setupStore.getTextColor(stakingStore.selectedServiceToFilter?.setupColor) ??
-    "bg-[#232426]"
+      setupStore.getTextColor(stakingStore.selectedServiceToFilter?.setupColor) ?? "bg-[#232426]"
   );
 });
-
-console.log(stakingStore.selectedServiceToFilter);
 </script>
 <style scoped>
 .skeleton-pulse {
