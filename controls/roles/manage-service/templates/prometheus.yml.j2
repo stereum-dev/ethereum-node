@@ -402,6 +402,7 @@ scrape_configs:
 
 # op-node beacon
   - job_name: op_node_beacon
+    metrics_path: /metrics
     static_configs:
       - targets: [
 {% set targets = [] %}
