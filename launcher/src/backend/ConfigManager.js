@@ -112,12 +112,12 @@ export class ConfigManager {
     let opServices = [];
 
     // Categorize services
-    services.forEach((item) => {
-      if (!this.commonServices.includes(item.service)) {
-        if (this.opServices.includes(item.service)) {
-          opServices.push(item.id);
+    services.forEach((service) => {
+      if (!this.commonServices.includes(service.service)) {
+        if (service.service === "OpGethService" || service.service === "OpNodeBeaconService") {
+          opServices.push(service.id);
         } else {
-          ethServices.push(item.id);
+          ethServices.push(service.id);
         }
       }
     });
