@@ -3,6 +3,7 @@ import { ServiceVolume } from "./ServiceVolume.js";
 
 export class OpGethService extends NodeService {
   static buildByUserInput(network, ports, dir) {
+    // static buildByUserInput(network, ports, dir, executionClients) {
     const service = new OpGethService();
     service.setId();
     const workingDir = service.buildWorkingDir(dir);
@@ -10,7 +11,17 @@ export class OpGethService extends NodeService {
     const JWTDir = "/op-engine.jwt";
     const dataDir = "/op-geth";
     const volumes = [new ServiceVolume(workingDir + "/data", dataDir), new ServiceVolume(workingDir + "/op-engine.jwt", JWTDir)];
-    const sequencer = network === "op-mainnet" ? "https://mainnet-sequencer.optimism.io" : "https://sepolia-sequencer.optimism.io";
+    const sequencer = network === "mainnet" ? "https://mainnet-sequencer.optimism.io" : "https://sepolia-sequencer.optimism.io";
+
+    // // L2 geth
+    // const l2Geth = executionClients
+    //   .filter((client) => client.service.includes("L2GethService"))
+    //   .map((client) => {
+    //     return client.buildExecutionClientHttpEndpointUrl();
+    //   })
+    //   .join();
+
+    const cmd = service.generateGethCommand(dataDir, JWTDir, sequencer, network);
 
     service.init(
       "OpGethService", // service
@@ -18,37 +29,7 @@ export class OpGethService extends NodeService {
       1, // configVersion
       "us-docker.pkg.dev/oplabs-tools-artifacts/images/op-geth", // image
       "v1.101411.4", // imageVersion
-      [
-        `--datadir=${dataDir}`,
-        `--http`,
-        `--http.corsdomain=*`,
-        `--http.vhosts=*`,
-        `--http.addr=0.0.0.0`,
-        `--http.port=8545`,
-        `--http.api=web3,debug,eth,txpool,net,engine`,
-        `--ws`,
-        `--ws.addr=0.0.0.0`,
-        `--ws.port=8546`,
-        `--ws.origins=*`,
-        `--ws.api=debug,eth,txpool,net,engine,web3`,
-        `--syncmode=snap`,
-        `--gcmode=full`,
-        `--state.scheme=hash`,
-        `--authrpc.vhosts=*`,
-        `--authrpc.addr=0.0.0.0`,
-        `--authrpc.port=8551`,
-        `--authrpc.jwtsecret=${JWTDir}`,
-        `--rollup.sequencerhttp=${sequencer}`,
-        `--rollup.disabletxpoolgossip=true`,
-        `--port=39393`,
-        `--discovery.port=39393`,
-        `--db.engine=pebble`,
-        `--op-network=op-${network}`,
-        `--metrics`,
-        `--metrics.expensive`,
-        `--metrics.port=6060`,
-        `--metrics.addr=0.0.0.0`,
-      ], // command
+      cmd, // command
       ["geth"], // entrypoint
       null, // env
       ports, // ports
@@ -60,6 +41,45 @@ export class OpGethService extends NodeService {
     );
 
     return service;
+  }
+
+  generateGethCommand(dataDir, JWTDir, sequencer, network) {
+    const commonCmd = [
+      `--datadir=${dataDir}`,
+      `--http`,
+      `--http.corsdomain=*`,
+      `--http.vhosts=*`,
+      `--http.addr=0.0.0.0`,
+      `--http.port=8545`,
+      `--http.api=web3,debug,eth,txpool,net,engine`,
+      `--ws`,
+      `--ws.addr=0.0.0.0`,
+      `--ws.port=8546`,
+      `--ws.origins=*`,
+      `--ws.api=debug,eth,txpool,net,engine,web3`,
+      `--syncmode=snap`,
+      `--gcmode=full`,
+      `--state.scheme=hash`,
+      `--authrpc.vhosts=*`,
+      `--authrpc.addr=0.0.0.0`,
+      `--authrpc.port=8551`,
+      `--authrpc.jwtsecret=${JWTDir}`,
+      `--rollup.sequencerhttp=${sequencer}`,
+      `--rollup.disabletxpoolgossip=true`,
+      `--port=39393`,
+      `--discovery.port=39393`,
+      `--db.engine=pebble`,
+      `--op-network=op-${network}`,
+      `--metrics`,
+      `--metrics.expensive`,
+      `--metrics.port=6060`,
+      `--metrics.addr=0.0.0.0`,
+    ];
+
+    if (network === "mainnet") {
+      return [...commonCmd, "--rollup.historicalrpc=http://l2geth:8545"];
+      // return [...commonCmd, `--rollup.historicalrpc=${l2Geth}`];
+    }
   }
 
   static buildByConfiguration(config) {
