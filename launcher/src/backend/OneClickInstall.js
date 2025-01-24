@@ -555,7 +555,7 @@ export class OneClickInstall {
         services.push("FlashbotsMevBoostService", "KeysAPIService", "ValidatorEjectorService", "KuboIPFSService", "LCOMService");
         break;
       case "optimism":
-        services.push("OpGethService", "OpNodeBeaconService");
+        services.push("OpGethService", "OpNodeBeaconService", "L2GethService");
     }
     return services;
   }
