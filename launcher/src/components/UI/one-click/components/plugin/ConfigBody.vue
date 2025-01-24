@@ -192,10 +192,21 @@ const checkPluginCategory = (element) => {
         const isValidator = element.category === "validator";
 
         if (isExecution) {
-          if (element.service !== "OpGethService") {
-            return /Geth|Reth/.test(item.service) && item.category === "execution" && item.service !== "OpGethService";
+          if (element.service === "L2GethService") {
+            return false;
           }
-          return item.service === "OpGethService" && item.category === "execution";
+          if (element.service === "OpGethService") {
+            return false;
+          }
+
+          if (element.service !== "OpGethService" && element.service !== "L2GethService") {
+            return (
+              /Geth|Reth/.test(item.service) &&
+              item.category === "execution" &&
+              item.service !== "OpGethService" &&
+              item.service !== "L2GethService"
+            );
+          }
         }
 
         if (isConsensus) {
