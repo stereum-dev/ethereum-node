@@ -8,8 +8,6 @@ export class ConfigManager {
     this.serviceManager = null;
     this.multiSetupPath = "/etc/stereum/multisetup.yaml";
     this.commonServices = ["PrometheusService", "GrafanaService", "PrometheusNodeExporterService", "NotificationService"];
-    // this.opServices = ["OpGethService", "OpNodeBeaconService"];
-    this.opServices = ["GethService"];
   }
   setServiceManager(serviceManager) {
     this.serviceManager = serviceManager;
@@ -114,7 +112,7 @@ export class ConfigManager {
     // Categorize services
     services.forEach((service) => {
       if (!this.commonServices.includes(service.service)) {
-        if (service.service === "OpGethService" || service.service === "OpNodeBeaconService") {
+        if (service.service === "OpGethService" || service.service === "OpNodeBeaconService" || service.service === "L2GethService") {
           opServices.push(service.id);
         } else {
           ethServices.push(service.id);
