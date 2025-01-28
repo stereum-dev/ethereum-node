@@ -37,6 +37,7 @@ import { LCOMService } from "./ethereum-services/LCOMService";
 import { KuboIPFSService } from "./ethereum-services/KuboIPFSService";
 import { OpGethService } from "./ethereum-services/OpGethService";
 import { OpNodeBeaconService } from "./ethereum-services/OpNodeBeaconService";
+import { L2GethService } from "./ethereum-services/L2GethService";
 
 import YAML from "yaml";
 // import { file } from "jszip";
@@ -185,6 +186,8 @@ export class ServiceManager {
               services.push(OpGethService.buildByConfiguration(config));
             } else if (config.service == "OpNodeBeaconService") {
               services.push(OpNodeBeaconService.buildByConfiguration(config));
+            } else if (config.service == "L2GethService") {
+              services.push(L2GethService.buildByConfiguration(config));
             }
           } else {
             log.error("found configuration without service!");
@@ -1129,7 +1132,7 @@ export class ServiceManager {
           new ServicePort(null, 39393, 39393, servicePortProtocol.tcp),
           new ServicePort(null, 39393, 39393, servicePortProtocol.udp),
         ];
-        return OpGethService.buildByUserInput(args.network, ports, args.installDir + "/op-geth");
+        return OpGethService.buildByUserInput(args.network, ports, args.installDir + "/op-geth", args.executionClients);
 
       case "OpNodeBeaconService":
         ports = [
@@ -1144,6 +1147,10 @@ export class ServiceManager {
           args.executionClients,
           args.consensusClients
         );
+
+      case "L2GethService":
+        ports = [new ServicePort("127.0.0.1", args.port ? args.port : 9991, 8545, servicePortProtocol.tcp)];
+        return L2GethService.buildByUserInput(args.network, ports, args.installDir + "/l2-geth");
     }
   }
 

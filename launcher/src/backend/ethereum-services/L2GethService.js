@@ -2,24 +2,13 @@ import { NodeService } from "./NodeService.js";
 import { ServiceVolume } from "./ServiceVolume.js";
 
 export class L2GethService extends NodeService {
-  // static buildByUserInput(network, dir, ports, executionClients) {
-  static buildByUserInput(network, ports, dir, executionClients) {
+  static buildByUserInput(network, ports, dir) {
     const service = new L2GethService();
     service.setId();
     const workingDir = service.buildWorkingDir(dir);
 
-    // const JWTDir = "/op-engine.jwt";
     const dataDir = "/l2-geth";
     const volumes = [new ServiceVolume(workingDir + "/data", dataDir)];
-    // const sequencer = network === "mainnet" ? "https://mainnet-sequencer.optimism.io" : "https://sepolia-sequencer.optimism.io";
-
-    // // L2 geth
-    // const l2Geth = executionClients
-    //   .filter((client) => client.service.includes("L2GethService"))
-    //   .map((client) => {
-    //     return client.buildExecutionClientHttpEndpointUrl();
-    //   })
-    //   .join();
 
     service.init(
       "L2GethService", // service
@@ -27,7 +16,7 @@ export class L2GethService extends NodeService {
       1, // configVersion
       "ethereumoptimism/l2geth", // image
       "0.5.31", // imageVersion
-      ["--vmodule=eth/*=5,miner=4,rpc=5,rollup=4,consensus/clique=1", "--datadir=/l2geth", "--allow-insecure-unlock", "--gcmode=full"], // command
+      ["--vmodule=eth/*=5,miner=4,rpc=5,rollup=4,consensus/clique=1", `--datadir=${dataDir}`, "--allow-insecure-unlock", "--gcmode=full"], // command
       ["geth"], // entrypoint
       {
         USING_OVM: "true",
@@ -42,8 +31,8 @@ export class L2GethService extends NodeService {
       ports, // ports
       volumes, // volumes
       "root", // user
-      network, // network
-      executionClients
+      "op-" + network // network
+      // executionClients
       // consensusClients
     );
 
@@ -58,7 +47,7 @@ export class L2GethService extends NodeService {
     return service;
   }
 
-  buildExecutionClientEngineRPCEndpointUrl() {
+  buildExecutionClientRPCEndpointUrl() {
     return "http://stereum-" + this.id + ":8545";
   }
 }
