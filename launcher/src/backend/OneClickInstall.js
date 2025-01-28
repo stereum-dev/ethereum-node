@@ -119,7 +119,9 @@ export class OneClickInstall {
       this.beaconService.push(
         this.serviceManager.getService("LighthouseBeaconService", {
           ...args,
-          executionClients: this.executionClient.filter((client) => client.service !== "OpGethService"),
+          executionClients: this.executionClient.filter(
+            (client) => client.service !== "OpGethService" || client.service !== "L2GethService"
+          ),
           ...(this.mevboost && { mevboost: [this.mevboost] }),
         })
       );
@@ -130,7 +132,9 @@ export class OneClickInstall {
       this.beaconService.push(
         this.serviceManager.getService("LodestarBeaconService", {
           ...args,
-          executionClients: this.executionClient.filter((client) => client.service !== "OpGethService"),
+          executionClients: this.executionClient.filter(
+            (client) => client.service !== "OpGethService" || client.service !== "L2GethService"
+          ),
           ...(this.mevboost && { mevboost: [this.mevboost] }),
         })
       );
@@ -141,7 +145,9 @@ export class OneClickInstall {
       this.beaconService.push(
         this.serviceManager.getService("PrysmBeaconService", {
           ...args,
-          executionClients: this.executionClient.filter((client) => client.service !== "OpGethService"),
+          executionClients: this.executionClient.filter(
+            (client) => client.service !== "OpGethService" || client.service !== "L2GethService"
+          ),
           ...(this.mevboost && { mevboost: [this.mevboost] }),
         })
       );
@@ -152,7 +158,9 @@ export class OneClickInstall {
       this.beaconService.push(
         this.serviceManager.getService("NimbusBeaconService", {
           ...args,
-          executionClients: this.executionClient.filter((client) => client.service !== "OpGethService"),
+          executionClients: this.executionClient.filter(
+            (client) => client.service !== "OpGethService" || client.service !== "L2GethService"
+          ),
           ...(this.mevboost && { mevboost: [this.mevboost] }),
         })
       );
@@ -163,7 +171,9 @@ export class OneClickInstall {
       this.beaconService.push(
         this.serviceManager.getService("TekuBeaconService", {
           ...args,
-          executionClients: this.executionClient.filter((client) => client.service !== "OpGethService"),
+          executionClients: this.executionClient.filter(
+            (client) => client.service !== "OpGethService" || client.service !== "L2GethService"
+          ),
           ...(this.mevboost && { mevboost: [this.mevboost] }),
         })
       );
@@ -227,7 +237,7 @@ export class OneClickInstall {
       this.validatorService = this.serviceManager.getService("SSVNetworkService", {
         ...args,
         consensusClients: this.beaconService.filter((service) => service.service !== "OpNodeBeaconService"),
-        executionClients: this.executionClient.filter((client) => client.service !== "OpGethService"),
+        executionClients: this.executionClient.filter((client) => client.service !== "OpGethService" || client.service !== "L2GethService"),
       });
       this.needsKeystore.push(this.validatorService);
     }
@@ -258,7 +268,9 @@ export class OneClickInstall {
         this.serviceManager.getService("KeysAPIService", {
           ...args,
           consensusClients: this.beaconService.filter((service) => service.service !== "OpNodeBeaconService"),
-          executionClients: this.executionClient.filter((client) => client.service !== "OpGethService"),
+          executionClients: this.executionClient.filter(
+            (client) => client.service !== "OpGethService" || client.service !== "L2GethService"
+          ),
         })
       );
     }
@@ -269,7 +281,9 @@ export class OneClickInstall {
         this.serviceManager.getService("ValidatorEjectorService", {
           ...args,
           consensusClients: this.beaconService.filter((service) => service.service !== "OpNodeBeaconService"),
-          executionClients: this.executionClient.filter((client) => client.service !== "OpGethService"),
+          executionClients: this.executionClient.filter(
+            (client) => client.service !== "OpGethService" || client.service !== "L2GethService"
+          ),
         })
       );
     }
@@ -298,7 +312,9 @@ export class OneClickInstall {
         this.serviceManager.getService("LCOMService", {
           ...args,
           consensusClients: this.beaconService.filter((service) => service.service !== "OpNodeBeaconService"),
-          executionClients: this.executionClient.filter((client) => client.service !== "OpGethService"),
+          executionClients: this.executionClient.filter(
+            (client) => client.service !== "OpGethService" || client.service !== "L2GethService"
+          ),
           otherServices: this.extraServices.filter((s) => s.service === "KuboIPFSService"),
         })
       );
@@ -313,20 +329,39 @@ export class OneClickInstall {
       this.extraServices.push(SSVDKGService);
     }
 
+    if (constellation.includes("L2GethService")) {
+      //L2GethService
+      this.executionClient.push(this.serviceManager.getService("L2GethService", args));
+    }
+
     if (constellation.includes("OpGethService")) {
-      //GethService
-      this.executionClient.push(this.serviceManager.getService("OpGethService", args));
+      //OpGethService
+      this.executionClient.push(
+        this.serviceManager.getService("OpGethService", {
+          ...args,
+          executionClients: this.executionClient.filter((client) => client.service === "L2GethService"),
+        })
+      );
     }
 
     if (constellation.includes("OpNodeBeaconService")) {
-      //LighthouseBeaconService
+      //OpNodeBeaconService
       this.beaconService.push(
         this.serviceManager.getService("OpNodeBeaconService", {
           ...args,
-          executionClients: this.executionClient,
+          executionClients: this.executionClient.filter((client) => client.service !== "L2GethService"),
           consensusClients: this.beaconService.filter((service) => service.service !== "OpNodeBeaconService"),
         })
       );
+
+      this.beaconService
+        .filter((service) => service.service === "OpNodeBeaconService")
+        .map((service) => service.id)
+        .forEach((id) => {
+          if (!this.notToStart.includes(id)) {
+            this.notToStart.push(id);
+          }
+        });
     }
 
     this.handleArchiveTags(selectedPreset);
