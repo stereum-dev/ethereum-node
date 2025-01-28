@@ -2,8 +2,7 @@ import { NodeService } from "./NodeService.js";
 import { ServiceVolume } from "./ServiceVolume.js";
 
 export class OpGethService extends NodeService {
-  static buildByUserInput(network, ports, dir) {
-    // static buildByUserInput(network, ports, dir, executionClients) {
+  static buildByUserInput(network, ports, dir, executionClients) {
     const service = new OpGethService();
     service.setId();
     const workingDir = service.buildWorkingDir(dir);
@@ -13,15 +12,15 @@ export class OpGethService extends NodeService {
     const volumes = [new ServiceVolume(workingDir + "/data", dataDir), new ServiceVolume(workingDir + "/op-engine.jwt", JWTDir)];
     const sequencer = network === "mainnet" ? "https://mainnet-sequencer.optimism.io" : "https://sepolia-sequencer.optimism.io";
 
-    // // L2 geth
-    // const l2Geth = executionClients
-    //   .filter((client) => client.service.includes("L2GethService"))
-    //   .map((client) => {
-    //     return client.buildExecutionClientHttpEndpointUrl();
-    //   })
-    //   .join();
+    // L2 geth
+    const l2Geth = executionClients
+      .filter((client) => client.service.includes("L2GethService"))
+      .map((client) => {
+        return client.buildExecutionClientRPCEndpointUrl();
+      })
+      .join();
 
-    const cmd = service.generateGethCommand(dataDir, JWTDir, sequencer, network);
+    const cmd = service.generateGethCommand(dataDir, JWTDir, sequencer, network, l2Geth);
 
     service.init(
       "OpGethService", // service
@@ -35,15 +34,15 @@ export class OpGethService extends NodeService {
       ports, // ports
       volumes, // volumes
       "root", // user
-      network // network
-      // executionClients
+      "op-" + network, // network
+      executionClients ? executionClients : [] // executionClients
       // consensusClients
     );
 
     return service;
   }
 
-  generateGethCommand(dataDir, JWTDir, sequencer, network) {
+  generateGethCommand(dataDir, JWTDir, sequencer, network, l2Geth) {
     const commonCmd = [
       `--datadir=${dataDir}`,
       `--http`,
@@ -76,10 +75,7 @@ export class OpGethService extends NodeService {
       `--metrics.addr=0.0.0.0`,
     ];
 
-    if (network === "mainnet") {
-      return [...commonCmd, "--rollup.historicalrpc=http://l2geth:8545"];
-      // return [...commonCmd, `--rollup.historicalrpc=${l2Geth}`];
-    }
+    return network === "mainnet" ? [...commonCmd, `--rollup.historicalrpc=${l2Geth}`] : commonCmd;
   }
 
   static buildByConfiguration(config) {

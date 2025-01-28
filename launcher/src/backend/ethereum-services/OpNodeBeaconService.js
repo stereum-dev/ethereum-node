@@ -73,7 +73,7 @@ export class OpNodeBeaconService extends NodeService {
       ports, //ports
       volumes, //volumes
       null, //user
-      network, //network
+      "op-" + network, //network
       executionClients, //executionClients
       consensusClients, //consensusClients
       null //mevboost
