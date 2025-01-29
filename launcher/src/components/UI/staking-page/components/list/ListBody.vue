@@ -4,13 +4,21 @@
     :class="[
       stakingStore.isOverDropZone ? 'border-dashed border-blue-500' : 'border-gray-600',
       stakingStore.inputWrongKey ? 'border-red-500' : '',
-      stakingStore.isPreviewListActive || stakingStore.isRemoteListActive || stakingStore.isGroupListActive
+      stakingStore.isPreviewListActive ||
+      stakingStore.isRemoteListActive ||
+      stakingStore.isGroupListActive
         ? 'row-start-2 row-end-12'
         : 'row-start-1 row-end-12 rounded-t-md',
     ]"
   >
-    <GroupList v-if="stakingStore.isGroupListActive" :is-loading="stakingStore.isSkeletonActive" />
-    <RemoteList v-else-if="stakingStore.isRemoteListActive" :is-loading="stakingStore.isSkeletonActive" />
+    <GroupList
+      v-if="stakingStore.isGroupListActive"
+      :is-loading="stakingStore.isSkeletonActive"
+    />
+    <RemoteList
+      v-else-if="stakingStore.isRemoteListActive"
+      :is-loading="stakingStore.isSkeletonActive"
+    />
 
     <div
       v-else
@@ -24,21 +32,32 @@
       <span
         v-if="stakingStore.isOverDropZone"
         class="w-full h-full self-center justify-self-center flex justify-center items-center text-2xl"
-        :class="[stakingStore.inputWrongKey ? 'text-red-500' : 'text-blue-400', stakingStore.isSkeletonActive ? 'cursor-not-allowed' : '']"
+        :class="[
+          stakingStore.inputWrongKey ? 'text-red-500' : 'text-blue-400',
+          stakingStore.isSkeletonActive ? 'cursor-not-allowed' : '',
+        ]"
         >+</span
       >
       <div
         v-else
         class="w-full h-full flex flex-col justify-start items-center space-y-2 z-10 scrollbar scrollbar-rounded-* scrollbar-thumb-teal-800 scrollbar-track-transparent overflow-y-auto pt-2"
       >
-        <span v-if="shouldShowNoValidators" class="text-lg font-bold text-gray-300 text-center uppercase select-none">{{
-          $t("stakingPage.noVal")
-        }}</span>
-        <span v-if="searchNotFound && getFilteredValidators?.length > 0" class="text-lg font-bold text-gray-300 text-center uppercase">{{
-          $t("stakingPage.noMatch")
-        }}</span>
+        <span
+          v-if="shouldShowNoValidators"
+          class="text-lg font-bold text-gray-300 text-center uppercase select-none"
+          >{{ $t("stakingPage.noVal") }}</span
+        >
+        <span
+          v-if="searchNotFound && getFilteredValidators?.length > 0"
+          class="text-lg font-bold text-gray-300 text-center uppercase"
+          >{{ $t("stakingPage.noMatch") }}</span
+        >
 
-        <SkeletonRow v-for="i in 10" v-show="!stakingStore.isPreviewListActive && stakingStore.isSkeletonActive" :key="i" />
+        <SkeletonRow
+          v-for="i in 10"
+          v-show="!stakingStore.isPreviewListActive && stakingStore.isSkeletonActive"
+          :key="i"
+        />
 
         <PreviewKey
           v-for="item in stakingStore.previewKeys"
@@ -48,7 +67,17 @@
           @delete-preview="emit('deletePreview', $event)"
         />
 
-        <DoppelGCheckRow v-for="key in filteredDoppelgangerKeys" v-show="shouldShowDoppelganger(key)" :key="key" :item="key" />
+        <DoppelGCheckRow
+          v-for="key in stakingStore.doppelgangerKeys"
+          v-show="
+            stakingStore.isDoppelgangerProtectionActive &&
+            !stakingStore.isSkeletonActive &&
+            !stakingStore.isPreviewListActive &&
+            !stakingStore.isSkeletonActive
+          "
+          :key="key"
+          :item="key"
+        />
 
         <GroupRow
           v-for="group in getCorrectValidatorGroups"
@@ -106,7 +135,10 @@ stakingStore.filteredKeys = computed(() => {
     filteredKeys = stakingStore.keys.filter(
       (key) =>
         key.key?.toLowerCase().includes(stakingStore.searchContent.toLowerCase()) ||
-        (key.displayName && key.displayName.toLowerCase()?.includes(stakingStore.searchContent.toLowerCase()))
+        (key.displayName &&
+          key.displayName
+            .toLowerCase()
+            ?.includes(stakingStore.searchContent.toLowerCase()))
     );
   }
 
@@ -129,12 +161,18 @@ const getFilteredValidators = computed(() => {
   }
 
   if (!setupStore.selectedSetup && stakingStore.selectedServiceToFilter) {
-    return stakingStore.filteredKeys.filter((key) => key.validatorID === stakingStore.selectedServiceToFilter?.config?.serviceID);
+    return stakingStore.filteredKeys.filter(
+      (key) => key.validatorID === stakingStore.selectedServiceToFilter?.config?.serviceID
+    );
   }
 
   if (setupStore.selectedSetup && !stakingStore.selectedServiceToFilter) {
-    const serviceIds = setupStore.selectedSetup?.services?.map((service) => service.config?.serviceID);
-    return stakingStore.filteredKeys.filter((key) => serviceIds?.includes(key.validatorID));
+    const serviceIds = setupStore.selectedSetup?.services?.map(
+      (service) => service.config?.serviceID
+    );
+    return stakingStore.filteredKeys.filter((key) =>
+      serviceIds?.includes(key.validatorID)
+    );
   }
 
   const selectedServiceId = stakingStore.selectedServiceToFilter.config?.serviceID;
@@ -143,7 +181,9 @@ const getFilteredValidators = computed(() => {
 
 const getCorrectValidatorGroups = computed(() =>
   stakingStore.validatorKeyGroups.filter(
-    (group) => group.keys.length > 0 && group.validatorClientID === stakingStore.selectedServiceToFilter?.config?.serviceID
+    (group) =>
+      group.keys.length > 0 &&
+      group.validatorClientID === stakingStore.selectedServiceToFilter?.config?.serviceID
   )
 );
 
@@ -165,19 +205,10 @@ const shouldShowNoValidators = computed(
 );
 
 const shouldShowGroups = computed(
-  () => !stakingStore.isPreviewListActive && stakingStore.validatorKeyGroups?.length > 0 && !stakingStore.isSkeletonActive
-);
-
-const filteredDoppelgangerKeys = computed(() => stakingStore.doppelgangerKeys);
-
-watch(
-  () => stakingStore.keys.length,
-  async (newLength, oldLength) => {
-    if (newLength !== oldLength) {
-      removeDuplicatedDoppelgangerKeys();
-    }
-  },
-  { deep: true }
+  () =>
+    !stakingStore.isPreviewListActive &&
+    stakingStore.validatorKeyGroups?.length > 0 &&
+    !stakingStore.isSkeletonActive
 );
 
 onUnmounted(() => {
@@ -189,29 +220,40 @@ function normalizeKey(key) {
 }
 
 function removeDuplicatedDoppelgangerKeys() {
-  const normalizedKeysSet = new Set(stakingStore.filteredKeys.map((k) => normalizeKey(k.key)));
-  const filteredKeys = stakingStore.doppelgangerKeys.filter((doppelKey) => !normalizedKeysSet.has(normalizeKey(doppelKey.pubkey)));
+  const normalizedKeysSet = new Set(stakingStore.keys.map((k) => normalizeKey(k.key)));
+  // const filteredKeys = stakingStore.doppelgangerKeys.filter(
+  //   (doppelKey) => !normalizedKeysSet.has(normalizeKey(doppelKey.pubkey))
+  // );
 
-  if (filteredKeys.length !== stakingStore.doppelgangerKeys.length) {
-    stakingStore.doppelgangerKeys = filteredKeys;
-  }
-}
+  // if (filteredKeys.length !== stakingStore.doppelgangerKeys.length) {
+  //   stakingStore.doppelgangerKeys = filteredKeys;
+  // }
 
-function isKeyInGroup(key) {
-  return stakingStore.validatorKeyGroups.some((group) => group.keys.some((groupKey) => groupKey.key === key.key));
-}
-
-function shouldShowDoppelganger(key) {
-  return (
-    stakingStore.doppelgangerKeys?.length &&
-    !stakingStore.isPreviewListActive &&
-    !stakingStore.isSkeletonActive &&
-    stakingStore.selectedServiceToFilter?.config?.serviceID === key.serviceID
+  stakingStore.doppelgangerKeys = stakingStore.doppelgangerKeys.filter(
+    (item) => !normalizedKeysSet.has(item.pubkey)
   );
 }
 
+watch(
+  () => stakingStore.keys,
+  async () => {
+    removeDuplicatedDoppelgangerKeys();
+  },
+  { deep: true }
+);
+
+function isKeyInGroup(key) {
+  return stakingStore.validatorKeyGroups.some((group) =>
+    group.keys.some((groupKey) => groupKey.key === key.key)
+  );
+}
 function shouldShowKeys(key) {
-  return !isKeyInGroup(key) && !stakingStore.isPreviewListActive && stakingStore.keys?.length > 0 && !stakingStore.isSkeletonActive;
+  return (
+    !isKeyInGroup(key) &&
+    !stakingStore.isPreviewListActive &&
+    stakingStore.keys?.length > 0 &&
+    !stakingStore.isSkeletonActive
+  );
 }
 
 function onDragOver() {
