@@ -4,9 +4,7 @@
     @pointerdown.prevent.stop
     @mousedown.prevent.stop
   >
-    <div
-      class="w-full h-full row-start-2 row-span-full grid grid-rows-12 items-center justify-start"
-    >
+    <div class="w-full h-full row-start-2 row-span-full grid grid-rows-12 items-center justify-start">
       <!-- All Keys Button -->
       <div
         v-if="showAllKeysButton"
@@ -20,9 +18,7 @@
         @mouseenter="footerStore.cursorLocation = `All Keys`"
         @mouseleave="[(footerStore.cursorLocation = ''), (hoveredIndex = null)]"
       >
-        <span class="w-7 h-7 rounded-full text-center text-xs text-gray-200 p-2"
-          >All</span
-        >
+        <span class="w-7 h-7 rounded-full text-center text-xs text-gray-200 p-2">All</span>
       </div>
 
       <!-- Validator Buttons -->
@@ -31,9 +27,7 @@
         :key="item.config?.serviceID"
         class="w-9 h-9 max-h-[35px] row-span-1 py-1 rounded-r-full text-gray-700 transition-colors duration-200 flex justify-center items-center cursor-pointer"
         :class="[
-          item.setupColor === 'default'
-            ? 'bg-[#336666]'
-            : setupStore.getBGColor(item.setupColor),
+          item.setupColor === 'default' ? 'bg-[#336666]' : setupStore.getBGColor(item.setupColor),
           currentService === item.config?.serviceID
             ? 'shadow-md shadow-[#191a1b] animate__animated animate__slideInLeft animate__faster pointer-events-none'
             : 'bg-[#202123] border border-gray-600',
@@ -80,10 +74,7 @@ const installedValidators = computed(() => {
   return serviceStore.installedServices
     .filter(
       (s) =>
-        s.category === "validator" &&
-        setupStore.selectedSetup.services
-          ?.map((setup) => setup.config.serviceID)
-          .includes(s.config.serviceID)
+        s.category === "validator" && setupStore.selectedSetup.services?.map((setup) => setup.config.serviceID).includes(s.config.serviceID)
     )
     .sort((a, b) => a.name.localeCompare(b.name));
 });
@@ -107,9 +98,7 @@ const selectSingleValidator = (validator) => {
 
 const filterKeys = () => {
   stakingStore.keys?.filter((key) =>
-    stakingStore.displayAllKeysActive
-      ? true
-      : key.validatorID === stakingStore.selectedServiceToFilter?.config?.serviceID
+    stakingStore.displayAllKeysActive ? true : key.validatorID === stakingStore.selectedServiceToFilter?.config?.serviceID
   ) || [];
 };
 
