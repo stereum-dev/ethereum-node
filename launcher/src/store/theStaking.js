@@ -53,6 +53,8 @@ export const useStakingStore = defineStore("theStaking", {
       // ***** End Staking Remote Keys *****
 
       // ***** Validator Keys *****
+      isImportValidatorButtonClicked: false,
+      displayDoppelgangerPreview: false,
       passwordFiles: [],
       isPubkeyVisible: false,
       removeResponse: [],
