@@ -1,6 +1,6 @@
 <template>
   <div class="no-data_box text-blue-300">
-    <span class="big-sign flex justify-center items-center w-full h-full uppercase text-xl font-semibold">
+    <span class="big-sign flex justify-center items-center w-full h-full uppercase text-lg font-semibold">
       &gt; {{ $t("noData.noData") }} &lt;
     </span>
   </div>

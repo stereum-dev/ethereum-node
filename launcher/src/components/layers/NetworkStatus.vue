@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full h-full bg-[#151618] border border-gray-600 px-1 grid"
+    class="w-full h-full bg-[#151618] px-1 grid"
     :class="[
       route.path === '/staking' || route.path === '/control' ? 'rounded-[4px]' : 'mt-1 rounded-md',
       route.path === '/control' ? 'grid-cols-6' : 'grid-cols-3 col-start-1 col-span-full',
