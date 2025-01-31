@@ -102,6 +102,7 @@
     "write": "ÉCRITURE",
     "read": "LECTURE",
     "inclusionDistance": "DISTANCE D'INCLUSION",
+    "ipAddressIs": "IP ADDRESS IS",
     "rpc": "POINT DE TERMINAISON RPC",
     "ws": "POINT DE TERMINAISON WS",
     "syncStatus": "ÉTAT DE SYNCHRONISATION",

@@ -102,6 +102,7 @@
     "write": "ПИСАТИ",
     "read": "ПРОЧИТАТИ",
     "inclusionDistance": "ИНКЛУЗИВНА УДАЉЕНОСТ",
+    "ipAddressIs": "IP ADDRESS IS",
     "rpc": "РПЦ-ТАЧКА",
     "ws": "ВС-ТАЧКА",
     "syncStatus": "СТАТУС СИНХРОНИЗАЦИЈЕ",
