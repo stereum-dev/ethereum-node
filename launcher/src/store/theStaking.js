@@ -53,6 +53,8 @@ export const useStakingStore = defineStore("theStaking", {
       // ***** End Staking Remote Keys *****
 
       // ***** Validator Keys *****
+      isImportValidatorButtonClicked: false,
+      displayDoppelgangerPreview: false,
       passwordFiles: [],
       isPubkeyVisible: false,
       removeResponse: [],
@@ -62,6 +64,7 @@ export const useStakingStore = defineStore("theStaking", {
       selectedKeyToRemove: null,
       selectKeyToRename: null,
       selectKeyForFee: null,
+      isRenameKeyActive: false,
       validatorDisplayName: "",
       enteredFeeRecipientAddress: "",
       feeRecepientAddress: "",
@@ -95,6 +98,7 @@ export const useStakingStore = defineStore("theStaking", {
       keyCounter: 0,
       obolStats: {},
       ssvStats: {},
+      isSkeletonActive: true,
     };
   },
   actions: {

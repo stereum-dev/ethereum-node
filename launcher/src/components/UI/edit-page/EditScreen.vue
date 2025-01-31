@@ -1,7 +1,5 @@
 <template>
   <base-layout>
-    <!-- Start Node main layouts -->
-
     <div class="w-full h-full grid grid-cols-24 relative select-none">
       <div class="col-start-1 col-span-1 flex justify-center items-center">
         <SidebarSection @network-modal="displaySwitchNetwork" @nuke-node="openNukeNodeModal" />
@@ -127,9 +125,10 @@
     <LoaderAnime v-if="manageStore.disableConfirmButton || setupStore.isImportAnimeActive" :anime="getAimationSrc" />
   </base-layout>
 </template>
+
 <script setup>
+import { useFrontendServices } from "@/composables/services";
 import { useDeepClone } from "@/composables/utils";
-import { useListKeys } from "@/composables/validators";
 import ControlService from "@/store/ControlService";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useNodeManage } from "@/store/nodeManage";
@@ -140,6 +139,7 @@ import { useStakingStore } from "@/store/theStaking";
 import { computed, onMounted, onUnmounted, ref, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 import { useMultiSetups } from "../../../composables/multiSetups";
+import { useGenesis } from "../../../store/genesis";
 import { useSetups } from "../../../store/setups";
 import NetworkStatus from "../../layers/NetworkStatus.vue";
 import DrawerBox from "./components/drawer/DrawerBox.vue";
@@ -154,16 +154,14 @@ import ModifyModal from "./components/modals/ModifyModal.vue";
 import NetworkModal from "./components/modals/NetworkModal.vue";
 import NukeModal from "./components/modals/NukeModal.vue";
 import SwitchModal from "./components/modals/SwitchModal.vue";
-import DevnetSetup from "./components/modals/devnet/DevnetSetup.vue";
 import AddCustom from "./components/modals/custom-service/AddCustom.vue";
+import DevnetSetup from "./components/modals/devnet/DevnetSetup.vue";
 import CreateSetup from "./components/modals/setups/CreateSetup.vue";
 import ImportSetup from "./components/modals/setups/ImportSetup.vue";
 import SetupInfos from "./components/modals/setups/SetupInfos.vue";
 import ChangesSection from "./sections/ChangesSection.vue";
 import ServiceSection from "./sections/ServiceSection.vue";
 import SidebarSection from "./sections/SidebarSection.vue";
-import { useFrontendServices } from "@/composables/services";
-import { useGenesis } from "../../../store/genesis";
 
 const setupStore = useSetups();
 const footerStore = useFooter();
@@ -292,10 +290,6 @@ const fetchSetups = async () => {
   setupStore.editSetups = getAllSetups();
 };
 
-const listKeys = async (forceRefresh) => {
-  await useListKeys(forceRefresh);
-};
-
 // Random ID generator
 function generateRandomId() {
   const timestamp = new Date().getTime().toString(16);
@@ -398,6 +392,7 @@ const serviceModifyHandler = (item) => {
 const hideModifyModal = () => {
   manageStore.isLineHidden = false;
   isModifyModalOpen.value = false;
+
   manageStore.newConfiguration = useDeepClone(serviceStore.installedServices);
 };
 const confirmConsensusConnection = (item) => {
@@ -516,6 +511,7 @@ const setupDevnet = async () => {
     await Promise.all(installPromises);
 
     await ControlService.handleServiceChanges(useDeepClone(manageStore.confirmChanges));
+
     await ControlService.startServicesForSetup(setupId);
     await ControlService.removeConfigGenesisCopy();
 
@@ -583,6 +579,7 @@ const cancelChangeHandler = (item) => {
       const event = manageStore.newConfiguration.find((e) => e.id === item.service.id);
       const eventIdx = manageStore.newConfiguration.indexOf(event);
       manageStore.newConfiguration.splice(eventIdx, 1);
+
       manageStore.newConfiguration = useDeepClone(serviceStore.installedServices);
     }
 
@@ -892,11 +889,12 @@ const confirmHandler = async () => {
       await handleSetupChanges();
     } else if (manageStore.confirmChanges.some((e) => e.content === "NETWORK")) {
       await handleSwitchSetupNetwork();
-      await ControlService.handleServiceChanges(useDeepClone(manageStore.confirmChanges));
+
+      await ControlService.handleServiceChanges(JSON.parse(JSON.stringify(manageStore.confirmChanges)));
     } else if (manageStore.confirmChanges.some((e) => e.content === "MODIFY")) {
-      await ControlService.handleServiceChanges(useDeepClone(manageStore.confirmChanges));
+      await ControlService.handleServiceChanges(JSON.parse(JSON.stringify(manageStore.confirmChanges)));
     } else {
-      await ControlService.handleServiceChanges(useDeepClone(manageStore.confirmChanges));
+      await ControlService.handleServiceChanges(JSON.parse(JSON.stringify(manageStore.confirmChanges)));
     }
   } catch (error) {
     console.error("Error processing changes:", error);
@@ -912,7 +910,8 @@ const handleServerServiceChanges = async () => {
   manageStore.confirmChanges.forEach((change) => {
     change.data.setupId = commonServicesId ?? change.data.setupId;
   });
-  await ControlService.handleServiceChanges(useDeepClone(manageStore.confirmChanges));
+
+  await ControlService.handleServiceChanges(JSON.parse(JSON.stringify(manageStore.confirmChanges)));
 };
 
 const handleSetupChanges = async () => {
@@ -942,7 +941,6 @@ const resetState = async () => {
   manageStore.selectedNetwork = {};
   setupStore.selectedSetupToRemove = [];
   manageStore.isLineHidden = false;
-  await listKeys();
   await updateDom();
   setTimeout(() => {
     manageStore.disableConfirmButton = false;
@@ -985,6 +983,7 @@ const deleteSetup = async (item) => {
   const subtasks =
     item?.services.flatMap((service) => {
       const matchedServices = manageStore.newConfiguration.filter((e) => e.config?.serviceID === service.config?.serviceID);
+
       return matchedServices.map((e) => ({
         id: e.config?.serviceID,
         content: "DELETE",
@@ -1027,7 +1026,8 @@ const closeNetworkModal = () => {
 const closeSwitchModal = () => {
   isSwitchModalOpen.value = false;
   manageStore.isLineHidden = false;
-  manageStore.newConfiguration = useDeepClone(serviceStore.installedServices);
+
+  manageStore.newConfiguration = JSON.parse(JSON.stringify(serviceStore.installedServices));
 };
 
 const closeInfoModal = () => {

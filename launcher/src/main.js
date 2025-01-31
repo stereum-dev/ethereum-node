@@ -5,6 +5,7 @@ import { createPinia } from "pinia";
 import VueApexCharts from "vue3-apexcharts";
 
 import "./main.css";
+import "preline/preline";
 
 import i18n from "./includes/i18n";
 import BaseLayout from "./components/base/BaseLayout.vue";

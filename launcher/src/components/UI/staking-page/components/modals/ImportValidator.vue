@@ -101,9 +101,8 @@
   </staking-custom-modal>
 </template>
 <script setup>
-import { computed, ref, watch, onMounted, nextTick, onUnmounted } from "vue";
 import { useStakingStore } from "@/store/theStaking";
-import { useListKeys } from "@/composables/validators";
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from "vue";
 
 const emit = defineEmits(["importKey"]);
 
@@ -197,10 +196,6 @@ const handleFileUpload = (event) => {
   }
 };
 
-const listKeys = async () => {
-  await useListKeys(stakingStore.forceRefresh);
-};
-
 const importValidator = () => {
   clickOut.value = null;
   isSlashingActive.value = false;
@@ -212,7 +207,6 @@ const importValidator = () => {
 const okHandler = async () => {
   stakingStore.setActiveModal(null);
   stakingStore.setActivePanel(null);
-  await listKeys();
 };
 </script>
 <style scoped>

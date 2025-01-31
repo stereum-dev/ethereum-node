@@ -1,15 +1,18 @@
 <template>
   <div
-    class="max-h-[165px] col-start-1 col-span-full row-start-1 row-end-5 grid grid-cols-6 space-y-1"
+    class="max-h-[165px] col-start-1 col-span-full row-start-1 row-end-5 grid grid-cols-6 justify-normal items-center bg-[#232426] space-y-[2px]"
     :class="
       stakingStore?.selectedServiceToFilter?.service === 'CharonService' ||
       stakingStore?.selectedServiceToFilter?.service === 'SSVNetworkService'
-        ? 'grid-rows-5'
-        : 'grid-rows-4'
+        ? 'grid-rows-8'
+        : 'grid-rows-7'
     "
     @mousedown.prevent
   >
+    <SelectedValidator />
     <EpochSlot />
+    <TotalKeys />
+    <TotalBalance />
     <StatusInfoRow
       v-if="
         stakingStore.selectedServiceToFilter?.service === 'CharonService' ||
@@ -65,6 +68,9 @@ import ParticipationRow from "./components/val-rewards/ParticipationRow.vue";
 import PerformanceRow from "./components/val-rewards/PerformanceRow.vue";
 import StatusInfoRow from "./components/val-rewards/StatusInfoRow.vue";
 import { useObolStats, useSSVStats } from "../../../../../composables/validators";
+import TotalBalance from "./components/val-rewards/TotalBalance.vue";
+import TotalKeys from "./components/val-rewards/TotalKeys.vue";
+import SelectedValidator from "./components/val-rewards/SelectedValidator.vue";
 
 const stakingStore = useStakingStore();
 const pollingInterval = ref(null);

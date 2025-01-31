@@ -35,9 +35,11 @@ const displayButtonByCondition = computed(() => {
   const isImportRemoteButton = props.button.text === "Import Remote Keys";
 
   //Imported keys for selected validator service
-  const matchingKeyForService = stakingStore.keys.some((key) => key.validatorID === stakingStore.selectedServiceToFilter?.config.serviceID);
+  const matchingKeyForService = stakingStore.keys.some(
+    (key) => key.validatorID === stakingStore.selectedServiceToFilter?.config?.serviceID
+  );
 
-  if (isImportRemoteButton && stakingStore.isStakingDisabled) {
+  if ((isImportRemoteButton && stakingStore.isStakingDisabled) || (isImportRemoteButton && !isValidatorFilterRunning)) {
     return true;
   }
 
