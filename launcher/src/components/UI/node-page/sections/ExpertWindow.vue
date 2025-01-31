@@ -19,7 +19,7 @@
             {{ item.category }}
             <span v-if="item.category != 'service'">client</span>
           </p>
-          <span class="text-sm text-gray-200">ID: {{ item.config.serviceID }}</span>
+          <span class="text-sm text-gray-200">ID: {{ item.config?.serviceID }}</span>
         </div>
       </div>
 

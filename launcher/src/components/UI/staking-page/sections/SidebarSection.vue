@@ -7,11 +7,12 @@
     <div class="w-full h-full row-start-2 row-span-full grid grid-rows-12 items-center justify-start">
       <!-- All Keys Button -->
       <div
+        v-if="showAllKeysButton"
         class="w-9 h-9 max-h-[35px] row-span-1 py-1 rounded-r-full text-gray-700 transition-colors duration-200 flex justify-center items-center cursor-pointer"
         :class="{
-          'bg-[#336666] shadow-md shadow-[#191a1b] animate__animated animate__slideInLeft animate__faster pointer-events-none':
+          'bg-[#336666] border-2 border-l-0 border-lime-300 shadow-md shadow-[#191a1b] animate__animated animate__slideInLeft animate__faster pointer-events-none':
             stakingStore.displayAllKeysActive,
-          'bg-[#202123] border border-gray-600': !stakingStore.displayAllKeysActive,
+          'bg-[#336666] border-gray-400': !stakingStore.displayAllKeysActive,
         }"
         @click="clearServiceFilter"
         @mouseenter="footerStore.cursorLocation = `All Keys`"
@@ -25,11 +26,12 @@
         v-for="item in installedValidators"
         :key="item.config?.serviceID"
         class="w-9 h-9 max-h-[35px] row-span-1 py-1 rounded-r-full text-gray-700 transition-colors duration-200 flex justify-center items-center cursor-pointer"
-        :class="{
-          'bg-[#336666] shadow-md shadow-[#191a1b] animate__animated animate__slideInLeft animate__faster pointer-events-none':
-            currentService === item.config?.serviceID,
-          'bg-[#202123] border border-gray-600': currentService !== item.config?.serviceID,
-        }"
+        :class="[
+          item.setupColor === 'default' ? 'bg-[#336666]' : setupStore.getBGColor(item.setupColor),
+          currentService === item.config?.serviceID
+            ? 'shadow-md shadow-[#191a1b] animate__animated animate__slideInLeft animate__faster pointer-events-none'
+            : 'bg-[#202123] border border-gray-600',
+        ]"
         @click="filterByService(item)"
         @mouseenter="footerStore.cursorLocation = `Filter by ${item.name}`"
         @mouseleave="[(footerStore.cursorLocation = ''), (hoveredIndex = null)]"
@@ -63,44 +65,41 @@ const serviceStore = useServices();
 
 const currentService = ref(null);
 const hoveredIndex = ref(null);
+const isInitialMount = ref(true);
 
-// Computed: Filters installed validators based on selected setup
 const installedValidators = computed(() => {
   if (!setupStore.selectedSetup) {
     return serviceStore.installedServices.filter((s) => s.category === "validator");
   }
-
-  // Apply setup filter to validators
   return serviceStore.installedServices
     .filter(
       (s) =>
-        s.category === "validator" &&
-        s.service !== "LCOMService" &&
-        setupStore.selectedSetup.services?.map((s) => s.config.serviceID).includes(s.config.serviceID)
+        s.category === "validator" && setupStore.selectedSetup.services?.map((setup) => setup.config.serviceID).includes(s.config.serviceID)
     )
     .sort((a, b) => a.name.localeCompare(b.name));
 });
 
-// Lifecycle Hooks: Initialize current service and validator
-onMounted(() => {
-  clearServiceFilter(); // Set default to All Keys view
-});
+const showAllKeysButton = computed(() => installedValidators.value.length > 1);
 
-// Methods
+const clearServiceFilter = () => {
+  stakingStore.selectedServiceToFilter = null;
+  currentService.value = null;
+  stakingStore.displayAllKeysActive = true;
+};
+
+const selectSingleValidator = (validator) => {
+  currentService.value = validator.config?.serviceID;
+  stakingStore.selectedServiceToFilter = validator;
+  stakingStore.displayAllKeysActive = false;
+  filterKeys();
+  useObolStats();
+  useSSVStats();
+};
+
 const filterKeys = () => {
-  if (stakingStore.displayAllKeysActive) {
-    // Default: Show all keys, or apply only setup filter if setup is selected
-    stakingStore.keys = setupStore.selectedSetup
-      ? stakingStore.keys.filter((key) => setupStore.selectedSetup.services.some((service) => service.config.serviceID === key.validatorID))
-      : stakingStore.keys;
-  } else {
-    // Apply both selectedServiceToFilter and selectedSetup filtering
-    stakingStore.keys = stakingStore.keys.filter(
-      (key) =>
-        key.validatorID === stakingStore.selectedServiceToFilter?.config?.serviceID &&
-        (!setupStore.selectedSetup || setupStore.selectedSetup.services.some((service) => service.config.serviceID === key.validatorID))
-    );
-  }
+  stakingStore.keys?.filter((key) =>
+    stakingStore.displayAllKeysActive ? true : key.validatorID === stakingStore.selectedServiceToFilter?.config?.serviceID
+  ) || [];
 };
 
 const filterByService = (item) => {
@@ -112,21 +111,35 @@ const filterByService = (item) => {
   useSSVStats();
 };
 
-const clearServiceFilter = () => {
-  stakingStore.selectedServiceToFilter = null;
-  currentService.value = null;
-  stakingStore.displayAllKeysActive = true;
-  filterKeys();
-};
-
 watch(
-  () => setupStore.selectedSetup,
+  () => stakingStore.displayAllKeysActive,
   () => {
-    if (stakingStore.displayAllKeysActive) {
-      filterKeys();
-    }
+    filterKeys();
   }
 );
+
+watch(
+  () => installedValidators.value,
+  (newValidators) => {
+    if (isInitialMount.value) {
+      if (newValidators.length === 1) {
+        selectSingleValidator(newValidators[0]);
+      } else {
+        clearServiceFilter();
+      }
+      isInitialMount.value = false;
+    }
+  },
+  { immediate: true }
+);
+
+onMounted(() => {
+  if (installedValidators.value.length === 1) {
+    selectSingleValidator(installedValidators.value[0]);
+  } else {
+    clearServiceFilter();
+  }
+});
 </script>
 
 <style scoped>

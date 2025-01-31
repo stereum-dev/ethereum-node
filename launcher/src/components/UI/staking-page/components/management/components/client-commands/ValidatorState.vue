@@ -53,10 +53,10 @@
 </template>
 
 <script setup>
-import { computed, watch } from "vue";
-import { useStakingStore } from "@/store/theStaking";
-import { useFooter } from "@/store/theFooter";
 import i18n from "@/includes/i18n";
+import { useFooter } from "@/store/theFooter";
+import { useStakingStore } from "@/store/theStaking";
+import { computed, watch } from "vue";
 
 const t = i18n.global.t;
 
@@ -68,33 +68,35 @@ const numValidator = t("displayValidator.numValidator");
 
 const stakingStore = useStakingStore();
 
-const getServiceState = computed(() => {
-  return stakingStore.selectedServiceToFilter?.state ?? null;
-});
-
 const getServiceIcon = computed(() => {
   return stakingStore.selectedServiceToFilter?.icon ?? null;
 });
 
+const getServiceState = computed(() => {
+  let state;
+  if (stakingStore.selectedServiceToFilter?.state === "running") {
+    state = "online";
+  } else {
+    state = "offline";
+  }
+  return state;
+});
+
 const getTextColor = computed(() => {
-  if (getServiceState.value === "running") {
+  if (getServiceState.value === "online") {
     return "text-green-500";
-  } else if (getServiceState.value === "off") {
+  } else if (getServiceState.value === "offline") {
     return "text-red-500";
-  } else if (getServiceState.value === "restarting") {
-    return "text-amber-400";
   }
 
   return "text-gray-500";
 });
 
 const getStateColor = computed(() => {
-  if (getServiceState.value === "running") {
+  if (getServiceState.value === "online") {
     return "bg-green-400";
-  } else if (getServiceState.value === "off") {
+  } else if (getServiceState.value === "offline") {
     return "bg-red-500";
-  } else if (getServiceState.value === "restarting") {
-    return "bg-amber-400";
   }
 
   return "bg-gray-500";
