@@ -84,8 +84,8 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onUnmounted } from "vue";
-import KeyRow from "./rows/KeyRow.vue";
+import { ref, computed, watch, onUnmounted, defineAsyncComponent } from "vue";
+// import KeyRow from "./rows/KeyRow.vue";
 import PreviewKey from "./rows/PreviewKey.vue";
 import GroupRow from "./rows/GroupRow.vue";
 import SkeletonRow from "./rows/SkeletonRow.vue";
@@ -94,6 +94,8 @@ import GroupList from "./GroupList.vue";
 import RemoteList from "./RemoteList.vue";
 import { useStakingStore } from "@/store/theStaking";
 import { useSetups } from "@/store/setups";
+
+const KeyRow = defineAsyncComponent(() => import("./rows/KeyRow.vue"));
 
 const emit = defineEmits([
   "onDrop",
@@ -204,7 +206,7 @@ watch(
   async () => {
     removeDuplicatedDoppelgangerKeys();
   },
-  { deep: true }
+  { once: true }
 );
 
 function isKeyInGroup(key) {
@@ -242,7 +244,7 @@ function onDrop(event) {
 }
 
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 5px;
   height: 5px;
   cursor: pointer;
 }
