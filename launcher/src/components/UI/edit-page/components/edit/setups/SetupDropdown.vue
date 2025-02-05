@@ -16,7 +16,12 @@
 
     <!-- Dropdown toggle button -->
 
-    <div v-else class="col-start-1 relative p-1 grid rounded-[4px]" :class="dynamicClasses" @click="toggleDropdown">
+    <div
+      v-else
+      class="col-start-1 relative p-1 grid rounded-[4px]"
+      :class="[dynamicClasses, border ? 'border border-gray-600' : '']"
+      @click="toggleDropdown"
+    >
       <span
         v-if="setupStore.selectedSetup !== null && setupStore.selectedSetup?.isActive"
         class="col-start-1 col-span-1 w-4 h-4 rounded-full self-center justify-self-center shadow-sm shadow-black"
@@ -109,7 +114,7 @@ import RenameSetup from "./RenameSetup.vue";
 import { useServices } from "@/store/services";
 import { useDeepClone } from "@/composables/utils";
 
-const { newHeight, newBorder } = defineProps({
+const { newHeight, border } = defineProps({
   list: {
     type: Array,
     required: true,
@@ -119,10 +124,10 @@ const { newHeight, newBorder } = defineProps({
     required: false,
     default: "h-full",
   },
-  newBorder: {
-    type: String,
+  border: {
+    type: Boolean,
     required: false,
-    default: "border border-gray-600",
+    default: false,
   },
 });
 
@@ -153,11 +158,7 @@ const setupsList = computed(() => {
   return useDeepClone(output);
 });
 
-const borderClass = computed(() => {
-  if (newBorder === "") return "";
-  return newBorder;
-});
-const dynamicClasses = computed(() => [route.path === "/edit" ? "col-end-6 grid-cols-9" : "col-span-full grid-cols-12", borderClass.value]);
+const dynamicClasses = computed(() => [route.path === "/edit" ? "col-end-6 grid-cols-9" : "col-span-full grid-cols-12"]);
 
 const getDropdownWidth = computed(() => {
   let width;

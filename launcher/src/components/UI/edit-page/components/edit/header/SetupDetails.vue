@@ -1,5 +1,5 @@
 <template>
-  <div class="grid grid-cols-6 gap-1 items-center bg-[#151618] border h-full border-gray-600 rounded-md">
+  <div class="grid grid-cols-6 gap-1 items-center bg-[#151618] h-full rounded-md" :class="props.border ? 'border border-gray-600' : ''">
     <SetupDropdown
       :list="props.list"
       @select-rename="selectRename"
@@ -16,6 +16,10 @@ const props = defineProps({
   list: {
     type: Array,
     required: true,
+  },
+  border: {
+    type: Boolean,
+    default: true,
   },
 });
 
