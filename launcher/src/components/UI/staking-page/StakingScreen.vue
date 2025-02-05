@@ -46,7 +46,7 @@ import { useServices } from "@/store/services";
 import { useSetups } from "@/store/setups";
 import { useStakingStore } from "@/store/theStaking";
 import { saveAs } from "file-saver";
-import { computed, onMounted, onUnmounted, watch, watchEffect } from "vue";
+import { computed, onMounted, onUnmounted, watch } from "vue";
 import ControlService from "../../../store/ControlService";
 import ImportRemote from "./components/modals/ImportRemote.vue";
 import ImportValidator from "./components/modals/ImportValidator.vue";
@@ -128,6 +128,9 @@ onMounted(async () => {
   stakingStore.forceRefresh = true;
   getServerView();
   await listKeys();
+  if (stakingStore.keys.length > 0 && setupStore.allSetups.length > 0) {
+    getKeySetupColor();
+  }
 });
 
 // *************** Methods *****************
@@ -738,12 +741,6 @@ const confirmImportRemoteKeys = async () => {
 };
 
 //****End of Client Commands Buttons ****
-
-watchEffect(() => {
-  if (stakingStore.keys.length > 0 && setupStore.allSetups.length > 0) {
-    getKeySetupColor();
-  }
-});
 
 onUnmounted(() => {
   setupStore.selectedSetup = null;
