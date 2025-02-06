@@ -40,8 +40,12 @@ export class OneClickInstall {
 
   //this is broken
   chooseClient(clients) {
-    let client = clients[Math.floor(Math.random() * clients.length)].toLowerCase();
-    return client.charAt(0).toUpperCase() + client.slice(1);
+    console.log("111111111------------------------------", clients);
+    if (clients && clients.length > 0) {
+      let client = clients[Math.floor(Math.random() * clients.length)].toLowerCase();
+      console.log("2222222------------------------------", clients);
+      return client.charAt(0).toUpperCase() + client.slice(1);
+    }
   }
 
   clearSetup() {
@@ -541,7 +545,17 @@ export class OneClickInstall {
     this.network = network;
     let services = ["GrafanaService", "PrometheusNodeExporterService", "PrometheusService", "NotificationService"];
 
-    const selectedCC_VC = this.chooseClient(["PRYSM", "LIGHTHOUSE", "NIMBUS", "TEKU", "LODESTAR"]);
+    // const selectedCC_VC = this.chooseClient(["PRYSM", "LIGHTHOUSE", "NIMBUS", "TEKU", "LODESTAR"]);
+    const selectedCC_VC = (() => {
+      switch (setup) {
+        case "op full node":
+          return this.chooseClient([]);
+        case "op node archive":
+          return this.chooseClient([]);
+        default:
+          return this.chooseClient(["PRYSM", "LIGHTHOUSE", "NIMBUS", "TEKU", "LODESTAR"]);
+      }
+    })();
 
     services.push(selectedCC_VC + "ValidatorService");
     services.push(selectedCC_VC + "BeaconService");
