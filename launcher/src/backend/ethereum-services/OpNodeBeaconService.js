@@ -61,7 +61,7 @@ export class OpNodeBeaconService extends NodeService {
         "--metrics.addr=0.0.0.0",
         "--metrics.port=7300",
         "--syncmode=execution-layer",
-        `--network=op-${network}`,
+        `--network=${network}`,
         "--rollup.load-protocol-versions=true",
         "--rollup.halt=major",
         "--p2p.priv.path=/p2p/opnode_p2p_priv.txt",
@@ -73,7 +73,7 @@ export class OpNodeBeaconService extends NodeService {
       ports, //ports
       volumes, //volumes
       null, //user
-      "op-" + network, //network
+      network, //network
       executionClients, //executionClients
       consensusClients, //consensusClients
       null //mevboost

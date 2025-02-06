@@ -34,7 +34,7 @@ export class OpGethService extends NodeService {
       ports, // ports
       volumes, // volumes
       "root", // user
-      "op-" + network, // network
+      network, // network
       executionClients ? executionClients : [] // executionClients
       // consensusClients
     );
@@ -68,7 +68,7 @@ export class OpGethService extends NodeService {
       `--port=39393`,
       `--discovery.port=39393`,
       `--db.engine=pebble`,
-      `--op-network=op-${network}`,
+      `--op-network=${network}`,
       `--metrics`,
       `--metrics.expensive`,
       `--metrics.port=6060`,

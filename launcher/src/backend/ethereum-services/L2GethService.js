@@ -31,7 +31,7 @@ export class L2GethService extends NodeService {
       ports, // ports
       volumes, // volumes
       "root", // user
-      "op-" + network // network
+      network // network
       // executionClients
       // consensusClients
     );
