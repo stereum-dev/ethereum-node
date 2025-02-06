@@ -546,7 +546,21 @@ export class OneClickInstall {
     services.push(selectedCC_VC + "ValidatorService");
     services.push(selectedCC_VC + "BeaconService");
 
-    const selectedEC = setup === "optimism" ? this.chooseClient(["GETH", "RETH"]) : this.chooseClient(["GETH", "BESU", "NETHERMIND"]);
+    const selectedEC = (() => {
+      switch (setup) {
+        case "op full node":
+          return this.chooseClient([]);
+        case "op node archive":
+          return this.chooseClient([]);
+        default:
+          return this.chooseClient(["GETH", "BESU", "NETHERMIND"]);
+      }
+    })();
+
+    // const selectedEC =
+    //   setup === "op full node"
+    //     ? this.chooseClient(["GETH", "RETH", "NETHERMIND", "BESU", "ERIGON"])
+    //     : this.chooseClient(["GETH", "BESU", "NETHERMIND"]);
 
     services.push(selectedEC + "Service");
 
@@ -589,8 +603,18 @@ export class OneClickInstall {
       case "lidocsm":
         services.push("FlashbotsMevBoostService", "KeysAPIService", "ValidatorEjectorService", "KuboIPFSService", "LCOMService");
         break;
-      case "optimism":
-        services.push("OpGethService", "OpNodeBeaconService", "L2GethService");
+      case "op full node":
+        services.push("OpGethService", "OpNodeBeaconService");
+        break;
+      case "op and eth full node":
+        services.push("OpGethService", "OpNodeBeaconService");
+        break;
+      case "op node archive":
+        services.push("OpGethService", "OpNodeBeaconService");
+        break;
+      case "op and eth node archive":
+        services.push("OpGethService", "OpNodeBeaconService");
+        break;
     }
     return services;
   }
