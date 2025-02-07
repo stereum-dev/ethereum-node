@@ -302,8 +302,6 @@ const setArchitecture = async () => {
   manageStore.architecture = settings.stereum?.settings.arch;
 };
 
-const randomId = computed(() => generateRandomId());
-
 // Switch Clients methods
 const switchClientModalhandler = (item) => {
   manageStore.isLineHidden = true;
@@ -370,7 +368,7 @@ const confirmModifyingService = (item) => {
   }
 
   manageStore.confirmChanges.push({
-    id: randomId,
+    id: generateRandomId(),
     content: "MODIFY",
     contentIcon: "/img/icon/edit-node-icons/service-connected.png",
     service: item.client,
@@ -398,7 +396,7 @@ const hideModifyModal = () => {
 const confirmConsensusConnection = (item) => {
   clientToConnect.value.isNotConnectedToConsensus = false;
   manageStore.confirmChanges.push({
-    id: randomId,
+    id: generateRandomId(),
     content: "CLIENT CONNECT",
     contentIcon: "/img/icon/edit-node-icons/service-connecting.png",
     service: item,
@@ -410,13 +408,13 @@ const confirmConsensusConnection = (item) => {
 const changeMevboostConnection = () => {
   manageStore.isLineHidden = true;
   const hasConsensusWithMevboost = manageStore.newConfiguration.some((e) => {
-    return e.category === "consensus" && !e.config.dependencies.mevboost[0];
+    return e.category === "consensus" && !e.config.dependencies?.mevboost[0];
   });
   if (hasConsensusWithMevboost) {
     manageStore.newConfiguration.forEach((e) => {
-      if (e.config.dependencies.mevboost[0]) {
+      if (e.config.dependencies?.mevboost[0]) {
         e.isConnectedToMevboost = true;
-      } else if (!e.config.dependencies.mevboost[0]) {
+      } else if (!e.config.dependencies?.mevboost[0]) {
         e.isNotConnectedToMevboost = true;
       }
     });
@@ -543,7 +541,7 @@ const installService = async (client, setupId, executionClients, consensusClient
   };
 
   manageStore.confirmChanges.push({
-    id: randomId,
+    id: generateRandomId(),
     content: "INSTALL",
     contentIcon: "/img/icon/edit-node-icons/add-service-icon.png",
     service: client,
@@ -700,7 +698,7 @@ const addServiceHandler = (item) => {
   }
 
   manageStore.confirmChanges.push({
-    id: randomId,
+    id: generateRandomId(),
     content: "INSTALL",
     contentIcon: "/img/icon/edit-node-icons/add-service-icon.png",
     service: item.client,
