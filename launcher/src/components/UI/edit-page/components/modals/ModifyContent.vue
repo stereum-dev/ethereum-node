@@ -200,11 +200,11 @@ const updateProperties = () => {
 const getConnectedClient = () => {
   list.value.forEach((service) => {
     if (service.config?.dependencies) {
-      const allDependencies = props.client.config.dependencies.consensusClients.concat(
+      const allDependencies = props.client.config.dependencies?.consensusClients.concat(
         props.client.config.dependencies.executionClients,
         props.client.config.dependencies.otherServices
       );
-      if (allDependencies.map((s) => s.id).includes(service.config.serviceID)) {
+      if (allDependencies && allDependencies.map((s) => s.id).includes(service.config.serviceID)) {
         service.isConnected = true;
       }
       if (props.client.service === "FlashbotsMevBoostService") {
