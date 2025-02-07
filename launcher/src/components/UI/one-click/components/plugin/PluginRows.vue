@@ -3,7 +3,7 @@
     class="col-start-1 col-end-7 row-start-2 row-span-full border border-gray-600 rounded-md bg-[#14171a] p-2 overflow-x-hidden overflow-y-auto space-y-2 z-0"
   >
     <div
-      v-for="(plugin, index) in clickStore.selectedPreset.includedPlugins"
+      v-for="(plugin, index) in clickStore.selectedPreset?.includedPlugins"
       :key="index"
       class="w-full h-10 flex justify-start items-center bg-[#2c3136] rounded-md py-1 px-2 cursor-pointer hover:bg-[#3c434a] transition-all duration-300 ease-in-out relative"
       @click="pluginExchange(plugin)"
@@ -52,7 +52,9 @@ const serviceStore = useServices();
 
 const existingPluginsToReplace = computed(() => {
   return props.filteredPlugin.filter((i) => {
-    return i.service !== "ExternalExecutionService" && i.service !== "ExternalConsensusService";
+    return (
+      i.service !== "ExternalExecutionService" && i.service !== "ExternalConsensusService"
+    );
   });
 });
 

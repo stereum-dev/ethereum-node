@@ -2169,7 +2169,7 @@ export const useServices = defineStore("services", {
           linkUrl: "",
           docsUrl: "https://github.com/ethereum-optimism/op-geth",
           icon: require("../..//public/img/icon/service-icons/execution/op-geth.png"),
-          sIcon: require("../../public/img/icon/service-icons/execution/op-geth.png"),
+          sIcon: require("../../public/img/icon/service-icons/execution/op-geth-s.png"),
           headerOption: false,
           expertOptionsModal: false,
           expertOptions: [
@@ -2281,8 +2281,8 @@ export const useServices = defineStore("services", {
           path: "/opnode",
           linkUrl: "",
           docsUrl: "https://docs.optimism.io/",
-          icon: require("../../public/img/icon/service-icons/consensus/op-node.png"),
-          sIcon: require("../../public/img/icon/service-icons/consensus/op-node.png"),
+          icon: require("../../public/img/icon/service-icons/execution/op-node.png"),
+          sIcon: require("../../public/img/icon/service-icons/execution/op-node-s.png"),
           headerOption: false,
           expertOptionsModal: false,
           expertOptions: [
@@ -2371,7 +2371,7 @@ export const useServices = defineStore("services", {
           linkUrl: "",
           docsUrl: "https://docs.optimism.io/",
           icon: require("../..//public/img/icon/service-icons/execution/l2-geth.png"),
-          sIcon: require("../../public/img/icon/service-icons/execution/l2-geth.png"),
+          sIcon: require("../../public/img/icon/service-icons/execution/l2-geth-s.png"),
           headerOption: false,
           expertOptionsModal: false,
           expertOptions: [],
