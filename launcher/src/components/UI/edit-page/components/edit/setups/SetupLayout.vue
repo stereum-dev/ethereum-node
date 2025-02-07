@@ -47,7 +47,7 @@ const NodeConfigName = computed(() => {
 
   if (matchedNetwork?.network === "mainnet") {
     shortName = "ETH NODE CONFIG";
-  } else if (matchedNetwork?.network === "holisky") {
+  } else if (matchedNetwork?.network === "holesky") {
     shortName = "HLS NODE CONFIG";
   } else if (matchedNetwork?.network === "optimism") {
     shortName = "OPITMISM CONFIG";

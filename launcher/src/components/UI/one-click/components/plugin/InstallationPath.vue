@@ -64,18 +64,50 @@
         <!-- <input v-model="installMonitoring" class="switch" type="checkbox" /> -->
       </div>
     </div>
+    <div
+      v-if="
+        (clickStore.selectedPreset.name === 'op node archive' || clickStore.selectedPreset.name === 'op and eth node archive') &&
+        manageStore.currentNetwork.network == 'op-mainnet'
+      "
+      class="w-full col-start-1 col-span-full row-start-5 row-span-2 border rounded-md border-gray-600 mx-auto bg-[#336666] flex justify-between align-center"
+    >
+      <div>
+        <img :src="getLegacyService.icon" alt="legacy" class="w-8 h-8" />
+        <p>
+          {{ getLegacyService.name }}
+        </p>
+      </div>
+      <button
+        class="col-start-6 col-span-1 w-1/3 h-8 bg-gray-800 text-md text-gray-300 font-semibold rounded-full"
+        @click="addLegacyToPreset()"
+      >
+        +
+      </button>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { useClickInstall } from "@/store/clickInstallation";
-import { onMounted } from "vue";
+import { computed, onMounted } from "vue";
+import { useServices } from "../../../../../store/services";
+import { useNodeManage } from "@/store/nodeManage";
 
 const clickStore = useClickInstall();
+const serviceStore = useServices();
+const manageStore = useNodeManage();
+
+const getLegacyService = computed(() => {
+  return serviceStore.allServices.find((service) => service.service === "L2GethService");
+});
 
 const validatePath = () => {
   const pathRegex = /^\/(?:[^ /\0*?<>|&{}$;][^ /\0]*\/?)*[^ /\0*?<>|&{}$;]{1,}$/;
   clickStore.isPathValid = pathRegex.test(clickStore.installationPath.trim());
+};
+
+const addLegacyToPreset = () => {
+  clickStore.selectedPreset.includedPlugins.push(getLegacyService.value);
 };
 
 onMounted(() => {

@@ -41,7 +41,7 @@ const matchedNetworkIcon = computed(() => {
 const setupType = computed(() => {
   let shortName;
   const matchedNetwork = manageStore.networkList.find((network) => network.network === props.setup.network);
-  if (matchedNetwork?.network === "optimism") {
+  if (matchedNetwork?.network.startWith("op")) {
     shortName = "OPT";
   } else {
     shortName = "ETH";
