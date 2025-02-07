@@ -18,8 +18,13 @@
       <div
         v-for="item in getServices"
         :key="item"
+        :ref="
+          (el) => {
+            item.ref = el;
+          }
+        "
         class="w-full max-h-[78px] grid grid-cols-2 p-2 rounded-md border border-gray-600 shadow-md mx-auto bg-[#212629]"
-        :class="{ 'border border-red-600 bg-red-600': item.isRemoveProcessing }"
+        :class="getDynamicClasses(item)"
         style="cursor: default"
         @mouseenter="footerStore.cursorLocation = `${item.name} ${$t('editPageServices.service')}`"
         @mouseleave="footerStore.cursorLocation = ''"
@@ -67,6 +72,19 @@ const emit = defineEmits(["changeConnection", "deleteService"]);
 
 const manageStore = useNodeManage();
 const setupStore = useSetups();
+
+// Methods
+const getDynamicClasses = (item) => {
+  if (item.hasOwnProperty("isRemoveProcessing") && item.isRemoveProcessing) {
+    return "border bg-red-600 border-white hover:bg-red-600";
+  } else if (item.hasOwnProperty("isNewClient") && item.isNewClient) {
+    return "opacity-50 cursor-not-allowed pointer-events-none bg-[#212629] border border-gray-700";
+  } else if (item.hasOwnProperty("modifierPanel") && item.modifierPanel) {
+    return "opacity-50 cursor-not-allowed pointer-events-none bg-[#212629] border border-gray-700";
+  } else {
+    return "bg-[#212629] hover:bg-[#374045] border border-gray-700";
+  }
+};
 
 const getServices = computed(() => {
   let services = manageStore.newConfiguration.filter((e) => e.category === "service").sort((a, b) => a.name.localeCompare(b.name));
