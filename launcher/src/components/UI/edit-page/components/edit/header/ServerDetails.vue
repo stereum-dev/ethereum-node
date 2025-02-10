@@ -12,8 +12,14 @@
       "
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <span class="col-start-2 col-end-8 text-xs text-left text-gray-100 overflow-hidden whitespace-pre ml-[5px]">Mach</span>
-      <span class="col-start-8 col-span-full text-md text-yellow-500 overflow-hidden whitespace-pre">{{ controlStore.ServerName }}</span>
+      <span class="col-start-2 col-end-22 text-md text-yellow-500 overflow-hidden whitespace-pre">{{ controlStore.ServerName }}</span>
+
+      <img
+        class="w-7 col-start-23 col-span-full cursor-pointer hover:scale-110 active:scale-95 transition-all duration-200 ease-in-out"
+        src="/img/icon/service-modals-icons/copy.png"
+        alt="icon"
+        @click="toClipboard(controlStore.ServerName)"
+      />
     </div>
     <div
       v-if="controlStore.ipAddress"
@@ -25,14 +31,13 @@
       "
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <span class="col-start-2 col-end-7 text-xs text-left text-gray-100 overflow-hidden whitespace-pre ml-[5px]">IP </span>
-      <span class="col-start-8 col-end-22 text-sm text-yellow-500 overflow-hidden whitespace-pre">{{ controlStore.ipAddress }}</span>
+      <span class="col-start-2 col-end-22 text-md text-yellow-500 overflow-hidden whitespace-pre">{{ controlStore.ipAddress }}</span>
 
       <img
         class="w-7 col-start-23 col-span-full cursor-pointer hover:scale-110 active:scale-95 transition-all duration-200 ease-in-out"
         src="/img/icon/service-modals-icons/copy.png"
         alt="icon"
-        @click="copyServerIp"
+        @click="toClipboard(controlStore.ipAddress)"
       />
     </div>
   </div>
@@ -53,10 +58,9 @@ onMounted(() => {
   updateConnectionStats();
 });
 
-const copyServerIp = () => {
-  let ipToCopy = controlStore.ipAddress;
+const toClipboard = (stringToCopy) => {
   navigator.clipboard
-    .writeText(ipToCopy)
+    .writeText(stringToCopy.trim())
     .then(() => {
       console.log("copied!");
     })
