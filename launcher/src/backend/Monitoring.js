@@ -2704,12 +2704,12 @@ export class Monitoring {
     };
   }
 
-  // Get a list of all ports (including the associated service and protocol) that are availalbe publicly (which means thru an ip that is NOT localhost/127.0.0.1)
+  // Get a list of all ports (including the associated service and protocol) that are available publicly (which means thru an ip that is NOT localhost/127.0.0.1)
   async getPublicPortStatus() {
     return await this.getPortStatus({ addr: "public" });
   }
 
-  // Get a list of all ports (including the associated service and protocol) that are availalbe locally (thru localhost/127.0.0.1)
+  // Get a list of all ports (including the associated service and protocol) that are available locally (thru localhost/127.0.0.1)
   async getLocalPortStatus() {
     return await this.getPortStatus({ addr: "local" });
   }
