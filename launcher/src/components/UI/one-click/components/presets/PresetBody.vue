@@ -74,7 +74,7 @@ import { ref, onMounted, watch } from 'vue';
             :key="preset.name"
             class="col-span-1 row-span-1 justify-self-center self-center hover:border hover:border-teal-500 rounded-md hover:shadow-lg hover:shadow-[#050505] transition-all duration-300 ease-in-out active:scale-100 active:shadow-none cursor-pointer"
             :class="{
-              'opacity-30 pointer-events-none':
+              hidden:
                 !manageStore.currentNetwork?.support?.includes(preset.name) ||
                 !displayItem?.name,
             }"
