@@ -137,7 +137,7 @@ export class ConfigManager {
       let opSetupId = uuid.v4();
       setupServicesObj[opSetupId] = {
         name: "opSetup1",
-        network: "op-" + network,
+        network: network,
         color: "default",
         type: "OP",
         services: opServices,
