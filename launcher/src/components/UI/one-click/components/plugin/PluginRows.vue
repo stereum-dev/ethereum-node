@@ -52,9 +52,7 @@ const serviceStore = useServices();
 
 const existingPluginsToReplace = computed(() => {
   return props.filteredPlugin.filter((i) => {
-    return (
-      i.service !== "ExternalExecutionService" && i.service !== "ExternalConsensusService"
-    );
+    return i.service !== "ExternalExecutionService" && i.service !== "ExternalConsensusService";
   });
 });
 
