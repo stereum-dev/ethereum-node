@@ -12,6 +12,7 @@ export class LodestarBeaconService extends NodeService {
 
     const JWTDir = "/engine.jwt";
     const dataDir = "/opt/app/beacon";
+    network = network === "op-mainnet" ? "mainnet" : network === "op-sepolia" ? "sepolia" : network;
 
     // volumes
     const volumes = [new ServiceVolume(workingDir + "/beacon", dataDir)];

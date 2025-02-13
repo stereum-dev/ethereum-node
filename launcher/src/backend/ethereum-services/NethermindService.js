@@ -10,6 +10,7 @@ export class NethermindService extends NodeService {
     const JWTDir = "/engine.jwt";
 
     const volumes = [new ServiceVolume(workingDir + "/data", dataDir), new ServiceVolume(workingDir + "/engine.jwt", JWTDir)];
+    network = network === "op-mainnet" ? "mainnet" : network === "op-sepolia" ? "sepolia" : network;
 
     service.init(
       "NethermindService", // service

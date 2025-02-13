@@ -11,6 +11,8 @@ export class NimbusValidatorService extends NodeService {
     const dataDir = "/opt/app/data";
     const validatorsDir = "/opt/app/validators";
     const secretsDir = "/opt/app/secrets";
+    network = network === "op-mainnet" ? "mainnet" : network === "op-sepolia" ? "sepolia" : network;
+
     const volumes = [
       new ServiceVolume(workingDir + "/data", dataDir),
       new ServiceVolume(workingDir + "/validator/validators", validatorsDir),

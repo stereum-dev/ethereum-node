@@ -1,31 +1,37 @@
-import { useClickInstall } from "../../src/store/clickInstallation";
+import { useClickInstall } from "@/store/clickInstallation";
 import { useRouter } from "vue-router";
-
-//Computed
-
-//Functions
 
 export function goToNext() {
   const installStore = useClickInstall();
   const router = useRouter();
   const fullPath = router.currentRoute.value.fullPath;
 
+  let nextPath;
   switch (fullPath) {
     case "/oneClick/preset":
-      return "/oneClick/config";
+      nextPath = "/oneClick/config";
+      break;
     case "/oneClick/config":
       if (installStore.selectedPreset.includedPlugins.some((plugin) => plugin.service === "FlashbotsMevBoostService")) {
-        return "/oneClick/mevboost";
+        nextPath = "/oneClick/mevboost";
+      } else if (installStore.selectedPreset.name === "op full node" || installStore.selectedPreset.name === "op node archive") {
+        nextPath = "/oneClick/verify";
       } else {
-        return "/oneClick/sync";
+        nextPath = "/oneClick/sync";
       }
+      break;
     case "/oneClick/mevboost":
-      return "/oneClick/sync";
+      nextPath = "/oneClick/sync";
+      break;
     case "/oneClick/sync":
-      return "/oneClick/verify";
+      nextPath = "/oneClick/verify";
+      break;
     case "/oneClick/verify":
-      return "/oneClick/launch";
+      nextPath = "/oneClick/launch";
+      break;
     default:
-      return "/welcome";
+      nextPath = "/welcome";
   }
+
+  return nextPath;
 }

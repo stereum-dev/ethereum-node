@@ -1,4 +1,3 @@
-import { ref, computed, onMounted, watch } from 'vue';
 <template>
   <div class="w-full h-full col-start-1 col-span-full row-start-3 row-end-11 grid grid-cols-12 grid-rows-7 p-2 mx-auto">
     <div
@@ -97,7 +96,11 @@ const pluginChangeHandler = (plugin, item, idx) => {
 
   clickStore.selectedPreset.includedPlugins.splice(idx, 0, item);
 
-  if (["staking", "mev boost", "stereum on arm", "archive", "lidocsm"].includes(clickStore.selectedPreset.name)) {
+  if (
+    ["staking", "mev boost", "stereum on arm", "archive", "lidocsm", "op and eth full node", "op and eth node archive"].includes(
+      clickStore.selectedPreset.name
+    )
+  ) {
     if (item.category === "consensus") {
       let valIndex = clickStore.selectedPreset.includedPlugins.findIndex((e) => e.category === "validator");
       clickStore.selectedPreset.includedPlugins[valIndex] = serviceStore.allServices.find(
@@ -159,7 +162,7 @@ const checkPluginCategory = (element) => {
     case "obol":
     case "lidoobol":
       filter = (item) => {
-        if (element.category === "validator" && element.service !== "CharonService") {
+        if (element.category === "execution" && element.service !== "CharonService") {
           return /Teku|Lodestar|Lighthouse|Nimbus/.test(item.service) && item.category === element.category;
         } else if (element.category === "validator") {
           return item.service === "CharonService";
@@ -186,6 +189,40 @@ const checkPluginCategory = (element) => {
         filter = (item) => item.category === element.category && /(Lighthouse|Teku|Nethermind|Erigon|Nimbus|Lodestar)/.test(item.service);
       }
       break;
+    case "op full node":
+    case "op node archive":
+      filter = (item) =>
+        item.category === element.category && item.service === element.service && /OpGethService|OpNodeService/.test(item.service);
+      break;
+
+    case "op and eth full node":
+      filter = (item) => {
+        if (/OpGethService|OpNodeBeaconService/.test(element.service)) {
+          return item.service === element.service;
+        }
+
+        return (
+          item.category === element.category &&
+          !/(SSVNetwork|Web3Signer|Charon|L2Geth|OpGeth|OpNode)/.test(item.service) &&
+          (manageStore.currentNetwork.network !== "gnosis" || /(Lighthouse|Teku|Nethermind|Erigon|Nimbus|Lodestar)/.test(item.service))
+        );
+      };
+      break;
+
+    case "op and eth node archive":
+      filter = (item) => {
+        if (/OpGethService|OpNodeBeaconService/.test(element.service)) {
+          return item.service === element.service;
+        }
+
+        return (
+          item.category === element.category &&
+          !/(SSVNetwork|Web3Signer|Charon|L2Geth|OpGeth|OpNode)/.test(item.service) &&
+          (manageStore.currentNetwork.network !== "gnosis" || /(Lighthouse|Teku|Nethermind|Erigon|Nimbus|Lodestar)/.test(item.service))
+        );
+      };
+      break;
+
     default:
       break;
   }

@@ -25,6 +25,8 @@
 <script setup>
 import { useFooter } from "@/store/theFooter";
 import { useNodeManage } from "../../../../../../store/nodeManage";
+import { computed } from "vue";
+import { useSetups } from "../../../../../../store/setups";
 
 // props & emits
 const props = defineProps({
@@ -39,6 +41,11 @@ const emit = defineEmits(["deleteSetup", "connectSetup", "infoModal", "openConfi
 // Store
 const footerStore = useFooter();
 const manageStore = useNodeManage();
+const setupStore = useSetups();
+
+const isSetupOP = computed(() => {
+  return props.setup.setupName?.includes("op");
+});
 
 // Methods
 const deleteSetup = () => {
@@ -47,7 +54,9 @@ const deleteSetup = () => {
 };
 
 const connectSetup = () => {
-  emit("connectSetup", props.setup);
+  console.log("connectSetup");
+  setupStore.selectedOPSetup = props.setup;
+  setupStore.isConnectSetupModalActive = true;
   footerStore.cursorLocation = "";
 };
 
@@ -74,7 +83,7 @@ const icons = [
     src: "/img/icon/edit-node-icons/service-connecting.png",
     action: connectSetup,
     tooltip: "Setup Connection",
-    disabled: true,
+    disabled: !isSetupOP.value,
   },
   {
     name: "delete",

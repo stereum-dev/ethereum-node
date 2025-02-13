@@ -165,7 +165,7 @@ const confirm = async () => {
     name: setupName.value.trim(),
     network: props.network.network,
     color: setupColor.value,
-    type: setupLayouts.value.trim(),
+    type: setupLayouts.value,
     services: [],
   };
 

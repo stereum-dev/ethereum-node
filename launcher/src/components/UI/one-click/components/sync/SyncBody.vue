@@ -49,11 +49,15 @@ const clickStore = useClickInstall();
 
 //Computed & Watcher
 const executionClient = computed(() => {
-  return clickStore.selectedPreset.includedPlugins.filter((service) => service.category === "execution")[0];
+  return clickStore.selectedPreset.includedPlugins.filter(
+    (service) => service.category === "execution" && service.service !== "OpGethService"
+  )[0];
 });
 
 const consensusClient = computed(() => {
-  return clickStore.selectedPreset.includedPlugins.filter((service) => service.category === "consensus")[0];
+  return clickStore.selectedPreset.includedPlugins.filter(
+    (service) => service.category === "consensus" && service.service !== "OpNodeBeaconService"
+  )[0];
 });
 
 const isPresetArchive = computed(() => {
