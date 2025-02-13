@@ -4,12 +4,7 @@
     :class="props.setup.isActive ? 'bg-black opacity-45 z-0 rounded-b-md' : ''"
     @pointerdown.prevent.stop
     @mousedown.prevent.stop
-    @mouseenter="
-      [
-        (footerStore.cursorLocation = `${props.setup.setupName}`),
-        (setupStore.isSetupMenuActive = true),
-      ]
-    "
+    @mouseenter="[(footerStore.cursorLocation = `${props.setup.setupName}`), (setupStore.isSetupMenuActive = true)]"
     @mouseleave="footerStore.cursorLocation = ''"
   >
     <img
@@ -41,20 +36,14 @@ const props = defineProps({
 
 // find the matching network and its icon
 const matchedNetworkIcon = computed(() => {
-  const matchedNetwork = manageStore.networkList.find(
-    (network) => network.network === props.setup.network
-  );
+  const matchedNetwork = manageStore.networkList.find((network) => network.network === props.setup.network);
 
-  return matchedNetwork
-    ? matchedNetwork.icon
-    : "/img/icon/network-icons/devnet-circle.png";
+  return matchedNetwork ? matchedNetwork.icon : "/img/icon/network-icons/devnet-circle.png";
 });
 
 const setupType = computed(() => {
   let shortName = "OP";
-  const matchedNetwork = manageStore.networkList.find(
-    (network) => network.network === props.setup.network
-  );
+  const matchedNetwork = manageStore.networkList.find((network) => network.network === props.setup.network);
   if (matchedNetwork?.network.includes("op")) {
     shortName = "OP Node Config";
   } else {
