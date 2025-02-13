@@ -11,13 +11,30 @@
     >
       {{ t("networkDetails.currentNet") }}
     </div>
-    <div v-else class="w-full self-start text-xs font-semibold text-teal-700 overflow-hidden">TOTAL SETUPS ON SERVER</div>
-    <div v-if="setupStore.isConfigViewActive || setupStore.isEditConfigViewActive" class="w-full flex justify-center items-center">
-      <img v-if="getSetupNetwork" :src="getSetupNetwork?.icon" alt="Networks" class="w-5 mr-1" />
-      <span class="text-md text-gray-300 text-left overflow-hidden whitespace-pre">{{ getSetupNetwork?.name }}</span>
+    <div
+      v-else
+      class="w-full self-start text-xs font-semibold text-teal-700 overflow-hidden"
+    >
+      TOTAL SETUPS ON SERVER
+    </div>
+    <div
+      v-if="setupStore.isConfigViewActive || setupStore.isEditConfigViewActive"
+      class="w-full flex justify-center items-center"
+    >
+      <img
+        v-if="getSetupNetwork"
+        :src="getSetupNetwork?.icon"
+        alt="Networks"
+        class="w-5 mr-1"
+      />
+      <span class="text-md text-gray-300 text-left overflow-hidden whitespace-pre">{{
+        getSetupNetwork?.name
+      }}</span>
     </div>
     <div v-else class="w-full flex justify-center items-center">
-      <span class="text-md text-gray-300 text-left overflow-hidden whitespace-pre">{{ totalNetworks }}</span>
+      <span class="text-md text-gray-300 text-left overflow-hidden whitespace-pre">{{
+        totalNetworks
+      }}</span>
     </div>
   </div>
 </template>
@@ -37,7 +54,11 @@ const manageStore = useNodeManage();
 const setupStore = useSetups();
 
 const totalNetworks = computed(() => {
-  return setupStore.allSetups.filter((setup) => setup.setupName !== "commonServices").map((setup) => setup).length || 0;
+  return (
+    setupStore.allSetups
+      .filter((setup) => setup.setupName !== "commonServices")
+      .map((setup) => setup).length || 0
+  );
 });
 
 const getSetupNetwork = computed(() => {
@@ -45,7 +66,8 @@ const getSetupNetwork = computed(() => {
   const devnet = { name: "Devnet", icon: "/img/icon/network-icons/devnet-circle.png" };
   const net = setupStore.selectedSetup?.network;
   if (net) {
-    setupNet = manageStore.networkList.find((network) => network.network === net) ?? devnet;
+    setupNet =
+      manageStore.networkList.find((network) => network.network === net) ?? devnet;
   }
   return setupNet;
 });
