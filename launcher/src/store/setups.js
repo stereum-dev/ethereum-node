@@ -89,6 +89,10 @@ export const useSetups = defineStore("setups", {
     isImportAnimeActive: false,
     setupDataToImport: [],
 
+    //Setup Connect
+    isConnectSetupModalActive: false,
+    selectedOPSetup: null,
+
     //Setup Others
     serverServices: ["PrometheusService", "GrafanaService", "PrometheusNodeExporterService", "NotificationService"],
 
