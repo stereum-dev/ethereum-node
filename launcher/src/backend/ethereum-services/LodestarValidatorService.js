@@ -11,6 +11,7 @@ export class LodestarValidatorService extends NodeService {
     const image = "chainsafe/lodestar";
 
     const dataDir = "/opt/app/validator";
+    network = network === "op-mainnet" ? "mainnet" : network === "op-sepolia" ? "sepolia" : network;
 
     const volumes = [new ServiceVolume(workingDir + "/validator", dataDir)];
 

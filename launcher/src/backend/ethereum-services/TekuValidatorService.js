@@ -18,6 +18,7 @@ export class TekuValidatorService extends NodeService {
 
     const dataDir = "/opt/app/data";
     const graffitiDir = "/opt/app/graffitis";
+    network = network === "op-mainnet" ? "mainnet" : network === "op-sepolia" ? "sepolia" : network;
 
     const volumes = [new ServiceVolume(workingDir + "/data", dataDir), new ServiceVolume(workingDir + "/graffitis", graffitiDir)];
 
