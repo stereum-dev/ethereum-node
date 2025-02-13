@@ -13,7 +13,7 @@
     />
 
     <div
-      class="col-start-1 col-span-full row-start-9 row-span-1 text-[8px] text-center font-semibold overflow-hidden whitespace-nowrap truncate flex justify-center items-center text-gray-400"
+      class="col-start-1 col-span-full row-start-9 row-span-1 text-[8px] text-center font-semibold overflow-hidden whitespace-nowrap truncate flex justify-center items-center text-gray-100"
     >
       <span>{{ setupType }}</span>
     </div>
@@ -48,14 +48,14 @@ const matchedNetworkIcon = computed(() => {
 
 const setupType = computed(() => {
   let shortName = "OP";
-  // const matchedNetwork = manageStore.networkList.find(
-  //   (network) => network.network === props.setup.network
-  // );
-  // if (matchedNetwork?.network.startWith("op")) {
-  //   shortName = "OP";
-  // } else {
-  //   shortName = "ETH";
-  // }
+  const matchedNetwork = manageStore.networkList.find(
+    (network) => network.network === props.setup.network
+  );
+  if (matchedNetwork?.network.includes("op")) {
+    shortName = "OP";
+  } else {
+    shortName = "ETH";
+  }
 
   return shortName;
 });
