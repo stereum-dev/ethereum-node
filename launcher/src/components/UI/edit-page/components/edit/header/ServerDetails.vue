@@ -12,10 +12,7 @@
       "
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <span
-        class="col-start-2 col-end-22 text-md text-yellow-500 overflow-hidden whitespace-pre"
-        >{{ controlStore.ServerName }}</span
-      >
+      <span class="col-start-2 col-end-22 text-md text-yellow-500 overflow-hidden whitespace-pre">{{ controlStore.ServerName }}</span>
 
       <img
         class="w-5 col-start-23 col-span-full cursor-pointer hover:scale-110 active:scale-95 transition-all duration-200 ease-in-out opacity-50"
@@ -34,10 +31,7 @@
       "
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <span
-        class="col-start-2 col-end-22 text-md text-yellow-500 overflow-hidden whitespace-pre"
-        >{{ controlStore.ipAddress }}</span
-      >
+      <span class="col-start-2 col-end-22 text-md text-yellow-500 overflow-hidden whitespace-pre">{{ controlStore.ipAddress }}</span>
 
       <img
         class="w-5 col-start-23 col-span-full cursor-pointer hover:scale-110 active:scale-95 transition-all duration-200 ease-in-out opacity-50"

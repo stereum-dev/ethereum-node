@@ -8,10 +8,9 @@
       @mouseenter="footerStore.cursorLocation = `${machineName}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <span
-        class="text-md font-semibold ml-1 text-yellow-500 overflow-hidden whitespace-pre text-center"
-        >{{ controlStore.ServerName }}</span
-      >
+      <span class="text-md font-semibold ml-1 text-yellow-500 overflow-hidden whitespace-pre text-center">{{
+        controlStore.ServerName
+      }}</span>
     </div>
     <div
       v-if="controlStore.ipAddress"
@@ -19,14 +18,8 @@
       @mouseenter="footerStore.cursorLocation = `${machineIp}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <span
-        class="col-start-2 col-span-1 text-xs text-left text-gray-100 overflow-hidden whitespace-pre ml-[5px]"
-        >IP :</span
-      >
-      <span
-        class="col-start-4 col-end-12 text-sm text-yellow-500 overflow-hidden whitespace-pre"
-        >{{ controlStore.ipAddress }}</span
-      >
+      <span class="col-start-2 col-span-1 text-xs text-left text-gray-100 overflow-hidden whitespace-pre ml-[5px]">IP :</span>
+      <span class="col-start-4 col-end-12 text-sm text-yellow-500 overflow-hidden whitespace-pre">{{ controlStore.ipAddress }}</span>
 
       <img
         class="w-7 col-start-12 col-span-1 cursor-pointer hover:scale-110 active:scale-95 transition-all duration-200 ease-in-out opacity-75"

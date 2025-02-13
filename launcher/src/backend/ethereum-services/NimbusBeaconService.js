@@ -12,6 +12,7 @@ export class NimbusBeaconService extends NodeService {
 
     const JWTDir = "/engine.jwt";
     const dataDir = "/opt/app/beacon";
+    network = network === "op-mainnet" ? "mainnet" : network === "op-sepolia" ? "sepolia" : network;
 
     const volumes = [new ServiceVolume(workingDir + "/beacon", dataDir)];
 
