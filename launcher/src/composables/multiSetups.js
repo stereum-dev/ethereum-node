@@ -54,6 +54,8 @@ export const useMultiSetups = () => {
       setupType: config.setupType,
       network: config.network,
       color: config.color,
+      isConnected: false,
+      isSelected: false,
       services: serviceStore.installedServices
         .filter((service) => config.serviceIds.includes(service.config.serviceID))
         .map((s) => {
