@@ -40,9 +40,7 @@ const matchedNetworkIcon = computed(() => {
 
 const setupType = computed(() => {
   let shortName = "OP";
-  const matchedNetwork = manageStore.networkList.find(
-    (network) => network.network === props.setup.network
-  );
+  const matchedNetwork = manageStore.networkList.find((network) => network.network === props.setup.network);
   if (matchedNetwork?.network.includes("op")) {
     shortName = "OP";
   } else {

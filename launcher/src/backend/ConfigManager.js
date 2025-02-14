@@ -125,7 +125,7 @@ export class ConfigManager {
       let ethsetupId = uuid.v4();
       setupServicesObj[ethsetupId] = {
         name: "ethSetup1",
-        network: network,
+        network: network === "op-mainnet" ? "mainnet" : network === "op-sepolia" ? "sepolia" : network,
         color: "default",
         type: "ETH",
         services: ethServices,
