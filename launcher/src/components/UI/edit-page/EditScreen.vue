@@ -619,6 +619,7 @@ const drawerMouseLeave = () => {
 
 const cancelChangeHandler = (item) => {
   isAddModalOpen.value = false;
+  console.log("cancelChangeHandler", item);
   item.service.isRemoveProcessing = false;
   if (item) {
     if (item.content === "INSTALL") {
@@ -1055,8 +1056,29 @@ const backToLogin = async () => {
 // Setups methods
 
 const confirmSetupConnection = (setup) => {
-  console.log("confirmSetupConnection", setup);
+  if (!Array.isArray(setup)) {
+    console.error("Expected an array but got:", setup);
+    return;
+  }
+
+  setup.forEach((item) => {
+    if (!item.config || !item.config.dependencies) {
+      return;
+    }
+
+    manageStore.confirmChanges.push({
+      id: generateRandomId(),
+      content: "MODIFY",
+      contentIcon: "/img/icon/edit-node-icons/service-connected.png",
+      service: item.service, // Ensure this is correct
+      data: {
+        executionClients: item.config.dependencies.executionClients || [],
+        consensusClients: item.config.dependencies.consensusClients || [],
+      },
+    });
+  });
 };
+
 const editSetupsPrepration = () => {
   setupStore.editSetups = setupStore.allSetups.map((setup) => {
     if (setup.isActive) {
