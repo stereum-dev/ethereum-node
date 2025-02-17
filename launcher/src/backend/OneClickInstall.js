@@ -285,7 +285,7 @@ export class OneClickInstall {
     if (constellation.includes("SSVDKGService")) {
       let SSVDKGService = this.serviceManager.getService("SSVDKGService", {
         ...args,
-        consensusClients: [this.beaconService],
+        executionClients: [this.executionClient],
         otherServices: this.validatorService === "SSVNetworkService" ? [this.validatorService] : [],
       });
       this.extraServices.push(SSVDKGService);
