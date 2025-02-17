@@ -1173,6 +1173,7 @@ const closeSetupModal = () => {
 const closeSetupConnectingModal = () => {
   setupStore.isConnectSetupModalActive = false;
   setupStore.selectedOPSetup = null;
+  manageStore.confirmChanges = [];
 };
 </script>
 
