@@ -489,6 +489,12 @@ export class ServiceManager {
           command = "--beacon-node-api-endpoint=";
         }
         break;
+      case "OpNode":
+        if (service.service.includes("Beacon")) {
+          filter = (e) => e.buildExecutionClientEngineRPCHttpEndpointUrl();
+          command = "--l2=";
+        }
+        break;
       case "Charon":
         filter = (e) => e.buildConsensusClientHttpEndpointUrl();
         command = "--beacon-node-endpoints=";
@@ -554,9 +560,11 @@ export class ServiceManager {
           let destinationPath =
             client.service === "ExternalExecutionService"
               ? client.volumes.find((vol) => vol.destinationPath.includes("/engine.jwt")).destinationPath
-              : client.volumes.find((vol) => vol.servicePath === "/engine.jwt").destinationPath;
+              : client.volumes.find((vol) => vol.servicePath === "/engine.jwt" || vol.servicePath === "/op-engine.jwt").destinationPath;
 
-          return new ServiceVolume(destinationPath, "/engine.jwt");
+          let servicePath = destinationPath.includes("/op-engine.jwt") ? "/op-engine.jwt" : "/engine.jwt";
+
+          return new ServiceVolume(destinationPath, servicePath);
         })
       );
     } else if (service.service.includes("Validator") || service.service.includes("Charon")) {
