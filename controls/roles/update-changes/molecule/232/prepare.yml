@@ -1,0 +1,167 @@
+---
+- name: Prepare
+  hosts: all
+  tasks:
+    - name: Make sure Stereum's config path exists
+      file:
+        path: "/etc/stereum/services"
+        state: directory
+        owner: "root"
+        group: "root"
+        mode: 0644
+      become: yes
+
+    - name: Create SSVNetworkService config
+      copy:
+        dest: "/etc/stereum/services/163d29c0-6bc0-b8d3-d7ec-fb7ccd8e1802.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: SSVNetworkService
+          id: 163d29c0-6bc0-b8d3-d7ec-fb7ccd8e1802
+          configVersion: 1
+          command: make BUILD_PATH=/go/bin/ssvnode start-node && docker logs ssv_node
+          entrypoint: []
+          env:
+            CONFIG_PATH: /data/config.yaml
+          image: ssvlabs/ssv-node:v2.2.0
+          ports:
+            - 0.0.0.0:12000:12000/udp
+            - 0.0.0.0:13000:13000/tcp
+          volumes:
+            - /opt/stereum/ssv_network-163d29c0-6bc0-b8d3-d7ec-fb7ccd8e1802/data:/data
+            - /opt/stereum/ssv_network-163d29c0-6bc0-b8d3-d7ec-fb7ccd8e1802/secrets:/secrets
+          user: "2000"
+          autoupdate: true
+          network: holesky
+          dependencies:
+            executionClients:
+              - service: GethService
+                id: f5b3f2b6-a9a3-ead0-aa06-211d19a50c07
+            consensusClients:
+              - service: TekuBeaconService
+                id: eca45df4-f69f-78c0-20b1-d91c7f46f1d0
+            mevboost: []
+            otherServices: []
+      become: yes
+
+    - name: Make sure SSVNetworkService's config path exists
+      file:
+        path: "/opt/stereum/ssv_network-163d29c0-6bc0-b8d3-d7ec-fb7ccd8e1802/data"
+        state: directory
+        owner: "root"
+        group: "root"
+        mode: 0644
+      become: yes
+
+    - name: Create SSVNetworkService's Config file
+      copy:
+        dest: "/opt/stereum/ssv_network-163d29c0-6bc0-b8d3-d7ec-fb7ccd8e1802/data/config.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          global:
+            # Console output log level 
+            LogLevel: info
+
+            # Number of log files preserved (roughly equivalent to number of days)
+            # Increase if you want to preserve log files for longer. This would require more disk space
+            LogFileBackups: 28
+            
+            # Debug logs file path
+            #LogFilePath: ./data/debug.log
+
+          #db:
+            # Path to a persistent directory to store the node's database.
+            #Path: ./data/db
+
+          ssv:
+            # The SSV network to join to
+            # Mainnet = Network: mainnet (default)
+            # Testnet (Goerli) = Network: jato-v2
+            # Testnet (Holesky) = Network: holesky
+            Network: holesky
+            
+            ValidatorOptions:
+              # Whether to enable MEV block production. Requires the connected Beacon node to be MEV-enabled.
+              BuilderProposals: false
+
+          eth2:
+            BeaconNodeAddr: http://stereum-eca45df4-f69f-78c0-20b1-d91c7f46f1d0:5051
+
+          eth1:
+            ETH1Addr: ws://stereum-f5b3f2b6-a9a3-ead0-aa06-211d19a50c07:8546
+
+          p2p:
+            # HostAddress: 192.168.1.1
+            TcpPort: 13000
+            UdpPort: 12000
+
+          KeyStore:
+            PrivateKeyFile: /secrets/encrypted_private_key.json
+            PasswordFile: /secrets/password
+
+          MetricsAPIPort: 15000
+      become: yes
+
+    - name: Create SSVDKGService config
+      copy:
+        dest: "/etc/stereum/services/50de2500-bbc6-1c24-fe30-1df87c59a642.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: SSVDKGService
+          id: 50de2500-bbc6-1c24-fe30-1df87c59a642
+          configVersion: 1
+          command:
+            - start-operator
+            - --configPath=/data/config.yaml
+          entrypoint:
+            - /entry-point.sh
+          env: {}
+          image: bloxstaking/ssv-dkg:v2.1.0
+          ports:
+            - 0.0.0.0:3030:3030/udp
+            - 0.0.0.0:3030:3030/tcp
+          volumes:
+            - /opt/stereum/ssvdkg-50de2500-bbc6-1c24-fe30-1df87c59a642/data:/data
+            - /opt/stereum/ssv_network-163d29c0-6bc0-b8d3-d7ec-fb7ccd8e1802/secrets:/secrets
+          user: root
+          autoupdate: true
+          network: holesky
+          dependencies:
+            executionClients: []
+            consensusClients: []
+            mevboost: []
+            otherServices: []
+      become: yes
+
+    - name: Make sure SSVNetworkService's config path exists
+      file:
+        path: "/opt/stereum/ssvdkg-50de2500-bbc6-1c24-fe30-1df87c59a642/data"
+        state: directory
+        owner: "root"
+        group: "root"
+        mode: 0644
+      become: yes
+
+    - name: Create SSVDKGService's Config file
+      copy:
+        dest: "/opt/stereum/ssvdkg-50de2500-bbc6-1c24-fe30-1df87c59a642/data/config.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          privKey: /secrets/encrypted_private_key.json
+          privKeyPassword: /secrets/password
+          operatorID: 0
+          port: 3030
+          logLevel: info
+          logFormat: json
+          logLevelFormat: capitalColor
+          logFilePath: /data/debug.log
+          outputPath: /data/output
+      become: yes

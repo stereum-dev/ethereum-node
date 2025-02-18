@@ -35,8 +35,6 @@ ethEndpointURL: ${ethEndpointURL} #HTTP Address of Execution Node`;
       new ServiceVolume(workingDir + "/secrets", "/ssv-dkg/secrets"),
     ];
 
-    console.log("-------> TTT :: otherServices", otherServices);
-
     // build service
     service.init(
       "SSVDKGService", //service
