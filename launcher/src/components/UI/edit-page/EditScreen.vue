@@ -147,7 +147,7 @@
       <ConnectSetup
         v-if="setupStore.isConnectSetupModalActive"
         @close-window="closeSetupConnectingModal"
-        @confirm-action="confirmSetupConnection"
+        @confirm-action="confirmModifyingService"
       />
 
       <!-- Start Setup Infos -->
@@ -407,6 +407,7 @@ const switchClientConfirm = (properties) => {
 // Clients Modifying methods
 
 const confirmModifyingService = (item) => {
+  console.log("op connection itemmmmm", item);
   isModifyModalOpen.value = false;
   if (item.client.service === "FlashbotsMevBoostService") {
     changeMevboostConnection();
@@ -1054,32 +1055,6 @@ const backToLogin = async () => {
 };
 
 // Setups methods
-
-const confirmSetupConnection = (services) => {
-  if (!Array.isArray(services)) {
-    console.error("Expected an array but got:", services);
-    return;
-  }
-
-  services.forEach((item) => {
-    if (!item.config || !item.config.dependencies) {
-      return;
-    }
-    console.log("confirmSetupConnection itemmmmm----", item);
-    manageStore.confirmChanges.push({
-      id: generateRandomId(),
-      content: "MODIFY",
-      contentIcon: "/img/icon/edit-node-icons/service-connected.png",
-      service: item, // Ensure this is correct
-      data: {
-        executionClients: item.config.dependencies.executionClients || [],
-        consensusClients: item.config.dependencies.consensusClients || [],
-      },
-    });
-  });
-
-  console.log("confirmSetupConnection changesss-----", manageStore.confirmChanges);
-};
 
 const editSetupsPrepration = () => {
   setupStore.editSetups = setupStore.allSetups.map((setup) => {
