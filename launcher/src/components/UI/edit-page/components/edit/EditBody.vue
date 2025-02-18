@@ -12,7 +12,28 @@
       @modify-service="modifyService"
       @remove-lines="removeConnectionLines"
     />
-    <SetupBody v-else @delete-setup="deleteSetup" @connect-setup="connectSetup" @setup-infos="setupInfos" @open-configs="openConfigs" />
+    <SetupBody
+      v-else
+      @delete-setup="deleteSetup"
+      @connect-setup="connectSetup"
+      @setup-infos="setupInfos"
+      @open-configs="openConfigs"
+    />
+    <ConnectionLine
+      v-for="connection in activeConnections"
+      :key="connection.id"
+      :start="{
+        element: connection.start.element,
+        position: connection.start.position,
+      }"
+      :end="{
+        element: connection.end.element,
+        position: connection.end.position,
+      }"
+      color="#DBEF6A"
+      :animated="true"
+      :dashed="true"
+    />
   </div>
 </template>
 
@@ -26,6 +47,7 @@ import { useNodeManage } from "@/store/nodeManage";
 import { useSetups } from "@/store/setups";
 import { computed, ref, watch } from "vue";
 import { useMultiSetups } from "../../../../../composables/multiSetups";
+import ConnectionLine from "../../../../layers/ConnectionLine.vue";
 
 const { getSelectedSetup } = useMultiSetups();
 

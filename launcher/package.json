@@ -46,6 +46,7 @@
     "evilscan": "^1.9.1",
     "file-saver": "^2.0.5",
     "geoip-lite": "^1.4.7",
+    "gsap": "^3.12.7",
     "jszip": "^3.10.1",
     "leader-line-new": "^1.1.9",
     "lodash": "^4.17.21",
