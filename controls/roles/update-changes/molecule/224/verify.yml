@@ -77,5 +77,5 @@
           - PrysmValdiator_service_configuration.command | select('match', '--beacon-rest-api-provider') | length == 1
           - PrysmValdiator_service_configuration.command | select('match', '--enable-beacon-rest-api') | length == 1
           - PrysmValdiator_service_configuration.command | select('match', '--beacon-rpc-gateway-provider') | length == 0
-          - Reth_service_configuration.command | select('match', '--engine.legacy') | length == 1
+          - Reth_service_configuration.command | select('match', '--engine.legacy') | length != 1
 # EOF
