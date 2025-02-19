@@ -35,7 +35,7 @@
       }"
       color="#DBEF6A"
       :animated="true"
-      :dashed="false"
+      :dashed="true"
     />
   </div>
 </template>
@@ -76,12 +76,6 @@ watchEffect(() => {
     loadingClients.value = true;
   } else {
     loadingClients.value = false;
-  }
-});
-
-watchEffect(() => {
-  if (nodeStore.isLineHidden) {
-    removeConnectionLines();
   }
 });
 
