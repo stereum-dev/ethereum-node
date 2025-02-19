@@ -108,10 +108,10 @@ test("teku validator import", async () => {
     if (
       /JWT secret loaded/.test(BCstatus.stdout) &&
       /Using execution engine at http:\/\/stereum-.{36}:8551/.test(BCstatus.stdout) &&
-      /Metrics service started/.test(BCstatus.stdout) &&
+      /Starting metrics http service/.test(BCstatus.stdout) &&
       /Listening on http:\/\/.*:5051/.test(BCstatus.stdout) &&
       /Syncing started/.test(BCstatus.stdout) &&
-      /Metrics service started/.test(VCstatus.stdout) &&
+      /Starting metrics http service/.test(VCstatus.stdout) &&
       /Listening on https:\/\/.*:5052/.test(VCstatus.stdout) &&
       /Successfully connected to beacon node event stream/.test(VCstatus.stdout) &&
       /Starting doppelganger detection for public keys: .{7}, .{7}, .{7}/.test(VCstatus.stdout)
@@ -150,12 +150,12 @@ test("teku validator import", async () => {
   //teku tekuBC logs
   expect(BCstatus.stdout).toMatch(/JWT secret loaded/);
   expect(BCstatus.stdout).toMatch(/Using execution engine at http:\/\/stereum-.{36}:8551/);
-  expect(BCstatus.stdout).toMatch(/Metrics service started/);
+  expect(BCstatus.stdout).toMatch(/Starting metrics http service/);
   expect(BCstatus.stdout).toMatch(/Listening on http:\/\/.*:5051/);
   expect(BCstatus.stdout).toMatch(/Syncing started/);
 
   //teku tekuVC logs
-  expect(VCstatus.stdout).toMatch(/Metrics service started/);
+  expect(VCstatus.stdout).toMatch(/Starting metrics http service/);
   expect(VCstatus.stdout).toMatch(/Listening on https:\/\/.*:5052/);
   expect(VCstatus.stdout).toMatch(/Successfully connected to beacon node event stream/);
   expect(VCstatus.stdout).toMatch(/Starting doppelganger detection for public keys: .{7}, .{7}, .{7}/);
