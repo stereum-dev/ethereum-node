@@ -104,6 +104,7 @@ jobs:
           name: app-${{ matrix.os }}
           path: |
             launcher/dist/linux/Stereum-Launcher-${{ steps.variables.outputs.version }}.AppImage
+            launcher/dist/linux/Stereum-Launcher-${{ steps.variables.outputs.version }}.deb
             launcher/dist/linux/latest*.yml
             launcher/dist/linux/*.blockmap
         if: ${{ !contains(github.event.head_commit.message, '[NOCI]') && matrix.os == 'ubuntu-latest' }}
