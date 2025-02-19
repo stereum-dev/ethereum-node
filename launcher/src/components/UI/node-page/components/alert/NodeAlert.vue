@@ -1,9 +1,7 @@
 <template>
   <div class="status-box flex flex-col justify-between items-center">
     <div class="status-box_header h-[8%] w-full flex">
-      <div
-        class="status-box_icon-box border border-gray-600 rounded-md bg-[#151618] w-3/4 h-full flex justify-around items-center pl-1"
-      >
+      <div class="status-box_icon-box border border-gray-600 rounded-md bg-[#151618] w-3/4 h-full flex justify-around items-center pl-1">
         <div class="icon-line flex justify-center items-center w-full h-full">
           <div
             class="status-icon"
@@ -48,35 +46,19 @@
           @mouseleave="cursorLocation = ''"
         >
           <img
-            :src="
-              volState
-                ? '/img/icon/node-alert-icons/alert-settings.png'
-                : '/img/icon/node-alert-icons/alert-settings-mute.png'
-            "
+            :src="volState ? '/img/icon/node-alert-icons/alert-settings.png' : '/img/icon/node-alert-icons/alert-settings-mute.png'"
             alt="green"
           />
         </div>
       </div>
     </div>
 
-    <div
-      class="status-box_messages bg-[#151618] border border-gray-600 rounded-md overflow-x-hidden overflow-y-auto"
-    >
+    <div class="status-box_messages bg-[#151618] border border-gray-600 rounded-md overflow-x-hidden overflow-y-auto">
       <AlertSkeleton v-for="i in skeletons" v-show="loadingAlerts" :key="i" />
-      <div
-        v-show="!loadingAlerts"
-        class="status_innerBox overflow-x-hidden overflow-y-auto space-y-1 px-[2px]"
-      >
-        <router-link
-          v-if="storageWarning && !alertShowState.includes('yellow')"
-          to="/control"
-          class="status-message_yellow h-9"
-        >
+      <div v-show="!loadingAlerts" class="status_innerBox overflow-x-hidden overflow-y-auto space-y-1 px-[2px]">
+        <router-link v-if="storageWarning && !alertShowState.includes('yellow')" to="/control" class="status-message_yellow h-9">
           <div class="message-icon">
-            <img
-              src="/img/icon/node-alert-icons/alert-storage-yellow.png"
-              alt="warn_storage"
-            />
+            <img src="/img/icon/node-alert-icons/alert-storage-yellow.png" alt="warn_storage" />
           </div>
           <div class="message-text_container">
             <div class="main-message">
@@ -85,16 +67,9 @@
             <div class="val-message">{{ availDisk }} GB Free</div>
           </div>
         </router-link>
-        <router-link
-          v-if="cpuWarning && !alertShowState.includes('yellow')"
-          to="/control"
-          class="status-message_yellow h-9"
-        >
+        <router-link v-if="cpuWarning && !alertShowState.includes('yellow')" to="/control" class="status-message_yellow h-9">
           <div class="message-icon">
-            <img
-              src="/img/icon/node-alert-icons/alert-cpu-yellow.png"
-              alt="warn_storage"
-            />
+            <img src="/img/icon/node-alert-icons/alert-cpu-yellow.png" alt="warn_storage" />
           </div>
           <div class="message-text_container">
             <div class="main-message">
@@ -106,17 +81,9 @@
           </div>
         </router-link>
         <template v-if="pointStatus && !alertShowState.includes('yellow')">
-          <router-link
-            v-for="point in pointStatus"
-            :key="point"
-            to="/control"
-            class="status-message_yellow h-9"
-          >
+          <router-link v-for="point in pointStatus" :key="point" to="/control" class="status-message_yellow h-9">
             <div class="message-icon">
-              <img
-                src="/img/icon/control-page-icons/PORT_LIST_ICON.png"
-                alt="warn_storage"
-              />
+              <img src="/img/icon/control-page-icons/PORT_LIST_ICON.png" alt="warn_storage" />
             </div>
             <div class="message-text_container">
               <div class="main-message">
@@ -128,11 +95,7 @@
             </div>
           </router-link>
         </template>
-        <router-link
-          v-if="cpuAlarm && !alertShowState.includes('red')"
-          to="/control"
-          class="status-message_red h-9"
-        >
+        <router-link v-if="cpuAlarm && !alertShowState.includes('red')" to="/control" class="status-message_red h-9">
           <div class="message-icon">
             <img src="/img/icon/node-alert-icons/alert-cpu-red.png" alt="warn_storage" />
           </div>
@@ -155,10 +118,7 @@
             @mouseleave="cursorLocation = ''"
           >
             <div class="message-icon">
-              <img
-                src="/img/icon/service-icons/validator/ObolCharon.png"
-                alt="warn_obol"
-              />
+              <img src="/img/icon/service-icons/validator/ObolCharon.png" alt="warn_obol" />
             </div>
             <div class="message-text_container">
               <div class="main-message">
@@ -182,10 +142,7 @@
             @mouseleave="cursorLocation = ''"
           >
             <div class="message-icon">
-              <img
-                src="/img/icon/service-icons/validator/ObolCharon.png"
-                alt="warn_obol"
-              />
+              <img src="/img/icon/service-icons/validator/ObolCharon.png" alt="warn_obol" />
             </div>
             <div class="message">
               <div class="main-message text-gray-900">
@@ -249,43 +206,23 @@
 
         <!-- csm Green end -->
         <div
-          v-if="
-            connectionStatusIsPoor &&
-            (alertShowState === 'showAll' || alertShowState === 'red')
-          "
+          v-if="connectionStatusIsPoor && (alertShowState === 'showAll' || alertShowState === 'red')"
           class="w-full h-10 grid grid-cols-12 rounded-md bg-red-700 p-1 cursor-pointer hover:bg-red-500"
           @click="callReconnectModal"
         >
-          <div
-            class="col-start-1 col-end-4 w-full h-full flex justify-center items-center p-1"
-          >
-            <img
-              class="w-8"
-              src="/img/icon/connection-status/searching.gif"
-              alt="WIFI Icon"
-            />
+          <div class="col-start-1 col-end-4 w-full h-full flex justify-center items-center p-1">
+            <img class="w-8" src="/img/icon/connection-status/searching.gif" alt="WIFI Icon" />
           </div>
           <div class="col-start-5 col-span-full flex flex-col justify-center items-start">
-            <span class="text-[8px] text-gray-100 font-semibold uppercase"
-              >Poor Connection</span
-            >
+            <span class="text-[8px] text-gray-100 font-semibold uppercase">Poor Connection</span>
 
-            <span class="text-[8px] text-left text-gray-100 font-semibold lowercase"
-              >> Click to reconnect</span
-            >
+            <span class="text-[8px] text-left text-gray-100 font-semibold lowercase">> Click to reconnect</span>
           </div>
         </div>
 
-        <router-link
-          v-if="synchronizationErrorControl && !alertShowState.includes('red')"
-          to="/control"
-          class="status-message_red h-9"
-        >
+        <router-link v-if="synchronizationErrorControl && !alertShowState.includes('red')" to="/control" class="status-message_red h-9">
           <div class="message-icon">
-            <img
-              src="/img/icon/node-alert-icons/alert-sync-error.gif"
-              alt="warn_storage"
-            />
+            <img src="/img/icon/node-alert-icons/alert-sync-error.gif" alt="warn_storage" />
           </div>
           <div class="message-text_container">
             <div class="main-message">
@@ -296,16 +233,9 @@
             </div>
           </div>
         </router-link>
-        <div
-          v-if="errorAlarm && !alertShowState.includes('red')"
-          class="status-message_red h-9"
-          @click="isTaskModalActive = true"
-        >
+        <div v-if="errorAlarm && !alertShowState.includes('red')" class="status-message_red h-9" @click="isTaskModalActive = true">
           <div class="message-icon">
-            <img
-              src="/img/icon/node-alert-icons/alert-task-error.png"
-              alt="warn_storage"
-            />
+            <img src="/img/icon/node-alert-icons/alert-task-error.png" alt="warn_storage" />
           </div>
           <div class="message-text_container">
             <div class="main-message">
@@ -338,20 +268,14 @@
         </template>
 
         <div
-          v-if="
-            stereumUpdate.current !== stereumUpdate.version &&
-            !alertShowState.includes('green')
-          "
+          v-if="stereumUpdate.current !== stereumUpdate.version && !alertShowState.includes('green')"
           class="status-message_green h-9"
           @mouseenter="cursorLocation = `${clkUpdate}`"
           @mouseleave="cursorLocation = ''"
           @click="showUpdate"
         >
           <div class="message-icon">
-            <img
-              src="/img/icon/node-alert-icons/alert-notification-stereum-update.png"
-              alt="warn_storage"
-            />
+            <img src="/img/icon/node-alert-icons/alert-notification-stereum-update.png" alt="warn_storage" />
           </div>
           <div class="message-text_container">
             <div class="main-message">
@@ -376,9 +300,7 @@
             </div>
             <div class="message-text_container update-items">
               <div class="main-message">
-                <span class="overflow-hidden truncate text-md"
-                  >{{ item.name }} UPDATE</span
-                >
+                <span class="overflow-hidden truncate text-md">{{ item.name }} UPDATE</span>
               </div>
               <div class="val-message">
                 <span>{{ item.version }}</span>
@@ -489,8 +411,7 @@ export default {
     updatedNewUpdates() {
       const updatedUpdates = this.newUpdates.map((update) => {
         const matchingService = this.allServices.find(
-          (service) =>
-            service.service.replace(/(Beacon|Validator|Service)/gm, "") === update.name
+          (service) => service.service.replace(/(Beacon|Validator|Service)/gm, "") === update.name
         );
         if (matchingService) {
           return {
@@ -581,13 +502,9 @@ export default {
       }
     },
     processCsm(alerts) {
-      const criticalAlertNames = alerts
-        .filter((alert) => alert.level === "critical")
-        .map((alert) => alert.name);
+      const criticalAlertNames = alerts.filter((alert) => alert.level === "critical").map((alert) => alert.name);
 
-      const notifictionsNames = alerts
-        .filter((alert) => alert.level === "notification")
-        .map((alert) => alert.name);
+      const notifictionsNames = alerts.filter((alert) => alert.level === "notification").map((alert) => alert.name);
 
       this.criticalCsm = criticalAlertNames;
 
@@ -595,13 +512,9 @@ export default {
     },
 
     processAlerts(alerts) {
-      const criticalAlertNames = alerts
-        .filter((alert) => alert.level === "critical")
-        .map((alert) => alert.name);
+      const criticalAlertNames = alerts.filter((alert) => alert.level === "critical").map((alert) => alert.name);
 
-      const warningAlertNames = alerts
-        .filter((alert) => alert.level === "warning")
-        .map((alert) => alert.name);
+      const warningAlertNames = alerts.filter((alert) => alert.level === "warning").map((alert) => alert.name);
 
       this.criticalObol = criticalAlertNames;
 
@@ -671,9 +584,7 @@ export default {
       this.stereumStatus = false;
     },
     expertHandler(el) {
-      let selectedObject = this.installedServices.find(
-        (obj) => obj.config.serviceID === el
-      );
+      let selectedObject = this.installedServices.find((obj) => obj.config.serviceID === el);
       this.selectedValidatorFromNodeAlert = selectedObject;
       this.openModalFromNodeAlert = true;
     },
@@ -692,15 +603,11 @@ export default {
           }
           if (!validator.yaml)
             try {
-              validator.yaml = await ControlService.getServiceYAML(
-                validator.config.serviceID
-              );
+              validator.yaml = await ControlService.getServiceYAML(validator.config.serviceID);
             } catch (e) {
               console.log("couldn't get service yaml");
             }
-          const patternIndex = validator.expertOptions.findIndex(
-            (o) => o.title === "Default Fee Recipient"
-          );
+          const patternIndex = validator.expertOptions.findIndex((o) => o.title === "Default Fee Recipient");
           if (patternIndex === -1 || !validator.yaml) {
             continue;
           }
@@ -717,10 +624,7 @@ export default {
             });
           }
         }
-        const notSetAddresses = addresses.filter(
-          (validator) =>
-            validator.address === "0x0000000000000000000000000000000000000000"
-        );
+        const notSetAddresses = addresses.filter((validator) => validator.address === "0x0000000000000000000000000000000000000000");
         this.notSetAddresses = notSetAddresses;
       }
     },

@@ -21,7 +21,6 @@ export class RethService extends NodeService {
         `node`,
         `--chain=${network}`,
         `--datadir=${dataDir}`,
-        "--engine.legacy",
         "--http",
         "--http.port=8545",
         "--http.addr=0.0.0.0",
