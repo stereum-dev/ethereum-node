@@ -5,6 +5,10 @@ import { useStakingStore } from "@/store/theStaking";
 import axios from "axios";
 
 export async function useListKeys(forceRefresh) {
+  const DEBUG = true;
+  if (DEBUG) {
+    console.trace("useListKeys called");
+  }
   const serviceStore = useServices();
   const nodeManageStore = useNodeManage();
   const stakingStore = useStakingStore();

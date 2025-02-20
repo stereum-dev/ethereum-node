@@ -191,15 +191,11 @@ function normalizeKey(key) {
 
 function removeDuplicatedDoppelgangerKeys() {
   const normalizedKeysSet = new Set(stakingStore.keys.map((k) => normalizeKey(k.key)));
-  // const filteredKeys = stakingStore.doppelgangerKeys.filter(
-  //   (doppelKey) => !normalizedKeysSet.has(normalizeKey(doppelKey.pubkey))
-  // );
+  const filteredKeys = stakingStore.doppelgangerKeys.filter((doppelKey) => !normalizedKeysSet.has(normalizeKey(doppelKey.pubkey)));
 
-  // if (filteredKeys.length !== stakingStore.doppelgangerKeys.length) {
-  //   stakingStore.doppelgangerKeys = filteredKeys;
-  // }
-
-  stakingStore.doppelgangerKeys = stakingStore.doppelgangerKeys.filter((item) => !normalizedKeysSet.has(item.pubkey));
+  if (filteredKeys.length !== stakingStore.doppelgangerKeys.length) {
+    stakingStore.doppelgangerKeys = filteredKeys;
+  }
 }
 
 watch(
