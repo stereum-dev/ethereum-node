@@ -66,7 +66,7 @@ const getConfirmText = computed(() => {
     } else if (
       props.client.category === "consensus" ||
       (props.client.category === "validator" && !/Web3Signer/.test(props.client.service)) ||
-      /LidoObolExit|ValidatorEjector|KeysAPI/.test(props.client.service)
+      /LidoObolExit|ValidatorEjector|KeysAPI|SSVDKG/.test(props.client.service)
     ) {
       text = "next";
     } else if (props.client.category === "service" && props.client.service !== "FlashbotsMevBoostService") {
@@ -118,7 +118,7 @@ const confirmInstall = () => {
   } else if (
     (props.client.category === "consensus" && getConfirmText.value === "next") ||
     (props.client.category === "validator" && getConfirmText.value === "next") ||
-    /LidoObolExit|ValidatorEjector|KeysAPI/.test(props.client.service)
+    /LidoObolExit|ValidatorEjector|KeysAPI|SSVDKG/.test(props.client.service)
   ) {
     isAddPanelActivated.value = false;
     isModifyActivated.value = true;

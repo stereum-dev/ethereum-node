@@ -359,6 +359,7 @@ export class ServiceManager {
 
     for (let task of tasks) {
       let ssvConfig;
+      let ssvDkgConfig;
       let service = services.find((s) => s.id === task.service.config.serviceID);
       let dependencies = task.data.executionClients.concat(task.data.consensusClients, task.data.otherServices).map((s) =>
         services.find((e) => {
@@ -387,14 +388,22 @@ export class ServiceManager {
         let result = await this.nodeConnection.readSSVNetworkConfig(service.id);
         ssvConfig = YAML.parse(result);
       }
+      if (service.service === "SSVDKGService") {
+        let result = await this.nodeConnection.readSSVDKGConfig(service.id);
+        ssvDkgConfig = YAML.parse(result);
+      }
 
       if (task.data.port) {
         service = this.changePort(service, task.data.port);
       }
-      let updated = this.addDependencies(service, dependencies, ssvConfig);
+      let updated = this.addDependencies(service, dependencies, ssvConfig, ssvDkgConfig);
       if (service.service === "SSVNetworkService") {
         await this.nodeConnection.writeSSVNetworkConfig(service.id, YAML.stringify(ssvConfig));
       }
+      if (service.service === "SSVDKGService") {
+        await this.nodeConnection.writeSSVDKGConfig(service.id, YAML.stringify(ssvDkgConfig));
+      }
+
       if (!Array.isArray(updated)) updated = [updated];
       updated.forEach((dep) => {
         let index = modifiedServices.findIndex((s) => s.id === dep.id);
@@ -413,7 +422,7 @@ export class ServiceManager {
     );
   }
 
-  addDependencies(service, dependencies, ssvConfig) {
+  addDependencies(service, dependencies, ssvConfig, ssvDkgConfig) {
     let command = "";
     let filter;
     let keyValuePairs = [];
@@ -492,6 +501,8 @@ export class ServiceManager {
         });
       case "SSVNetwork":
         return this.addSSVNetworkConnection(service, dependencies, ssvConfig);
+      case "SSVDKG":
+        return this.addSSVDKGConnection(service, dependencies, ssvDkgConfig);
       case "LidoObolExit":
         return this.addLidoObolExitConnection(service, dependencies);
       case "Ejector":
@@ -622,6 +633,13 @@ export class ServiceManager {
     ssvConfig.eth2.BeaconNodeAddr = `${consensusClient ? consensusClient.buildConsensusClientHttpEndpointUrl() : ""}`;
     service.dependencies.executionClients = executionClient ? [executionClient] : [];
     service.dependencies.consensusClients = consensusClient ? [consensusClient] : [];
+    return service;
+  }
+
+  addSSVDKGConnection(service, dependencies, ssvDkgConfig) {
+    const executionClient = dependencies.filter((d) => typeof d.buildExecutionClientWsEndpointUrl === "function")[0];
+    ssvDkgConfig.ethEndpointURL = `${executionClient ? executionClient.buildExecutionClientHttpEndpointUrl() : "http://ethnode:8545"}`;
+    service.dependencies.executionClients = executionClient ? [executionClient] : [];
     return service;
   }
 
@@ -1089,13 +1107,7 @@ export class ServiceManager {
         );
       case "SSVDKGService":
         ports = [new ServicePort(null, 3030, 3030, servicePortProtocol.udp), new ServicePort(null, 3030, 3030, servicePortProtocol.tcp)];
-        return SSVDKGService.buildByUserInput(
-          args.network,
-          ports,
-          args.installDir + "/ssvdkg",
-          args.consensusClients, // TOOD: remove later!
-          args.otherServices
-        );
+        return SSVDKGService.buildByUserInput(args.network, ports, args.installDir + "/ssvdkg", args.executionClients, args.otherServices);
 
       case "LCOMService":
         ports = [new ServicePort("127.0.0.1", 8000, 8000, servicePortProtocol.tcp)];
@@ -1216,7 +1228,7 @@ export class ServiceManager {
         if (config.ssv_sk) {
           replacementString = "OperatorPrivateKey: " + config.ssv_sk;
         } else {
-          replacementString = "KeyStore:\n  PrivateKeyFile: /secrets/encrypted_private_key.json\n  PasswordFile: /secrets/password";
+          replacementString = "KeyStore:\n  PrivateKeyFile: ./secrets/encrypted_private_key.json\n  PasswordFile: ./secrets/password";
         }
 
         // prepare service's config file
@@ -1441,12 +1453,8 @@ export class ServiceManager {
 
   // Prepares the SSVDKGService on installation
   async prepareSSVDKG(service) {
-    console.log("prepareSSVDKG", service);
-    log.debug("prepareSSVDKG", service);
     if (!service) return;
-    // Prepare service's config file
-    //const ssvDkgServiceConfig = await this.nodeConnection.readServiceConfiguration(service.id);
-    let ssvDkgConfig = service.getServiceConfiguration(0);
+    let ssvDkgConfig = service.getServiceConfiguration(0, service.dependencies.executionClients);
     const dataDir = service.volumes.find((vol) => vol.servicePath === "/data").destinationPath;
     const escapedConfigFile = StringUtils.escapeStringForShell(ssvDkgConfig);
     this.nodeConnection.sshService.exec(`mkdir -p ${dataDir} && echo ${escapedConfigFile} > ${dataDir}/config.yaml`);
@@ -1562,39 +1570,37 @@ export class ServiceManager {
         // Set dataDir and secretsDir that is *currently* added to SSVDKGService
         const dataDir = SSVDKGService.volumes.find((vol) => vol.servicePath === "/data").destinationPath;
         const secretsDir = SSVDKGService.volumes.find((vol) => vol.servicePath === "/secrets").destinationPath;
+        const secretsDir2 = SSVDKGService.volumes.find((vol) => vol.servicePath === "/ssv-dkg/secrets").destinationPath;
         // Set local secretsDir that that is added to SSVDKGService by default on installation
         const workingDir = path.dirname(dataDir);
         const localSecretsDir = workingDir + "/secrets";
         const localSecretsVolume = new ServiceVolume(localSecretsDir, "/secrets");
+        const localSecretsVolume2 = new ServiceVolume(localSecretsDir, "/ssv-dkg/secrets");
         if (ssvTotalConfig) {
           // Change local (SSVDKGService) secrets volume with shared (SSVNetworkService) secrets volume
-          if (!secretsDir.includes(SSVNetworkService.id)) {
+          if (!secretsDir.includes(SSVNetworkService.id) || !secretsDir2.includes(SSVNetworkService.id)) {
             log.silly("SSVNetworkService exists");
-            log.info("Add shared secrets volume to DKG container");
-            const index = SSVDKGService.volumes.findIndex((vol) => vol.servicePath === "/secrets");
-            if (index !== -1) {
-              SSVDKGService.volumes.splice(index, 1);
-            }
+            log.info("Add shared secrets volumes to DKG container");
+            SSVDKGService.volumes = SSVDKGService.volumes.filter((vol) => !vol.servicePath.endsWith("/secrets"));
             SSVDKGService.volumes.push(new ServiceVolume(ssvTotalConfig.ssvSecretsDir, "/secrets"));
+            SSVDKGService.volumes.push(new ServiceVolume(ssvTotalConfig.ssvSecretsDir, "/ssv-dkg/secrets"));
             await this.nodeConnection.writeServiceConfiguration(SSVDKGService.buildConfiguration());
             changes = true;
           } else {
-            log.silly("Shared secrets volume already added to DKG container");
+            log.silly("Shared secrets volumes already added to DKG container");
           }
         } else {
           // Change shared (SSVNetworkService) secrets volume with local (SSVDKGService) secrets volume
-          if (!secretsDir.includes(SSVDKGService.id)) {
+          if (!secretsDir.includes(SSVDKGService.id) || !secretsDir2.includes(SSVDKGService.id)) {
             log.silly("SSVNetworkService does not exist");
-            log.info("Add local secrets volume to DKG container");
-            const index = SSVDKGService.volumes.findIndex((vol) => vol.servicePath === "/secrets");
-            if (index !== -1) {
-              SSVDKGService.volumes.splice(index, 1);
-            }
+            log.info("Add local secrets volumes to DKG container");
+            SSVDKGService.volumes = SSVDKGService.volumes.filter((vol) => !vol.servicePath.endsWith("/secrets"));
             SSVDKGService.volumes.push(localSecretsVolume);
+            SSVDKGService.volumes.push(localSecretsVolume2);
             await this.nodeConnection.writeServiceConfiguration(SSVDKGService.buildConfiguration());
             changes = true;
           } else {
-            log.silly("Local secrets volume already added to DKG container");
+            log.silly("Local secrets volumes already added to DKG container");
           }
         }
 
