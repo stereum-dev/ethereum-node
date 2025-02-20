@@ -102,6 +102,7 @@
     "write": "SCHRIJVEN",
     "read": "LEZEN",
     "inclusionDistance": "INCLUSIE AFSTAND",
+    "ipAddressIs": "IP ADDRESS IS",
     "rpc": "RPC-ENDPUNT",
     "ws": "WS-ENDPUNT",
     "syncStatus": "SYNCHRONISATIESTATUS",

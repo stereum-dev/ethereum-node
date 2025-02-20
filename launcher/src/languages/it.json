@@ -102,6 +102,7 @@
     "write": "SCRITTURA",
     "read": "LETTURA",
     "inclusionDistance": "DISTANZA DI INCLUSIONE",
+    "ipAddressIs": "IP ADDRESS IS",
     "rpc": "ENDPOINT-RPC",
     "ws": "ENDPOINT-WS",
     "syncStatus": "STATO DI SINCRONIZZAZIONE",
