@@ -4,13 +4,21 @@
     :class="[
       stakingStore.isOverDropZone ? 'border-dashed border-blue-500' : 'border-gray-600',
       stakingStore.inputWrongKey ? 'border-red-500' : '',
-      stakingStore.isPreviewListActive || stakingStore.isRemoteListActive || stakingStore.isGroupListActive
+      stakingStore.isPreviewListActive ||
+      stakingStore.isRemoteListActive ||
+      stakingStore.isGroupListActive
         ? 'row-start-2 row-end-12'
         : 'row-start-1 row-end-12 rounded-t-md',
     ]"
   >
-    <GroupList v-if="stakingStore.isGroupListActive" :is-loading="stakingStore.isSkeletonActive" />
-    <RemoteList v-else-if="stakingStore.isRemoteListActive" :is-loading="stakingStore.isSkeletonActive" />
+    <GroupList
+      v-if="stakingStore.isGroupListActive"
+      :is-loading="stakingStore.isSkeletonActive"
+    />
+    <RemoteList
+      v-else-if="stakingStore.isRemoteListActive"
+      :is-loading="stakingStore.isSkeletonActive"
+    />
 
     <div
       v-else
@@ -24,21 +32,32 @@
       <span
         v-if="stakingStore.isOverDropZone"
         class="w-full h-full self-center justify-self-center flex justify-center items-center text-2xl"
-        :class="[stakingStore.inputWrongKey ? 'text-red-500' : 'text-blue-400', stakingStore.isSkeletonActive ? 'cursor-not-allowed' : '']"
+        :class="[
+          stakingStore.inputWrongKey ? 'text-red-500' : 'text-blue-400',
+          stakingStore.isSkeletonActive ? 'cursor-not-allowed' : '',
+        ]"
         >+</span
       >
       <div
         v-else
         class="w-full h-full flex flex-col justify-start items-center space-y-2 z-10 scrollbar scrollbar-rounded-* scrollbar-thumb-teal-800 scrollbar-track-transparent overflow-y-auto pt-2"
       >
-        <span v-if="shouldShowNoValidators" class="text-lg font-bold text-gray-300 text-center uppercase select-none">{{
-          $t("stakingPage.noVal")
-        }}</span>
-        <span v-if="searchNotFound && getFilteredValidators?.length > 0" class="text-lg font-bold text-gray-300 text-center uppercase">{{
-          $t("stakingPage.noMatch")
-        }}</span>
+        <span
+          v-if="shouldShowNoValidators"
+          class="text-lg font-bold text-gray-300 text-center uppercase select-none"
+          >{{ $t("stakingPage.noVal") }}</span
+        >
+        <span
+          v-if="searchNotFound && getFilteredValidators?.length > 0"
+          class="text-lg font-bold text-gray-300 text-center uppercase"
+          >{{ $t("stakingPage.noMatch") }}</span
+        >
 
-        <SkeletonRow v-for="i in 10" v-show="!stakingStore.isPreviewListActive && stakingStore.isSkeletonActive" :key="i" />
+        <SkeletonRow
+          v-for="i in 10"
+          v-show="!stakingStore.isPreviewListActive && stakingStore.isSkeletonActive"
+          :key="i"
+        />
 
         <PreviewKey
           v-for="item in stakingStore.previewKeys"
@@ -119,7 +138,10 @@ stakingStore.filteredKeys = computed(() => {
     filteredKeys = stakingStore.keys.filter(
       (key) =>
         key.key?.toLowerCase().includes(stakingStore.searchContent.toLowerCase()) ||
-        (key.displayName && key.displayName.toLowerCase()?.includes(stakingStore.searchContent.toLowerCase()))
+        (key.displayName &&
+          key.displayName
+            .toLowerCase()
+            ?.includes(stakingStore.searchContent.toLowerCase()))
     );
   }
 
@@ -142,12 +164,18 @@ const getFilteredValidators = computed(() => {
   }
 
   if (!setupStore.selectedSetup && stakingStore.selectedServiceToFilter) {
-    return stakingStore.filteredKeys.filter((key) => key.validatorID === stakingStore.selectedServiceToFilter?.config?.serviceID);
+    return stakingStore.filteredKeys.filter(
+      (key) => key.validatorID === stakingStore.selectedServiceToFilter?.config?.serviceID
+    );
   }
 
   if (setupStore.selectedSetup && !stakingStore.selectedServiceToFilter) {
-    const serviceIds = setupStore.selectedSetup?.services?.map((service) => service.config?.serviceID);
-    return stakingStore.filteredKeys.filter((key) => serviceIds?.includes(key.validatorID));
+    const serviceIds = setupStore.selectedSetup?.services?.map(
+      (service) => service.config?.serviceID
+    );
+    return stakingStore.filteredKeys.filter((key) =>
+      serviceIds?.includes(key.validatorID)
+    );
   }
 
   const selectedServiceId = stakingStore.selectedServiceToFilter.config?.serviceID;
@@ -156,7 +184,9 @@ const getFilteredValidators = computed(() => {
 
 const getCorrectValidatorGroups = computed(() =>
   stakingStore.validatorKeyGroups.filter(
-    (group) => group.keys.length > 0 && group.validatorClientID === stakingStore.selectedServiceToFilter?.config?.serviceID
+    (group) =>
+      group.keys.length > 0 &&
+      group.validatorClientID === stakingStore.selectedServiceToFilter?.config?.serviceID
   )
 );
 
@@ -178,7 +208,10 @@ const shouldShowNoValidators = computed(
 );
 
 const shouldShowGroups = computed(
-  () => !stakingStore.isPreviewListActive && stakingStore.validatorKeyGroups?.length > 0 && !stakingStore.isSkeletonActive
+  () =>
+    !stakingStore.isPreviewListActive &&
+    stakingStore.validatorKeyGroups?.length > 0 &&
+    !stakingStore.isSkeletonActive
 );
 
 onUnmounted(() => {
@@ -188,13 +221,29 @@ onUnmounted(() => {
 function normalizeKey(key) {
   return key?.startsWith("0x") ? key.substring(2) : key;
 }
+console.log(stakingStore.doppelgangerKeys);
 
 function removeDuplicatedDoppelgangerKeys() {
-  const normalizedKeysSet = new Set(stakingStore.keys.map((k) => normalizeKey(k.key)));
-  const filteredKeys = stakingStore.doppelgangerKeys.filter((doppelKey) => !normalizedKeysSet.has(normalizeKey(doppelKey.pubkey)));
+  try {
+    const normalizedKeysSet = new Set(
+      stakingStore.keys.filter((k) => k.key).map((k) => normalizeKey(k.key))
+    );
 
-  if (filteredKeys.length !== stakingStore.doppelgangerKeys.length) {
-    stakingStore.doppelgangerKeys = filteredKeys;
+    const filteredKeys = stakingStore.doppelgangerKeys.filter((doppelKey) => {
+      if (!doppelKey?.pubkey) {
+        return false;
+      }
+
+      const normalizedPubkey = normalizeKey(doppelKey.pubkey);
+      const isDuplicate = normalizedKeysSet.has(normalizedPubkey);
+      return !isDuplicate;
+    });
+
+    if (filteredKeys.length !== stakingStore.doppelgangerKeys.length) {
+      stakingStore.doppelgangerKeys = filteredKeys;
+    }
+  } catch (error) {
+    console.log("Error in removeDuplicatedDoppelgangerKeys:", error);
   }
 }
 
@@ -203,18 +252,30 @@ watch(
   async () => {
     removeDuplicatedDoppelgangerKeys();
   },
-  { once: true }
+  {
+    deep: true,
+    immediate: true,
+  }
 );
 
 const removeDoppelGangerManually = (pubkey) => {
-  stakingStore.doppelgangerKeys = stakingStore.doppelgangerKeys.filter((item) => item.pubkey !== pubkey);
+  stakingStore.doppelgangerKeys = stakingStore.doppelgangerKeys.filter(
+    (item) => item.pubkey !== pubkey
+  );
 };
 
 function isKeyInGroup(key) {
-  return stakingStore.validatorKeyGroups.some((group) => group.keys.some((groupKey) => groupKey.key === key.key));
+  return stakingStore.validatorKeyGroups.some((group) =>
+    group.keys.some((groupKey) => groupKey.key === key.key)
+  );
 }
 function shouldShowKeys(key) {
-  return !isKeyInGroup(key) && !stakingStore.isPreviewListActive && stakingStore.keys?.length > 0 && !stakingStore.isSkeletonActive;
+  return (
+    !isKeyInGroup(key) &&
+    !stakingStore.isPreviewListActive &&
+    stakingStore.keys?.length > 0 &&
+    !stakingStore.isSkeletonActive
+  );
 }
 
 function onDragOver() {
