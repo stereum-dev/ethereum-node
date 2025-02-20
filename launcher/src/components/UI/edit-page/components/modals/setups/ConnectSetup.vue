@@ -196,8 +196,8 @@ const confirmAction = () => {
 
   const restructuredData = {
     client: opNode,
-    consensusClients: [executionService, ...opNode.config.dependencies.consensusClients],
-    executionClients: [consensusService, ...opNode.config.dependencies.executionClients],
+    consensusClients: [consensusService, ...opNode.config.dependencies.consensusClients],
+    executionClients: [executionService, ...opNode.config.dependencies.executionClients],
     otherServices: [],
   };
   console.log("restructuredData", restructuredData);
