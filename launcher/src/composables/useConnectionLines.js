@@ -1,9 +1,7 @@
-import { ref } from "vue";
-import { useNodeStore } from "@/store/theNode";
 import { useServices } from "@/store/services";
+import { ref } from "vue";
 
 export function useConnectionLines() {
-  const nodeStore = useNodeStore();
   const serviceStore = useServices();
   const activeConnections = ref([]);
 
