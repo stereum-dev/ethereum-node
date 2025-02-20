@@ -46,7 +46,7 @@ import { useServices } from "@/store/services";
 import { useSetups } from "@/store/setups";
 import { useStakingStore } from "@/store/theStaking";
 import { saveAs } from "file-saver";
-import { computed, onMounted, onUnmounted, watch } from "vue";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import ControlService from "../../../store/ControlService";
 import ImportRemote from "./components/modals/ImportRemote.vue";
 import ImportValidator from "./components/modals/ImportValidator.vue";
@@ -65,6 +65,7 @@ const setupStore = useSetups();
 const { listGroups } = useListGroups();
 const { getServerView } = useMultiSetups();
 const { uploadValidatorKey, onDrop, importingKey, importValidatorProcessing } = useImportKeys(stakingStore.forceRefresh);
+const fetchInterval = ref(null);
 
 const modals = {
   import: {
@@ -131,6 +132,7 @@ onMounted(async () => {
   if (stakingStore.keys.length > 0 && setupStore.allSetups.length > 0) {
     getKeySetupColor();
   }
+  fetchInterval.value = setInterval(fetchKeysWhileDplProtection, 30000);
 });
 
 // *************** Methods *****************
@@ -141,6 +143,12 @@ onMounted(async () => {
 const listKeys = async () => {
   await useListKeys(stakingStore.forceRefresh);
   stakingStore.isSkeletonActive = false;
+};
+
+const fetchKeysWhileDplProtection = async () => {
+  if (stakingStore.doppelgangerKeys) {
+    await useListKeys();
+  }
 };
 
 // const updateValidatorStats = async () => {
@@ -745,5 +753,6 @@ const confirmImportRemoteKeys = async () => {
 onUnmounted(() => {
   setupStore.selectedSetup = null;
   getServerView();
+  clearInterval(fetchInterval.value);
 });
 </script>
