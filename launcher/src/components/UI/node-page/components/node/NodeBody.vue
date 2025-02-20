@@ -12,6 +12,21 @@
     />
     <SetupBody v-if="!setupStore.isConfigViewActive" @open-setup="openSetup" @export-setup="exportSetup" />
     <PluginLogs v-if="isPluginLogPageActive" :item="itemToLogs" @close-log="closePluginLogsPage" />
+    <ConnectionLine
+      v-for="connection in activeConnections"
+      :key="connection.id"
+      :start="{
+        element: connection.start.element,
+        position: connection.start.position,
+      }"
+      :end="{
+        element: connection.end.element,
+        position: connection.end.position,
+      }"
+      color="#DBEF6A"
+      :animated="true"
+      :dashed="true"
+    />
   </div>
 </template>
 
@@ -25,8 +40,9 @@ import { useNodeStore } from "@/store/theNode";
 import { useServices } from "@/store/services";
 import ControlService from "@/store/ControlService";
 
-import LeaderLine from "leader-line-new";
 import { useSetups } from "@/store/setups";
+import ConnectionLine from "../../../../layers/ConnectionLine.vue";
+import { useConnectionLines } from "@/composables/useConnectionLines";
 
 const emit = defineEmits(["openExpert", "openLog", "setupState", "exportSetup"]);
 
@@ -34,12 +50,12 @@ const emit = defineEmits(["openExpert", "openLog", "setupState", "exportSetup"])
 const isPluginLogPageActive = ref(false);
 const itemToLogs = ref({});
 const loadingClients = ref(false);
-const isLineDrawHandlerReady = ref(false);
 
 // Store and router
 const setupStore = useSetups();
 const nodeStore = useNodeStore();
 const serviceStore = useServices();
+const { activeConnections, lineDrawHandler, removeConnectionLines } = useConnectionLines();
 
 watchEffect(() => {
   if (nodeStore.skeletonLoading || serviceStore.installedServices.length === 0) {
@@ -49,128 +65,9 @@ watchEffect(() => {
   }
 });
 
-watchEffect(() => {
-  if (nodeStore.isLineHidden) {
-    removeConnectionLines();
-  }
-});
-
 //Lifecycle
 
 // Methods
-
-const oneWayConnection = (start, end, startSocket, endSocket) => {
-  if (start && end) {
-    let newLine = new LeaderLine(start, end, { dash: { animation: true } }, { hide: true });
-    newLine.position();
-    newLine.setOptions({
-      size: 2,
-      color: "#DBEF6A",
-      endPlug: "behind",
-      startSocket: startSocket ? startSocket : "right",
-      endSocket: endSocket ? endSocket : "left",
-    });
-    nodeStore.lines.push(newLine);
-  }
-};
-
-const lineDrawHandler = (item) => {
-  let start;
-  let end;
-  if (item && !item.displayPluginMenu) {
-    switch (item.category) {
-      case "execution": {
-        const dependencies = serviceStore.installedServices.filter(
-          (s) =>
-            s.config?.dependencies?.executionClients?.length > 0 &&
-            s.config?.dependencies?.executionClients.some((d) => d.id === item.config?.serviceID)
-        );
-        dependencies.forEach((d) => {
-          if (d.category === "consensus") {
-            start = d.ref;
-            end = item.ref;
-            if (start && end) {
-              oneWayConnection(end, start);
-            }
-          }
-        });
-        break;
-      }
-      case "consensus": {
-        const dependencies = serviceStore.installedServices.filter(
-          (s) =>
-            (s.config?.dependencies?.consensusClients?.length > 0 &&
-              s.config?.dependencies?.consensusClients.some((d) => d.id === item.config?.serviceID)) ||
-            item.config?.dependencies?.executionClients.some((d) => d.id === s.config?.serviceID)
-        );
-        dependencies.forEach((d) => {
-          if (d.category === "validator") {
-            start = d.ref;
-            end = item.ref;
-            if (start && end) {
-              oneWayConnection(end, start);
-            }
-          }
-          if (d.category === "execution") {
-            start = d.ref;
-            end = item.ref;
-            if (start && end) {
-              oneWayConnection(start, end);
-            }
-          }
-        });
-        break;
-      }
-      case "validator": {
-        const dependencies = serviceStore.installedServices.filter(
-          (s) =>
-            item.config?.dependencies?.executionClients.some((d) => d.id === s.config?.serviceID) ||
-            item.config?.dependencies?.consensusClients.some((d) => d.id === s.config?.serviceID) ||
-            s.config?.dependencies?.consensusClients.some((d) => d.id === item.config?.serviceID)
-        );
-        dependencies.forEach((d) => {
-          if (d.category === "validator") {
-            start = d.ref;
-            end = item.ref;
-            if (start && end) {
-              if (item.service === "CharonService") {
-                oneWayConnection(end, start, "left", "left");
-              } else {
-                oneWayConnection(start, end, "left", "left");
-              }
-            }
-          }
-          if (d.category === "execution") {
-            start = d.ref;
-            end = item.ref;
-            if (start && end) {
-              oneWayConnection(start, end);
-            }
-          }
-          if (d.category === "consensus") {
-            start = d.ref;
-            end = item.ref;
-            if (start && end) {
-              oneWayConnection(start, end);
-            }
-          }
-        });
-        break;
-      }
-    }
-  } else if (item && item.displayPluginMenu) {
-    removeConnectionLines();
-  }
-  isLineDrawHandlerReady.value = true;
-};
-
-const removeConnectionLines = () => {
-  // Remove all existing connections
-  nodeStore.lines.forEach((line) => {
-    line.remove();
-  });
-  nodeStore.lines = [];
-};
 
 const openLog = (item) => {
   emit("openLog", item);

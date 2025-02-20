@@ -102,6 +102,7 @@
     "write": "YAZMA",
     "read": "OKUMA",
     "inclusionDistance": "İÇERME MESAFESİ",
+    "ipAddressIs": "IP ADDRESS IS",
     "rpc": "RPC-NOKTASI",
     "ws": "WS-NOKTASI",
     "syncStatus": "SENKRONİZASYON DURUMU",

@@ -102,6 +102,7 @@
     "write": "GHI",
     "read": "ĐỌC",
     "inclusionDistance": "KHOẢNG CÁCH BAO GỒM",
+    "ipAddressIs": "IP ADDRESS IS",
     "rpc": "ĐIỂM CUỐI RPC",
     "ws": "ĐIỂM CUỐI WS",
     "syncStatus": "TRẠNG THÁI ĐỒNG BỘ",

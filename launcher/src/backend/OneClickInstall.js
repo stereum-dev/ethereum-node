@@ -327,7 +327,8 @@ export class OneClickInstall {
     if (constellation.includes("SSVDKGService")) {
       let SSVDKGService = this.serviceManager.getService("SSVDKGService", {
         ...args,
-        consensusClients: this.beaconService.filter((service) => service.service !== "OpNodeBeaconService"),
+
+        executionClients: [this.executionClient],
         otherServices: this.validatorService === "SSVNetworkService" ? [this.validatorService] : [],
       });
       this.extraServices.push(SSVDKGService);
@@ -470,11 +471,11 @@ export class OneClickInstall {
 
   handleLidoTags(selectedPreset) {
     if (/lidocsm/.test(selectedPreset)) {
-      const networkFeeAdress = {
+      const networkFeeAddress = {
         mainnet: "0x388C818CA8B9251b393131C08a736A67ccB19297",
         holesky: "0xE73a3602b99f1f913e72F8bdcBC235e206794Ac8",
       };
-      const serviceFeeAdressCommand = {
+      const serviceFeeAddressCommand = {
         LighthouseValidatorService: "--suggested-fee-recipient=",
         LodestarValidatorService: "--suggestedFeeRecipient=",
         NimbusValidatorService: "--suggested-fee-recipient=",
@@ -482,8 +483,8 @@ export class OneClickInstall {
         TekuValidatorService: "--validators-proposer-default-fee-recipient=",
       };
       this.validatorService.command[
-        this.validatorService.command.findIndex((c) => c.includes(serviceFeeAdressCommand[this.validatorService.service]))
-      ] = serviceFeeAdressCommand[this.validatorService.service] + networkFeeAdress[this.network];
+        this.validatorService.command.findIndex((c) => c.includes(serviceFeeAddressCommand[this.validatorService.service]))
+      ] = serviceFeeAddressCommand[this.validatorService.service] + networkFeeAddress[this.network];
     }
     if (this.extraServices.some((s) => s.service === "ValidatorEjectorService")) {
       const moduleIDs = {

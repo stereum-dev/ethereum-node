@@ -1,0 +1,232 @@
+---
+- name: Read service file
+  slurp:
+    src: "{{ config_file.path }}"
+  register: service_configuration_raw
+
+- name: Parse service's configuration
+  set_fact:
+    service_configuration: "{{ service_configuration_raw['content'] | b64decode | from_yaml }}"
+    service_configuration_text: "{{ service_configuration_raw['content'] | b64decode }}"
+
+- name: Parse SSVDKG data dir path
+  when: service_configuration.service == "SSVDKGService"
+  set_fact:
+    ssvdkg_config_data_dir: "{{ service_configuration.volumes | select('search', '/data') | list | first | split(':') | first }}"
+
+- name: Parse SSVDKG config file path
+  when: service_configuration.service == "SSVDKGService"
+  set_fact:
+    ssvdkg_config_file: "{{ ssvdkg_config_data_dir }}/config.yaml"
+
+# Add Volumes only if they are not already present
+- name: Update Volumes
+  when:
+    - service_configuration.service == "SSVDKGService"
+    - service_configuration.volumes | select('search', ':/data') | list | length > 0
+    - service_configuration.volumes | select('search', ':/secrets') | list | length > 0
+    - service_configuration.volumes | select('search', ':/ssv-dkg/data') | list | length == 0
+    - service_configuration.volumes | select('search', ':/ssv-dkg/secrets') | list | length == 0
+  block:
+    - name: set existing volume facts
+      set_fact:
+        existingDataVolume: "{{ service_configuration.volumes | select('search', ':/data') | list | first }}"
+        existingSecretsVolume: "{{ service_configuration.volumes | select('search', ':/secrets') | list | first }}"
+
+    # take the existing volumes and replace the service path
+    - name: set new volume facts
+      set_fact:
+        newDataVolume: "{{ existingDataVolume | regex_replace(':.*$', ':/ssv-dkg/data') }}"
+        newSecretsVolume: "{{ existingSecretsVolume | regex_replace(':.*$', ':/ssv-dkg/secrets') }}"
+
+    - name: update fact
+      ansible.utils.update_fact:
+        updates:
+          - path: service_configuration.volumes
+            value: "{{ service_configuration.volumes + [ newDataVolume, newSecretsVolume] }}" # Add the new Volumes
+      register: updated_volumes
+
+    - name: set updated fact
+      set_fact:
+        service_configuration: "{{ updated_volumes.service_configuration }}"
+      when: updated_volumes.changed
+
+# Update Image only if it is not already updated
+- name: Update Image
+  when:
+    - service_configuration.service == "SSVDKGService"
+    - service_configuration.image is search('bloxstaking/ssv-dkg')
+  block:
+    - name: update fact
+      ansible.utils.update_fact:
+        updates:
+          - path: service_configuration.image
+            value: "ssvlabs/ssv-dkg:{{ service_configuration.image | split(':') | last }}"
+      register: updated_image
+
+    - name: set updated fact
+      set_fact:
+        service_configuration: "{{ updated_image.service_configuration }}"
+      when: updated_image.changed
+
+# Update Config path only if it is absolute
+- name: Update Config path
+  when:
+    - service_configuration.service == "SSVDKGService"
+    - "service_configuration.command | select('search', '--configPath') | list | first | regex_replace('^--configPath(=)?\\s?', '') | regex_search('^/')"
+  block:
+    - name: get current config path
+      set_fact:
+        currentConfigPathCommand: "{{ service_configuration.command | select('search', '--configPath') | list | first }}"
+        currentConfigPath: "{{ service_configuration.command | select('search', '--configPath') | list | first | regex_replace('^--configPath(=)?\\s?', '') }}"
+
+    - name: update fact
+      ansible.utils.update_fact:
+        updates:
+          - path: service_configuration.command.{{ service_configuration.command.index(currentConfigPathCommand) }}
+            value: "{{ '--configPath=.' + currentConfigPath }}"
+      register: updated_config_path
+      when: currentConfigPath | regex_search('^/')
+
+    - name: set updated fact
+      set_fact:
+        service_configuration: "{{ updated_config_path.service_configuration }}"
+      when:
+        - currentConfigPath | regex_search('^/')
+        - updated_config_path.changed
+
+# Ensure all paths are relative (if they are already the regex wont match)
+- name: Update SSV DKG Config
+  when:
+    - service_configuration.service == "SSVDKGService"
+  block:
+    - name: make private key file relative
+      replace:
+        path: "{{ ssvdkg_config_file }}"
+        regexp: "privKey:\\s*/"
+        replace: "privKey: ./"
+
+    - name: make private key password file relative
+      replace:
+        path: "{{ ssvdkg_config_file }}"
+        regexp: "privKeyPassword:\\s*/"
+        replace: "privKeyPassword: ./"
+
+    - name: make log path relative
+      replace:
+        path: "{{ ssvdkg_config_file }}"
+        regexp: "logFilePath:\\s*/"
+        replace: "logFilePath: ./"
+
+    - name: make output path relative
+      replace:
+        path: "{{ ssvdkg_config_file }}"
+        regexp: "outputPath:\\s*/"
+        replace: "outputPath: ./"
+
+# Check if ethEndpointURL is already presentin the config file
+- name: check ssv_dkg_config_file
+  when: service_configuration.service == "SSVDKGService"
+  ansible.builtin.lineinfile:
+    path: "{{ ssvdkg_config_file }}"
+    regexp: "ethEndpointURL:"
+    state: absent
+  check_mode: yes
+  register: checkSSVDKGConfigFile
+  changed_when: checkSSVDKGConfigFile.found == 0
+
+- name: check if ethEndpointURL is already present
+  set_fact:
+    includesEndpointURL: "{{ checkSSVDKGConfigFile.found == 1 }}"
+  when: service_configuration.service == "SSVDKGService"
+
+# Check if there is a SSVNetworkService to get the endpoint from
+- name: Find SSVNetworkService
+  when:
+    - service_configuration.service == "SSVDKGService"
+    - not includesEndpointURL
+  ansible.builtin.lineinfile:
+    path: "{{ item.path }}"
+    regexp: "^\\s*service: SSVNetworkService"
+    state: absent # We use 'absent' only in check mode (no real change)
+  check_mode: yes
+  loop: "{{ service_config_files.files }}"
+  register: matching_files
+
+# Set Default Endpoint
+- name: Set Default Endpoint
+  when:
+    - service_configuration.service == "SSVDKGService"
+    - not includesEndpointURL
+  set_fact:
+    http_endpoint: "http://ethnode:8545"
+
+# If SSVNetworkService is found, get the endpoint from it
+- name: Get Execution Endpoint and Write to Config
+  when:
+    - service_configuration.service == "SSVDKGService"
+    - not includesEndpointURL
+    - matching_files.results | selectattr('found', '==', 1) | list | length > 0
+  block:
+    - name: Extract SSVNetworkService config file
+      set_fact:
+        ssv_network_service_file_path: "{{ matching_files.results | selectattr('found', '==', 1) | map(attribute='item.path') | list | first }}"
+
+    - name: Read SSVNetworkService file
+      slurp:
+        src: "{{ ssv_network_service_file_path }}"
+      register: ssv_network_service_raw
+
+    - name: Get SSVNetworkService content
+      set_fact:
+        ssv_network_service: "{{ ssv_network_service_raw['content'] | b64decode | from_yaml }}"
+
+    - name: Get SSVNetworkService config file path
+      set_fact:
+        ssv_network_config_file: "{{ (ssv_network_service.volumes | select('search', '/data') | list | first | split(':') | first) + (ssv_network_service.env.CONFIG_PATH | regex_replace('/data', '')) }}"
+
+    - name: Find a line containing "ETH1Addr:" in the SSVNetworkService config file
+      ansible.builtin.shell: "grep 'ETH1Addr:' {{ ssv_network_config_file }}"
+      register: matched_line
+      changed_when: false
+      failed_when: matched_line.rc not in [0, 1]
+
+    - name: Build HTTP endpoint
+      when:
+        - matched_line.rc == 0
+        - matched_line.stdout is search('ws://') # Check if the line matched contains a ws endpoint
+      set_fact:
+        http_endpoint: "http{{ matched_line.stdout | regex_replace('^.*ws', '') | regex_replace(':[0-9]{4}', ':8545') }}" # replace ws with http and port with 8545
+
+    - name: Write HTTP endpoint to SSV DKG config
+      ansible.builtin.lineinfile:
+        path: "{{ ssvdkg_config_file }}"
+        line: "ethEndpointURL: {{ http_endpoint }} #HTTP Address of Execution Node"
+        regexp: "^ethEndpointURL:"
+        insertafter: EOF
+
+    - name: Add Dependency
+      when:
+        - matched_line.rc == 0
+        - matched_line.stdout is search('ws://')
+      block:
+        - name: update fact
+          ansible.utils.update_fact:
+            updates:
+              - path: service_configuration.dependencies.executionClients
+                value: "{{ ssv_network_service.dependencies.executionClients }}"
+          register: updated_dependencies
+
+        - name: set updated fact
+          set_fact:
+            service_configuration: "{{ updated_dependencies.service_configuration }}"
+          when: updated_dependencies.changed
+
+# Apply all changes done with update_fact
+- name: Write Config
+  copy:
+    dest: "{{ config_file.path }}"
+    content: "{{ service_configuration | to_nice_yaml(indent=2) }}"
+    owner: "root"
+    group: "root"
+    mode: 0644
