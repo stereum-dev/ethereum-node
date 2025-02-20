@@ -1,6 +1,6 @@
 <template>
   <div class="connection-container" :style="containerStyle">
-    <svg ref="svgRef" class="connection-svg" :style="svgStyle" :width="bounds.width" :height="bounds.height">
+    <svg ref="svgRef" class="connection-svg" :width="bounds.width" :height="bounds.height">
       <defs>
         <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
           <feGaussianBlur stdDeviation="2" result="coloredBlur" />
