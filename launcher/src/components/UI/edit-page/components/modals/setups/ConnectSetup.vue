@@ -196,11 +196,11 @@ const confirmAction = () => {
 
   const restructuredData = {
     client: opNode,
-    consensusClients: [executionService],
-    executionClients: [consensusService],
+    consensusClients: [executionService, ...opNode.config.dependencies.executionClients],
+    executionClients: [consensusService, ...opNode.config.dependencies.consensusClients],
     otherServices: [],
   };
-
+  console.log("restructuredData", restructuredData);
   setupStore.isConnectSetupModalActive = false;
   emit("confirmAction", restructuredData);
 };
