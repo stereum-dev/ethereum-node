@@ -221,9 +221,8 @@ onUnmounted(() => {
 function normalizeKey(key) {
   return key?.startsWith("0x") ? key.substring(2) : key;
 }
-console.log(stakingStore.doppelgangerKeys);
 
-function removeDuplicatedDoppelgangerKeys() {
+const removeDuplicatedDoppelgangerKeys = async () => {
   try {
     const normalizedKeysSet = new Set(
       stakingStore.keys.filter((k) => k.key).map((k) => normalizeKey(k.key))
@@ -245,7 +244,7 @@ function removeDuplicatedDoppelgangerKeys() {
   } catch (error) {
     console.log("Error in removeDuplicatedDoppelgangerKeys:", error);
   }
-}
+};
 
 watch(
   () => stakingStore.keys,

@@ -1,6 +1,11 @@
 <template>
   <div class="connection-container" :style="containerStyle">
-    <svg ref="svgRef" class="connection-svg" :width="bounds.width" :height="bounds.height">
+    <svg
+      ref="svgRef"
+      class="connection-svg"
+      :width="bounds.width"
+      :height="bounds.height"
+    >
       <defs>
         <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
           <feGaussianBlur stdDeviation="2" result="coloredBlur" />
@@ -17,7 +22,7 @@
         fill="none"
         :stroke="color"
         :stroke-width="strokeWidth"
-        stroke-dasharray="5,5"
+        stroke-dasharray="5.5"
         :filter="props.glow ? 'url(#glow)' : 'none'"
         :style="{ opacity: isPathReady ? 1 : 0 }"
       />
@@ -40,11 +45,15 @@ const props = defineProps({
   },
   color: {
     type: String,
-    default: "#000",
+    default: "#73a832",
   },
   strokeWidth: {
     type: Number,
     default: 2,
+  },
+  strokeDasharray: {
+    type: String,
+    default: "5,5",
   },
   animated: {
     type: Boolean,
@@ -157,8 +166,8 @@ const animatePath = () => {
   const pathLength = pathRef.value.getTotalLength();
 
   gsap.set(pathRef.value, {
-    strokeDasharray: `${pathLength} ${pathLength}`,
-    strokeDashoffset: pathLength,
+    strokeDasharray: `${pathLength} ${pathLength}` || "5.5",
+    strokeDashoffset: pathLength || 5,
     opacity: 0,
   });
 
@@ -166,7 +175,8 @@ const animatePath = () => {
     strokeDashoffset: 0,
     strokeDasharray: true,
     duration: 0.8,
-    ease: "power2.out",
+    yoyo: true,
+    ease: "power1.inOut",
     onStart: () => {
       isPathReady.value = true;
     },

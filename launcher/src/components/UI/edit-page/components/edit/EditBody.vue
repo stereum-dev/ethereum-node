@@ -13,7 +13,13 @@
       @line-draw="lineDrawHandler"
       @remove-lines="removeConnectionLines"
     />
-    <SetupBody v-else @delete-setup="deleteSetup" @connect-setup="connectSetup" @setup-infos="setupInfos" @open-configs="openConfigs" />
+    <SetupBody
+      v-else
+      @delete-setup="deleteSetup"
+      @connect-setup="connectSetup"
+      @setup-infos="setupInfos"
+      @open-configs="openConfigs"
+    />
     <ConnectionLine
       v-for="connection in activeConnections"
       :key="connection.id"
@@ -25,7 +31,7 @@
         element: connection.end.element,
         position: connection.end.position,
       }"
-      color="#DBEF6A"
+      color="#F6F68B85"
       :animated="true"
       :dashed="true"
     />
@@ -62,7 +68,11 @@ const emit = defineEmits([
 //Pinia stores
 const manageStore = useNodeManage();
 const setupStore = useSetups();
-const { activeConnections, lineDrawHandler, removeConnectionLines } = useConnectionLines();
+const {
+  activeConnections,
+  lineDrawHandler,
+  removeConnectionLines,
+} = useConnectionLines();
 // refs
 
 const isOverDropZone = ref(false);
