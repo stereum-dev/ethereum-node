@@ -40,10 +40,8 @@ export class OneClickInstall {
 
   //this is broken
   chooseClient(clients) {
-    console.log("111111111------------------------------", clients);
     if (clients && clients.length > 0) {
       let client = clients[Math.floor(Math.random() * clients.length)].toLowerCase();
-      console.log("2222222------------------------------", clients);
       return client.charAt(0).toUpperCase() + client.slice(1);
     }
   }
@@ -327,8 +325,7 @@ export class OneClickInstall {
     if (constellation.includes("SSVDKGService")) {
       let SSVDKGService = this.serviceManager.getService("SSVDKGService", {
         ...args,
-
-        executionClients: [this.executionClient],
+        executionClients: this.executionClient.filter((client) => client.service !== "OpGethService" || client.service !== "L2GethService"),
         otherServices: this.validatorService === "SSVNetworkService" ? [this.validatorService] : [],
       });
       this.extraServices.push(SSVDKGService);
