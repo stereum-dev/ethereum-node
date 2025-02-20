@@ -10,9 +10,25 @@
       @confirm-consensus="confirmConsensus"
       @info-modal="infoModal"
       @modify-service="modifyService"
+      @line-draw="lineDrawHandler"
       @remove-lines="removeConnectionLines"
     />
     <SetupBody v-else @delete-setup="deleteSetup" @connect-setup="connectSetup" @setup-infos="setupInfos" @open-configs="openConfigs" />
+    <ConnectionLine
+      v-for="connection in activeConnections"
+      :key="connection.id"
+      :start="{
+        element: connection.start.element,
+        position: connection.start.position,
+      }"
+      :end="{
+        element: connection.end.element,
+        position: connection.end.position,
+      }"
+      color="#DBEF6A"
+      :animated="true"
+      :dashed="true"
+    />
   </div>
 </template>
 
@@ -24,8 +40,10 @@ import SetupBody from "./SetupBody.vue";
 import ControlService from "@/store/ControlService";
 import { useNodeManage } from "@/store/nodeManage";
 import { useSetups } from "@/store/setups";
-import { computed, ref, watch } from "vue";
+import { computed, ref } from "vue";
 import { useMultiSetups } from "../../../../../composables/multiSetups";
+import ConnectionLine from "../../../../layers/ConnectionLine.vue";
+import { useConnectionLines } from "@/composables/useConnectionLines";
 
 const { getSelectedSetup } = useMultiSetups();
 
@@ -37,7 +55,6 @@ const emit = defineEmits([
   "confirmConsensus",
   "infoModal",
   "modifyService",
-
   "openConfigs",
   "deleteSetup",
 ]);
@@ -45,11 +62,10 @@ const emit = defineEmits([
 //Pinia stores
 const manageStore = useNodeManage();
 const setupStore = useSetups();
-
+const { activeConnections, lineDrawHandler, removeConnectionLines } = useConnectionLines();
 // refs
 
 const isOverDropZone = ref(false);
-// const isLineDrawHandlerReady = ref(false);
 
 // computed & watchers properties
 // eslint-disable-next-line no-unused-vars
@@ -63,24 +79,7 @@ const displayDropZone = computed(() => {
   return dropClass;
 });
 
-watch(
-  () => manageStore.isLineHidden,
-  (newValue) => {
-    if (newValue) {
-      removeConnectionLines();
-    }
-  }
-);
-
 // methods
-
-const removeConnectionLines = () => {
-  // Remove all existing connections
-  manageStore.lines.forEach((line) => {
-    line.remove();
-  });
-  manageStore.lines = [];
-};
 
 const onDrop = (event) => {
   isOverDropZone.value = false;
