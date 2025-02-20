@@ -102,6 +102,7 @@
     "write": "ЗАПИСЬ",
     "read": "ЧТЕНИЕ",
     "inclusionDistance": "ДИСТАНЦИЯ ВКЛЮЧЕНИЯ",
+    "ipAddressIs": "IP ADDRESS IS",
     "rpc": "RPC-ENDPOINT",
     "ws": "WS-ENDPOINT",
     "syncStatus": "СТАТУС СИНХРОНИЗАЦИИ",

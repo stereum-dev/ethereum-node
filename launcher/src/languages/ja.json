@@ -102,6 +102,7 @@
     "write": "書き込み",
     "read": "読み取り",
     "inclusionDistance": "インクルージョン距離",
+    "ipAddressIs": "IP ADDRESS IS",
     "rpc": "RPCエンドポイント",
     "ws": "WSエンドポイント",
     "syncStatus": "同期状態",

@@ -54,7 +54,6 @@ import { useNodeStore } from "@/store/theNode";
 import { saveAs } from "file-saver";
 import JSZip from "jszip";
 import { onMounted, onUnmounted, ref, watchEffect } from "vue";
-import { useRouter } from "vue-router";
 import { useRefreshNodeStats } from "../../../composables/monitoring";
 import { useMultiSetups } from "../../../composables/multiSetups";
 import { useListKeys } from "../../../composables/validators";
@@ -71,7 +70,7 @@ const nodeStore = useNodeStore();
 const headerStore = useNodeHeader();
 const serviceStore = useServices();
 const controlStore = useControlStore();
-const router = useRouter();
+
 const footerStore = useFooter();
 const setupStore = useSetups();
 const { updateDom } = useMultiSetups();
@@ -89,15 +88,6 @@ let pollingPings = null;
 //*****************  Watchers *****************
 
 //Computed & Watchers
-// TODO: maybe add watchSSV from service.js here?
-
-watchEffect(() => {
-  if (router.currentRoute.value.path !== "/node") {
-    nodeStore.isLineHidden = true;
-  } else {
-    nodeStore.isLineHidden = false;
-  }
-});
 
 watchEffect(() => {
   if (headerStore.openModalFromNodeAlert) {

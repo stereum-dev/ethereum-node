@@ -102,6 +102,7 @@
     "write": "БИЧИХ",
     "read": "УНШИХ",
     "inclusionDistance": "ХАМААРУУЛАХ ЗАЙ",
+    "ipAddressIs": "IP ADDRESS IS",
     "rpc": "RPC-ТӨГСГӨЛИЙН ЦЭГ",
     "ws": "WS-ТӨГСГӨЛИЙН ЦЭГ",
     "syncStatus": "СИНК СТАТУС",

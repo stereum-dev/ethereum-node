@@ -1,0 +1,71 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+    # SSVNetworkService
+    - name: Read SSVNetworkService file
+      slurp:
+        src: "/etc/stereum/services/163d29c0-6bc0-b8d3-d7ec-fb7ccd8e1802.yaml"
+      register: ssv_network_service_configuration_raw
+
+    # SSVNetworkService Config File
+    - name: Read SSVNetworkService config file
+      slurp:
+        src: "/opt/stereum/ssv_network-163d29c0-6bc0-b8d3-d7ec-fb7ccd8e1802/data/config.yaml"
+      register: ssv_network_config_raw
+
+    # SSVDKGService
+    - name: Read SSVDKGService file
+      slurp:
+        src: "/etc/stereum/services/50de2500-bbc6-1c24-fe30-1df87c59a642.yaml"
+      register: ssv_dkg_service_configuration_raw
+
+    # SSVDKGService Config File
+    - name: Read SSVDKGService config file
+      slurp:
+        src: "/opt/stereum/ssvdkg-50de2500-bbc6-1c24-fe30-1df87c59a642/data/config.yaml"
+      register: ssv_dkg_config_raw
+
+    - name: Parse Service configurations
+      set_fact:
+        ssv_network_service_configuration: "{{ ssv_network_service_configuration_raw['content'] | b64decode | from_yaml }}"
+        ssv_network_config: "{{ ssv_network_config_raw['content'] | b64decode | from_yaml }}"
+        ssv_dkg_service_configuration: "{{ ssv_dkg_service_configuration_raw['content'] | b64decode | from_yaml }}"
+        ssv_dkg_config: "{{ ssv_dkg_config_raw['content'] | b64decode | from_yaml }}"
+
+    - debug:
+        msg: "{{ ssv_network_service_configuration }}"
+    - debug:
+        msg: "{{ ssv_network_service_configuration_raw['content'] | b64decode }}"
+
+    - debug:
+        msg: "{{ ssv_network_config }}"
+    - debug:
+        msg: "{{ ssv_network_config_raw['content'] | b64decode }}"
+
+    - debug:
+        msg: "{{ ssv_dkg_service_configuration }}"
+    - debug:
+        msg: "{{ ssv_dkg_service_configuration_raw['content'] | b64decode }}"
+
+    - debug:
+        msg: "{{ ssv_dkg_config }}"
+    - debug:
+        msg: "{{ ssv_dkg_config_raw['content'] | b64decode }}"
+
+    - assert:
+        that:
+          - ssv_dkg_service_configuration.volumes | select('search', ':/ssv-dkg/data') | length == 1
+          - ssv_dkg_service_configuration.volumes | select('search', ':/ssv-dkg/secrets') | length == 1
+          - ssv_dkg_service_configuration.image is search('ssvlabs/ssv-dkg')
+          - ssv_dkg_service_configuration.command | select('search', '--configPath=\./data/config.yaml')
+          - ssv_dkg_config.privKey is search('\./secrets/encrypted_private_key.json')
+          - ssv_dkg_config.privKeyPassword is search('\./secrets/password')
+          - ssv_dkg_config.logFilePath is search('\./data/debug.log')
+          - ssv_dkg_config.outputPath is search('\./data/output')
+          - ssv_dkg_config.ethEndpointURL is search('http://.*:8545')
+          - ssv_dkg_service_configuration.dependencies.executionClients | length == 1
+          - ssv_dkg_service_configuration.dependencies.executionClients.0.service == "GethService"
+          - ssv_dkg_service_configuration.dependencies.executionClients.0.id == "f5b3f2b6-a9a3-ead0-aa06-211d19a50c07"
+# EOF

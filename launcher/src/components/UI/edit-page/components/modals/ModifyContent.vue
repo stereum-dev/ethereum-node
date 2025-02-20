@@ -256,6 +256,9 @@ const getConnectionOptions = () => {
       if (props.client.service === "KeysAPIService") {
         return manageStore.newConfiguration.filter((e) => /consensus|execution/.test(e.category));
       }
+      if (props.client.service === "SSVDKGService") {
+        return manageStore.newConfiguration.filter((e) => /execution/.test(e.category));
+      }
       break;
     default:
       return [];
