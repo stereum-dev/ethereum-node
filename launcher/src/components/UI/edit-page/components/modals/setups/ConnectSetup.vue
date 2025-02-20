@@ -93,9 +93,12 @@
 import { computed, ref } from "vue";
 import { useSetups } from "../../../../../../store/setups";
 import CustomModal from "../../modals/CustomModal.vue";
+import { useServices } from "@/store/services";
+import { useDeepClone } from "@/composables/utils";
 
 const emit = defineEmits(["closeWindow", "confirmAction"]);
 const setupStore = useSetups();
+const serviceStore = useServices();
 
 const selectedOpNode = ref(null);
 const selectedSetup = ref(null);
@@ -194,15 +197,27 @@ const confirmAction = () => {
     return;
   }
 
+  const existingExecutionConnections = opNode.config.dependencies.executionClients
+    .map((connection) => {
+      return serviceStore.installedServices.find((service) => service.config.serviceID === connection.id);
+    })
+    .filter(Boolean);
+
+  const existingConsensusConnections = opNode.config.dependencies.consensusClients
+    .map((connection) => {
+      return serviceStore.installedServices.find((service) => service.config.serviceID === connection.id);
+    })
+    .filter(Boolean);
+
   const restructuredData = {
     client: opNode,
-    consensusClients: [consensusService, ...opNode.config.dependencies.consensusClients],
-    executionClients: [executionService, ...opNode.config.dependencies.executionClients],
+    consensusClients: [consensusService, ...existingConsensusConnections],
+    executionClients: [executionService, ...existingExecutionConnections],
     otherServices: [],
   };
-  console.log("restructuredData", restructuredData);
+
   setupStore.isConnectSetupModalActive = false;
-  emit("confirmAction", restructuredData);
+  emit("confirmAction", useDeepClone(restructuredData));
 };
 
 const closeWindow = () => {
