@@ -7,6 +7,8 @@ export class GethService extends NodeService {
     service.setId();
     const workingDir = service.buildWorkingDir(dir);
 
+    network = network === "op-mainnet" ? "mainnet" : network === "op-sepolia" ? "sepolia" : network;
+
     const JWTDir = network === "devnet" ? "/execution/engine.jwt" : "/engine.jwt";
     const dataDir = network === "devnet" ? "/execution" : "/opt/data/geth";
     const volumes =
@@ -43,6 +45,7 @@ export class GethService extends NodeService {
       "--http.port=8545",
       "--http.addr=0.0.0.0",
       "--http.corsdomain=*",
+      "--http.vhosts=*",
       "--ws",
       "--ws.api=eth,net,web3",
       "--ws.port=8546",
