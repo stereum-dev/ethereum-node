@@ -49,14 +49,14 @@ export class OpNodeBeaconService extends NodeService {
       "v1.10.2", //imageVersion
       [
         "op-node",
-        `--l1=${l1Execution}`,
+        ...(l1Execution ? [`--l1=${l1Execution}`] : []),
         `--l2=${l2Execution}`,
         "--rpc.addr=0.0.0.0",
         "--rpc.port=9545",
         "--l2.jwt-secret=/op-engine.jwt",
         "--l1.trustrpc=false",
         "--l1.rpckind=standard",
-        `--l1.beacon=${l1Consensus}`,
+        ...(l1Consensus ? [`--l1.beacon=${l1Consensus}`] : []),
         "--metrics.enabled",
         "--metrics.addr=0.0.0.0",
         "--metrics.port=7300",
