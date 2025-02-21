@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="w-full h-full max-h-[430px] rounded-md border border-gray-600 overflow-hidden bg-[#151618] flex justify-center items-center"
-  >
+  <div class="w-full h-full max-h-[430px] rounded-md border border-gray-600 overflow-hidden bg-[#151618] flex justify-center items-center">
     <ConfigBody
       v-if="setupStore.isConfigViewActive"
       @open-expert="openExpert"
@@ -12,16 +10,8 @@
       @line-draw="lineDrawHandler"
       @remove-lines="removeConnectionLines"
     />
-    <SetupBody
-      v-if="!setupStore.isConfigViewActive"
-      @open-setup="openSetup"
-      @export-setup="exportSetup"
-    />
-    <PluginLogs
-      v-if="isPluginLogPageActive"
-      :item="itemToLogs"
-      @close-log="closePluginLogsPage"
-    />
+    <SetupBody v-if="!setupStore.isConfigViewActive" @open-setup="openSetup" @export-setup="exportSetup" />
+    <PluginLogs v-if="isPluginLogPageActive" :item="itemToLogs" @close-log="closePluginLogsPage" />
     <ConnectionLine
       v-for="connection in activeConnections"
       :key="connection.id"
@@ -65,11 +55,7 @@ const loadingClients = ref(false);
 const setupStore = useSetups();
 const nodeStore = useNodeStore();
 const serviceStore = useServices();
-const {
-  activeConnections,
-  lineDrawHandler,
-  removeConnectionLines,
-} = useConnectionLines();
+const { activeConnections, lineDrawHandler, removeConnectionLines } = useConnectionLines();
 
 watchEffect(() => {
   if (nodeStore.skeletonLoading || serviceStore.installedServices.length === 0) {
