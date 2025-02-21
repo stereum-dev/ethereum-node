@@ -916,18 +916,28 @@ async function createWindow(type = "main") {
     win.loadURL(type === "update" ? "app://./index.html#/update" : "app://./index.html");
   }
 
-  // Assign to global window variable
   mainWindow = win;
 
-  // Ensure tunnels are closed once window is ready
   win.once("ready-to-show", () => {
     nodeConnection.closeTunnels();
   });
 
+  function disableShortcuts() {
+    globalShortcut.register("CommandOrControl+R", () => {});
+    globalShortcut.register("F5", () => {});
+  }
+
+  function enableShortcuts() {
+    globalShortcut.unregister("CommandOrControl+R");
+    globalShortcut.unregister("F5");
+  }
+
+  app.on("browser-window-focus", disableShortcuts);
+  app.on("browser-window-blur", enableShortcuts);
   // Define close behavior
-  function handleClose(e) {
+  win.on("close", async (e) => {
     if (app.showExitPrompt) {
-      e.preventDefault(); // Prevents the window from closing
+      e.preventDefault();
       const response = dialog.showMessageBoxSync({
         type: "question",
         buttons: ["Yes", "No"],
@@ -942,71 +952,37 @@ async function createWindow(type = "main") {
         if (type === "update") stereumUpdater.updateWindow = null;
         win.close();
       }
+    } else {
+      mainWindow = null;
     }
-  }
-
-  win.on("close", handleClose);
-
-  // Handle directory selection
-  ipcMain.handle("openDirectoryDialog", async (event, args) => {
-    const { canceled, filePaths } = await dialog.showOpenDialog(win, args);
-    return canceled ? [] : filePaths;
-  });
-
-  // Handle file picker
-  ipcMain.handle("openFilePicker", async (event, dialog_options, read_content = false) => {
-    const { canceled, filePaths } = await dialog.showOpenDialog(win, dialog_options);
-    if (canceled) return [];
-
-    const fileList = filePaths
-      .map((filePath) => {
-        try {
-          return read_content
-            ? { path: filePath, name: path.basename(filePath), content: readFileSync(filePath, "utf-8") }
-            : { path: filePath, name: path.basename(filePath) };
-        } catch (error) {
-          log.error("Failed reading local file:", error);
-          return null;
-        }
-      })
-      .filter(Boolean);
-
-    return fileList;
   });
 
   return win;
 }
 
-function disableShortcuts() {
-  globalShortcut.register("CommandOrControl+R", () => {});
-  globalShortcut.register("F5", () => {});
-}
-
-function enableShortcuts() {
-  globalShortcut.unregister("CommandOrControl+R");
-  globalShortcut.unregister("F5");
-}
-
-// Register shortcuts only when a window exists
-app.on("browser-window-focus", disableShortcuts);
-app.on("browser-window-blur", enableShortcuts);
-
+// Handle full app quit when all windows are closed
 app.on("window-all-closed", async () => {
   app.isQuiting = true;
-  await nodeConnection.logout();
-  if (process.platform !== "darwin") app.quit();
+
+  try {
+    await nodeConnection.logout();
+  } catch (error) {
+    console.error("Error during logout:", error);
+  }
+
+  if (process.platform === "darwin") {
+    mainWindow = null;
+  } else {
+    app.exit();
+  }
 });
 
 app.on("ready", async () => {
   if (app.isReady()) {
     if (process.env.WEBPACK_DEV_SERVER_URL) {
-      // Development mode
       app.setAsDefaultProtocolClient("stereumlauncher", process.execPath, [path.resolve(process.argv[1])]);
     } else {
-      // Production mode
       app.setAsDefaultProtocolClient("stereumlauncher");
-
-      // Disable "View" and "Window" Menu items in production
       const hideMenuItems = ["viewmenu", "windowmenu"];
       const menu = Menu.getApplicationMenu();
       if (menu && menu.items) {
@@ -1046,6 +1022,7 @@ app.on("web-contents-created", (event, contents) => {
   });
 });
 
+// Prevent multiple instances running on Windows/Linux
 if (process.platform === "win32" || process.platform === "linux") {
   const gotTheLock = app.requestSingleInstanceLock();
 
@@ -1071,6 +1048,7 @@ if (process.platform === "win32" || process.platform === "linux") {
   }
 }
 
+// Handle open-url on macOS
 if (process.platform === "darwin") {
   app.on("open-url", async (event, url) => {
     event.preventDefault();
@@ -1089,6 +1067,7 @@ if (process.platform === "darwin") {
   });
 }
 
+// Handle graceful exit in development mode
 if (isDevelopment) {
   if (process.platform === "win32") {
     process.on("message", (data) => {
