@@ -498,12 +498,36 @@ export class ServiceManager {
           command = "--beacon-node-api-endpoint=";
         }
         break;
-      case "OpNode":
-        if (service.service.includes("Beacon")) {
-          filter = (e) => e.buildExecutionClientEngineRPCHttpEndpointUrl();
-          command = "--l2=";
-        }
+      case "OpNode": {
+        filter = (e) => {
+          if (e.service === "OpGethService") {
+            return e.buildExecutionClientEngineRPCHttpEndpointUrl();
+          }
+        };
+        command = "--l2=";
+        const opGethService = dependencies.filter((e) => e.service === "OpGethService");
+        service.command = this.addCommandConnection(service, command, opGethService, filter);
+
+        filter = (e) => {
+          if (e.service !== "OpGethService" && typeof e.buildExecutionClientHttpEndpointUrl === "function") {
+            return e.buildExecutionClientHttpEndpointUrl();
+          }
+        };
+        command = "--l1=";
+        const l1ExecutionService = dependencies.filter((e) => e.service !== "OpGethService" && !e.service.includes("Beacon"));
+        service.command = this.addCommandConnection(service, command, l1ExecutionService, filter);
+
+        filter = (e) => {
+          if (typeof e.buildConsensusClientHttpEndpointUrl === "function") {
+            return e.buildConsensusClientHttpEndpointUrl();
+          }
+        };
+        command = "--l1.beacon=";
+        const l1ConsensusService = dependencies.filter((e) => e.service.includes("BeaconService"));
+        service.command = this.addCommandConnection(service, command, l1ConsensusService, filter);
+
         break;
+      }
       case "Charon":
         filter = (e) => e.buildConsensusClientHttpEndpointUrl();
         command = "--beacon-node-endpoints=";
@@ -559,10 +583,18 @@ export class ServiceManager {
       default:
         return service;
     }
-    service.command = this.addCommandConnection(service, command, dependencies, filter);
+
+    if (service.service !== "OpNodeBeaconService") {
+      service.command = this.addCommandConnection(service, command, dependencies, filter);
+    }
 
     if (service.service.includes("Beacon")) {
-      service.dependencies.executionClients = dependencies;
+      if (service.service.includes("OpNode")) {
+        service.dependencies.executionClients = dependencies.filter((d) => typeof d.buildExecutionClientHttpEndpointUrl === "function");
+        service.dependencies.consensusClients = dependencies.filter((d) => typeof d.buildConsensusClientHttpEndpointUrl === "function");
+      } else {
+        service.dependencies.executionClients = dependencies;
+      }
 
       service.volumes = service.volumes.filter((v) => v.destinationPath.includes(service.id));
 
@@ -578,6 +610,10 @@ export class ServiceManager {
           return new ServiceVolume(destinationPath, servicePath);
         })
       );
+
+      if (service.service === "OpNodeBeaconService") {
+        service.volumes = service.volumes.filter((vol) => vol.servicePath !== "/engine.jwt");
+      }
     } else if (service.service.includes("Validator") || service.service.includes("Charon")) {
       service.dependencies.consensusClients = dependencies;
     }
@@ -597,7 +633,8 @@ export class ServiceManager {
     if (fullCommand) {
       newProps = [this.formatCommand(fullCommand, endpointCommand, filter, dependencies)].filter((c) => c !== undefined);
     } else {
-      newProps = endpointCommand + dependencies.map(filter).join();
+      const filteredDependencies = dependencies.map(filter).filter((c) => c !== undefined && c !== "");
+      newProps = filteredDependencies.length > 0 ? endpointCommand + filteredDependencies.join() : [];
     }
     if (isString) {
       return command.concat(newProps).join(" ").trim();
