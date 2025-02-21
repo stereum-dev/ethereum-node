@@ -1,39 +1,24 @@
 import { ref, watchEffect, onMounted } from 'vue';
 <template>
-  <div
-    class="col-start-1 col-span-full row-start-1 row-span-1 grid grid-cols-24 items-center"
-  >
-    <div
-      class="col-start-3 col-end-14 text-2xl text-gray-200 font-bold flex justify-evenly items-center"
-    >
+  <div class="col-start-1 col-span-full row-start-1 row-span-1 grid grid-cols-24 items-center">
+    <div class="col-start-3 col-end-14 text-2xl text-gray-200 font-bold flex justify-evenly items-center">
       SERVER MANAGEMENT
-      <span
-        class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-md text-sm font-semibold bg-neutral-900 text-white"
+      <span class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-md text-sm font-semibold bg-neutral-900 text-white"
         >V {{ currentVersion ? currentVersion : "2.0" }}</span
       >
     </div>
 
-    <div
-      class="col-start-14 col-span-full w-full h-full grid grid-cols-12 grid-rows-5 items-center pr-2 pl-1"
-    >
-      <div
-        class="col-start-1 col-span-full row-start-2 row-end-5 h-full bg-[#1b1b1d] rounded-md grid grid-cols-8 items-center px-2"
-      >
+    <div class="col-start-14 col-span-full w-full h-full grid grid-cols-12 grid-rows-5 items-center pr-2 pl-1">
+      <div class="col-start-1 col-span-full row-start-2 row-end-5 h-full bg-[#1b1b1d] rounded-md grid grid-cols-8 items-center px-2">
         <div
           v-for="tab in serverStore.tabs"
           :key="tab.name"
           :class="[
             'col-span-1 w-8 h-8 bg-gray-500 hover:text-teal-500 border border-gray-500 hover:border-teal-200 rounded-sm shadow-md shadow-black flex justify-center items-center cursor-pointer active:scale-95 transition-all duration-200 active:shadow-none',
             tab.isActive ? 'bg-teal-500 border-teal-200' : '',
-            isConnectedServer && tab.name === 'login'
-              ? ' opacity-30 pointer-events-none scale-90 shadow-none'
-              : '',
-            isServerToConnect && tab.name !== 'login'
-              ? ' opacity-30 pointer-events-none scale-90 shadow-none'
-              : '',
-            isLoginRoute && tab.name !== 'login'
-              ? ' opacity-30 pointer-events-none scale-90 shadow-none'
-              : '',
+            isConnectedServer && tab.name === 'login' ? ' opacity-30 pointer-events-none scale-90 shadow-none' : '',
+            isServerToConnect && tab.name !== 'login' ? ' opacity-30 pointer-events-none scale-90 shadow-none' : '',
+            isLoginRoute && tab.name !== 'login' ? ' opacity-30 pointer-events-none scale-90 shadow-none' : '',
           ]"
           @click="
             (isServerToConnect && tab.name !== 'login') ||
@@ -45,11 +30,7 @@ import { ref, watchEffect, onMounted } from 'vue';
           @mouseenter="footerStore.cursorLocation = `${tabTooltip(tab)}`"
           @mouseleave="footerStore.cursorLocation = ''"
         >
-          <img
-            class="w-7 h-7 mx-auto hover:scale-110 transition-all duration-200"
-            :src="tab.icon"
-            alt="Server Icon"
-          />
+          <img class="w-7 h-7 mx-auto hover:scale-110 transition-all duration-200" :src="tab.icon" alt="Server Icon" />
         </div>
       </div>
     </div>
