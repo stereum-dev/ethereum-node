@@ -820,6 +820,10 @@ ipcMain.handle("getSubnetSubs", async () => {
   return await monitoring.getSubnetSubs();
 });
 
+ipcMain.handle("fetchCsmMetrics", async () => {
+  return await monitoring.fetchCsmMetrics();
+});
+
 ipcMain.handle("fetchCsmAlerts", async () => {
   return await monitoring.fetchCsmAlerts();
 });
