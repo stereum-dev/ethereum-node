@@ -73,13 +73,13 @@ const buttonState = ref([
   },
   //Testnet https://csm.testnet.fi/?ref=stereum
   //Mainnet https://csm.lido.fi/
-  {
-    text: "GO TO CSM WEBSITE",
-    icon: "/img/icon/staking-page-icons/remote-key-icon.svg",
-    events: () => window.open("https://example.com", "_blank"),
-    tooltip: "Visit our website",
-    isHidden: false,
-  },
+  // {
+  //   text: "GO TO CSM WEBSITE",
+  //   icon: "/img/icon/staking-page-icons/remote-key-icon.svg",
+  //   events: () => window.open("https://example.com", "_blank"),
+  //   tooltip: "Visit our website",
+  //   isHidden: false,
+  // },
 ]);
 
 // Computed Property to Filter Button Visibility

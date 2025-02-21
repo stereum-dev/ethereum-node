@@ -864,195 +864,188 @@ ipcMain.handle("getSSVClusterInformation", async (event, args) => {
   return await monitoring.getSSVClusterInformation(args.serviceID);
 });
 
+let mainWindow = null;
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { secure: true, standard: true } }]);
 
-let mainWindow = null;
 async function createWindow(type = "main") {
-  // Create the browser window.
+  // Ensure only one instance of the window exists
+  if (mainWindow) {
+    mainWindow.focus();
+    return;
+  }
 
+  // Define window settings
   const initwin = {
     width: 1044,
     height: 609,
     minHeight: 609,
     minWidth: 1044,
     webPreferences: {
-      // Use pluginOptions.nodeIntegration, leave this alone
-      // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
-      // devTools: false,
       nodeIntegration: false,
       preload: path.join(__dirname, "preload.js"),
     },
   };
+
+  // Modify window size based on environment
   if (!isDevelopment) {
-    initwin["maxHeight"] = 609;
-    initwin["maxWidth"] = 1044;
+    Object.assign(initwin, { maxHeight: 609, maxWidth: 1044 });
   }
   if (!isDevelopment && process.platform === "win32") {
-    initwin["minHeight"] = 650;
-    initwin["minWidth"] = 1100;
-    initwin["maxHeight"] = 650;
-    initwin["maxWidth"] = 1100;
+    Object.assign(initwin, {
+      minHeight: 650,
+      minWidth: 1100,
+      maxHeight: 650,
+      maxWidth: 1100,
+    });
   }
 
+  // Create the browser window
   const win = new BrowserWindow(initwin);
-
   win.setMenuBarVisibility(false);
 
+  // Load correct URL based on environment
   if (process.env.WEBPACK_DEV_SERVER_URL) {
-    // Load the url of the dev server if in development mode
-    if (type === "update") {
-      await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL + "#/update");
-    } else {
-      await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL);
-    }
+    const url = type === "update" ? `${process.env.WEBPACK_DEV_SERVER_URL}#/update` : process.env.WEBPACK_DEV_SERVER_URL;
+
+    await win.loadURL(url);
+
     if (!process.env.IS_TEST) win.webContents.openDevTools();
   } else {
     createProtocol("app");
-    // Load the index.html when not in developmen
-    if (type === "update") {
-      win.loadURL("app://./index.html#/update");
-    } else {
-      win.loadURL("app://./index.html");
-    }
-
-    mainWindow = win;
-    return win;
+    win.loadURL(type === "update" ? "app://./index.html#/update" : "app://./index.html");
   }
 
-  win.on("ready-to-show", async () => {
-    await nodeConnection.closeTunnels();
+  // Assign to global window variable
+  mainWindow = win;
+
+  // Ensure tunnels are closed once window is ready
+  win.once("ready-to-show", () => {
+    nodeConnection.closeTunnels();
   });
-  let closeHandler;
-  switch (type) {
-    case "main": {
-      closeHandler = (e) => {
-        if (app.showExitPrompt) {
-          e.preventDefault(); // Prevents the window from closing
-          const response = dialog.showMessageBoxSync({
-            type: "question",
-            buttons: ["Yes", "No"],
-            title: "Confirm",
-            message: "Critical tasks are running in the background.\nAre you sure you want to quit?",
-            icon: "./public/img/icon/node-journal-icons/red-warning.png",
-          });
-          if (response === 0) {
-            app.showExitPrompt = false;
-            win.close();
-          }
-        }
-      };
-      break;
-    }
-    case "update": {
-      closeHandler = (e) => {
-        if (app.showExitPrompt) {
-          e.preventDefault(); // Prevents the window from closing
-          const response = dialog.showMessageBoxSync({
-            type: "question",
-            buttons: ["Yes", "No"],
-            title: "Confirm",
-            message: "Stereum is updating.\nAre you sure you want to quit?",
-            icon: "./public/img/icon/node-journal-icons/red-warning.png",
-          });
-          if (response === 0) {
-            app.showExitPrompt = false;
-            stereumUpdater.updateWindow = null;
-            win.close();
-          }
-        }
-      };
-      break;
+
+  // Define close behavior
+  function handleClose(e) {
+    if (app.showExitPrompt) {
+      e.preventDefault(); // Prevents the window from closing
+      const response = dialog.showMessageBoxSync({
+        type: "question",
+        buttons: ["Yes", "No"],
+        title: "Confirm",
+        message:
+          type === "update"
+            ? "Stereum is updating.\nAre you sure you want to quit?"
+            : "Critical tasks are running in the background.\nAre you sure you want to quit?",
+      });
+      if (response === 0) {
+        app.showExitPrompt = false;
+        if (type === "update") stereumUpdater.updateWindow = null;
+        win.close();
+      }
     }
   }
 
-  win.on("close", closeHandler);
+  win.on("close", handleClose);
 
-  //
+  // Handle directory selection
   ipcMain.handle("openDirectoryDialog", async (event, args) => {
     const { canceled, filePaths } = await dialog.showOpenDialog(win, args);
-    if (canceled) return [];
-    return filePaths;
+    return canceled ? [] : filePaths;
   });
 
+  // Handle file picker
   ipcMain.handle("openFilePicker", async (event, dialog_options, read_content = false) => {
     const { canceled, filePaths } = await dialog.showOpenDialog(win, dialog_options);
     if (canceled) return [];
-    const fileList = [];
-    for (const filePath of filePaths) {
-      try {
-        if (read_content) {
-          const content = readFileSync(filePath, "utf-8");
-          fileList.push({ path: filePath, name: path.basename(filePath), content: content });
-        } else {
-          fileList.push({ path: filePath, name: path.basename(filePath) });
+
+    const fileList = filePaths
+      .map((filePath) => {
+        try {
+          return read_content
+            ? { path: filePath, name: path.basename(filePath), content: readFileSync(filePath, "utf-8") }
+            : { path: filePath, name: path.basename(filePath) };
+        } catch (error) {
+          log.error("Failed reading local file:", error);
+          return null;
         }
-      } catch (error) {
-        log.error("Failed reading local file: ", error);
-      }
-    }
+      })
+      .filter(Boolean);
+
     return fileList;
   });
 
   return win;
 }
 
-// Disable CTRL+R and F5 in build
-if (!isDevelopment) {
-  app.on("browser-window-focus", function () {
-    globalShortcut.register("CommandOrControl+R", () => {});
-    globalShortcut.register("F5", () => {});
-  });
-  app.on("browser-window-blur", function () {
-    globalShortcut.unregister("CommandOrControl+R");
-    globalShortcut.unregister("F5");
-  });
+function disableShortcuts() {
+  globalShortcut.register("CommandOrControl+R", () => {});
+  globalShortcut.register("F5", () => {});
 }
 
-// Quit when all windows are closed.
-app.on("window-all-closed", () => {
-  nodeConnection.logout();
-  if (process.platform !== "darwin") {
-    app.quit();
+function enableShortcuts() {
+  globalShortcut.unregister("CommandOrControl+R");
+  globalShortcut.unregister("F5");
+}
+
+// Register shortcuts only when a window exists
+app.on("browser-window-focus", disableShortcuts);
+app.on("browser-window-blur", enableShortcuts);
+
+app.on("window-all-closed", async () => {
+  app.isQuiting = true;
+  await nodeConnection.logout();
+  if (process.platform !== "darwin") app.quit();
+});
+
+app.on("ready", async () => {
+  if (app.isReady()) {
+    if (process.env.WEBPACK_DEV_SERVER_URL) {
+      // Development mode
+      app.setAsDefaultProtocolClient("stereumlauncher", process.execPath, [path.resolve(process.argv[1])]);
+    } else {
+      // Production mode
+      app.setAsDefaultProtocolClient("stereumlauncher");
+
+      // Disable "View" and "Window" Menu items in production
+      const hideMenuItems = ["viewmenu", "windowmenu"];
+      const menu = Menu.getApplicationMenu();
+      if (menu && menu.items) {
+        menu.items.filter((item) => hideMenuItems.includes(item.role)).forEach((item) => (item.visible = false));
+        Menu.setApplicationMenu(menu);
+      }
+
+      // Check for updates
+      stereumUpdater.checkForUpdates();
+    }
+
+    await createWindow();
   }
 });
 
-app.on("activate", () => {
-  if (BrowserWindow.getAllWindows().length === 0) createWindow();
+app.on("activate", async () => {
+  if (!mainWindow) {
+    try {
+      await createWindow();
+    } catch (error) {
+      console.error("Error creating window on activate:", error);
+    }
+  }
 });
 
 app.on("web-contents-created", (event, contents) => {
   contents.setWindowOpenHandler((details) => {
-    const parsedUrl = new url.URL(details.url);
-    if (["https:", "http:", "mailto:"].includes(parsedUrl.protocol)) {
-      shell.openExternal(parsedUrl.href);
+    try {
+      const parsedUrl = new url.URL(details.url);
+      if (["https:", "http:", "mailto:"].includes(parsedUrl.protocol)) {
+        shell.openExternal(parsedUrl.href);
+      }
+    } catch (error) {
+      console.error("Invalid URL attempted to open:", details.url, error);
     }
     return { action: "deny" };
   });
 });
 
-app.on("ready", async () => {
-  if (process.env.WEBPACK_DEV_SERVER_URL) {
-    // Development mode
-    app.setAsDefaultProtocolClient("stereumlauncher", process.execPath, [path.resolve(process.argv[1])]);
-  } else {
-    // Production mode
-    app.setAsDefaultProtocolClient("stereumlauncher");
-
-    // Disable "View" and "Window" Menu items in build
-    const hideMenuItems = ["viewmenu", "windowmenu"];
-    var menu = Menu.getApplicationMenu();
-    menu.items.filter((item) => hideMenuItems.includes(item.role)).map((item) => (item.visible = false));
-    Menu.setApplicationMenu(menu);
-
-    // Check for updates in production
-    stereumUpdater.checkForUpdates();
-  }
-
-  await createWindow();
-});
-
-// Handle the protocol on Windows and Linux
 if (process.platform === "win32" || process.platform === "linux") {
   const gotTheLock = app.requestSingleInstanceLock();
 
@@ -1063,50 +1056,53 @@ if (process.platform === "win32" || process.platform === "linux") {
       if (mainWindow) {
         if (mainWindow.isMinimized()) mainWindow.restore();
         mainWindow.focus();
+      }
 
-        const url = argv.find((arg) => arg.startsWith("stereumlauncher://"));
-        if (url) {
-          await protocolHandler.handleCustomUrl(url);
+      // Handle custom protocol URLs
+      const urlArg = argv.find((arg) => arg.startsWith("stereumlauncher://"));
+      if (urlArg) {
+        try {
+          await protocolHandler.handleCustomUrl(urlArg);
+        } catch (error) {
+          console.error("Error handling custom URL:", urlArg, error);
         }
       }
     });
   }
 }
 
-// Handle the protocol on macOS
 if (process.platform === "darwin") {
   app.on("open-url", async (event, url) => {
     event.preventDefault();
 
-    // If app is not ready, wait for it
-    if (!mainWindow) {
-      app.on("ready", async () => {
+    try {
+      if (!mainWindow) {
+        app.once("ready", async () => {
+          await protocolHandler.handleCustomUrl(url);
+        });
+      } else {
         await protocolHandler.handleCustomUrl(url);
-      });
-    } else {
-      await protocolHandler.handleCustomUrl(url);
+      }
+    } catch (error) {
+      console.error("Error handling macOS open-url event:", url, error);
     }
   });
 }
 
-// Handle URLs from command line arguments (works for all platforms)
-app.on("ready", async () => {
-  const protocolUrl = process.argv.find((arg) => arg.startsWith("stereumlauncher://"));
-  if (protocolUrl) {
-    await protocolHandler.handleCustomUrl(protocolUrl);
-  }
-});
-
 if (isDevelopment) {
   if (process.platform === "win32") {
     process.on("message", (data) => {
-      if (data === "graceful-exit") {
+      if (data === "graceful-exit" && !app.isQuiting) {
+        app.isQuiting = true;
         app.quit();
       }
     });
   } else {
     process.on("SIGTERM", () => {
-      app.quit();
+      if (!app.isQuiting) {
+        app.isQuiting = true;
+        app.quit();
+      }
     });
   }
 }

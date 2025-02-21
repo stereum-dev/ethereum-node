@@ -157,6 +157,7 @@ export class Monitoring {
             config: {
               serviceID: config.id,
               configVersion: config.configVersion,
+              env: config.env,
               image: config.image,
               imageVersion: config.imageVersion,
               runningImageVersion: newState?.Image ? newState.Image.split(":").pop() : null,

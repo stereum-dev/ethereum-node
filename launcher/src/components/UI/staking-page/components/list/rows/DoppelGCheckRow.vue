@@ -36,14 +36,12 @@ import { computed, ref, onMounted, watchEffect } from 'vue';
 </template>
 
 <script setup>
-import { computed, ref, onMounted, watchEffect, onUnmounted } from "vue";
+import { computed, ref, onMounted, watchEffect } from "vue";
 import { useFooter } from "@/store/theFooter";
-import { useListKeys } from "@/composables/validators";
 import { useTruncate } from "@/composables/utils";
-import { useStakingStore } from "@/store/theStaking";
 
 const footerStore = useFooter();
-const stakingStore = useStakingStore();
+
 const displayText = ref("Doppelganger Protection");
 const isProtectionActive = ref(false);
 const isRemoveBtnActive = ref(false);
@@ -61,33 +59,19 @@ const formattedPubKey = computed(() => {
   return useTruncate(props.item.pubkey, 20, 20);
 });
 
-// const warningText = () => {
-//   setTimeout(() => {
-//     displayText.value = "Waiting for response";
-//   }, 900000);
-//   setTimeout(() => {
-//     displayText.value = "No response";
-//   }, 1800000);
-
-//   setTimeout(() => {
-//     displayText.value = "Click To Remove";
-//     isRemoveBtnActive.value = true;
-//     removeDoppelGanger();
-//   }, 86400000);
-// };
-
 const warningText = () => {
   setTimeout(() => {
     displayText.value = "Waiting for response";
-  }, 30000);
+  }, 900000);
   setTimeout(() => {
     displayText.value = "No response";
-  }, 50000);
+  }, 1800000);
 
   setTimeout(() => {
     displayText.value = "Click To Remove";
     isRemoveBtnActive.value = true;
-  }, 60000);
+    removeDoppelGanger();
+  }, 86400000);
 };
 
 watchEffect(() => {
@@ -96,14 +80,6 @@ watchEffect(() => {
   }
 });
 
-let fetchInterval = null;
-
-const fetchKeysWhileDplProtection = async () => {
-  if (stakingStore.doppelgangerKeys) {
-    await useListKeys(true);
-  }
-};
-
 const removeDoppelGanger = () => {
   emit("removeDplg", props.item.pubkey);
 };
@@ -111,11 +87,6 @@ const removeDoppelGanger = () => {
 onMounted(() => {
   isProtectionActive.value = true;
   isRemoveBtnActive.value = false;
-  fetchInterval = setInterval(fetchKeysWhileDplProtection, 30000);
-});
-
-onUnmounted(() => {
-  if (fetchInterval) clearInterval(fetchInterval);
 });
 </script>
 

@@ -23,7 +23,7 @@
         element: connection.end.element,
         position: connection.end.position,
       }"
-      color="#DBEF6A"
+      color="#F6F68B85"
       :animated="true"
       :dashed="true"
     />

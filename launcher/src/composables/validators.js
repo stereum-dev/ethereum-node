@@ -103,6 +103,7 @@ export async function useListKeys(forceRefresh) {
 export async function useUpdateValidatorStats() {
   const nodeManageStore = useNodeManage();
   const stakingStore = useStakingStore();
+  const serviceStore = useServices();
   let totalBalance = 0;
   let data = [];
 
@@ -142,15 +143,17 @@ export async function useUpdateValidatorStats() {
   }
   // Get queue keys
   let keysInQueue = [];
-  try {
-    keysInQueue = (await ControlService.getSigningKeysWithQueueInfo()) || [];
-    if (!Array.isArray(keysInQueue)) {
-      console.warn("Unexpected response from getSigningKeysWithQueueInfo:", keysInQueue);
+  if (serviceStore.installedServices.some((s) => s.service === "LCOMService")) {
+    try {
+      keysInQueue = (await ControlService.getSigningKeysWithQueueInfo()) || [];
+      if (!Array.isArray(keysInQueue)) {
+        console.warn("Unexpected response from getSigningKeysWithQueueInfo:", keysInQueue);
+        keysInQueue = [];
+      }
+    } catch (error) {
+      console.error("Error fetching signing keys with queue info:", error);
       keysInQueue = [];
     }
-  } catch (error) {
-    console.error("Error fetching signing keys with queue info:", error);
-    keysInQueue = [];
   }
 
   stakingStore.keys.forEach((key) => {
