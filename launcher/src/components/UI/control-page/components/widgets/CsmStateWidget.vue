@@ -1,5 +1,7 @@
 <template>
-  <div class="volume-Parent flex w-full h-full justify-center items-center flex-col p-1 gap-1 relative">
+  <div
+    class="volume-Parent flex w-full h-full justify-center items-center flex-col p-1 gap-1 relative"
+  >
     <ServiceLine
       label="Active"
       :value="String(setupStore.runningServicesCount)"
@@ -31,11 +33,11 @@
 </template>
 
 <script setup>
+import i18n from "@/includes/i18n";
 import { useSetups } from "@/store/setups";
-import ServiceLine from "../fragments/ServiceLine.vue";
 import { useStakingStore } from "@/store/theStaking";
 import { computed } from "vue";
-import i18n from "@/includes/i18n";
+import ServiceLine from "../fragments/ServiceLine.vue";
 
 const t = i18n.global.t;
 
@@ -62,7 +64,11 @@ const dvtInQueueWithRelatedValidatorCount = computed(() => {
     const relatedValidator = setupStore?.allSetups.some((setup) => {
       return (
         setup?.setupId === setupStore?.selectedLCOMService?.setupId &&
-        setup?.services.some((service) => service?.category === "validator" && service?.validatorID === key?.validatorID)
+        setup?.services.some(
+          (service) =>
+            service?.category === "validator" &&
+            service?.config?.serviceID === key?.validatorID
+        )
       );
     });
 
