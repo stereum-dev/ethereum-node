@@ -120,9 +120,6 @@ export function useImportKeys(forceRefresh) {
     ) {
       await importingKey(stakingStore.importEnteredPassword);
 
-      // if (stakingStore.importKeyMessage.includes("error")) {
-      //   stakingStore.doppelgangerKeys.pop();
-      // }
       stakingStore.setActivePanel(null);
       stakingStore.keyFiles = [];
       stakingStore.passwordFiles = [];
