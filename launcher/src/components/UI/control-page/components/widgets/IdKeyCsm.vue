@@ -5,7 +5,9 @@
     </div>
     <div class="item-row w-full h-1/4 flex justify-between items-center uppercase text-gray-200 text-2xs pl-1 pr-1">
       operator id
-      <span class="text-2xs pl-1 pr-1 text-green-500">{{ setupStore?.selectedLCOMService?.id }}</span>
+      <span class="text-2xs pl-1 pr-1 text-green-500">{{
+        serviceStore.installedServices.find((service) => service.service === "LCOMService")?.config?.env?.NO_ID || 0
+      }}</span>
     </div>
     <div class="item-row w-full h-1/4 flex justify-between items-center uppercase text-gray-200 text-2xs pl-1 pr-1">
       <div class="total-ttl h-full w-1/2 flex justify-start items-center">
@@ -17,31 +19,16 @@
   </div>
 </template>
 <script setup>
-import { useSetups } from "@/store/setups";
-import { useStakingStore } from "@/store/theStaking";
+import { useServices } from "@/store/services.js";
+import { useSetups } from "@/store/setups.js";
+import { useStakingStore } from "@/store/theStaking.js";
 import { computed } from "vue";
 
+const serviceStore = useServices();
 const stakingStore = useStakingStore();
 const setupStore = useSetups();
 
 const dvtWithRelatedValidatorCount = computed(() => {
-  if (!stakingStore?.keys || !setupStore?.allSetups || !setupStore?.selectedLCOMService) {
-    return 0;
-  }
-
-  return stakingStore?.keys.filter((key) => {
-    if (key?.dvt !== true || !key?.validatorID) {
-      return false;
-    }
-
-    const relatedValidator = setupStore?.allSetups.some((setup) => {
-      return (
-        setup?.setupId === setupStore?.selectedLCOMService.setupId &&
-        setup?.services.some((service) => service?.category === "validator" && service?.validatorID === key?.validatorID)
-      );
-    });
-
-    return relatedValidator;
-  }).length;
+  return stakingStore.keys.length;
 });
 </script>

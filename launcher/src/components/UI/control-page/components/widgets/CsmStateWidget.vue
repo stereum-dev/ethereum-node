@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="volume-Parent flex w-full h-full justify-center items-center flex-col p-1 gap-1 relative"
-  >
+  <div class="volume-Parent flex w-full h-full justify-center items-center flex-col p-1 gap-1 relative">
     <ServiceLine
       label="Active"
       :value="String(setupStore.runningServicesCount)"
@@ -52,27 +50,6 @@ const props = defineProps({
 });
 
 const dvtInQueueWithRelatedValidatorCount = computed(() => {
-  if (!stakingStore?.keys || !setupStore?.allSetups || !setupStore?.selectedLCOMService) {
-    return 0;
-  }
-
-  return stakingStore?.keys.filter((key) => {
-    if (key?.dvt !== true || key?.status !== "inQueue" || !key?.validatorID) {
-      return false;
-    }
-
-    const relatedValidator = setupStore?.allSetups.some((setup) => {
-      return (
-        setup?.setupId === setupStore?.selectedLCOMService?.setupId &&
-        setup?.services.some(
-          (service) =>
-            service?.category === "validator" &&
-            service?.config?.serviceID === key?.validatorID
-        )
-      );
-    });
-
-    return relatedValidator;
-  }).length;
+  return stakingStore.keys.filter((key) => key.status == "inQueue").length;
 });
 </script>
