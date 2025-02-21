@@ -76,6 +76,12 @@ export function useImportKeys(forceRefresh) {
   const importingKey = async (val) => {
     stakingStore.importEnteredPassword = val;
     stakingStore.importKeyMessage = await ControlService.importKey(stakingStore.selectedValidatorService.config.serviceID);
+    if (stakingStore.importKeyMessage.includes("error")) {
+      if (stakingStore.keyFiles.length > 1) stakingStore.doppelgangerKeys = [];
+      else {
+        stakingStore.doppelgangerKeys.pop();
+      }
+    }
     stakingStore.isPreviewListActive = false;
     stakingStore.setActivePanel("insert");
     stakingStore.keyFiles = [];
@@ -84,14 +90,18 @@ export function useImportKeys(forceRefresh) {
 
     stakingStore.importEnteredPassword = "";
     stakingStore.forceRefresh = true;
-    if (stakingStore.isDoppelgangerProtectionActive && stakingStore.doppelgangerKeys.length > 0) {
+    if (
+      stakingStore.isDoppelgangerProtectionActive &&
+      stakingStore.doppelgangerKeys.length > 0 &&
+      !stakingStore.importKeyMessage.includes("error")
+    ) {
       stakingStore.displayDoppelgangerPreview = true;
       setTimeout(() => {
         stakingStore.setActiveModal(null);
       }, 10000);
+      await useListKeys(forceRefresh);
+      await useListGroups();
     }
-    await useListKeys(forceRefresh);
-    await useListGroups();
   };
 
   const importValidatorProcessing = async () => {
@@ -110,6 +120,9 @@ export function useImportKeys(forceRefresh) {
     ) {
       await importingKey(stakingStore.importEnteredPassword);
 
+      // if (stakingStore.importKeyMessage.includes("error")) {
+      //   stakingStore.doppelgangerKeys.pop();
+      // }
       stakingStore.setActivePanel(null);
       stakingStore.keyFiles = [];
       stakingStore.passwordFiles = [];
