@@ -553,7 +553,7 @@
     "stepTwo": "Visit the appstore or our website to download 'Stereum Node Monitor'",
     "stepThree": "Open 'Stereum Node Monitor' on your smarthphone",
     "stepFour": "Scan the QR Code in the App.",
-    "stepFive": "Send a test notificiation in Grafana.",
+    "stepFive": "Send a test notification in Grafana.",
     "close": "点击外部关闭",
     "dash": "仪表板",
     "chooseVal": "选择要连接监控的验证器客户端",
