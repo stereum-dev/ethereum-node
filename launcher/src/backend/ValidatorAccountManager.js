@@ -563,8 +563,7 @@ export class ValidatorAccountManager {
           walletPath = service.volumes.find((v) => v.servicePath == "/opt/app/data/wallets").destinationPath;
         }
         //Make sure keystores have correct permissions
-        const chmodResult = await this.nodeConnection.sshService.exec("chmod -Rv 600 " + walletPath + "/direct/accounts/*");
-        log.info(chmodResult.stdout);
+        await this.nodeConnection.sshService.exec("chmod -Rv 600 " + walletPath + "/direct/accounts/*");
         if (walletPath) {
           result = await this.nodeConnection.sshService.exec("cat " + walletPath + "/auth-token");
           result.stdout = result.stdout

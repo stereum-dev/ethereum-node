@@ -174,6 +174,7 @@ const checkForListingKeys = async () => {
     )
   ) {
     clearInterval(pollingListingKeys);
+    console.log("Listing keys node screen");
     useListKeys();
   }
 };
