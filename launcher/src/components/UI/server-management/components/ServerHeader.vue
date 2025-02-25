@@ -1,7 +1,13 @@
-import { ref, watchEffect } from 'vue';
+import { ref, watchEffect, onMounted } from 'vue';
 <template>
   <div class="col-start-1 col-span-full row-start-1 row-span-1 grid grid-cols-24 items-center">
-    <span class="col-start-4 col-end-14 text-3xl text-gray-200 font-bold">SERVER MANAGEMENT</span>
+    <div class="col-start-3 col-end-14 text-2xl text-gray-200 font-bold flex justify-evenly items-center">
+      SERVER MANAGEMENT
+      <span class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-md text-sm font-semibold bg-neutral-900 text-white"
+        >V {{ currentVersion ? currentVersion : "2.0" }}</span
+      >
+    </div>
+
     <div class="col-start-14 col-span-full w-full h-full grid grid-cols-12 grid-rows-5 items-center pr-2 pl-1">
       <div class="col-start-1 col-span-full row-start-2 row-end-5 h-full bg-[#1b1b1d] rounded-md grid grid-cols-8 items-center px-2">
         <div
@@ -34,9 +40,11 @@ import { ref, watchEffect } from 'vue';
 <script setup>
 import { useRoute } from "vue-router";
 import { useServers } from "@/store/servers";
-import { computed } from "vue";
+import { computed, ref, onMounted } from "vue";
 import { useFooter } from "@/store/theFooter";
 import i18n from "@/includes/i18n";
+
+import ControlService from "@/store/ControlService";
 
 const t = i18n.global.t;
 
@@ -51,6 +59,8 @@ const footerStore = useFooter();
 
 const route = useRoute();
 const serverStore = useServers();
+
+const currentVersion = ref(null);
 const emit = defineEmits(["tabPicker"]);
 
 // Computed property to check if current route is '/login'
@@ -72,6 +82,19 @@ const tabTooltip = (tab) => {
   }
   return null; // Default case if none of the conditions match
 };
+
+const getCurrentVersion = async () => {
+  try {
+    currentVersion.value = await ControlService.getCurrentLauncherVersion();
+    console.log("Current Launcher Version:", currentVersion.value);
+  } catch (error) {
+    console.error("Failed to get launcher version:", error);
+  }
+};
+
+onMounted(() => {
+  getCurrentVersion();
+});
 
 const isConnectedServer = computed(() => {
   return serverStore.selectedServerConnection && !serverStore.selectedServerToConnect;

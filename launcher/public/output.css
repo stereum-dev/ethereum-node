@@ -753,6 +753,11 @@ video {
   right: 5rem;
 }
 
+.inset-x-4{
+  left: 1rem;
+  right: 1rem;
+}
+
 .inset-x-6{
   left: 1.5rem;
   right: 1.5rem;
@@ -809,6 +814,10 @@ video {
 
 .-top-\[90px\]{
   top: -90px;
+}
+
+.bottom-0{
+  bottom: 0px;
 }
 
 .bottom-0\.5{
@@ -1017,6 +1026,10 @@ video {
 
 .top-full{
   top: 100%;
+}
+
+.left-2\/3{
+  left: 66.666667%;
 }
 
 .z-0{
@@ -1433,6 +1446,10 @@ video {
 
 .m-auto{
   margin: auto;
+}
+
+.m-0{
+  margin: 0px;
 }
 
 .mx-1{
@@ -1956,6 +1973,10 @@ video {
 
 .h-screen{
   height: 100vh;
+}
+
+.h-auto{
+  height: auto;
 }
 
 .max-h-10{
@@ -2502,6 +2523,10 @@ video {
   width: 100vw;
 }
 
+.w-auto{
+  width: auto;
+}
+
 .min-w-\[100px\]{
   min-width: 100px;
 }
@@ -2590,6 +2615,12 @@ video {
 
 .translate-y-0{
   --tw-translate-y: 0px;
+  -webkit-transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+          transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.-translate-x-2\/3{
+  --tw-translate-x: -66.666667%;
   -webkit-transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
           transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
@@ -2984,6 +3015,12 @@ video {
   -webkit-column-gap: 0.25rem;
      -moz-column-gap: 0.25rem;
           column-gap: 0.25rem;
+}
+
+.gap-x-1\.5{
+  -webkit-column-gap: 0.375rem;
+     -moz-column-gap: 0.375rem;
+          column-gap: 0.375rem;
 }
 
 .gap-x-2{
@@ -3703,6 +3740,16 @@ video {
   border-color: rgb(63 63 70 / var(--tw-border-opacity, 1));
 }
 
+.border-neutral-500{
+  --tw-border-opacity: 1;
+  border-color: rgb(115 115 115 / var(--tw-border-opacity, 1));
+}
+
+.border-neutral-600{
+  --tw-border-opacity: 1;
+  border-color: rgb(82 82 82 / var(--tw-border-opacity, 1));
+}
+
 .border-b-transparent{
   border-bottom-color: transparent;
 }
@@ -4355,13 +4402,11 @@ video {
   background-color: rgb(54 83 20 / var(--tw-bg-opacity, 1));
 }
 
-.bg-neutral-800{
-  --tw-bg-opacity: 1;
-  background-color: rgb(38 38 38 / var(--tw-bg-opacity, 1));
-}
 
-.bg-neutral-900\/90{
-  background-color: rgb(23 23 23 / 0.9);
+.bg-neutral-900{
+  --tw-bg-opacity: 1;
+  background-color: rgb(23 23 23 / var(--tw-bg-opacity, 1));
+
 }
 
 .bg-orange-500{
@@ -4476,6 +4521,16 @@ video {
 .bg-zinc-700{
   --tw-bg-opacity: 1;
   background-color: rgb(63 63 70 / var(--tw-bg-opacity, 1));
+}
+
+.bg-neutral-700{
+  --tw-bg-opacity: 1;
+  background-color: rgb(64 64 64 / var(--tw-bg-opacity, 1));
+}
+
+.bg-neutral-800{
+  --tw-bg-opacity: 1;
+  background-color: rgb(38 38 38 / var(--tw-bg-opacity, 1));
 }
 
 .bg-opacity-50{
@@ -4688,6 +4743,11 @@ video {
 .py-1{
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
+}
+
+.py-1\.5{
+  padding-top: 0.375rem;
+  padding-bottom: 0.375rem;
 }
 
 .py-2{
@@ -5635,6 +5695,15 @@ video {
           transition-duration: 150ms;
 }
 
+.transition-opacity{
+  -webkit-transition-property: opacity;
+  transition-property: opacity;
+  -webkit-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+          transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-transition-duration: 150ms;
+          transition-duration: 150ms;
+}
+
 .transition-transform{
   -webkit-transition-property: -webkit-transform;
   transition-property: -webkit-transform;
@@ -5945,6 +6014,10 @@ html body {
 .after\:content-\[\'\'\]::after{
   --tw-content: '';
   content: var(--tw-content);
+}
+
+.group:hover .group-hover\:opacity-100{
+  opacity: 1;
 }
 
 .peer:checked ~ .peer-checked\:start-6{
@@ -6559,6 +6632,22 @@ html body {
 
 .disabled\:opacity-50:disabled{
   opacity: 0.5;
+}
+
+.hs-tooltip.show .hs-tooltip-shown\:visible{
+  visibility: visible;
+}
+
+.hs-tooltip.show .hs-tooltip-shown\:opacity-100{
+  opacity: 1;
+}
+
+.hs-tooltip-content.show.hs-tooltip-shown\:visible{
+  visibility: visible;
+}
+
+.hs-tooltip-content.show.hs-tooltip-shown\:opacity-100{
+  opacity: 1;
 }
 
 .selected .hs-combo-box-selected\:block{
