@@ -10,7 +10,7 @@ export class OpGethService extends NodeService {
     const JWTDir = "/op-engine.jwt";
     const dataDir = "/op-geth";
     const volumes = [new ServiceVolume(workingDir + "/data", dataDir), new ServiceVolume(workingDir + "/op-engine.jwt", JWTDir)];
-    const sequencer = network === "mainnet" ? "https://mainnet-sequencer.optimism.io" : "https://sepolia-sequencer.optimism.io";
+    const sequencer = network === "op-mainnet" ? "https://mainnet-sequencer.optimism.io" : "https://sepolia-sequencer.optimism.io";
 
     // L2 geth
     const l2Geth = executionClients
@@ -75,7 +75,7 @@ export class OpGethService extends NodeService {
       `--metrics.addr=0.0.0.0`,
     ];
 
-    return network === "mainnet" ? [...commonCmd, `--rollup.historicalrpc=${l2Geth}`] : commonCmd;
+    return network === "op-mainnet" && l2Geth ? [...commonCmd, `--rollup.historicalrpc=${l2Geth}`] : commonCmd;
   }
 
   static buildByConfiguration(config) {
