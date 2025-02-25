@@ -355,15 +355,6 @@ export class OneClickInstall {
           consensusClients: this.beaconService.filter((service) => service.service !== "OpNodeBeaconService"),
         })
       );
-
-      this.beaconService
-        .filter((service) => service.service === "OpNodeBeaconService")
-        .map((service) => service.id)
-        .forEach((id) => {
-          if (!this.notToStart.includes(id)) {
-            this.notToStart.push(id);
-          }
-        });
     }
 
     this.handleArchiveTags(selectedPreset);
