@@ -9,9 +9,7 @@ import { ref, computed, watch, watchEffect } from 'vue';
           : selectedServerBackground
           ? 'bg-blue-300'
           : 'bg-gray-200 ',
-        connectedServer || route.path === '/login' || !sshExists
-          ? 'col-span-full rounded-md'
-          : 'col-end-22',
+        connectedServer || route.path === '/login' || !sshExists ? 'col-span-full rounded-md' : 'col-end-22',
       ]"
       @mouseenter="hovered = true"
       @click="selectServer"
@@ -20,28 +18,19 @@ import { ref, computed, watch, watchEffect } from 'vue';
         v-if="serverStore.refreshServers"
         class="col-start-1 col-span-1 self-center mx-auto h-[38px] w-[38px] flex-none rounded-full bg-gray-50"
       >
-        <span
-          class="animate-spin border-2 border-gray-300 border-t-blue-600 border-r-blue-600 bg-transparent"
-        ></span>
+        <span class="animate-spin border-2 border-gray-300 border-t-blue-600 border-r-blue-600 bg-transparent"></span>
       </div>
 
       <div
         v-else
         class="col-start-1 col-span-1 h-[38px] w-[38px] self-center mx-auto flex-none rounded-full bg-gray-50 border border-gray-300 shadow-sm shadow-[#1f2021]"
       >
-        <img
-          class="w-full h-full rounded-full"
-          :src="serverAvatar"
-          alt="Server Avatar"
-          @click="avatarModalHandler"
-        />
+        <img class="w-full h-full rounded-full" :src="serverAvatar" alt="Server Avatar" @click="avatarModalHandler" />
       </div>
 
       <div
         class="col-start-2 col-end-10 flex flex-col justify-center items-start ml-2"
-        :class="
-          connectedServer && route.path !== '/login' ? 'text-gray-100' : 'text-gray-800'
-        "
+        :class="connectedServer && route.path !== '/login' ? 'text-gray-100' : 'text-gray-800'"
       >
         <p class="leading-6 text-2xs font-semibold">
           {{ getServerNumber }}
@@ -71,9 +60,7 @@ import { ref, computed, watch, watchEffect } from 'vue';
           class="w-4 h-4 transition-all duration-200 ease-in-out hover:scale-110"
           src="/img/icon/server-management-icons/quick-login.png"
           alt="Quick Login Icon"
-          :class="
-            isHovered ? 'transition-all duration-150 scale-110 invert' : 'filter-none'
-          "
+          :class="isHovered ? 'transition-all duration-150 scale-110 invert' : 'filter-none'"
           @mousedown.prevent
         />
       </div>
@@ -101,8 +88,7 @@ const props = defineProps({
 const isHovered = ref(false);
 
 const avatarModalHandler = () => {
-  if (serverStore.selectedServerConnection?.name === props.server?.name)
-    serverStore.isAvatarModalActive = true;
+  if (serverStore.selectedServerConnection?.name === props.server?.name) serverStore.isAvatarModalActive = true;
 };
 
 const emit = defineEmits(["selectServer", "quickLogin"]);
