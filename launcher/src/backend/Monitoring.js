@@ -234,7 +234,7 @@ export class Monitoring {
   // Caches results for 10 seconds!
   async getServiceInfos() {
     const cache_max_seconds = 10;
-    const args = Array.prototype.slice.call(arguments); // convert functon "arguments" to Array
+    const args = Array.prototype.slice.call(arguments); // convert function "arguments" to Array
     const hash = crypto.createHash("md5").update(args.join("-")).digest("hex"); // cache id
     const file = this.serviceInfosCacheFile;
     const dnow = new Date(); // eslint-disable-line no-unused-vars
