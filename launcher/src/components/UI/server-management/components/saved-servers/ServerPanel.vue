@@ -1,9 +1,17 @@
 <template>
-  <div class="col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-12 grid-rows-12 items-center bg-[#1b1b1d] p-2 rounded-md">
-    <div class="col-start-1 col-end-7 row-start-1 row-span-1 flex justify-start items-center">
-      <span class="text-md font-semibold text-gray-200 uppercase">{{ $t("multiServer.saveServerCon") }}</span>
+  <div
+    class="col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-12 grid-rows-12 items-center bg-[#1b1b1d] p-2 rounded-md gap-y-1"
+  >
+    <div
+      class="col-start-1 col-end-7 row-start-1 row-span-1 flex justify-start items-center"
+    >
+      <span class="text-sm font-semibold text-gray-200 uppercase">{{
+        $t("multiServer.saveServerCon")
+      }}</span>
     </div>
-    <div class="col-start-7 col-span-full row-start-1 row-span-1 flex justify-start items-center relative">
+    <div
+      class="col-start-7 col-span-full row-start-1 row-span-1 flex justify-start items-center relative"
+    >
       <label for="Search" class="sr-only"> {{ $t("multiServer.serch") }} </label>
 
       <input
@@ -12,7 +20,7 @@
         v-model="searchQuery"
         type="text"
         :placeholder="`${t('multiServer.serchFor')}`"
-        class="w-full h-8 rounded-md border-gray-200 py-2.5 pe-10 shadow-sm sm:text-sm px-2"
+        class="w-full h-7 rounded-md border-gray-200 py-2 shadow-sm sm:text-sm px-2"
         @mouseenter="footerStore.cursorLocation = `${t('serverList.search')}`"
         @mouseleave="footerStore.cursorLocation = ''"
       />
@@ -21,7 +29,14 @@
         <button type="button" class="text-gray-600 hover:text-gray-700">
           <span class="sr-only">{{ $t("multiServer.serch") }} </span>
 
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="h-4 w-4"
+          >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -33,7 +48,7 @@
     </div>
 
     <div
-      class="w-full h-full max-h-[300px] col-start-1 col-span-full row-start-2 row-end-11 overflow-x-hidden overflow-y-auto flex flex-col justify-start items-center p-1 bg-black rounded-md space-y-2"
+      class="w-full h-full max-h-[300px] col-start-1 col-span-full row-start-2 row-end-11 overflow-x-hidden overflow-y-auto flex flex-col justify-start items-center p-1 bg-black rounded-md space-y-2 border border-neutral-500"
     >
       <ServerRow
         v-for="(server, index) in getFilteredServers"
@@ -46,15 +61,23 @@
         @mouseleave="footerStore.cursorLocation = ''"
       />
     </div>
-    <div class="h-full col-start-1 col-span-full row-start-11 row-span-2 grid grid-cols-12 justify-center items-start">
-      <div class="group relative col-start-5 col-end-7 row-start-11 row-span-2 flex justify-center">
+    <div
+      class="h-full col-start-1 col-span-full row-start-11 row-span-2 grid grid-cols-12 justify-center items-start"
+    >
+      <div
+        class="group relative col-start-5 col-end-7 row-start-11 row-span-2 flex justify-center"
+      >
         <button
           class="w-[50px] h-[50px] bg-gray-200 rounded-md flex justify-self-center justify-center items-center shadow-lg shadow-black active:shadow-none active:scale-95 cursor-pointer transition-all duration-200 ease-in-out hover:bg-[#336666] text-gray-800 hover:text-gray-100"
           @click="openFileInput"
           @mouseenter="footerStore.cursorLocation = 'click to import server list'"
           @mouseleave="footerStore.cursorLocation = ''"
         >
-          <img class="w-full" src="/img/icon/server-management-icons/import-config.png" alt="Add Icon" />
+          <img
+            class="w-full"
+            src="/img/icon/server-management-icons/import-config.png"
+            alt="Add Icon"
+          />
         </button>
         <span
           class="absolute bottom-full left-1/2 -translate-x-2/3 mb-2 px-3 py-1 text-sm text-white bg-[#336666] rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap border border-neutral-600"
@@ -63,17 +86,29 @@
         </span>
       </div>
 
-      <input ref="fileInput" type="file" class="hidden" accept=".zip" @change="importConnections" />
+      <input
+        ref="fileInput"
+        type="file"
+        class="hidden"
+        accept=".zip"
+        @change="importConnections"
+      />
 
       <!-- Export Button with Tooltip -->
-      <div class="group relative col-start-7 col-end-9 row-start-11 row-span-2 flex justify-center">
+      <div
+        class="group relative col-start-7 col-end-9 row-start-11 row-span-2 flex justify-center"
+      >
         <button
           class="w-[50px] h-[50px] bg-gray-200 rounded-md justify-self-center flex justify-center items-center shadow-lg shadow-black active:shadow-none active:scale-95 cursor-pointer transition-all duration-200 ease-in-out hover:bg-[#336666] text-gray-800 hover:text-gray-100"
           @click="exportConnections"
           @mouseenter="footerStore.cursorLocation = `click to export server list`"
           @mouseleave="footerStore.cursorLocation = ''"
         >
-          <img class="w-full" src="/img/icon/server-management-icons/export-config.png" alt="Add Icon" />
+          <img
+            class="w-full"
+            src="/img/icon/server-management-icons/export-config.png"
+            alt="Add Icon"
+          />
         </button>
         <span
           class="absolute bottom-full left-1/2 -translate-x-2/3 mb-2 px-3 py-1 text-sm text-white bg-[#336666] rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap border border-neutral-600"
@@ -83,14 +118,20 @@
       </div>
 
       <!-- New Button with Tooltip -->
-      <div class="group relative col-start-9 col-end-11 row-start-11 row-span-2 flex justify-center">
+      <div
+        class="group relative col-start-9 col-end-11 row-start-11 row-span-2 flex justify-center"
+      >
         <button
           class="w-[50px] h-[50px] bg-gray-200 rounded-md justify-self-center flex justify-center items-center shadow-lg shadow-black active:shadow-none active:scale-95 cursor-pointer p-2 transition-all duration-200 ease-in-out hover:bg-[#336666] text-gray-800 hover:text-gray-100 m-0"
           @click="serverLogin"
           @mouseenter="footerStore.cursorLocation = `${t('serverList.addServer')}`"
           @mouseleave="footerStore.cursorLocation = ''"
         >
-          <img class="w-6" src="/img/icon/server-management-icons/plus.png" alt="Add Icon" />
+          <img
+            class="w-6"
+            src="/img/icon/server-management-icons/plus.png"
+            alt="Add Icon"
+          />
         </button>
         <span
           class="absolute bottom-full left-1/2 -translate-x-2/3 mb-2 px-3 py-1 text-sm text-gray-100 bg-[#336666] rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap border border-neutral-600"
@@ -100,7 +141,9 @@
       </div>
 
       <!-- Stereum Plus Button -->
-      <div class="group relative col-start-11 col-end-13 row-start-11 row-span-2 flex justify-center">
+      <div
+        class="group relative col-start-11 col-end-13 row-start-11 row-span-2 flex justify-center"
+      >
         <button
           class="w-[50px] h-[50px] bg-gray-200 rounded-md justify-self-center flex justify-center items-center shadow-lg shadow-black active:shadow-none active:scale-95 cursor-pointer p-2 transition-all duration-200 ease-in-out hover:bg-[#336666] text-gray-800 hover:text-gray-100 m-0"
           @click="getToStereumPlusLogin"
@@ -123,7 +166,8 @@
       tabindex="-1"
       aria-labelledby="hs-solid-color-danger-label"
     >
-      <span id="hs-solid-color-danger-label" class="font-bold">Failed</span> Invalid or empty connections data.
+      <span id="hs-solid-color-danger-label" class="font-bold">Failed</span> Invalid or
+      empty connections data.
     </div>
   </div>
 </template>
@@ -155,7 +199,9 @@ const getFilteredServers = computed(() => {
     return serverStore.savedServers?.savedConnections;
   }
 
-  return serverStore.savedServers.savedConnections.filter((server) => server.name.toLowerCase().includes(searchQuery.value.toLowerCase()));
+  return serverStore.savedServers.savedConnections.filter((server) =>
+    server.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+  );
 });
 
 watch(
@@ -224,9 +270,14 @@ const importConnections = async (event) => {
     const newConnections = JSON.parse(jsonData);
 
     if (newConnections.length > 0) {
-      const existingConnections = serverStore.savedServers?.savedConnections ? useDeepClone(serverStore.savedServers.savedConnections) : [];
+      const existingConnections = serverStore.savedServers?.savedConnections
+        ? useDeepClone(serverStore.savedServers.savedConnections)
+        : [];
       const uniqueConnections = newConnections.filter(
-        (newConnection) => !existingConnections.some((existingConnection) => existingConnection.host === newConnection.host)
+        (newConnection) =>
+          !existingConnections.some(
+            (existingConnection) => existingConnection.host === newConnection.host
+          )
       );
 
       existingConnections.push(...uniqueConnections);
@@ -258,7 +309,9 @@ const getToStereumPlusLogin = () => {
 const loadStoredConnections = async () => {
   serverStore.savedServers = await ControlService.readConfig();
 
-  serverStore.selectedServerConnection = serverStore.savedServers?.savedConnections?.find((item) => item.host === controlStore.ipAddress);
+  serverStore.selectedServerConnection = serverStore.savedServers?.savedConnections?.find(
+    (item) => item.host === controlStore.ipAddress
+  );
 
   serverStore.refreshServers = false;
 };
@@ -277,15 +330,17 @@ const serverLogin = () => {
 </script>
 
 <style scoped>
+/* Base scrollbar styling */
 ::-webkit-scrollbar {
   width: 5px;
   background-color: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #7d838a;
+  background-color: #3b988f;
   border-radius: 5px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background-color: #599ce9;
 }
@@ -296,5 +351,27 @@ const serverLogin = () => {
 
 ::-webkit-scrollbar-track-piece {
   background-color: transparent;
+}
+
+/* Auto-hide behavior */
+.scrollbar-container {
+  overflow-y: auto;
+}
+
+/* Hide scrollbar when not hovering */
+.scrollbar-container:not(:hover)::-webkit-scrollbar {
+  width: 0;
+  display: none; /* Hide completely */
+}
+
+/* For Firefox */
+.scrollbar-container {
+  scrollbar-width: thin;
+  scrollbar-color: #7d838a transparent;
+}
+
+/* Hide scrollbar when not hovering for Firefox */
+.scrollbar-container:not(:hover) {
+  scrollbar-width: none;
 }
 </style>

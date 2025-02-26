@@ -1028,10 +1028,6 @@ video {
   top: 100%;
 }
 
-.left-2\/3{
-  left: 66.666667%;
-}
-
 .z-0{
   z-index: 0;
 }
@@ -1440,16 +1436,16 @@ video {
   margin: -0.25rem;
 }
 
+.m-0{
+  margin: 0px;
+}
+
 .m-1{
   margin: 0.25rem;
 }
 
 .m-auto{
   margin: auto;
-}
-
-.m-0{
-  margin: 0px;
 }
 
 .mx-1{
@@ -1973,10 +1969,6 @@ video {
 
 .h-screen{
   height: 100vh;
-}
-
-.h-auto{
-  height: auto;
 }
 
 .max-h-10{
@@ -2523,10 +2515,6 @@ video {
   width: 100vw;
 }
 
-.w-auto{
-  width: auto;
-}
-
 .min-w-\[100px\]{
   min-width: 100px;
 }
@@ -2601,6 +2589,12 @@ video {
           transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
+.-translate-x-2\/3{
+  --tw-translate-x: -66.666667%;
+  -webkit-transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+          transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
 .-translate-y-1\/2{
   --tw-translate-y: -50%;
   -webkit-transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
@@ -2615,12 +2609,6 @@ video {
 
 .translate-y-0{
   --tw-translate-y: 0px;
-  -webkit-transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-          transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-}
-
-.-translate-x-2\/3{
-  --tw-translate-x: -66.666667%;
   -webkit-transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
           transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
@@ -3652,6 +3640,11 @@ video {
   border-color: rgb(54 83 20 / var(--tw-border-opacity, 1));
 }
 
+.border-neutral-600{
+  --tw-border-opacity: 1;
+  border-color: rgb(82 82 82 / var(--tw-border-opacity, 1));
+}
+
 .border-orange-500{
   --tw-border-opacity: 1;
   border-color: rgb(249 115 22 / var(--tw-border-opacity, 1));
@@ -3741,11 +3734,6 @@ video {
   border-color: rgb(115 115 115 / var(--tw-border-opacity, 1));
 }
 
-.border-neutral-600{
-  --tw-border-opacity: 1;
-  border-color: rgb(82 82 82 / var(--tw-border-opacity, 1));
-}
-
 .border-b-transparent{
   border-bottom-color: transparent;
 }
@@ -3806,11 +3794,6 @@ video {
 .border-t-white{
   --tw-border-opacity: 1;
   border-top-color: rgb(255 255 255 / var(--tw-border-opacity, 1));
-}
-
-.bg-\[\#093A4C\]{
-  --tw-bg-opacity: 1;
-  background-color: rgb(9 58 76 / var(--tw-bg-opacity, 1));
 }
 
 .bg-\[\#0d0d0e\]{
@@ -4510,16 +4493,6 @@ video {
 .bg-zinc-700{
   --tw-bg-opacity: 1;
   background-color: rgb(63 63 70 / var(--tw-bg-opacity, 1));
-}
-
-.bg-neutral-700{
-  --tw-bg-opacity: 1;
-  background-color: rgb(64 64 64 / var(--tw-bg-opacity, 1));
-}
-
-.bg-neutral-800{
-  --tw-bg-opacity: 1;
-  background-color: rgb(38 38 38 / var(--tw-bg-opacity, 1));
 }
 
 .bg-opacity-50{
@@ -6609,22 +6582,6 @@ html body {
 
 .disabled\:opacity-50:disabled{
   opacity: 0.5;
-}
-
-.hs-tooltip.show .hs-tooltip-shown\:visible{
-  visibility: visible;
-}
-
-.hs-tooltip.show .hs-tooltip-shown\:opacity-100{
-  opacity: 1;
-}
-
-.hs-tooltip-content.show.hs-tooltip-shown\:visible{
-  visibility: visible;
-}
-
-.hs-tooltip-content.show.hs-tooltip-shown\:opacity-100{
-  opacity: 1;
 }
 
 .selected .hs-combo-box-selected\:block{
