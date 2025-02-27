@@ -4,7 +4,10 @@
       <div class="volume-Ico-container flex justify-center items-center w-full h-4/5 p-2">
         <img class="w-3/4" src="/img/icon/control-page-icons/hdd.svg" />
       </div>
-      <span class="w-full h-1/5 flex justify-center items-center text-gray-200 text-2xs font-semibold uppercase">volume</span>
+      <span
+        class="w-full h-1/5 flex justify-center items-center text-gray-200 text-2xs font-semibold uppercase"
+        >volume</span
+      >
     </div>
     <div class="volume-box w-2/3 h-full flex flex-col justify-center items-center">
       <div
@@ -42,24 +45,38 @@
       </template>
 
       <div v-else class="hdd-services w-full h-3/4 flex pt-1 pb-1 overflow-hidden">
-        <div class="write-read-box h-full w-1/2 flex justify-start items-center text-[50%] border-r-2 border-gray-600">
-          <div class="ttl-box w-1/4 h-full flex flex-col justify-center items-center mr-1">
-            <div class="title w-full text-[7px] h-1/2 flex justify-start items-center text-gray-200 uppercase mr-1">
+        <div
+          class="write-read-box h-full w-1/2 flex justify-start items-center text-[50%]"
+        >
+          <div
+            class="ttl-box w-1/4 h-full flex flex-col justify-center items-center mr-1"
+          >
+            <div
+              class="title w-full text-[7px] h-1/2 flex justify-start items-center text-gray-200 uppercase mr-1"
+            >
               <span>write</span>
             </div>
-            <div class="title w-full text-[7px] h-1/2 flex justify-center items-center text-gray-200 uppercase">read</div>
-          </div>
-          <div class="val-box w-3/4 h-full flex flex-col text-xs justify-center font-semibold items-center">
             <div
-              class="title w-full h-1/2 flex justify-center items-center text-2xs text-orange-500 uppercase"
-              @mouseenter="footerStore.cursorLocation = `Write: ${convertWriteValueToMb} MB`"
+              class="title w-full text-[7px] h-1/2 flex justify-center items-center text-gray-200 uppercase"
+            >
+              read
+            </div>
+          </div>
+          <div
+            class="val-box w-3/4 h-full flex flex-col text-xs justify-center items-center"
+          >
+            <div
+              class="title w-full h-1/2 flex justify-center items-center text-2xs font-medium text-orange-500"
+              @mouseenter="
+                footerStore.cursorLocation = `Write: ${convertWriteValueToMb} MB`
+              "
               @mouseleave="footerStore.cursorLocation = ''"
             >
               {{ convertWriteValueToMb }}
               MB
             </div>
             <div
-              class="title w-full h-1/2 flex justify-center items-center text-2xs text-teal-700 uppercase"
+              class="title w-full h-1/2 flex justify-center items-center text-2xs font-medium text-emerald-500 uppercase"
               @mouseenter="
                 footerStore.cursorLocation = `Read: ${convertReadValueToMb}   MB
                 `
@@ -71,17 +88,21 @@
             </div>
           </div>
         </div>
-        <div class="storage-box flex h-full w-1/2 flex-col pl-1">
+        <div class="storage-box flex h-full w-1/2 flex-col ml-1">
           <div
             class="used-storage h-1/2 w-full text-2xs flex justify-start items-center text-emerald-500"
-            @mouseenter="footerStore.cursorLocation = `${availDisk} GB ${t('controlPage.free')}`"
+            @mouseenter="
+              footerStore.cursorLocation = `${availDisk} GB ${t('controlPage.free')}`
+            "
             @mouseleave="footerStore.cursorLocation = ''"
           >
             {{ availDisk }} GB {{ t("controlPage.free") }}
           </div>
           <div
             class="total-storage h-1/2 w-full text-2xs font-normal text-gray-300 flex justify-start items-center"
-            @mouseenter="footerStore.cursorLocation = `${totalDisk} GB ${t('controlPage.total')}`"
+            @mouseenter="
+              footerStore.cursorLocation = `${totalDisk} GB ${t('controlPage.total')}`
+            "
             @mouseleave="footerStore.cursorLocation = ''"
           >
             {{ totalDisk }} GB {{ $t("controlPage.total") }}
@@ -133,8 +154,12 @@ const storagestatus = computed(() => {
 
     const percentage = (valueInGB / totalDisk.value) * 100;
 
-    const matchingService = serviceStore.installedServices.find((service) => service.service === item.service);
-    const serviceIcon = matchingService ? matchingService.icon : "/path/to/default/icon.png";
+    const matchingService = serviceStore.installedServices.find(
+      (service) => service.service === item.service
+    );
+    const serviceIcon = matchingService
+      ? matchingService.icon
+      : "/path/to/default/icon.png";
 
     return {
       ...item,
