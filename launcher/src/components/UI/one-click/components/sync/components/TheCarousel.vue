@@ -139,7 +139,11 @@ const currentNetwork = computed(() => {
   let current;
 
   setupNetwork = manageStore.currentNetwork;
+
   current = manageStore.networkList.find((network) => network.network === setupNetwork.network);
+  if (!current) {
+    current = manageStore.networkList.find((network) => network.network === props.client.network);
+  }
   return current;
 });
 
