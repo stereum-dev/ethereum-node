@@ -137,6 +137,7 @@ const checkPluginCategory = (element) => {
   let filter;
   switch (clickStore.selectedPreset.name) {
     case "lidocsm":
+    case "mev boost":
     case "staking":
       filter = (item) => item.category === element.category && !/(SSVNetwork|Web3Signer|Charon)/.test(item.service);
       if (manageStore.currentNetwork.network == "gnosis") {
@@ -170,9 +171,6 @@ const checkPluginCategory = (element) => {
       break;
     case "rocketpool":
       //filter = (item) => item.category === element.category
-      break;
-    case "mev boost":
-      filter = (item) => item.category === element.category && !/(SSVNetwork|Reth|Web3Signer|Charon)/.test(item.service);
       break;
     case "stereum on arm":
       filter = (item) => item.category === element.category && !/(Prysm|Reth|SSVNetwork|Web3Signer|Charon)/.test(item.service);

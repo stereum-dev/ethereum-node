@@ -17,13 +17,15 @@
 
 - name: Get latest version for this service
   set_fact:
-    new_service_docker_image_tag: "{{ (update_data.json[service_configuration.network][service_configuration.service] | default(update_data.json['mainnet'][service_configuration.service] | default([]))) | last }}"
-  when: service_configuration.autoupdate and service_configuration.service != 'CustomService'
+    new_service_docker_image_tag: "{{ (update_data.json.get(service_configuration.network, {}).get(service_configuration.service, update_data.json.get('mainnet', {}).get(service_configuration.service, []))) | last | default(None, true) }}" # Returns empty string if nothing is found. (don't ask me why default is not picking up and returning None)
+  when:
+    - service_configuration.autoupdate
+    - service_configuration.service != 'CustomService'
 
 - name: Build new image tag
   set_fact:
     new_service_configuration_fraction:
-      image: "{{ service_docker_image }}:{{ new_service_docker_image_tag | default(service_docker_image_tag) }}"
+      image: "{{ service_docker_image }}:{{ new_service_docker_image_tag | default(service_docker_image_tag, true) }}" # If new_service_docker_image_tag is falsy, use the current tag (will cause a restart if the tag is an empty string)
   when: service_configuration.autoupdate
 
 - name: Update configuration
