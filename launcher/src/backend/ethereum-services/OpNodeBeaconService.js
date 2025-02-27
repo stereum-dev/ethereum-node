@@ -46,7 +46,7 @@ export class OpNodeBeaconService extends NodeService {
       service.id, //id
       1, // configVersion
       image, //image
-      "v1.10.2", //imageVersion
+      "v1.10.3", //imageVersion
       [
         "op-node",
         ...(l1Execution ? [`--l1=${l1Execution}`] : []),
@@ -67,6 +67,7 @@ export class OpNodeBeaconService extends NodeService {
         "--p2p.priv.path=/p2p/opnode_p2p_priv.txt",
         "--p2p.peerstore.path=/p2p/opnode_peerstore_db",
         "--p2p.discovery.path=/p2p/opnode_discovery_db",
+        // l2.enginekind=erigon
       ], //command
       null, //entrypoint
       null, //env
