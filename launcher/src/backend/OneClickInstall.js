@@ -393,7 +393,7 @@ export class OneClickInstall {
   }
 
   handleArchiveTags(selectedPreset) {
-    if (selectedPreset == "staking") {
+    if (/mev boost|staking/.test(selectedPreset)) {
       this.executionClient.forEach((client) => {
         switch (client.service) {
           case "RethService":
