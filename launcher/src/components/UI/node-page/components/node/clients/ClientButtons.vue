@@ -92,7 +92,7 @@ import { useNodeStore } from '@/store/theNode';
     >
       <img src="/img/icon/node-page-icons/service-command-delete-lockfile.png" alt="icon" class="w-4 h-4 active:scale-95" />
     </button>
-    <button
+    <!-- <button
       v-if="props.client.service == 'GethService'"
       class="col-start-1 row-start-3 col-span-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
       @click="openPruning"
@@ -100,11 +100,10 @@ import { useNodeStore } from '@/store/theNode';
       @mouseleave="footerStore.cursorLocation = ''"
     >
       <img src="/img/icon/node-page-icons/service-command-pruning.png" alt="icon" class="active:scale-95" />
-    </button>
+    </button> -->
     <button
       v-if="props.client.category == 'execution' && props.client.service !== 'ExternalExecutionService'"
       class="row-start-3 col-span-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md flex justify-center items-center"
-      :class="props.client.service == 'GethService' ? 'col-start-2' : 'col-start-1'"
       @click="copyJwt"
       @mouseenter="footerStore.cursorLocation = `${copyToken}`"
       @mouseleave="footerStore.cursorLocation = ''"
@@ -125,7 +124,7 @@ const turnOn = t("clientButtons.turnOn");
 const turnOff = t("clientButtons.turnOff");
 const restart = t("clientButtons.restart");
 const resync = t("clientButtons.resync");
-const pruning = t("clientButtons.pruning");
+// const pruning = t("clientButtons.pruning");
 const expert = t("clientButtons.settings");
 const logs = t("clientButtons.logs");
 const docs = t("clientButtons.docs");
@@ -182,11 +181,11 @@ const openResync = () => {
   footerStore.cursorLocation = "";
 };
 
-const openPruning = () => {
-  nodeStore.isLineHidden = true;
-  emit("openPruning", props.client);
-  footerStore.cursorLocation = "";
-};
+// const openPruning = () => {
+//   nodeStore.isLineHidden = true;
+//   emit("openPruning", props.client);
+//   footerStore.cursorLocation = "";
+// };
 
 const copyJwt = () => {
   emit("copyJwt", props.client);

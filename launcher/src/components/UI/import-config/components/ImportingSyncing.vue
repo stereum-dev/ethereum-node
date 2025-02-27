@@ -92,6 +92,7 @@ export default {
     },
     filterServices() {
       this.executionClient = this.configServices.filter((service) => service.category === "execution")[0];
+
       this.consensusClient = this.configServices.filter((service) => service.category === "consensus")[0];
     },
   },
