@@ -994,8 +994,8 @@ app.on("ready", async () => {
 
       // Checks for Updates installs them and restarts the app
       // If no updates are available it will start the app with createWindow()
-      //stereumUpdater.checkForUpdates();
-      stereumUpdater.runDebug();
+      stereumUpdater.checkForUpdates();
+      //stereumUpdater.runDebug();
     }
   }
 });
