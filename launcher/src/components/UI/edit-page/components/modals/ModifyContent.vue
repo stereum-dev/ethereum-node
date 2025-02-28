@@ -7,7 +7,7 @@ import { onMounted, computed } from 'vue';
   </div>
   <div v-else class="w-full mt-4 flex justify-center items-center box-border">
     <div
-      v-if="list.length && list.some((e) => e.category === 'consensus')"
+      v-if="list.length && list.some((e) => e.category === 'consensus' && e.setupId === setupStore.selectedSetup.setupId)"
       class="w-1/3 h-[250px] flex flex-col justify-start items-center"
     >
       <div class="w-full h-5 flex justify-center items-center">
@@ -161,6 +161,7 @@ import { onMounted, computed } from 'vue';
 import { useNodeManage } from "@/store/nodeManage";
 import { onMounted, ref } from "vue";
 import { useSetups } from "../../../../../store/setups";
+import { useDeepClone } from "@/composables/utils";
 
 const list = ref([]);
 
@@ -190,10 +191,12 @@ onMounted(() => {
 });
 //Methods
 const updateProperties = () => {
-  props.properties.executionClients = list.value.filter((e) => e.category === "execution" && e.isConnected);
-  props.properties.consensusClients = list.value.filter(
-    (e) => (e.category === "consensus" || e.service === "CharonService") && e.isConnected
+  props.properties.executionClients = useDeepClone(list.value.filter((e) => e.category === "execution" && e.isConnected));
+  console.log("executionClients", props.properties.executionClients);
+  props.properties.consensusClients = useDeepClone(
+    list.value.filter((e) => (e.category === "consensus" || e.service === "CharonService") && e.isConnected)
   );
+  console.log("consensusClients", props.properties.consensusClients);
   props.properties.otherServices = list.value.filter((e) => e.category === "service" && e.isConnected);
 };
 
@@ -204,6 +207,7 @@ const getConnectedClient = () => {
         props.client.config.dependencies.executionClients,
         props.client.config.dependencies.otherServices
       );
+
       if (allDependencies && allDependencies.map((s) => s.id).includes(service.config.serviceID)) {
         service.isConnected = true;
       }
@@ -231,7 +235,13 @@ const getConnectionOptions = () => {
     case "execution":
       return [];
     case "consensus":
+      if (props.client.service === "OpNodeBeaconService") {
+        return manageStore.newConfiguration.filter(
+          (e) => e.category === "execution" || (e.category === "consensus" && !e.service.includes("Op"))
+        );
+      }
       return manageStore.newConfiguration.filter((e) => e.category === "execution");
+
     case "validator":
       if (props.client.service === "SSVNetworkService") {
         return manageStore.newConfiguration.filter((e) => e.category === "consensus" || e.category === "execution");

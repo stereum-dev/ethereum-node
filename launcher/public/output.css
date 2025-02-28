@@ -3555,8 +3555,8 @@ video {
   border-color: rgb(251 146 60 / var(--tw-border-opacity, 1));
 }
 
-.border-\[\#ffffff0a\]{
-  border-color: #ffffff0a;
+.border-\[\#ffffff16\]{
+  border-color: #ffffff16;
 }
 
 .border-blue-100{
@@ -3740,14 +3740,6 @@ video {
 .border-zinc-700{
   --tw-border-opacity: 1;
   border-color: rgb(63 63 70 / var(--tw-border-opacity, 1));
-}
-
-.border-\[\#ffffff27\]{
-  border-color: #ffffff27;
-}
-
-.border-\[\#ffffff16\]{
-  border-color: #ffffff16;
 }
 
 .border-b-transparent{
@@ -4397,11 +4389,18 @@ video {
   background-color: rgb(54 83 20 / var(--tw-bg-opacity, 1));
 }
 
+.bg-neutral-800{
+  --tw-bg-opacity: 1;
+  background-color: rgb(38 38 38 / var(--tw-bg-opacity, 1));
+}
 
 .bg-neutral-900{
   --tw-bg-opacity: 1;
   background-color: rgb(23 23 23 / var(--tw-bg-opacity, 1));
+}
 
+.bg-neutral-900\/90{
+  background-color: rgb(23 23 23 / 0.9);
 }
 
 .bg-orange-500{
@@ -4547,12 +4546,6 @@ video {
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
 
-.from-\[\#1e1e1f\]{
-  --tw-gradient-from: #1e1e1f var(--tw-gradient-from-position);
-  --tw-gradient-to: rgb(30 30 31 / 0) var(--tw-gradient-to-position);
-  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
-}
-
 .from-\[\#264744\]{
   --tw-gradient-from: #264744 var(--tw-gradient-from-position);
   --tw-gradient-to: rgb(38 71 68 / 0) var(--tw-gradient-to-position);
@@ -4581,10 +4574,6 @@ video {
 
 .to-\[\#0D0D12\]{
   --tw-gradient-to: #0D0D12 var(--tw-gradient-to-position);
-}
-
-.to-\[\#0b0b0b\]{
-  --tw-gradient-to: #0b0b0b var(--tw-gradient-to-position);
 }
 
 .to-\[\#264744\]{
@@ -5178,6 +5167,11 @@ video {
   color: rgb(8 145 178 / var(--tw-text-opacity, 1));
 }
 
+.text-emerald-500{
+  --tw-text-opacity: 1;
+  color: rgb(16 185 129 / var(--tw-text-opacity, 1));
+}
+
 .text-gray-100{
   --tw-text-opacity: 1;
   color: rgb(243 244 246 / var(--tw-text-opacity, 1));
@@ -5321,11 +5315,6 @@ video {
 .text-yellow-500{
   --tw-text-opacity: 1;
   color: rgb(234 179 8 / var(--tw-text-opacity, 1));
-}
-
-.text-emerald-500{
-  --tw-text-opacity: 1;
-  color: rgb(16 185 129 / var(--tw-text-opacity, 1));
 }
 
 .placeholder-gray-400\/70::-webkit-input-placeholder{
