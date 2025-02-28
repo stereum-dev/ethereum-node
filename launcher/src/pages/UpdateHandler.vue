@@ -4,7 +4,7 @@
       <span>{{ t("updateModal.updateTo", { version: updateState.version }) }} </span>
     </div>
     <div class="loading-icon w-full flex justify-center items-center h-3/6">
-      <img src="/animation/launcher-update/update-loading.gif" class="w-2/4 mt-40" />
+      <img src="/animation/launcher-update/update-loading-modal.gif" class="w-1/3" />
     </div>
 
     <div class="progressbar-box flex justify-center items-center w-full h-1/6">

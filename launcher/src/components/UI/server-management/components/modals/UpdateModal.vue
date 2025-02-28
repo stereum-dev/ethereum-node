@@ -1,6 +1,6 @@
 <template>
   <custom-modal
-    icon=" /animation/launcher-update/update-loading-modal.gif"
+    icon="/animation/launcher-update/update-loading-modal.gif"
     icon-size="w-[30%]"
     bg-color="bg-[#336666]"
     :main-title="`${t('updateModal.updateTitle', { version: version })} `"
