@@ -35,6 +35,9 @@ import { LidoObolExitService } from "./ethereum-services/LidoObolExitService";
 import { ConfigManager } from "./ConfigManager";
 import { LCOMService } from "./ethereum-services/LCOMService";
 import { KuboIPFSService } from "./ethereum-services/KuboIPFSService";
+import { OpGethService } from "./ethereum-services/OpGethService";
+import { OpNodeBeaconService } from "./ethereum-services/OpNodeBeaconService";
+import { L2GethService } from "./ethereum-services/L2GethService";
 
 import YAML from "yaml";
 // import { file } from "jszip";
@@ -179,6 +182,12 @@ export class ServiceManager {
               services.push(LCOMService.buildByConfiguration(config));
             } else if (config.service == "KuboIPFSService") {
               services.push(KuboIPFSService.buildByConfiguration(config));
+            } else if (config.service == "OpGethService") {
+              services.push(OpGethService.buildByConfiguration(config));
+            } else if (config.service == "OpNodeBeaconService") {
+              services.push(OpNodeBeaconService.buildByConfiguration(config));
+            } else if (config.service == "L2GethService") {
+              services.push(L2GethService.buildByConfiguration(config));
             }
           } else {
             log.error("found configuration without service!");
@@ -489,6 +498,36 @@ export class ServiceManager {
           command = "--beacon-node-api-endpoint=";
         }
         break;
+      case "OpNode": {
+        filter = (e) => {
+          if (e.service === "OpGethService") {
+            return e.buildExecutionClientEngineRPCHttpEndpointUrl();
+          }
+        };
+        command = "--l2=";
+        const opGethService = dependencies.filter((e) => e.service === "OpGethService");
+        service.command = this.addCommandConnection(service, command, opGethService, filter);
+
+        filter = (e) => {
+          if (e.service !== "OpGethService" && typeof e.buildExecutionClientHttpEndpointUrl === "function") {
+            return e.buildExecutionClientHttpEndpointUrl();
+          }
+        };
+        command = "--l1=";
+        const l1ExecutionService = dependencies.filter((e) => e.service !== "OpGethService" && !e.service.includes("Beacon"));
+        service.command = this.addCommandConnection(service, command, l1ExecutionService, filter);
+
+        filter = (e) => {
+          if (typeof e.buildConsensusClientHttpEndpointUrl === "function") {
+            return e.buildConsensusClientHttpEndpointUrl();
+          }
+        };
+        command = "--l1.beacon=";
+        const l1ConsensusService = dependencies.filter((e) => e.service.includes("BeaconService"));
+        service.command = this.addCommandConnection(service, command, l1ConsensusService, filter);
+
+        break;
+      }
       case "Charon":
         filter = (e) => e.buildConsensusClientHttpEndpointUrl();
         command = "--beacon-node-endpoints=";
@@ -544,10 +583,18 @@ export class ServiceManager {
       default:
         return service;
     }
-    service.command = this.addCommandConnection(service, command, dependencies, filter);
+
+    if (service.service !== "OpNodeBeaconService") {
+      service.command = this.addCommandConnection(service, command, dependencies, filter);
+    }
 
     if (service.service.includes("Beacon")) {
-      service.dependencies.executionClients = dependencies;
+      if (service.service.includes("OpNode")) {
+        service.dependencies.executionClients = dependencies.filter((d) => typeof d.buildExecutionClientHttpEndpointUrl === "function");
+        service.dependencies.consensusClients = dependencies.filter((d) => typeof d.buildConsensusClientHttpEndpointUrl === "function");
+      } else {
+        service.dependencies.executionClients = dependencies;
+      }
 
       service.volumes = service.volumes.filter((v) => v.destinationPath.includes(service.id));
 
@@ -556,11 +603,17 @@ export class ServiceManager {
           let destinationPath =
             client.service === "ExternalExecutionService"
               ? client.volumes.find((vol) => vol.destinationPath.includes("/engine.jwt")).destinationPath
-              : client.volumes.find((vol) => vol.servicePath === "/engine.jwt").destinationPath;
+              : client.volumes.find((vol) => vol.servicePath === "/engine.jwt" || vol.servicePath === "/op-engine.jwt").destinationPath;
 
-          return new ServiceVolume(destinationPath, "/engine.jwt");
+          let servicePath = destinationPath.includes("/op-engine.jwt") ? "/op-engine.jwt" : "/engine.jwt";
+
+          return new ServiceVolume(destinationPath, servicePath);
         })
       );
+
+      if (service.service === "OpNodeBeaconService") {
+        service.volumes = service.volumes.filter((vol) => vol.servicePath !== "/engine.jwt");
+      }
     } else if (service.service.includes("Validator") || service.service.includes("Charon")) {
       service.dependencies.consensusClients = dependencies;
     }
@@ -580,7 +633,8 @@ export class ServiceManager {
     if (fullCommand) {
       newProps = [this.formatCommand(fullCommand, endpointCommand, filter, dependencies)].filter((c) => c !== undefined);
     } else {
-      newProps = endpointCommand + dependencies.map(filter).join();
+      const filteredDependencies = dependencies.map(filter).filter((c) => c !== undefined && c !== "");
+      newProps = filteredDependencies.length > 0 ? endpointCommand + filteredDependencies.join() : [];
     }
     if (isString) {
       return command.concat(newProps).join(" ").trim();
@@ -1127,6 +1181,33 @@ export class ServiceManager {
           new ServicePort("127.0.0.1", 8080, 8080, servicePortProtocol.tcp),
         ];
         return KuboIPFSService.buildByUserInput(args.network, ports, args.installDir + "/ipfs");
+
+      case "OpGethService":
+        ports = [
+          new ServicePort("127.0.0.1", args.port ? args.port : 9993, 8545, servicePortProtocol.tcp),
+          new ServicePort("127.0.0.1", 9994, 8546, servicePortProtocol.tcp),
+          new ServicePort(null, 39393, 39393, servicePortProtocol.tcp),
+          new ServicePort(null, 39393, 39393, servicePortProtocol.udp),
+        ];
+        return OpGethService.buildByUserInput(args.network, ports, args.installDir + "/op-geth", args.executionClients);
+
+      case "OpNodeBeaconService":
+        ports = [
+          new ServicePort(null, 9003, 9003, servicePortProtocol.tcp),
+          new ServicePort(null, 9003, 9003, servicePortProtocol.udp),
+          new ServicePort("127.0.0.1", args.port ? args.port : 9545, 9545, servicePortProtocol.tcp),
+        ];
+        return OpNodeBeaconService.buildByUserInput(
+          args.network,
+          ports,
+          args.installDir + "/op-node",
+          args.executionClients,
+          args.consensusClients
+        );
+
+      case "L2GethService":
+        ports = [new ServicePort("127.0.0.1", args.port ? args.port : 9991, 8545, servicePortProtocol.tcp)];
+        return L2GethService.buildByUserInput(args.network, ports, args.installDir + "/l2-geth");
     }
   }
 
@@ -1704,8 +1785,8 @@ export class ServiceManager {
       }
     } else {
       command = command.map((c) => {
-        if (/mainnet|prater|goerli|sepolia|holesky/.test(c)) {
-          c = c.replace(/mainnet|prater|goerli|sepolia|holesky/, newNetwork);
+        if (/mainnet|prater|goerli|sepolia|holesky|op-mainnet|op-sepolia/.test(c)) {
+          c = c.replace(/mainnet|prater|goerli|sepolia|holesky|op-mainnet|op-sepolia/, newNetwork);
         }
         return c;
       });
