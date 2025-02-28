@@ -828,8 +828,8 @@ ipcMain.handle("fetchCsmAlerts", async () => {
   return await monitoring.fetchCsmAlerts();
 });
 
-ipcMain.handle("ignoreUpdate", async (event) => {
-  return await stereumUpdater.ignoreUpdate(event.sender);
+ipcMain.handle("ignoreUpdate", async () => {
+  return await stereumUpdater.ignoreUpdate();
 });
 
 ipcMain.handle("updateLauncher", async () => {
@@ -981,6 +981,8 @@ app.on("ready", async () => {
   if (app.isReady()) {
     if (process.env.WEBPACK_DEV_SERVER_URL) {
       app.setAsDefaultProtocolClient("stereumlauncher", process.execPath, [path.resolve(process.argv[1])]);
+      createWindow();
+      //stereumUpdater.runDebug();
     } else {
       app.setAsDefaultProtocolClient("stereumlauncher");
       const hideMenuItems = ["viewmenu", "windowmenu"];
@@ -990,11 +992,11 @@ app.on("ready", async () => {
         Menu.setApplicationMenu(menu);
       }
 
-      // Check for updates
-      stereumUpdater.checkForUpdates();
+      // Checks for Updates installs them and restarts the app
+      // If no updates are available it will start the app with createWindow()
+      //stereumUpdater.checkForUpdates();
+      stereumUpdater.runDebug();
     }
-
-    await createWindow();
   }
 });
 
