@@ -393,7 +393,7 @@ export class OneClickInstall {
   }
 
   handleArchiveTags(selectedPreset) {
-    if (selectedPreset == "staking") {
+    if (/mev boost|staking/.test(selectedPreset)) {
       this.executionClient.forEach((client) => {
         switch (client.service) {
           case "RethService":
@@ -613,10 +613,10 @@ export class OneClickInstall {
         services.push("OpGethService", "OpNodeBeaconService");
         break;
       case "op node archive":
-        services.push("OpGethService", "OpNodeBeaconService");
+        services.push("OpGethService", "OpNodeBeaconService", "L2GethService");
         break;
       case "op and eth node archive":
-        services.push("OpGethService", "OpNodeBeaconService");
+        services.push("OpGethService", "OpNodeBeaconService", "L2GethService");
         break;
     }
     return services;

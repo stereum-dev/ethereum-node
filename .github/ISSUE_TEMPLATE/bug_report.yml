@@ -8,14 +8,12 @@ body:
       value: |
         Thank you for taking the time to fill out this bug report for Stereum!
 
-  - type: dropdown
+  - type: input
     id: environment
     attributes:
       label: "Environment"
-      description: "Select the environment where the issue occurs"
-      options:
-        - "Development"
-        - "Release"
+      description: "Specify the environment where the issue occurs (e.g., Development, Release)"
+      placeholder: e.g., Development, Release
     validations:
       required: true
 
@@ -37,16 +35,12 @@ body:
     validations:
       required: true
 
-  - type: dropdown
+  - type: input
     id: desktop-os
     attributes:
       label: Operating System
-      description: Which operating system are you using?
-      options:
-        - Windows
-        - Mac
-        - Linux
-        - Other
+      description: Specify your operating system (e.g., Windows, Mac, Linux, Other)
+      placeholder: e.g., Windows, Mac, Linux, Other
     validations:
       required: true
 
