@@ -3,7 +3,7 @@
     <template #content>
       <div class="w-full col-start-1 col-span-full row-start-2 row-end-5 grid grid-cols-3 grid-rows-3 items-center overflow-hidden">
         <div class="w-full col-start-1 col-span-full row-start-1 row-end-3 flex justify-start items-center overflow-hidden">
-          <img class="h-28 sliding-animation" src="/animation/staking/alice.gif" alt="Animation" />
+          <img class="h-28 sliding-animation" src="/animation/staking/validator-import.gif" alt="Animation" />
         </div>
         <div class="w-full col-start-1 col-span-full row-start-3 row-span-1 flex justify-center items-center overflow-hidden p-2 space-x-1">
           <span class="text-md text-gray-200 text-center font-semibold">{{ $t("stakingPage.pleaseWait") }}</span>
