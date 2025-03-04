@@ -5,10 +5,16 @@
     <div
       class="w-full col-start-1 col-span-full row-start-1 row-span-2 border rounded-md border-gray-600 mx-auto bg-[#336666] grid grid-cols-6 grid-rows-2"
     >
-      <div class="col-start-1 col-span-full row-start-1 row-span-1 flex justify-center items-center p-1">
-        <span class="text-sm text-gray-300 font-semibold">{{ $t("pluginName.path") }}</span>
+      <div
+        class="col-start-1 col-span-full row-start-1 row-span-1 flex justify-center items-center p-1"
+      >
+        <span class="text-sm text-gray-300 font-semibold">{{
+          $t("pluginName.path")
+        }}</span>
       </div>
-      <div class="h-8 col-start-1 col-span-full row-start-2 row-span-1 flex justify-center items-center px-1 pb-1">
+      <div
+        class="h-8 col-start-1 col-span-full row-start-2 row-span-1 flex justify-center items-center px-1 pb-1"
+      >
         <input
           v-model="clickStore.installationPath"
           type="text"
@@ -18,11 +24,19 @@
         />
       </div>
     </div>
-    <div class="w-full col-start-1 col-span-full row-start-3 row-span-2 border rounded-md border-gray-600 mx-auto bg-[#336666]">
-      <div class="col-start-1 col-span-full row-start-1 row-span-1 flex justify-center items-center p-1">
-        <span class="text-sm text-gray-300 font-semibold">{{ $t("pluginName.installOpt") }}</span>
+    <div
+      class="w-full col-start-1 col-span-full row-start-3 row-span-2 border rounded-md border-gray-600 mx-auto bg-[#336666]"
+    >
+      <div
+        class="col-start-1 col-span-full row-start-1 row-span-1 flex justify-center items-center p-1"
+      >
+        <span class="text-sm text-gray-300 font-semibold">{{
+          $t("pluginName.installOpt")
+        }}</span>
       </div>
-      <div class="h-8 col-start-1 col-span-full row-start-1 row-span-1 flex justify-center items-center p-1">
+      <div
+        class="h-8 col-start-1 col-span-full row-start-1 row-span-1 flex justify-center items-center p-1"
+      >
         <div class="checkpoint-part">
           <input
             id="InstallOption"
@@ -32,18 +46,26 @@
             class="h-5 w-5 rounded-md border-gray-200 bg-white shadow-sm"
           />
 
-          <span class="text-sm text-gray-300 font-semibold">{{ $t("pluginName.startOnInstall") }}</span>
+          <span class="text-sm text-gray-300 font-semibold">{{
+            $t("pluginName.startOnInstall")
+          }}</span>
         </div>
       </div>
     </div>
     <div
-      v-if="clickStore.selectedPreset.name === 'stereum on arm'"
+      v-if="clickStore.selectedPreset?.name === 'stereum on arm'"
       class="w-full col-start-1 col-span-full row-start-5 row-span-2 border rounded-md border-gray-600 mx-auto bg-[#336666]"
     >
-      <div class="col-start-1 col-span-full row-start-2 row-span-1 flex justify-center items-center p-1">
-        <span class="text-sm text-gray-300 font-semibold">{{ $t("pluginName.monitor") }}</span>
+      <div
+        class="col-start-1 col-span-full row-start-2 row-span-1 flex justify-center items-center p-1"
+      >
+        <span class="text-sm text-gray-300 font-semibold">{{
+          $t("pluginName.monitor")
+        }}</span>
       </div>
-      <div class="h-8 col-start-1 col-span-full row-start-2 row-span-1 flex justify-center items-center p-1">
+      <div
+        class="h-8 col-start-1 col-span-full row-start-2 row-span-1 flex justify-center items-center p-1"
+      >
         <div class="checkpoint-part">
           <label for="MarketingAccept" class="flex gap-2 cursor-pointer">
             <input
@@ -53,7 +75,9 @@
               name="marketing_accept"
               class="h-5 w-5 rounded-md border-gray-200 bg-white shadow-sm"
             />
-            <span class="text-sm text-gray-300 font-semibold">{{ $t("pluginName.instMonit") }}</span>
+            <span class="text-sm text-gray-300 font-semibold">{{
+              $t("pluginName.instMonit")
+            }}</span>
           </label>
         </div>
 
@@ -66,7 +90,8 @@
     </div>
     <div
       v-if="
-        (clickStore.selectedPreset.name === 'op node archive' || clickStore.selectedPreset.name === 'op and eth node archive') &&
+        (clickStore.selectedPreset?.name === 'op node archive' ||
+          clickStore.selectedPreset?.name === 'op and eth node archive') &&
         manageStore.currentNetwork.network == 'op-mainnet'
       "
       class="w-full col-start-1 col-span-full row-start-5 row-span-2 border rounded-md border-gray-600 mx-auto bg-[#336666] flex flex-col items-center p-2"
@@ -123,7 +148,9 @@ const getLegacyService = computed(() => {
 
 // Check if Legacy Service is Already Added
 const isLegacyAdded = computed(() => {
-  return clickStore.selectedPreset.includedPlugins.some((plugin) => plugin.service === "L2GethService");
+  return clickStore.selectedPreset.includedPlugins.some(
+    (plugin) => plugin.service === "L2GethService"
+  );
 });
 
 // Toggle Add/Remove Functionality

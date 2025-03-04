@@ -6,10 +6,15 @@
     <div v-if="groupedPlugins.ethSetup.length > 0" class="space-y-2">
       <div class="flex items-center px-2">
         <div class="h-px flex-1 bg-gray-700"></div>
-        <span class="px-4 text-sm text-amber-200">Eth Setup</span>
+        <span class="px-4 text-sm text-gray-300">Eth Setup</span>
         <div class="h-px flex-1 bg-gray-700"></div>
       </div>
-      <plugin-item v-for="plugin in groupedPlugins.ethSetup" :key="plugin.id" :plugin="plugin" @plugin-click="pluginExchange(plugin)">
+      <plugin-item
+        v-for="plugin in groupedPlugins.ethSetup"
+        :key="plugin.id"
+        :plugin="plugin"
+        @plugin-click="pluginExchange(plugin)"
+      >
         <change-modal v-if="plugin.openReplaceModal" :client="plugin">
           <div
             v-for="(item, idx) in existingPluginsToReplace"
@@ -35,10 +40,15 @@
     <div v-if="groupedPlugins.optimism.length > 0" class="space-y-2">
       <div class="flex items-center px-2">
         <div class="h-px flex-1 bg-gray-700"></div>
-        <span class="px-4 text-sm text-amber-200">Optimism</span>
+        <span class="px-4 text-sm text-gray-300">Optimism</span>
         <div class="h-px flex-1 bg-gray-700"></div>
       </div>
-      <plugin-item v-for="plugin in groupedPlugins.optimism" :key="plugin.id" :plugin="plugin" @plugin-click="pluginExchange(plugin)">
+      <plugin-item
+        v-for="plugin in groupedPlugins.optimism"
+        :key="plugin.id"
+        :plugin="plugin"
+        @plugin-click="pluginExchange(plugin)"
+      >
         <change-modal v-if="plugin.openReplaceModal" :client="plugin">
           <div
             v-for="(item, idx) in existingPluginsToReplace"
@@ -64,10 +74,15 @@
     <div v-if="groupedPlugins.serverServices.length > 0" class="space-y-2">
       <div class="flex items-center px-2">
         <div class="h-px flex-1 bg-gray-700"></div>
-        <span class="px-4 text-sm text-amber-200">Server Services</span>
+        <span class="px-4 text-sm text-gray-300">Server Services</span>
         <div class="h-px flex-1 bg-gray-700"></div>
       </div>
-      <plugin-item v-for="plugin in groupedPlugins.serverServices" :key="plugin.id" :plugin="plugin" @plugin-click="pluginExchange(plugin)">
+      <plugin-item
+        v-for="plugin in groupedPlugins.serverServices"
+        :key="plugin.id"
+        :plugin="plugin"
+        @plugin-click="pluginExchange(plugin)"
+      >
         <change-modal v-if="plugin.openReplaceModal" :client="plugin">
           <div
             v-for="(item, idx) in existingPluginsToReplace"
@@ -112,16 +127,23 @@ const groupedPlugins = computed(() => {
 
   return {
     serverServices: plugins.filter((p) => p.category === "service"),
-    optimism: plugins.filter((p) => p.name.toLowerCase().includes("op") || p.name.toLowerCase().includes("l2")),
+    optimism: plugins.filter(
+      (p) => p.name.toLowerCase().includes("op") || p.name.toLowerCase().includes("l2")
+    ),
     ethSetup: plugins.filter(
-      (p) => p.category !== "service" && !p.name.toLowerCase().includes("op") && !p.name.toLowerCase().includes("l2")
+      (p) =>
+        p.category !== "service" &&
+        !p.name.toLowerCase().includes("op") &&
+        !p.name.toLowerCase().includes("l2")
     ),
   };
 });
 
 const existingPluginsToReplace = computed(() => {
   return props.filteredPlugin.filter((i) => {
-    return i.service !== "ExternalExecutionService" && i.service !== "ExternalConsensusService";
+    return (
+      i.service !== "ExternalExecutionService" && i.service !== "ExternalConsensusService"
+    );
   });
 });
 
