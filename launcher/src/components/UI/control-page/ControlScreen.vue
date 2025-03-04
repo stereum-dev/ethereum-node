@@ -1,6 +1,6 @@
 <template>
   <base-layout>
-    <div class="Control-screen w-full h-full grid grid-cols-24 grid-rows-12 items-center bg-[#313136]">
+    <div class="Control-screen w-full h-full grid grid-cols-24 grid-rows-12 items-center bg-[#2A2A30]">
       <ControlHeader />
       <CommonSidebar />
       <AlertSection @expert-handler="expertModeHandlerAlert" />

@@ -8,6 +8,7 @@ export class StereumUpdater {
     this.logger = logger;
     this.createWindow = createWindow;
     this.newVersion = null;
+    this.dryRun = false;
   }
 
   checkForUpdates() {
@@ -72,33 +73,39 @@ export class StereumUpdater {
   }
 
   async downloadUpdate() {
-    this.updater.downloadUpdate();
+    this.dryRun ? this.runDebugDownload() : this.updater.downloadUpdate();
     this.logger.info("Downloading update...");
   }
 
-  async ignoreUpdate(win) {
+  async ignoreUpdate() {
     app.showExitPrompt = false;
-    await win.close();
+    await this.updateWindow.close();
     this.createWindow();
     this.logger.info("Update ignored.");
   }
 
   async runDebug() {
+    this.dryRun = true;
+    this.updateWindow = await this.createWindow("update");
+  }
+
+  async runDebugDownload() {
     async function Sleep(ms) {
       return new Promise((resolve) => setTimeout(resolve, ms));
     }
-    this.updateWindow = await this.createWindow("update");
-    await Sleep(5000);
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i <= 10; i++) {
       this.updateWindow.webContents.send("UpdateEvents", {
         message: "Downloading update...",
         type: "downloading",
-        data: { percent: i * 10, MBps: i * 10.11 },
+        data: { percent: i * 10, MBps: Math.random() * 10 },
       });
       await Sleep(1000);
     }
-    this.updateWindow.webContents.send("UpdateEvents", { message: "Update downloaded. " + "2.0.0-rc.20", type: "downloaded" });
-    await Sleep(1000);
-    this.updateWindow.close();
+    await Sleep(2000);
+    this.updateWindow.webContents.send("UpdateEvents", { message: "Update downloaded. " + "1.33.7", type: "downloaded" });
+    await Sleep(2000);
+    await this.updateWindow.close();
+    this.createWindow();
+    this.logger.info("Update downloaded.");
   }
 }

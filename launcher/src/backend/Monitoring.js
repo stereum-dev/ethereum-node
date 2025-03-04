@@ -157,6 +157,7 @@ export class Monitoring {
             config: {
               serviceID: config.id,
               configVersion: config.configVersion,
+              env: config.env,
               image: config.image,
               imageVersion: config.imageVersion,
               runningImageVersion: newState?.Image ? newState.Image.split(":").pop() : null,
@@ -233,7 +234,7 @@ export class Monitoring {
   // Caches results for 10 seconds!
   async getServiceInfos() {
     const cache_max_seconds = 10;
-    const args = Array.prototype.slice.call(arguments); // convert functon "arguments" to Array
+    const args = Array.prototype.slice.call(arguments); // convert function "arguments" to Array
     const hash = crypto.createHash("md5").update(args.join("-")).digest("hex"); // cache id
     const file = this.serviceInfosCacheFile;
     const dnow = new Date(); // eslint-disable-line no-unused-vars
@@ -2704,12 +2705,12 @@ export class Monitoring {
     };
   }
 
-  // Get a list of all ports (including the associated service and protocol) that are availalbe publicly (which means thru an ip that is NOT localhost/127.0.0.1)
+  // Get a list of all ports (including the associated service and protocol) that are available publicly (which means thru an ip that is NOT localhost/127.0.0.1)
   async getPublicPortStatus() {
     return await this.getPortStatus({ addr: "public" });
   }
 
-  // Get a list of all ports (including the associated service and protocol) that are availalbe locally (thru localhost/127.0.0.1)
+  // Get a list of all ports (including the associated service and protocol) that are available locally (thru localhost/127.0.0.1)
   async getLocalPortStatus() {
     return await this.getPortStatus({ addr: "local" });
   }
@@ -3615,6 +3616,82 @@ export class Monitoring {
         name: "Peer Ping Latency",
         level: "warning",
       };
+    }
+  }
+
+  /**
+   * Fetches metrics from Prometheus and returns their values.
+   * If a metric is missing, it will be included in the result with a value of null.
+   * @returns {Object[]} Array of metric values e.g. [{ name: "lcoms_stealing_penalty_stolenAmount", value: 150.75 },
+   *                                                  { name: "lcoms_node_operator_status", value: 1 },
+   *                                                  { name: "if a metric is missing", value: null }]
+   */
+  async fetchCsmMetrics() {
+    try {
+      // Retrieve service information to ensure the service is available
+      const serviceInfos = await this.getServiceInfos("LCOMService");
+      if (serviceInfos.length < 1) {
+        return [];
+      }
+
+      const queries = {
+        lcoms_stealing_penalty_stolenAmount: "lcoms_stealing_penalty_stolenAmount",
+        lcoms_node_operator_status: "lcoms_node_operator_status",
+        lcoms_current_bond: "lcoms_current_bond",
+        lcoms_required_bond: "lcoms_required_bond",
+        lcoms_current_bond_shares: "lcoms_current_bond_shares",
+        lcoms_required_bond_shares: "lcoms_required_bond_shares",
+        lcoms_unbonded_keys: "lcoms_unbonded_keys",
+        lcoms_required_bond_st_eth: "lcoms_required_bond_st_eth",
+        lcoms_total_added_keys: "lcoms_total_added_keys",
+        lcoms_total_withdrawn_keys: "lcoms_total_withdrawn_keys",
+        lcoms_total_deposited_keys: "lcoms_total_deposited_keys",
+        lcoms_total_vetted_keys: "lcoms_total_vetted_keys",
+        lcoms_stuck_validators_count: "lcoms_stuck_validators_count",
+        lcoms_depositable_validators_count: "lcoms_depositable_validators_count",
+        lcoms_target_limit: "lcoms_target_limit",
+        lcoms_target_limit_mode: "lcoms_target_limit_mode",
+        lcoms_total_exited_keys: "lcoms_total_exited_keys",
+        lcoms_enqueued_count: "lcoms_enqueued_count",
+        lcoms_target_validators_count: "lcoms_target_validators_count",
+        lcoms_refunded_validators_count: "lcoms_refunded_validators_count",
+        lcoms_stuck_penalty_end_timestamp: "lcoms_stuck_penalty_end_timestamp",
+        lcoms_total_exited_validators: "lcoms_total_exited_validators",
+        lcoms_total_deposited_validators: "lcoms_total_deposited_validators",
+        lcoms_fee_to_distribute: "lcoms_fee_to_distribute",
+        lcoms_fee_distributed: "lcoms_fee_distributed",
+        lcoms_fee_distributed_value: "lcoms_fee_distributed_value",
+        lcoms_exit_request_timestamp: "lcoms_exit_request_timestamp",
+      };
+
+      // Create promises to fetch all metric data from Prometheus
+      const queryPromises = Object.entries(queries).map(([key, query]) => {
+        return this.queryPrometheus(encodeURIComponent(query)).then((result) => ({ key, result }));
+      });
+
+      // Wait for all Prometheus queries to resolve
+      const results = await Promise.all(queryPromises);
+
+      // Process results and extract metric values, ensuring missing metrics return null
+      const metrics = Object.keys(queries).map((key) => {
+        const metric = results.find((m) => m.key === key);
+        if (!metric || metric.result.status !== "success" || !metric.result.data.result || metric.result.data.result.length === 0) {
+          return { name: key, value: null };
+        }
+
+        const metricData = metric.result.data.result[0];
+        if (!metricData || !metricData.value || metricData.value.length < 2) {
+          return { name: key, value: null };
+        }
+
+        // Parse the metric value from Prometheus response
+        return { name: key, value: parseFloat(metricData.value[1]) };
+      });
+
+      return metrics;
+    } catch (error) {
+      log.error("Fetching CSM Metrics Failed:\n" + error);
+      return [];
     }
   }
 

@@ -95,10 +95,9 @@ async function getNodeOperatorInfo(contract, nodeOperatorId) {
     }
 
     const nodeOperator = await contract.methods.getNodeOperator(nodeOperatorId).call();
-    const enqueuedCount = nodeOperator.enqueuedCount;
 
     //log.info("Enqueued Count:", enqueuedCount);
-    return enqueuedCount;
+    return nodeOperator;
   } catch (error) {
     log.error("Error calling getNodeOperator:", error);
     return null;
@@ -240,7 +239,8 @@ async function getSigningKeysWithQueueInfo(monitoring) {
     }
 
     // Retrieve enqueued count
-    const enqueuedCount = await getNodeOperatorInfo(contract, nodeOperatorId);
+    const nodeOperatorInfo = await getNodeOperatorInfo(contract, nodeOperatorId);
+    const enqueuedCount = nodeOperatorInfo.enqueuedCount;
     if (enqueuedCount === null || enqueuedCount <= 0) {
       log.info("No enqueued validators for this Node Operator.");
     }
@@ -253,7 +253,7 @@ async function getSigningKeysWithQueueInfo(monitoring) {
     }
 
     // Retrieve the signing keys
-    const signingKeys = await getSigningKeys(contract, nodeOperatorId, 0, numberOfNoneWithdrawnKeys);
+    const signingKeys = await getSigningKeys(contract, nodeOperatorId, 0, nodeOperatorInfo.totalAddedKeys);
     if (!signingKeys) {
       log.info("Failed to retrieve signing keys.");
       return null;
@@ -380,7 +380,7 @@ async function checkSigningKeys(keysArray, monitoring) {
     }
 
     // Retrieve enqueuedCount and ensure it's above 0
-    const enqueuedCount = await getNodeOperatorInfo(contract, nodeOperatorId);
+    const enqueuedCount = (await getNodeOperatorInfo(contract, nodeOperatorId)).enqueuedCount;
     if (enqueuedCount === null || enqueuedCount <= 0) {
       log.info("No enqueued validators for this Node Operator.");
       return false;

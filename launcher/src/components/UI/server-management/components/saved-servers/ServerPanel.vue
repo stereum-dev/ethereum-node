@@ -1,7 +1,9 @@
 <template>
-  <div class="col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-12 grid-rows-12 items-center bg-[#1b1b1d] p-2 rounded-md">
+  <div
+    class="col-start-1 col-span-full row-start-1 row-span-full grid grid-cols-12 grid-rows-12 items-center bg-[#1b1b1d] p-2 rounded-md gap-y-1"
+  >
     <div class="col-start-1 col-end-7 row-start-1 row-span-1 flex justify-start items-center">
-      <span class="text-md font-semibold text-gray-200 uppercase">{{ $t("multiServer.saveServerCon") }}</span>
+      <span class="text-sm font-semibold text-gray-200 uppercase">{{ $t("multiServer.saveServerCon") }}</span>
     </div>
     <div class="col-start-7 col-span-full row-start-1 row-span-1 flex justify-start items-center relative">
       <label for="Search" class="sr-only"> {{ $t("multiServer.serch") }} </label>
@@ -12,7 +14,7 @@
         v-model="searchQuery"
         type="text"
         :placeholder="`${t('multiServer.serchFor')}`"
-        class="w-full h-8 rounded-md border-gray-200 py-2.5 pe-10 shadow-sm sm:text-sm px-2"
+        class="w-full h-7 rounded-md border-gray-200 py-2 shadow-sm sm:text-sm px-2"
         @mouseenter="footerStore.cursorLocation = `${t('serverList.search')}`"
         @mouseleave="footerStore.cursorLocation = ''"
       />
@@ -33,10 +35,10 @@
     </div>
 
     <div
-      class="w-full h-full max-h-[300px] col-start-1 col-span-full row-start-2 row-end-11 overflow-x-hidden overflow-y-auto flex flex-col justify-start items-center p-1 bg-black rounded-md space-y-2"
+      class="w-full h-full max-h-[300px] col-start-1 col-span-full row-start-2 row-end-11 overflow-x-hidden overflow-y-auto flex flex-col justify-start items-center p-1 bg-black rounded-md space-y-2 border border-neutral-500"
     >
       <ServerRow
-        v-for="(server, index) in filteredServers"
+        v-for="(server, index) in getFilteredServers"
         :key="server.name"
         :idx="index"
         :server="server"
@@ -46,47 +48,84 @@
         @mouseleave="footerStore.cursorLocation = ''"
       />
     </div>
-    <div class="col-start-1 col-span-full row-start-11 row-span-2 self-end grid grid-cols-12 gap-x-2">
-      <button
-        class="w-full h-[50px] self-end col-start-1 col-span-3 row-start-11 row-span-2 bg-gray-200 rounded-md px-1 flex justify-start items-center shadow-lg shadow-black active:shadow-none active:scale-95 cursor-pointer transition-all duration-200 pr-2 ease-in-out hover:bg-[#336666] text-gray-800 hover:text-gray-100"
-        @click="openFileInput"
-        @mouseenter="footerStore.cursorLocation = 'click to import server list'"
-        @mouseleave="footerStore.cursorLocation = ''"
-      >
-        <img class="w-16 h-7" src="/img/icon/server-management-icons/import-config.png" alt="Add Icon" />
-        <span class="text-sm text-left uppercase font-bold">import</span>
-      </button>
+    <div class="h-full col-start-1 col-span-full row-start-11 row-span-2 grid grid-cols-12 justify-center items-start">
+      <div class="group relative col-start-5 col-end-7 row-start-11 row-span-2 flex justify-center">
+        <button
+          class="w-[50px] h-[50px] bg-gray-200 rounded-md flex justify-self-center justify-center items-center shadow-lg shadow-black active:shadow-none active:scale-95 cursor-pointer transition-all duration-200 ease-in-out hover:bg-[#336666] text-gray-800 hover:text-gray-100"
+          @click="openFileInput"
+          @mouseenter="footerStore.cursorLocation = 'click to import server list'"
+          @mouseleave="footerStore.cursorLocation = ''"
+        >
+          <img class="w-full" src="/img/icon/server-management-icons/import-config.png" alt="Add Icon" />
+        </button>
+        <span
+          class="absolute bottom-full left-1/2 -translate-x-2/3 mb-2 px-3 py-1 text-sm text-white bg-[#336666] rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap border border-neutral-600"
+        >
+          Import Connections
+        </span>
+      </div>
+
       <input ref="fileInput" type="file" class="hidden" accept=".zip" @change="importConnections" />
 
-      <button
-        class="w-full h-[50px] self-end col-start-4 col-span-3 row-start-11 row-span-2 bg-gray-200 rounded-md px-1 pr-2 flex justify-start items-center shadow-lg shadow-black active:shadow-none active:scale-95 cursor-pointer transition-all duration-200 ease-in-out hover:bg-[#336666] text-gray-800 hover:text-gray-100"
-        @click="exportConnections"
-        @mouseenter="footerStore.cursorLocation = `click to export server list`"
-        @mouseleave="footerStore.cursorLocation = ''"
-      >
-        <img class="w-16 h-7" src="/img/icon/server-management-icons/export-config.png" alt="Add Icon" />
-        <span class="text-sm text-left uppercase font-bold">export</span>
-      </button>
-      <button
-        class="w-full h-[50px] self-end col-start-10 col-span-full row-start-11 row-span-2 bg-gray-200 rounded-md px-4 py-2 flex justify-start items-center shadow-lg shadow-black active:shadow-none active:scale-95 cursor-pointer space-x-4 transition-all duration-200 ease-in-out hover:bg-[#336666] text-gray-800 hover:text-gray-100"
-        @click="serverLogin"
-        @mouseenter="footerStore.cursorLocation = `${t('serverList.addServer')}`"
-        @mouseleave="footerStore.cursorLocation = ''"
-      >
-        <img
-          class="w-7 h-7 border border-gray-500 bg-teal-500 rounded-full p-1"
-          src="/img/icon/server-management-icons/plus.png"
-          alt="Add Icon"
-        />
-        <span class="text-sm text-left uppercase font-bold">new</span>
-      </button>
-
-      <div
-        class="w-full h-[50px] self-end col-start-7 col-end-10 row-start-11 row-span-2 flex justify-center items-center bg-[#093A4C] rounded-md px-2 py-1 cursor-pointer space-x-2 transition-all duration-200 ease-in-out hover:bg-[#336666] shadow-lg shadow-black active:shadow-none"
-        @click="getToStereumPlusLogin"
-      >
-        <img class="w-full" src="/img/stereumPlus/logo.png" alt="Server Icon" />
+      <!-- Export Button with Tooltip -->
+      <div class="group relative col-start-7 col-end-9 row-start-11 row-span-2 flex justify-center">
+        <button
+          class="w-[50px] h-[50px] bg-gray-200 rounded-md justify-self-center flex justify-center items-center shadow-lg shadow-black active:shadow-none active:scale-95 cursor-pointer transition-all duration-200 ease-in-out hover:bg-[#336666] text-gray-800 hover:text-gray-100"
+          @click="exportConnections"
+          @mouseenter="footerStore.cursorLocation = `click to export server list`"
+          @mouseleave="footerStore.cursorLocation = ''"
+        >
+          <img class="w-full" src="/img/icon/server-management-icons/export-config.png" alt="Add Icon" />
+        </button>
+        <span
+          class="absolute bottom-full left-1/2 -translate-x-2/3 mb-2 px-3 py-1 text-sm text-white bg-[#336666] rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap border border-neutral-600"
+        >
+          Export Connections
+        </span>
       </div>
+
+      <!-- New Button with Tooltip -->
+      <div class="group relative col-start-9 col-end-11 row-start-11 row-span-2 flex justify-center">
+        <button
+          class="w-[50px] h-[50px] bg-gray-200 rounded-md justify-self-center flex justify-center items-center shadow-lg shadow-black active:shadow-none active:scale-95 cursor-pointer p-2 transition-all duration-200 ease-in-out hover:bg-[#336666] text-gray-800 hover:text-gray-100 m-0"
+          @click="serverLogin"
+          @mouseenter="footerStore.cursorLocation = `${t('serverList.addServer')}`"
+          @mouseleave="footerStore.cursorLocation = ''"
+        >
+          <img class="w-6" src="/img/icon/server-management-icons/plus.png" alt="Add Icon" />
+        </button>
+        <span
+          class="absolute bottom-full left-1/2 -translate-x-2/3 mb-2 px-3 py-1 text-sm text-gray-100 bg-[#336666] rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap border border-neutral-600"
+        >
+          Add New Server
+        </span>
+      </div>
+
+      <!-- Stereum Plus Button -->
+      <div class="group relative col-start-11 col-end-13 row-start-11 row-span-2 flex justify-center">
+        <button
+          class="w-[50px] h-[50px] bg-gray-200 rounded-md justify-self-center flex justify-center items-center shadow-lg shadow-black active:shadow-none active:scale-95 cursor-pointer p-2 transition-all duration-200 ease-in-out hover:bg-[#336666] text-gray-800 hover:text-gray-100 m-0"
+          @click="getToStereumPlusLogin"
+          @mouseenter="footerStore.cursorLocation = `Route to StereumPlus`"
+          @mouseleave="footerStore.cursorLocation = ''"
+        >
+          <img class="w-7" src="/img/stereumPlus/small-plus.png" alt="Add Icon" />
+        </button>
+        <span
+          class="absolute bottom-full left-1/2 -translate-x-2/3 mb-2 px-3 py-1 text-sm text-gray-100 bg-[#336666] rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap border border-neutral-600"
+        >
+          Route to StereumPlus
+        </span>
+      </div>
+    </div>
+    <div
+      v-if="isAlertActive"
+      class="absolute bottom-0 inset-x-4 mt-2 bg-red-500 text-sm text-white rounded-lg p-4"
+      role="alert"
+      tabindex="-1"
+      aria-labelledby="hs-solid-color-danger-label"
+    >
+      <span id="hs-solid-color-danger-label" class="font-bold">Failed</span> Invalid or empty connections data.
     </div>
   </div>
 </template>
@@ -96,10 +135,11 @@ import ControlService from "@/store/ControlService";
 import { useServers } from "@/store/servers";
 import { useControlStore } from "@/store/theControl";
 import { useFooter } from "@/store/theFooter";
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref, watch, computed, watchEffect } from "vue";
 import ServerRow from "./ServerRow.vue";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
+import { useDeepClone } from "@/composables/utils";
 
 const t = i18n.global.t;
 
@@ -110,39 +150,38 @@ const serverStore = useServers();
 const controlStore = useControlStore();
 const searchQuery = ref("");
 const searchInputRef = ref(null);
-const filteredServers = ref(null);
+const isAlertActive = ref(false);
 
-const getFilteredServers = () => {
+const getFilteredServers = computed(() => {
   if (!searchQuery.value) {
     return serverStore.savedServers?.savedConnections;
   }
 
   return serverStore.savedServers.savedConnections.filter((server) => server.name.toLowerCase().includes(searchQuery.value.toLowerCase()));
-};
+});
 
 watch(
-  [searchQuery, () => serverStore.refreshServers],
-  async ([, refreshTrigger], [, oldRefreshTrigger]) => {
+  () => serverStore.refreshServers,
+  async (refreshTrigger, oldRefreshTrigger) => {
     if (refreshTrigger !== oldRefreshTrigger) {
       await loadStoredConnections();
     }
-
-    filteredServers.value = null;
-    setTimeout(() => {
-      filteredServers.value = getFilteredServers();
-    }, 10);
-  },
-  { deep: true }
+  }
 );
-
-//Lifecycle Hooks
 
 onMounted(async () => {
   await loadStoredConnections();
   if (searchInputRef.value) {
     searchInputRef.value.focus();
   }
-  filteredServers.value = getFilteredServers();
+});
+
+watchEffect(() => {
+  if (isAlertActive.value) {
+    setTimeout(() => {
+      isAlertActive.value = false;
+    }, 3000);
+  }
 });
 
 //Methods
@@ -178,7 +217,7 @@ const importConnections = async (event) => {
 
     const connectionsFile = zipContent.file("connections.json");
     if (!connectionsFile) {
-      alert("No connections.json file found in the zip.");
+      isAlertActive.value = true;
       return;
     }
 
@@ -186,12 +225,10 @@ const importConnections = async (event) => {
 
     const newConnections = JSON.parse(jsonData);
 
-    if (Array.isArray(newConnections) && newConnections.length > 0) {
-      const existingConnections = serverStore.savedServers.savedConnections;
-
+    if (newConnections.length > 0) {
+      const existingConnections = serverStore.savedServers?.savedConnections ? useDeepClone(serverStore.savedServers.savedConnections) : [];
       const uniqueConnections = newConnections.filter(
-        (newConnection) =>
-          !existingConnections.some((existingConnection) => JSON.stringify(existingConnection) === JSON.stringify(newConnection))
+        (newConnection) => !existingConnections.some((existingConnection) => existingConnection.host === newConnection.host)
       );
 
       existingConnections.push(...uniqueConnections);
@@ -200,15 +237,17 @@ const importConnections = async (event) => {
 
       const conf = {
         ...prevConf,
-        savedConnections: JSON.parse(JSON.stringify(existingConnections)),
+        savedConnections: useDeepClone(existingConnections),
       };
 
       await ControlService.writeConfig(conf);
     } else {
+      isAlertActive.value = true;
       console.error("Invalid or empty connections data.");
     }
 
     await loadStoredConnections(serverStore.savedServers);
+    isAlertActive.value = false;
   } catch (error) {
     console.error("An error occurred:", error);
   }
@@ -240,15 +279,17 @@ const serverLogin = () => {
 </script>
 
 <style scoped>
+/* Base scrollbar styling */
 ::-webkit-scrollbar {
   width: 5px;
   background-color: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #7d838a;
+  background-color: #3b988f;
   border-radius: 5px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background-color: #599ce9;
 }
@@ -259,5 +300,27 @@ const serverLogin = () => {
 
 ::-webkit-scrollbar-track-piece {
   background-color: transparent;
+}
+
+/* Auto-hide behavior */
+.scrollbar-container {
+  overflow-y: auto;
+}
+
+/* Hide scrollbar when not hovering */
+.scrollbar-container:not(:hover)::-webkit-scrollbar {
+  width: 0;
+  display: none; /* Hide completely */
+}
+
+/* For Firefox */
+.scrollbar-container {
+  scrollbar-width: thin;
+  scrollbar-color: #7d838a transparent;
+}
+
+/* Hide scrollbar when not hovering for Firefox */
+.scrollbar-container:not(:hover) {
+  scrollbar-width: none;
 }
 </style>

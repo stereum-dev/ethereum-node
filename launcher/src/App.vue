@@ -3,8 +3,14 @@
     <router-view> </router-view>
   </div>
 </template>
-<script>
-export default {};
+<script setup>
+import { onMounted } from "vue";
+
+onMounted(() => {
+  setTimeout(() => {
+    window.HSStaticMethods.autoInit();
+  }, 100);
+});
 </script>
 <style>
 * {

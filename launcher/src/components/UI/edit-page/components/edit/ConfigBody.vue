@@ -83,8 +83,8 @@ const emit = defineEmits([
   "confirmConsensus",
   "infoModal",
   "modifyService",
-  "removeLines",
   "lineDraw",
+  "removeLines",
 ]);
 
 const manageStore = useNodeManage();
@@ -116,12 +116,12 @@ onMounted(() => {
 
 // Methods
 
-const removeLines = () => {
-  emit("removeLines");
+const lineDraw = (item) => {
+  emit("lineDraw", item);
 };
 
-const lineDraw = (service) => {
-  emit("lineDraw", service);
+const removeLines = () => {
+  emit("removeLines");
 };
 
 const onDrop = (event) => {

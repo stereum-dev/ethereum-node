@@ -189,25 +189,37 @@ function normalizeKey(key) {
   return key?.startsWith("0x") ? key.substring(2) : key;
 }
 
-function removeDuplicatedDoppelgangerKeys() {
-  const normalizedKeysSet = new Set(stakingStore.keys.map((k) => normalizeKey(k.key)));
-  // const filteredKeys = stakingStore.doppelgangerKeys.filter(
-  //   (doppelKey) => !normalizedKeysSet.has(normalizeKey(doppelKey.pubkey))
-  // );
+const removeDuplicatedDoppelgangerKeys = async () => {
+  try {
+    const normalizedKeysSet = new Set(stakingStore.keys.filter((k) => k.key).map((k) => normalizeKey(k.key)));
 
-  // if (filteredKeys.length !== stakingStore.doppelgangerKeys.length) {
-  //   stakingStore.doppelgangerKeys = filteredKeys;
-  // }
+    const filteredKeys = stakingStore.doppelgangerKeys.filter((doppelKey) => {
+      if (!doppelKey?.pubkey) {
+        return false;
+      }
 
-  stakingStore.doppelgangerKeys = stakingStore.doppelgangerKeys.filter((item) => !normalizedKeysSet.has(item.pubkey));
-}
+      const normalizedPubkey = normalizeKey(doppelKey.pubkey);
+      const isDuplicate = normalizedKeysSet.has(normalizedPubkey);
+      return !isDuplicate;
+    });
+
+    if (filteredKeys.length !== stakingStore.doppelgangerKeys.length) {
+      stakingStore.doppelgangerKeys = filteredKeys;
+    }
+  } catch (error) {
+    console.log("Error in removeDuplicatedDoppelgangerKeys:", error);
+  }
+};
 
 watch(
   () => stakingStore.keys,
   async () => {
     removeDuplicatedDoppelgangerKeys();
   },
-  { once: true }
+  {
+    deep: true,
+    immediate: true,
+  }
 );
 
 const removeDoppelGangerManually = (pubkey) => {
