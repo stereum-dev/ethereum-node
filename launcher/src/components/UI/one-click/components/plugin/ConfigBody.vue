@@ -260,18 +260,26 @@ const checkPluginCategory = (element) => {
       filter = (item) =>
         item.category === element.category &&
         item.service === element.service &&
-        /OpGethService|OpNodeService/.test(item.service);
+        /OpGethService|OpErigonService|OpRethService|OpNodeBeaconService/.test(
+          item.service
+        );
       break;
 
     case "op and eth full node":
       filter = (item) => {
-        if (/OpGethService|OpNodeBeaconService/.test(element.service)) {
+        if (
+          /OpGethService|OpErigonService|OpRethService|OpNodeBeaconService/.test(
+            element.service
+          )
+        ) {
           return item.service === element.service;
         }
 
         return (
           item.category === element.category &&
-          !/(SSVNetwork|Web3Signer|Charon|L2Geth|OpGeth|OpNode)/.test(item.service) &&
+          !/(SSVNetwork|Web3Signer|Charon|L2Geth|OpGeth|OpNode|OpErigon|OpReth)/.test(
+            item.service
+          ) &&
           (manageStore.currentNetwork.network !== "gnosis" ||
             /(Lighthouse|Teku|Nethermind|Erigon|Nimbus|Lodestar)/.test(item.service))
         );
@@ -286,7 +294,9 @@ const checkPluginCategory = (element) => {
 
         return (
           item.category === element.category &&
-          !/(SSVNetwork|Web3Signer|Charon|L2Geth|OpGeth|OpNode)/.test(item.service) &&
+          !/(SSVNetwork|Web3Signer|Charon|L2Geth|OpGeth|OpNode|OpErigon|OpReth)/.test(
+            item.service
+          ) &&
           (manageStore.currentNetwork.network !== "gnosis" ||
             /(Lighthouse|Teku|Nethermind|Erigon|Nimbus|Lodestar)/.test(item.service))
         );
