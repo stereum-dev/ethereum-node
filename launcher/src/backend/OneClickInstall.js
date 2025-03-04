@@ -673,10 +673,10 @@ export class OneClickInstall {
         services.push("FlashbotsMevBoostService", "KeysAPIService", "ValidatorEjectorService", "KuboIPFSService", "LCOMService");
         break;
       case "op full node":
-        services.push("OpGethService", "OpNodeBeaconService", "OpErigonService");
+        services.push("OpGethService", "OpNodeBeaconService", "OpErigonService", "OpRethService");
         break;
       case "op and eth full node":
-        services.push("OpGethService", "OpNodeBeaconService", "OpErigonService");
+        services.push("OpGethService", "OpNodeBeaconService", "OpErigonService", "OpRethService");
         break;
       case "op node archive":
         services.push("OpGethService", "OpNodeBeaconService", "L2GethService", "OpErigonService", "OpRethService");
