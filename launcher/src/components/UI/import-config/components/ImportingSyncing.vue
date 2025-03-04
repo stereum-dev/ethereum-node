@@ -53,7 +53,6 @@ export default {
     };
   },
   computed: {
-    // eslint-disable-next-line vue/return-in-computed-property
     nextRouteHandler() {
       if (!this.btnActive) {
         return this.checkPointSync !== "" || !this.checkPointSync ? "importingVerify" : "disabled";
