@@ -2,6 +2,8 @@ name: Sign with Software Trust Manager KSP
 
 on: push
 
+    workflow_dispatch:
+
 jobs:
   build:
     runs-on: ${{ matrix.os }}
