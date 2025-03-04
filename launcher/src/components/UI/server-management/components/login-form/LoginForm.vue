@@ -35,8 +35,8 @@
             alt="Trash Icon"
             :class="removeButtonDisabled ? 'opacity-50 pointer-events-none ' : ''"
             @mousedown.prevent
-            @mouseenter="(removeHovered = true), (footerStore.cursorLocation = `${t('loginForm.rem')}`)"
-            @mouseleave="(removeHovered = false), (footerStore.cursorLocation = '')"
+            @mouseenter="((removeHovered = true), (footerStore.cursorLocation = `${t('loginForm.rem')}`))"
+            @mouseleave="((removeHovered = false), (footerStore.cursorLocation = ''))"
             @click="removeServer"
           />
 
@@ -53,8 +53,8 @@
             src="/img/icon/server-management-icons/plus-icon.png"
             alt="icon"
             @mousedown.prevent
-            @mouseenter="(addHovered = true), (footerStore.cursorLocation = `${t('loginForm.save')}`)"
-            @mouseleave="(addHovered = false), (footerStore.cursorLocation = '')"
+            @mouseenter="((addHovered = true), (footerStore.cursorLocation = `${t('loginForm.save')}`))"
+            @mouseleave="((addHovered = false), (footerStore.cursorLocation = ''))"
             @click="saveServer"
           />
           <div

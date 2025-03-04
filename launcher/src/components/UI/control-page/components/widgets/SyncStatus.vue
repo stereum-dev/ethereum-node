@@ -131,10 +131,10 @@ const updateSyncIcon = () => {
     consensusState.value === "error" || executionState.value === "error"
       ? "error"
       : consensusState.value === "on-hold" || executionState.value === "on-hold"
-      ? "onHold"
-      : consensusState.value === "syncing" || executionState.value === "syncing"
-      ? "syncing"
-      : "synced";
+        ? "onHold"
+        : consensusState.value === "syncing" || executionState.value === "syncing"
+          ? "syncing"
+          : "synced";
 
   syncIconPath.value = syncIcons[iconType];
 };

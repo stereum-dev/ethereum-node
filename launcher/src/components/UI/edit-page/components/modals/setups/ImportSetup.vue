@@ -129,8 +129,8 @@ const handleFileUpload = async (event) => {
     rootPath = serviceVolume
       ? split.slice(0, split.length - 1).join("/") + "/"
       : YAML.parse(data).service === "PrometheusNodeExporterService"
-      ? "/"
-      : rootPath;
+        ? "/"
+        : rootPath;
 
     installStore.unzippedData.push({
       service: YAML.parse(data).service,

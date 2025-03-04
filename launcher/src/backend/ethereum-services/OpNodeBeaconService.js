@@ -17,7 +17,12 @@ export class OpNodeBeaconService extends NodeService {
 
     // eth1 nodes
     const l1Execution = executionClients
-      .filter((client) => !client.service.includes("OpGethService"))
+      .filter(
+        (client) =>
+          !client.service.includes("OpGethService") ||
+          !client.service.includes("OpErigonService") ||
+          !client.service.includes("OpRethService")
+      )
       .map((client) => {
         return client.buildExecutionClientHttpEndpointUrl();
       })
@@ -31,7 +36,10 @@ export class OpNodeBeaconService extends NodeService {
 
     // l2 clients
     const l2Execution = executionClients
-      .filter((client) => client.service.includes("OpGethService"))
+      .filter(
+        (client) =>
+          client.service.includes("OpGethService") || client.service.includes("OpErigonService") || client.service.includes("OpRethService")
+      )
       .map((client) => {
         const elJWTDir = client.volumes.find(
           (vol) => vol.servicePath === "/op-engine.jwt" || vol.destinationPath.includes("/op-engine.jwt")

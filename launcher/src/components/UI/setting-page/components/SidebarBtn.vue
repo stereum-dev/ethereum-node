@@ -11,8 +11,8 @@
         props.btnName == 'audio'
           ? '/img/icon/setting-page/volume-icon.png'
           : active
-          ? '/img/icon/setting-page/update-icon-black.png'
-          : '/img/icon/setting-page/update-icon-grey.png'
+            ? '/img/icon/setting-page/update-icon-black.png'
+            : '/img/icon/setting-page/update-icon-grey.png'
       "
       :alt="props.btnName"
     />

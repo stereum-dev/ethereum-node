@@ -112,7 +112,13 @@ export class ConfigManager {
     // Categorize services
     services.forEach((service) => {
       if (!this.commonServices.includes(service.service)) {
-        if (service.service === "OpGethService" || service.service === "OpNodeBeaconService" || service.service === "L2GethService") {
+        if (
+          service.service === "OpGethService" ||
+          service.service === "OpNodeBeaconService" ||
+          service.service === "L2GethService" ||
+          service.service === "OpErigonService" ||
+          service.service === "OpRethService"
+        ) {
           opServices.push(service.id);
         } else {
           ethServices.push(service.id);

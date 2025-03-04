@@ -32,8 +32,8 @@ import { computed } from 'vue';
             checkValidatorKeyType === 'csm'
               ? '/img/icon/staking-page-icons/csm-key.png'
               : checkValidatorKeyType === 'obol'
-              ? '/img/icon/staking-page-icons/obol-key.png'
-              : '/img/icon/staking-page-icons/ssv-key.png'
+                ? '/img/icon/staking-page-icons/obol-key.png'
+                : '/img/icon/staking-page-icons/ssv-key.png'
           "
           alt="DVT Key"
           @mousedown.prevent

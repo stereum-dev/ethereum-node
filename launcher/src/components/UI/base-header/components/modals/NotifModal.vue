@@ -18,7 +18,7 @@
               <span>{{ $t("notifModal.stereumMonitor") }} (Mobile App)</span>
             </div>
           </li>
-          <li @click="(beaconchaDashboard = true), (qrPage = true)">
+          <li @click="((beaconchaDashboard = true), (qrPage = true))">
             <div class="notif-row_icon">
               <img src="/img/icon/checkpoint-sync-icons/beaconchain-checkpoint-icon.png" alt="notif logo" />
             </div>

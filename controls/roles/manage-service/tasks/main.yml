@@ -121,7 +121,7 @@
         hex_chars: "0123456789abcdef"
       become: yes
       when:
-        - stereum_service_configuration.service in ['BesuService', 'GethService', 'RethService', 'NethermindService', 'ErigonService', 'LighthouseBeaconService', 'NimbusBeaconService', 'PrysmBeaconService', 'TekuBeaconService', 'LodestarBeaconService', 'OpGethService']
+        - stereum_service_configuration.service in ['BesuService', 'GethService', 'RethService', 'NethermindService', 'ErigonService', 'LighthouseBeaconService', 'NimbusBeaconService', 'PrysmBeaconService', 'TekuBeaconService', 'LodestarBeaconService', 'OpGethService', 'OpErigonService', 'OpRethService']
         - stereum_service_configuration.volumes | select('search', ':/engine.jwt|/execution/engine.jwt|:/op-engine.jwt') | length > 0
 
     - include_tasks: write-graffiti-files.yml

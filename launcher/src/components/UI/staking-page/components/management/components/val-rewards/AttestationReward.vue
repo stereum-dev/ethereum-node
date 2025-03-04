@@ -36,9 +36,12 @@ onMounted(() => {
 
 watchEffect(() => {
   if (stakingStore.secondsPerSlot > 0 && intervalID.value == null) {
-    intervalID.value = setInterval(() => {
-      getStats();
-    }, stakingStore.secondsPerSlot * stakingStore.slotsPerEpoch * 1000);
+    intervalID.value = setInterval(
+      () => {
+        getStats();
+      },
+      stakingStore.secondsPerSlot * stakingStore.slotsPerEpoch * 1000
+    );
   }
 });
 

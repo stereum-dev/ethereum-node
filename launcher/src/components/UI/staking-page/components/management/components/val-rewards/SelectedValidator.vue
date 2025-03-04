@@ -34,6 +34,7 @@ const footerStore = useFooter();
 const setupStore = useSetups();
 
 const getBackgroundColor = computed(() => {
+  /* eslint-disable no-constant-binary-expression */
   return (
     setupStore.getBGColor(stakingStore.selectedServiceToFilter?.setupColor) +
       " " +

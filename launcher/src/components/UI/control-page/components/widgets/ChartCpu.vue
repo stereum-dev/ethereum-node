@@ -10,12 +10,12 @@
               controlStore.tempCPU === null || controlStore.tempCPU === undefined || controlStore.tempCPU === ''
                 ? ''
                 : tempCPU === 'green'
-                ? 'invert(40%) sepia(90%) saturate(500%) hue-rotate(90deg)'
-                : tempCPU === 'yellow'
-                ? 'invert(45%) sepia(90%) saturate(500%) hue-rotate(0deg) brightness(150%)'
-                : tempCPU === 'orange'
-                ? 'invert(20%) sepia(80%) saturate(500%) hue-rotate(0deg) brightness(150%)'
-                : 'invert(21%) sepia(100%) saturate(7414%) hue-rotate(359deg) brightness(94%) contrast(117%)',
+                  ? 'invert(40%) sepia(90%) saturate(500%) hue-rotate(90deg)'
+                  : tempCPU === 'yellow'
+                    ? 'invert(45%) sepia(90%) saturate(500%) hue-rotate(0deg) brightness(150%)'
+                    : tempCPU === 'orange'
+                      ? 'invert(20%) sepia(80%) saturate(500%) hue-rotate(0deg) brightness(150%)'
+                      : 'invert(21%) sepia(100%) saturate(7414%) hue-rotate(359deg) brightness(94%) contrast(117%)',
           }"
         />
         <span

@@ -161,7 +161,7 @@ const animatePath = () => {
   const pathLength = pathRef.value.getTotalLength();
 
   gsap.set(pathRef.value, {
-    strokeDasharray: `${pathLength} ${pathLength}` || "5.5",
+    strokeDasharray: pathLength ? `${pathLength} ${pathLength}` : "5.5",
     strokeDashoffset: pathLength || 5,
     opacity: 0,
   });
