@@ -1,8 +1,10 @@
 name: Sign with Software Trust Manager KSP
 
-on: push
+on:
+  push:
+    branches: [main]
 
-    workflow_dispatch:
+  workflow_dispatch:
 
 jobs:
   build:
