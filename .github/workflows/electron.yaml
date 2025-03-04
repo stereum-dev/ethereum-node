@@ -1,6 +1,10 @@
 name: Sign with Software Trust Manager KSP
 
-on: push
+on:
+  push:
+    branches: [main]
+
+  workflow_dispatch:
 
 jobs:
   build:
@@ -79,10 +83,10 @@ jobs:
           args: ${{ env.BUILD_ARGS }}
         env:
           APPLE_ID: ${{ secrets.apple_id }}
-          APPLE_ID_PASSWORD: ${{ secrets.apple_id_password }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.apple_app_specific_password }}
           TEAM_SHORT_NAME: ${{ secrets.team_short_name }}
           APP_ID: "com.stereum.launcher"
-          TEAM_ID: ${{ secrets.team_id }}
+          APPLE_TEAM_ID: ${{ secrets.team_id }}
           KEYPAIR_ALIAS: ${{ secrets.KEYPAIR_ALIAS }}
         if: ${{ !contains(github.event.head_commit.message, '[NOCI]') }}
 
