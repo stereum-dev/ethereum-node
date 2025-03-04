@@ -413,7 +413,9 @@ const intervalId = setInterval(() => {
   align-items: center;
   border-radius: 100px;
   padding: 5px;
-  box-shadow: 0 20px 30px rgba(0, 0, 0, 0.1), inset 0px 10px 30px 5px rgb(237, 239, 240);
+  box-shadow:
+    0 20px 30px rgba(0, 0, 0, 0.1),
+    inset 0px 10px 30px 5px rgb(237, 239, 240);
 }
 .wrapper div .dot {
   height: 100%;
@@ -432,8 +434,13 @@ const intervalId = setInterval(() => {
   z-index: 101;
   opacity: 0.5;
   border-radius: 61% 40% 48% 72% / 62% 44% 56% 38%;
-  box-shadow: -20px 30px 16px #aedbf1, -40px 60px 32px #b6dcf0, inset -6px 6px 10px #c7ebfd, inset 2px 6px 10px #c7ebfd,
-    inset 20px -20px 22px white, inset 40px -40px 44px #c7ebfd;
+  box-shadow:
+    -20px 30px 16px #aedbf1,
+    -40px 60px 32px #b6dcf0,
+    inset -6px 6px 10px #c7ebfd,
+    inset 2px 6px 10px #c7ebfd,
+    inset 20px -20px 22px white,
+    inset 40px -40px 44px #c7ebfd;
 }
 .wrapper div:nth-child(1) {
   top: 20%;

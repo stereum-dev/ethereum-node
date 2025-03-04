@@ -109,8 +109,8 @@ const selectedServiceLabel = computed(() => {
   return controlStore.pickedService === "exeCons"
     ? "EXECUTION & CONSENSUS CLIENTS"
     : controlStore.pickedService === "vld"
-    ? "VALIDATOR CLIENT"
-    : "LIDO CSM OPERATOR";
+      ? "VALIDATOR CLIENT"
+      : "LIDO CSM OPERATOR";
 });
 
 onMounted(() => {

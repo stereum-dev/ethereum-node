@@ -187,7 +187,11 @@ export default {
 .textItem {
   white-space: nowrap;
   -webkit-text-stroke: 1px black;
-  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+  text-shadow:
+    -1px 0 black,
+    0 1px black,
+    1px 0 black,
+    0 -1px black;
 }
 .remove-modal-parent {
   width: 100%;

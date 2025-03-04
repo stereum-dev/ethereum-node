@@ -90,7 +90,7 @@ import { onMounted, watch, onUnmounted, ref } from 'vue';
               :key="service"
               class="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:text-gray-100 hover:bg-blue-500 uppercase cursor-pointer"
               role="menuitem"
-              @click="pickService(service), (isOpen = false)"
+              @click="(pickService(service), (isOpen = false))"
             >
               {{ service }}
             </span>

@@ -164,10 +164,13 @@ const stateButtonHandler = async (state) => {
     });
     promises.push(
       new Promise((resolve) =>
-        setTimeout(() => {
-          loading.value = false;
-          resolve();
-        }, promises.length * (state == "running" ? 8000 : 4000))
+        setTimeout(
+          () => {
+            loading.value = false;
+            resolve();
+          },
+          promises.length * (state == "running" ? 8000 : 4000)
+        )
       )
     );
     Promise.all(promises);

@@ -15,8 +15,8 @@
         route.path === '/staking'
           ? 'flex justify-start items-center space-x-4'
           : route.path === '/control'
-          ? 'flex justify-start items-center space-x-3 '
-          : 'flex flex-col  justify-center items-start ml-1'
+            ? 'flex justify-start items-center space-x-3 '
+            : 'flex flex-col  justify-center items-start ml-1'
       "
     >
       <div class="flex justify-start items-center space-x-1">

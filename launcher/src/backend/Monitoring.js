@@ -1,4 +1,3 @@
-/* eslint-disable no-empty, no-prototype-builtins */
 import { ServiceManager } from "./ServiceManager";
 import { ValidatorAccountManager } from "./ValidatorAccountManager";
 import { StringUtils } from "./StringUtils.js";
