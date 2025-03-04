@@ -10,9 +10,7 @@
     @confirm-action="confirmAction"
   >
     <template #content>
-      <div
-        class="flex flex-col items-center py-2 px-4 space-y-3 max-height-400px overflow-y-auto"
-      >
+      <div class="flex flex-col items-center py-2 px-4 space-y-2 max-h-[400px] overflow-y-auto">
         <!-- Step 1: Select OP Node -->
         <template v-if="!selectedOpNode">
           <div
@@ -27,19 +25,12 @@
           >
             <label class="flex items-center justify-between w-full cursor-pointer">
               <div class="flex items-center">
-                <img
-                  v-if="service"
-                  :src="service.icon"
-                  alt="Setup Icon"
-                  class="w-6 h-6 rounded-full mr-3"
-                />
+                <img v-if="service" :src="service.icon" alt="Setup Icon" class="w-6 h-6 rounded-full mr-3" />
                 <div class="flex flex-col">
                   <span class="text-sm font-semibold text-gray-200 uppercase">
                     {{ service.service }}
                   </span>
-                  <span class="text-xs text-gray-400">
-                    ID: {{ service.config.serviceID }}
-                  </span>
+                  <span class="text-xs text-gray-400"> ID: {{ service.config.serviceID }} </span>
                 </div>
               </div>
               <input
@@ -58,36 +49,20 @@
             v-for="setup in filteredSetups"
             :key="setup.setupId"
             class="w-full p-2 border border-gray-700 rounded-md shadow-md transition cursor-pointer animate__animated animate__zoomIn animate__delay-1s flex justify-between items-center"
-            :class="
-              isSetupSelected(setup)
-                ? 'bg-teal-700 animate__animated animate__zoomOutUp'
-                : 'bg-neutral-900/90 hover:bg-gray-700'
-            "
+            :class="isSetupSelected(setup) ? 'bg-teal-700 animate__animated animate__zoomOutUp' : 'bg-neutral-900/90 hover:bg-gray-700'"
             :style="{ animationDelay: `${filteredSetups.indexOf(setup) * 100}ms` }"
             @click="selectSetup(setup)"
           >
             <div class="flex items-center mb-2">
-              <img
-                v-if="setup.services.length > 0"
-                :src="setup.services[0].icon"
-                alt="Setup Icon"
-                class="w-6 h-6 rounded-full mr-3"
-              />
+              <img v-if="setup.services.length > 0" :src="setup.services[0].icon" alt="Setup Icon" class="w-6 h-6 rounded-full mr-3" />
               <div class="flex flex-col">
-                <span class="text-sm font-semibold text-gray-200 uppercase">{{
-                  setup.setupName
-                }}</span>
+                <span class="text-sm font-semibold text-gray-200 uppercase">{{ setup.setupName }}</span>
                 <span class="text-xs text-gray-400">Network: {{ setup.network }}</span>
               </div>
             </div>
-            <span
-              class="w-5 h-5 rounded-full"
-              :class="setupStore.getBGColor(setup.color)"
-            ></span>
+            <span class="w-5 h-5 rounded-full" :class="setupStore.getBGColor(setup.color)"></span>
           </div>
-          <p v-if="filteredSetups.length === 0" class="text-gray-400 italic">
-            No valid setups available.
-          </p>
+          <p v-if="filteredSetups.length === 0" class="text-gray-400 italic">No valid setups available.</p>
         </template>
 
         <!-- Step 3: Select Services -->
@@ -103,21 +78,12 @@
             >
               <label class="flex items-center justify-between w-full cursor-pointer">
                 <div class="flex items-center">
-                  <img
-                    :src="service.icon"
-                    alt="Service Icon"
-                    class="w-6 h-6 mr-3 rounded"
-                  />
+                  <img :src="service.icon" alt="Service Icon" class="w-6 h-6 mr-3 rounded" />
                   <div class="flex flex-col">
                     <span class="text-gray-300 text-sm font-semibold">
                       {{ service.service }}
                     </span>
-                    <span
-                      v-if="isServiceInDependencies(service)"
-                      class="text-xs text-teal-400"
-                    >
-                      Currently connected
-                    </span>
+                    <span v-if="isServiceInDependencies(service)" class="text-xs text-teal-400"> Currently connected </span>
                   </div>
                 </div>
 
@@ -130,12 +96,7 @@
               </label>
             </div>
 
-            <p
-              v-if="selectedServices.length === 0"
-              class="text-red-500 text-xs text-center"
-            >
-              Please select at least one service.
-            </p>
+            <p v-if="selectedServices.length === 0" class="text-red-500 text-xs text-center">Please select at least one service.</p>
           </div>
         </template>
       </div>
@@ -173,23 +134,17 @@ const subTitle = computed(() => {
 
 const getOpNodeFromOpSetup = computed(() => {
   return setupStore.selectedOPSetup?.services?.filter(
-    (service) =>
-      service.category === "consensus" && service.service === "OpNodeBeaconService"
+    (service) => service.category === "consensus" && service.service === "OpNodeBeaconService"
   );
 });
 
 const filteredSetups = computed(() => {
   return setupStore.allSetups.filter((setup) => {
     const setupNameLower = setup.setupName.toLowerCase();
-    if (setupNameLower === "commonservices" || setupNameLower.includes("op"))
-      return false;
+    if (setupNameLower === "commonservices" || setupNameLower.includes("op")) return false;
 
-    const hasExecution = setup.services.some(
-      (service) => service.category === "execution"
-    );
-    const hasConsensus = setup.services.some(
-      (service) => service.category === "consensus"
-    );
+    const hasExecution = setup.services.some((service) => service.category === "execution");
+    const hasConsensus = setup.services.some((service) => service.category === "consensus");
 
     return hasExecution && hasConsensus;
   });
@@ -220,8 +175,7 @@ const selectSetup = (setup) => {
   });
 };
 
-const isServiceSelected = (service) =>
-  selectedServices.value.some((s) => s.id === service.id);
+const isServiceSelected = (service) => selectedServices.value.some((s) => s.id === service.id);
 
 const isServiceInDependencies = (service) => {
   if (!selectedOpNode.value?.config?.dependencies) return false;
@@ -229,17 +183,11 @@ const isServiceInDependencies = (service) => {
   const deps = selectedOpNode.value.config.dependencies;
 
   if (service.category === "execution") {
-    return deps.executionClients.some(
-      (client) =>
-        client.service === service.service && client.id === service.config?.serviceID
-    );
+    return deps.executionClients.some((client) => client.service === service.service && client.id === service.config?.serviceID);
   }
 
   if (service.category === "consensus") {
-    return deps.consensusClients.some(
-      (client) =>
-        client.service === service.service && client.id === service.config?.serviceID
-    );
+    return deps.consensusClients.some((client) => client.service === service.service && client.id === service.config?.serviceID);
   }
 
   return false;
@@ -250,11 +198,7 @@ const handleServiceSelection = (service) => {
     selectedServices.value = [selectedOpNode.value, service];
 
     const linkedConsensus = selectedSetup.value.services.find(
-      (s) =>
-        s.category === "consensus" &&
-        s.config.dependencies.executionClients.some(
-          (ec) => ec.service === service.service
-        )
+      (s) => s.category === "consensus" && s.config.dependencies.executionClients.some((ec) => ec.service === service.service)
     );
 
     if (linkedConsensus) {
@@ -263,9 +207,7 @@ const handleServiceSelection = (service) => {
   } else if (service.category === "consensus") {
     selectedServices.value = [selectedOpNode.value, service];
 
-    const linkedExecution = selectedSetup.value.services.find(
-      (s) => s.category === "execution"
-    );
+    const linkedExecution = selectedSetup.value.services.find((s) => s.category === "execution");
 
     if (linkedExecution) {
       selectedServices.value.push(linkedExecution);
@@ -278,15 +220,10 @@ const confirmAction = () => {
     return;
   }
 
-  const opNode = selectedServices.value.find(
-    (service) => service.service === "OpNodeBeaconService"
-  );
-  const executionService = selectedServices.value.find(
-    (service) => service.category === "execution"
-  );
+  const opNode = selectedServices.value.find((service) => service.service === "OpNodeBeaconService");
+  const executionService = selectedServices.value.find((service) => service.category === "execution");
   const consensusService = selectedServices.value.find(
-    (service) =>
-      service.category === "consensus" && service.service !== "OpNodeBeaconService"
+    (service) => service.category === "consensus" && service.service !== "OpNodeBeaconService"
   );
 
   if (!opNode || !executionService || !consensusService) {
@@ -295,17 +232,13 @@ const confirmAction = () => {
 
   const existingExecutionConnections = opNode.config.dependencies.executionClients
     .map((connection) => {
-      return serviceStore.installedServices.find(
-        (service) => service.config.serviceID === connection.id
-      );
+      return serviceStore.installedServices.find((service) => service.config.serviceID === connection.id);
     })
     .filter(Boolean);
 
   const existingConsensusConnections = opNode.config.dependencies.consensusClients
     .map((connection) => {
-      return serviceStore.installedServices.find(
-        (service) => service.config.serviceID === connection.id
-      );
+      return serviceStore.installedServices.find((service) => service.config.serviceID === connection.id);
     })
     .filter(Boolean);
 
