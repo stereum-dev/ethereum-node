@@ -1,14 +1,14 @@
 import { NodeService } from "./NodeService.js";
 import { ServiceVolume } from "./ServiceVolume.js";
 
-export class OpGethService extends NodeService {
+export class OpErigonService extends NodeService {
   static buildByUserInput(network, ports, dir, executionClients) {
-    const service = new OpGethService();
+    const service = new OpErigonService();
     service.setId();
     const workingDir = service.buildWorkingDir(dir);
 
     const JWTDir = "/op-engine.jwt";
-    const dataDir = "/op-geth";
+    const dataDir = "/op-erigon";
     const volumes = [new ServiceVolume(workingDir + "/data", dataDir), new ServiceVolume(workingDir + "/op-engine.jwt", JWTDir)];
     const sequencer = network === "op-mainnet" ? "https://mainnet-sequencer.optimism.io" : "https://sepolia-sequencer.optimism.io";
 
@@ -20,16 +20,16 @@ export class OpGethService extends NodeService {
       })
       .join();
 
-    const cmd = service.generateOpGethCommand(dataDir, JWTDir, sequencer, network, l2Geth);
+    const cmd = service.generateOpErigonCommand(dataDir, JWTDir, sequencer, network, l2Geth);
 
     service.init(
-      "OpGethService", // service
+      "OpErigonService", // service
       service.id, // id
       1, // configVersion
-      "us-docker.pkg.dev/oplabs-tools-artifacts/images/op-geth", // image
-      "v1.101411.4", // imageVersion
+      "testinprod/op-erigon", // image
+      "v2.60.10-0.8.2", // imageVersion
       cmd, // command
-      ["geth"], // entrypoint
+      ["/usr/local/bin/erigon"], // entrypoint
       null, // env
       ports, // ports
       volumes, // volumes
@@ -42,44 +42,37 @@ export class OpGethService extends NodeService {
     return service;
   }
 
-  generateOpGethCommand(dataDir, JWTDir, sequencer, network, l2Geth) {
+  generateOpErigonCommand(dataDir, JWTDir, sequencer, network, l2Geth) {
     const commonCmd = [
       `--datadir=${dataDir}`,
+      `--private.api.addr=localhost:9090`,
       `--http`,
-      `--http.corsdomain=*`,
-      `--http.vhosts=*`,
+      `--http.api=eth,erigon,web3,net,debug,trace,txpool,db`,
       `--http.addr=0.0.0.0`,
       `--http.port=8545`,
-      `--http.api=web3,debug,eth,txpool,net,engine`,
+      `--http.corsdomain=*`,
+      `--http.vhosts=*`,
       `--ws`,
-      `--ws.addr=0.0.0.0`,
       `--ws.port=8546`,
-      `--ws.origins=*`,
-      `--ws.api=debug,eth,txpool,net,engine,web3`,
-      `--syncmode=snap`,
-      `--gcmode=full`,
-      `--state.scheme=hash`,
       `--authrpc.vhosts=*`,
       `--authrpc.addr=0.0.0.0`,
       `--authrpc.port=8551`,
       `--authrpc.jwtsecret=${JWTDir}`,
       `--rollup.sequencerhttp=${sequencer}`,
-      `--rollup.disabletxpoolgossip=true`,
-      `--port=39393`,
-      `--discovery.port=39393`,
-      `--db.engine=pebble`,
-      `--op-network=${network}`,
+      `--txpool.gossip.disable=true`,
+      `--chain=${network}`,
+      `--db.size.limit=8TB`,
+      `--nodiscover`,
       `--metrics`,
-      `--metrics.expensive`,
-      `--metrics.port=6060`,
       `--metrics.addr=0.0.0.0`,
+      `--metrics.port=6060`,
     ];
 
     return network === "op-mainnet" && l2Geth ? [...commonCmd, `--rollup.historicalrpc=${l2Geth}`] : commonCmd;
   }
 
   static buildByConfiguration(config) {
-    const service = new OpGethService();
+    const service = new OpErigonService();
 
     service.initByConfig(config);
 

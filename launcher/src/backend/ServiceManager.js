@@ -36,6 +36,8 @@ import { ConfigManager } from "./ConfigManager";
 import { LCOMService } from "./ethereum-services/LCOMService";
 import { KuboIPFSService } from "./ethereum-services/KuboIPFSService";
 import { OpGethService } from "./ethereum-services/OpGethService";
+import { OpErigonService } from "./ethereum-services/OpErigonService";
+import { OpRethService } from "./ethereum-services/OpRethService";
 import { OpNodeBeaconService } from "./ethereum-services/OpNodeBeaconService";
 import { L2GethService } from "./ethereum-services/L2GethService";
 
@@ -188,6 +190,10 @@ export class ServiceManager {
               services.push(OpNodeBeaconService.buildByConfiguration(config));
             } else if (config.service == "L2GethService") {
               services.push(L2GethService.buildByConfiguration(config));
+            } else if (config.service == "OpErigonService") {
+              services.push(OpErigonService.buildByConfiguration(config));
+            } else if (config.service == "OpRethService") {
+              services.push(OpRethService.buildByConfiguration(config));
             }
           } else {
             log.error("found configuration without service!");
@@ -500,21 +506,46 @@ export class ServiceManager {
         break;
       case "OpNode": {
         filter = (e) => {
-          if (e.service === "OpGethService") {
+          if (e.service === "OpGethService" || e.service === "OpErigonService" || e.service === "OpRethService") {
             return e.buildExecutionClientEngineRPCHttpEndpointUrl();
           }
         };
         command = "--l2=";
-        const opGethService = dependencies.filter((e) => e.service === "OpGethService");
-        service.command = this.addCommandConnection(service, command, opGethService, filter);
+        const opExecutionService = dependencies.filter(
+          (e) => e.service === "OpGethService" || e.service === "OpErigonService" || e.service === "OpRethService"
+        );
+        service.command = this.addCommandConnection(service, command, opExecutionService, filter);
+
+        // const executionServices = ["GethService", "ErigonService", "BesuService", "NethermindService", "RethService"];
+        // filter = (e) => {
+        //   if (executionServices.includes(e.service) && typeof e.buildExecutionClientHttpEndpointUrl === "function") {
+        //     return e.buildExecutionClientHttpEndpointUrl();
+        //   }
+        // };
 
         filter = (e) => {
-          if (e.service !== "OpGethService" && typeof e.buildExecutionClientHttpEndpointUrl === "function") {
+          if (
+            e.service === "GethService" ||
+            e.service === "ErigonService" ||
+            e.service === "BesuService" ||
+            e.service === "NethermindService" ||
+            e.service === "RethService"
+          ) {
             return e.buildExecutionClientHttpEndpointUrl();
           }
         };
         command = "--l1=";
-        const l1ExecutionService = dependencies.filter((e) => e.service !== "OpGethService" && !e.service.includes("Beacon"));
+        // const el = ["GethService", "ErigonService", "BesuService", "NethermindService", "RethService"];
+        // const l1ExecutionService = dependencies.filter((e) => el.includes(e.service));
+        const l1ExecutionService = dependencies.filter(
+          (e) =>
+            e.service === "GethService" ||
+            e.service === "ErigonService" ||
+            e.service === "BesuService" ||
+            e.service === "NethermindService" ||
+            e.service === "RethService"
+        );
+
         service.command = this.addCommandConnection(service, command, l1ExecutionService, filter);
 
         filter = (e) => {
@@ -1208,6 +1239,24 @@ export class ServiceManager {
       case "L2GethService":
         ports = [new ServicePort("127.0.0.1", args.port ? args.port : 9991, 8545, servicePortProtocol.tcp)];
         return L2GethService.buildByUserInput(args.network, ports, args.installDir + "/l2-geth");
+
+      case "OpErigonService":
+        ports = [
+          new ServicePort("127.0.0.1", args.port ? args.port : 8545, 8545, servicePortProtocol.tcp),
+          new ServicePort("127.0.0.1", 8546, 8546, servicePortProtocol.tcp),
+          new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
+          new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
+        ];
+        return OpErigonService.buildByUserInput(args.network, ports, args.installDir + "/op-erigon", args.executionClients);
+
+      case "OpRethService":
+        ports = [
+          new ServicePort("127.0.0.1", args.port ? args.port : 8545, 8545, servicePortProtocol.tcp),
+          new ServicePort("127.0.0.1", 8546, 8546, servicePortProtocol.tcp),
+          new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
+          new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
+        ];
+        return OpRethService.buildByUserInput(args.network, ports, args.installDir + "/op-reth");
     }
   }
 

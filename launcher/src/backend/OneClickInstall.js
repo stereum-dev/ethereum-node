@@ -122,7 +122,11 @@ export class OneClickInstall {
         this.serviceManager.getService("LighthouseBeaconService", {
           ...args,
           executionClients: this.executionClient.filter(
-            (client) => client.service !== "OpGethService" || client.service !== "L2GethService"
+            (client) =>
+              client.service !== "OpGethService" ||
+              client.service !== "L2GethService" ||
+              client.service !== "OpErigonService" ||
+              client.service !== "OpRethService"
           ),
           ...(this.mevboost && { mevboost: [this.mevboost] }),
         })
@@ -135,7 +139,11 @@ export class OneClickInstall {
         this.serviceManager.getService("LodestarBeaconService", {
           ...args,
           executionClients: this.executionClient.filter(
-            (client) => client.service !== "OpGethService" || client.service !== "L2GethService"
+            (client) =>
+              client.service !== "OpGethService" ||
+              client.service !== "L2GethService" ||
+              client.service !== "OpErigonService" ||
+              client.service !== "OpRethService"
           ),
           ...(this.mevboost && { mevboost: [this.mevboost] }),
         })
@@ -148,7 +156,11 @@ export class OneClickInstall {
         this.serviceManager.getService("PrysmBeaconService", {
           ...args,
           executionClients: this.executionClient.filter(
-            (client) => client.service !== "OpGethService" || client.service !== "L2GethService"
+            (client) =>
+              client.service !== "OpGethService" ||
+              client.service !== "L2GethService" ||
+              client.service !== "OpErigonService" ||
+              client.service !== "OpRethService"
           ),
           ...(this.mevboost && { mevboost: [this.mevboost] }),
         })
@@ -161,7 +173,11 @@ export class OneClickInstall {
         this.serviceManager.getService("NimbusBeaconService", {
           ...args,
           executionClients: this.executionClient.filter(
-            (client) => client.service !== "OpGethService" || client.service !== "L2GethService"
+            (client) =>
+              client.service !== "OpGethService" ||
+              client.service !== "L2GethService" ||
+              client.service !== "OpErigonService" ||
+              client.service !== "OpRethService"
           ),
           ...(this.mevboost && { mevboost: [this.mevboost] }),
         })
@@ -174,7 +190,11 @@ export class OneClickInstall {
         this.serviceManager.getService("TekuBeaconService", {
           ...args,
           executionClients: this.executionClient.filter(
-            (client) => client.service !== "OpGethService" || client.service !== "L2GethService"
+            (client) =>
+              client.service !== "OpGethService" ||
+              client.service !== "L2GethService" ||
+              client.service !== "OpErigonService" ||
+              client.service !== "OpRethService"
           ),
           ...(this.mevboost && { mevboost: [this.mevboost] }),
         })
@@ -239,7 +259,13 @@ export class OneClickInstall {
       this.validatorService = this.serviceManager.getService("SSVNetworkService", {
         ...args,
         consensusClients: this.beaconService.filter((service) => service.service !== "OpNodeBeaconService"),
-        executionClients: this.executionClient.filter((client) => client.service !== "OpGethService" || client.service !== "L2GethService"),
+        executionClients: this.executionClient.filter(
+          (client) =>
+            client.service !== "OpGethService" ||
+            client.service !== "L2GethService" ||
+            client.service !== "OpErigonService" ||
+            client.service !== "OpRethService"
+        ),
       });
       this.needsKeystore.push(this.validatorService);
     }
@@ -271,7 +297,11 @@ export class OneClickInstall {
           ...args,
           consensusClients: this.beaconService.filter((service) => service.service !== "OpNodeBeaconService"),
           executionClients: this.executionClient.filter(
-            (client) => client.service !== "OpGethService" || client.service !== "L2GethService"
+            (client) =>
+              client.service !== "OpGethService" ||
+              client.service !== "L2GethService" ||
+              client.service !== "OpErigonService" ||
+              client.service !== "OpRethService"
           ),
         })
       );
@@ -284,7 +314,11 @@ export class OneClickInstall {
           ...args,
           consensusClients: this.beaconService.filter((service) => service.service !== "OpNodeBeaconService"),
           executionClients: this.executionClient.filter(
-            (client) => client.service !== "OpGethService" || client.service !== "L2GethService"
+            (client) =>
+              client.service !== "OpGethService" ||
+              client.service !== "L2GethService" ||
+              client.service !== "OpErigonService" ||
+              client.service !== "OpRethService"
           ),
         })
       );
@@ -315,7 +349,11 @@ export class OneClickInstall {
           ...args,
           consensusClients: this.beaconService.filter((service) => service.service !== "OpNodeBeaconService"),
           executionClients: this.executionClient.filter(
-            (client) => client.service !== "OpGethService" || client.service !== "L2GethService"
+            (client) =>
+              client.service !== "OpGethService" ||
+              client.service !== "L2GethService" ||
+              client.service !== "OpErigonService" ||
+              client.service !== "OpRethService"
           ),
           otherServices: this.extraServices.filter((s) => s.service === "KuboIPFSService"),
         })
@@ -325,7 +363,13 @@ export class OneClickInstall {
     if (constellation.includes("SSVDKGService")) {
       let SSVDKGService = this.serviceManager.getService("SSVDKGService", {
         ...args,
-        executionClients: this.executionClient.filter((client) => client.service !== "OpGethService" || client.service !== "L2GethService"),
+        executionClients: this.executionClient.filter(
+          (client) =>
+            client.service !== "OpGethService" ||
+            client.service !== "L2GethService" ||
+            client.service !== "OpErigonService" ||
+            client.service !== "OpRethService"
+        ),
         otherServices: this.validatorService === "SSVNetworkService" ? [this.validatorService] : [],
       });
       this.extraServices.push(SSVDKGService);
@@ -340,6 +384,26 @@ export class OneClickInstall {
       //OpGethService
       this.executionClient.push(
         this.serviceManager.getService("OpGethService", {
+          ...args,
+          executionClients: this.executionClient.filter((client) => client.service === "L2GethService"),
+        })
+      );
+    }
+
+    if (constellation.includes("OpErigonService")) {
+      //OpErigonService
+      this.executionClient.push(
+        this.serviceManager.getService("OpErigonService", {
+          ...args,
+          executionClients: this.executionClient.filter((client) => client.service === "L2GethService"),
+        })
+      );
+    }
+
+    if (constellation.includes("OpRethService")) {
+      //OpRethService
+      this.executionClient.push(
+        this.serviceManager.getService("OpRethService", {
           ...args,
           executionClients: this.executionClient.filter((client) => client.service === "L2GethService"),
         })
@@ -403,7 +467,9 @@ export class OneClickInstall {
       });
     } else if (selectedPreset == "archive") {
       this.executionClient
-        .filter((service) => service.service !== "OpGethService")
+        .filter(
+          (service) => service.service !== "OpGethService" || service.service !== "OpErigonService" || service.service !== "OpRethService"
+        )
         .forEach((client) => {
           switch (client.service) {
             case "GethService":
@@ -607,16 +673,16 @@ export class OneClickInstall {
         services.push("FlashbotsMevBoostService", "KeysAPIService", "ValidatorEjectorService", "KuboIPFSService", "LCOMService");
         break;
       case "op full node":
-        services.push("OpGethService", "OpNodeBeaconService");
+        services.push("OpGethService", "OpNodeBeaconService", "OpErigonService");
         break;
       case "op and eth full node":
-        services.push("OpGethService", "OpNodeBeaconService");
+        services.push("OpGethService", "OpNodeBeaconService", "OpErigonService");
         break;
       case "op node archive":
-        services.push("OpGethService", "OpNodeBeaconService", "L2GethService");
+        services.push("OpGethService", "OpNodeBeaconService", "L2GethService", "OpErigonService", "OpRethService");
         break;
       case "op and eth node archive":
-        services.push("OpGethService", "OpNodeBeaconService", "L2GethService");
+        services.push("OpGethService", "OpNodeBeaconService", "L2GethService", "OpErigonService", "OpRethService");
         break;
     }
     return services;
