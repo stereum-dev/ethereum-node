@@ -2,7 +2,7 @@
   <div class="w-screen h-screen border-2 box-border border-slate-500 rounded-lg bg-[#336666] flex flex-col justify-evenly items-center">
     <div
       class="w-full h-full bg-no-repeat bg-center bg-contain bg-fixed grid grid-cols-24 grid-rows-12"
-      style="background-image: url('/img/icon/stereum-icons/stereum-logo-2.png')"
+      style="background-image: url(`/img/icon/stereum-icons/stereum-logo-2.png`)"
     >
       <div
         id="logo"

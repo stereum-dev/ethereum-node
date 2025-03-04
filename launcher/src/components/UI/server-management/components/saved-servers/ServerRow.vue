@@ -7,8 +7,8 @@ import { ref, computed, watch, watchEffect } from 'vue';
         connectedServer && route.path !== '/login'
           ? 'bg-[#336666] border border-teal-300 '
           : selectedServerBackground
-          ? 'bg-blue-300'
-          : 'bg-gray-200 ',
+            ? 'bg-blue-300'
+            : 'bg-gray-200 ',
         connectedServer || route.path === '/login' || !sshExists ? 'col-span-full rounded-md' : 'col-end-22',
       ]"
       @mouseenter="hovered = true"

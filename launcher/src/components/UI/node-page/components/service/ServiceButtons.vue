@@ -10,7 +10,7 @@
       <button
         v-else-if="props.client.state == 'running'"
         class="w-full h-full transition-colors duration-200 rounded-md flex justify-center items-center"
-        @click="$emit('handleState', props.client), (footerStore.cursorLocation = '')"
+        @click="($emit('handleState', props.client), (footerStore.cursorLocation = ''))"
         @mouseenter="footerStore.cursorLocation = `${turnOff}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
@@ -19,7 +19,7 @@
       <button
         v-else-if="props.client.state == 'restarting'"
         class="w-full h-full transition-colors duration-200 rounded-md flex justify-center items-center"
-        @click="$emit('handleState', props.client), (footerStore.cursorLocation = '')"
+        @click="($emit('handleState', props.client), (footerStore.cursorLocation = ''))"
         @mouseenter="footerStore.cursorLocation = `${pending}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
@@ -28,7 +28,7 @@
       <button
         v-else
         class="transition-colors duration-200 rounded-md flex justify-center items-center"
-        @click="$emit('handleState', props.client), (footerStore.cursorLocation = '')"
+        @click="($emit('handleState', props.client), (footerStore.cursorLocation = ''))"
         @mouseenter="footerStore.cursorLocation = `${turnOn}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
@@ -37,7 +37,7 @@
     </div>
     <button
       class="w-full h-full col-span-1 p-1 transition-colors duration-200 bg-[#131313] hover:bg-gray-600 rounded-md flex justify-center items-center"
-      @click="$emit('restartService', props.client), (footerStore.cursorLocation = '')"
+      @click="($emit('restartService', props.client), (footerStore.cursorLocation = ''))"
       @mouseenter="footerStore.cursorLocation = `${restart}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
@@ -45,7 +45,7 @@
     </button>
     <button
       class="col-span-1 w-full h-full p-1 transition-colors duration-200 bg-[#131313] hover:bg-gray-600 rounded-md"
-      @click="$emit('openExpert', props.client), (footerStore.cursorLocation = '')"
+      @click="($emit('openExpert', props.client), (footerStore.cursorLocation = ''))"
       @mouseenter="footerStore.cursorLocation = `${settings}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
@@ -53,7 +53,7 @@
     </button>
     <button
       class="w-full h-full p-1 col-span-1 transition-colors duration-200 bg-[#131313] hover:bg-gray-600 rounded-md flex justify-center items-center"
-      @click="$emit('openLogs', props.client), (footerStore.cursorLocation = '')"
+      @click="($emit('openLogs', props.client), (footerStore.cursorLocation = ''))"
       @mouseenter="footerStore.cursorLocation = `${logs}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
@@ -61,7 +61,7 @@
     </button>
     <button
       class="w-full h-full p-1 col-span-1 transition-colors duration-200 bg-[#131313] hover:bg-gray-600 rounded-md flex justify-center items-center"
-      @click="$emit('openDocs', props.client), (footerStore.cursorLocation = '')"
+      @click="($emit('openDocs', props.client), (footerStore.cursorLocation = ''))"
       @mouseenter="footerStore.cursorLocation = `${docs}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >

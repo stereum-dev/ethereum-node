@@ -25,20 +25,20 @@ const title = computed(() => {
   return headerStore.choosedCreditType === "technical contribution"
     ? t("creditPanel.techTitle")
     : headerStore.choosedCreditType === "feedback, testing & suggestions"
-    ? t("creditPanel.testTitle")
-    : headerStore.choosedCreditType === "translation"
-    ? t("creditPanel.translateTitle")
-    : "";
+      ? t("creditPanel.testTitle")
+      : headerStore.choosedCreditType === "translation"
+        ? t("creditPanel.translateTitle")
+        : "";
 });
 
 const link = computed(() => {
   return headerStore.choosedCreditType === "technical contribution"
     ? t("creditPanel.techText")
     : headerStore.choosedCreditType === "feedback, testing & suggestions"
-    ? t("creditPanel.testText")
-    : headerStore.choosedCreditType === "translation"
-    ? t("creditPanel.translateText")
-    : "";
+      ? t("creditPanel.testText")
+      : headerStore.choosedCreditType === "translation"
+        ? t("creditPanel.translateText")
+        : "";
 });
 
 const goToLink = () => {
