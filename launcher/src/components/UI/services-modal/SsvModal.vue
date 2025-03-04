@@ -59,30 +59,30 @@
               !passGenerateEncryptKeyConfirmed
                 ? `${$t('serviceModal.genPair')}`
                 : !lastStep
-                ? `${$t('serviceModal.confWarning')}`
-                : `${$t('serviceModal.opDash', { network: network })}`
+                  ? `${$t('serviceModal.confWarning')}`
+                  : `${$t('serviceModal.opDash', { network: network })}`
             }`"
             :bottom-line="`${
               !passGenerateEncryptKeyConfirmed
                 ? `${$t('serviceModal.runOp')}`
                 : !lastStep
-                ? `${$t('serviceModal.dnldBackup')}`
-                : !operatorData
-                ? apiUnavailable
-                  ? `${$t('serviceModal.apiUnavailable')}`
-                  : `${$t('serviceModal.registerOperator')}`
-                : `${$t('serviceModal.showPerformance', {
-                    opid: operatorData?.id,
-                    opname: operatorData?.name,
-                    network: ucWord(network),
-                  })}`
+                  ? `${$t('serviceModal.dnldBackup')}`
+                  : !operatorData
+                    ? apiUnavailable
+                      ? `${$t('serviceModal.apiUnavailable')}`
+                      : `${$t('serviceModal.registerOperator')}`
+                    : `${$t('serviceModal.showPerformance', {
+                        opid: operatorData?.id,
+                        opname: operatorData?.name,
+                        network: ucWord(network),
+                      })}`
             }`"
             :btn-name="`${
               !passGenerateEncryptKeyConfirmed
                 ? `${$t('multiServer.gen')}`
                 : !lastStep
-                ? `${$t('serviceModal.confirm')}`
-                : `${$t('serviceModal.openBrowser')}`
+                  ? `${$t('serviceModal.confirm')}`
+                  : `${$t('serviceModal.openBrowser')}`
             }`"
             @confirmPluginClick="firstConfirmBtnHndlr"
           />

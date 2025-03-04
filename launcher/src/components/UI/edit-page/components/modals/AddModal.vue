@@ -42,7 +42,7 @@ const isAddPanelActivated = ref(false);
 const isRelaysActivated = ref(false);
 const isModifyActivated = ref(false);
 const disabledButton = ref(false);
-// eslint-disable-next-line vue/no-setup-props-destructure
+
 const properties = ref({
   client: props.client,
   network: manageStore.configNetwork.network,

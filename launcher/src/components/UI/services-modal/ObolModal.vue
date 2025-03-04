@@ -49,15 +49,15 @@
                   !headerStore.continueForExistENR
                     ? $t('serviceModal.createEnr')
                     : areYouSureToRemove
-                    ? $t('serviceModal.areYouSure')
-                    : $t('serviceModal.mngEnr')
+                      ? $t('serviceModal.areYouSure')
+                      : $t('serviceModal.mngEnr')
                 }`"
                 :bottom-line="`${
                   !headerStore.continueForExistENR
                     ? $t('serviceModal.generateEnrToJoin')
                     : areYouSureToRemove
-                    ? $t('serviceModal.areYouSureMsg')
-                    : $t('serviceModal.copyEnr')
+                      ? $t('serviceModal.areYouSureMsg')
+                      : $t('serviceModal.copyEnr')
                 }`"
                 :btn-name="`${areYouSureToRemove ? $t('exitMultipleValidator.confirm') : $t('serviceModal.copy')}`"
                 :second-btn-name="`${
@@ -104,22 +104,22 @@
                 areYouSureToRemoveCluster
                   ? $t('serviceModal.areYouSureCluster')
                   : headerStore.depositFile
-                  ? $t('serviceModal.backUpFile')
-                  : $t('serviceModal.startDkg')
+                    ? $t('serviceModal.backUpFile')
+                    : $t('serviceModal.startDkg')
               }`"
               :bottom-line="`${
                 areYouSureToRemoveCluster
                   ? $t('serviceModal.areYouSureMsg')
                   : headerStore.depositFile
-                  ? $t('serviceModal.exportBackup')
-                  : $t('serviceModal.allEnrSign')
+                    ? $t('serviceModal.exportBackup')
+                    : $t('serviceModal.allEnrSign')
               }`"
               :btn-name="`${
                 areYouSureToRemoveCluster
                   ? $t('exitMultipleValidator.confirm')
                   : headerStore.depositFile
-                  ? $t('serviceModal.save')
-                  : $t('serviceModal.srart')
+                    ? $t('serviceModal.save')
+                    : $t('serviceModal.srart')
               }`"
               :second-btn-name="`${
                 !headerStore.depositFile ? '' : areYouSureToRemoveCluster ? $t('displayValidator.cancel') : $t('serviceModal.rem')

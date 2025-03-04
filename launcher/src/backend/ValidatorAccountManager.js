@@ -1023,7 +1023,7 @@ export class ValidatorAccountManager {
   async startObolDKG(input) {
     try {
       await this.nodeConnection.sshService.exec("docker rm -f dkg-container");
-    } catch (e) {} // eslint-disable-next-line no-empty
+    } catch (e) {}
 
     try {
       let services = await this.serviceManager.readServiceConfigurations();

@@ -1,10 +1,5 @@
 module.exports = {
-  presets: [
-    [
-      "@vue/cli-plugin-babel/preset",
-      {
-        polyfills: ["es.promise", "es.symbol", "es.object.entries", "es.array.includes"],
-      },
-    ],
-  ],
+  // Jest Tests
+  presets: ["@babel/preset-env"],
+  plugins: [["@babel/plugin-transform-runtime", { helpers: true }]],
 };
