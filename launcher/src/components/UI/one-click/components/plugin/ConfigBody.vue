@@ -187,30 +187,30 @@ const checkPluginCategory = (element) => {
         filter = (item) => item.category === element.category && /(Lighthouse|Teku|Nethermind|Erigon|Nimbus|Lodestar)/.test(item.service);
       }
       break;
+
     case "op full node":
     case "op node archive":
-      filter = (item) =>
-        item.category === element.category && item.service === element.service && /OpGethService|OpNodeBeaconService/.test(item.service);
-      break;
-
-    case "op and eth full node":
       filter = (item) => {
-        if (/OpGethService|OpNodeBeaconService/.test(element.service)) {
-          return item.service === element.service;
+        if (element.service === "OpGethService" || element.service === "OpErigonService" || element.service === "OpRethService") {
+          return item.category === element.category && /(OpGethService|OpErigonService|OpRethService)/.test(item.service);
+        } else if (element.service === "L2GethService") {
+          return item.category === element.category && /L2GethService/.test(item.service);
         }
-
         return (
-          item.category === element.category &&
-          !/(SSVNetwork|Web3Signer|Charon|L2Geth|OpGeth|OpNode)/.test(item.service) &&
-          (manageStore.currentNetwork.network !== "gnosis" || /(Lighthouse|Teku|Nethermind|Erigon|Nimbus|Lodestar)/.test(item.service))
+          item.category === element.category && item.service === element.service && /OpGethService|OpNodeBeaconService/.test(item.service)
         );
       };
       break;
 
+    case "op and eth full node":
     case "op and eth node archive":
       filter = (item) => {
-        if (/OpGethService|OpNodeBeaconService/.test(element.service)) {
-          return item.service === element.service;
+        if (element.service === "OpGethService" || element.service === "OpErigonService" || element.service === "OpRethService") {
+          return item.category === element.category && /(OpGethService|OpErigonService|OpRethService)/.test(item.service);
+        } else if (element.service === "L2GethService") {
+          return item.category === element.category && /L2GethService/.test(item.service);
+        } else if (element.service === "OpNodeBeaconService") {
+          return item.category === element.category && /OpNodeBeaconService/.test(item.service);
         }
 
         return (

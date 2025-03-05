@@ -112,7 +112,7 @@ const groupedPlugins = computed(() => {
 
   return {
     serverServices: plugins.filter((p) => p.category === "service"),
-    optimism: plugins.filter((p) => p.name.toLowerCase().includes("op")),
+    optimism: plugins.filter((p) => p.name.toLowerCase().includes("op") || p.name.toLowerCase().includes("l2")),
     ethSetup: plugins.filter(
       (p) => p.category !== "service" && !p.name.toLowerCase().includes("op") && !p.name.toLowerCase().includes("l2")
     ),
