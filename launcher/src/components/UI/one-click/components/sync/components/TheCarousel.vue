@@ -75,12 +75,11 @@
 
       <template #addons><navigation v-if="getCategory !== 'execution'" /> </template>
     </Carousel>
-
+    <!-- @mouseleave="colseDropdown" -->
     <Transition name="slide">
       <ul
         v-show="dropdown"
-        class="w-[17rem] transition-all min-h-[100px] max-h-[140px] duration-400 ease-in-out absolute right-[25px] -bottom-36 bg-neutral-800/80 border border-gray-700 rounded-lg shadow-lg pt-18 pb-1 z-10 mt-[9.5rem] divide-gray-400 overflow-y-auto flex flex-col justify-start items-center divide-y-[1px]"
-        @mouseleave="colseDropdown"
+        class="w-[17rem] transition-all min-h-[100px] max-h-[140px] duration-400 ease-in-out absolute right-[25px] top-12 bg-neutral-800/80 border border-gray-700 rounded-lg shadow-lg pt-18 pb-1 z-10 divide-gray-400 overflow-y-auto flex flex-col justify-start items-center divide-y-[1px]"
       >
         <li
           v-for="link in selectedLinks"
@@ -139,8 +138,13 @@ const currentNetwork = computed(() => {
   let current;
 
   setupNetwork = manageStore.currentNetwork;
-
+  if (setupNetwork.network === "op-mainnet") {
+    setupNetwork.network = "mainnet";
+  } else if (setupNetwork.network === "op-sepolia") {
+    setupNetwork.network = "sepolia";
+  }
   current = manageStore.networkList.find((network) => network.network === setupNetwork.network);
+
   if (!current) {
     current = manageStore.networkList.find((network) => network.network === props.client.network);
   }

@@ -165,8 +165,10 @@ const checkPluginCategory = (element) => {
     case "lidoobol":
       filter = (item) => {
         if (element.category === "execution" && element.service !== "CharonService") {
-          return /Teku|Lodestar|Lighthouse|Nimbus/.test(item.service) && item.category === element.category;
-        } else if (element.category === "validator") {
+          return item.category === element.category && !/(L2Geth|OpGeth|OpNode|OpReth|OpErigon)/.test(item.service);
+        } else if (element.category === "validator" && element.service !== "CharonService") {
+          return item.category === element.category && !/(SSVNetwork|Web3Signer|Charon)/.test(item.service);
+        } else if (element.category === "validator" && element.service === "CharonService") {
           return item.service === "CharonService";
         } else {
           return item.category === element.category && !/(OpNode)/.test(item.service);
