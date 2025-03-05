@@ -65,10 +65,6 @@ jobs:
       - name: macOS build args
         if: matrix.os == 'macos-latest'
         run: echo "BUILD_ARGS=--universal" >> $GITHUB_ENV
-      
-      - name: Install Dependencies
-        run: |
-          cd launcher && npm i
 
       - name: Build Electron app
         uses: samuelmeuli/action-electron-builder@v1
