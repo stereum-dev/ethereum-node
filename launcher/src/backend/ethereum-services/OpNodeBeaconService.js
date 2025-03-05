@@ -19,9 +19,11 @@ export class OpNodeBeaconService extends NodeService {
     const l1Execution = executionClients
       .filter(
         (client) =>
-          !client.service.includes("OpGethService") ||
-          !client.service.includes("OpErigonService") ||
-          !client.service.includes("OpRethService")
+          !(
+            client.service.includes("OpGethService") ||
+            client.service.includes("OpErigonService") ||
+            client.service.includes("OpRethService")
+          )
       )
       .map((client) => {
         return client.buildExecutionClientHttpEndpointUrl();
