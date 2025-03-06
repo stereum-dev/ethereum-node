@@ -51,6 +51,14 @@ export class OpNodeBeaconService extends NodeService {
       })
       .join();
 
+    const l2EngineKind = executionClients.some((client) => client.service.includes("OpGethService"))
+      ? "geth"
+      : executionClients.some((client) => client.service.includes("OpErigonService"))
+        ? "erigon"
+        : executionClients.some((client) => client.service.includes("OpRethService"))
+          ? "reth"
+          : "";
+
     service.init(
       "OpNodeBeaconService", //service
       service.id, //id
@@ -59,13 +67,14 @@ export class OpNodeBeaconService extends NodeService {
       "v1.10.3", //imageVersion
       [
         "op-node",
-        ...(l1Execution ? [`--l1=${l1Execution}`] : []),
         `--l2=${l2Execution}`,
         "--rpc.addr=0.0.0.0",
         "--rpc.port=9545",
         "--l2.jwt-secret=/op-engine.jwt",
-        "--l1.trustrpc=false",
+        `--l2.enginekind=${l2EngineKind}`,
+        "--l1.trustrpc=true",
         "--l1.rpckind=standard",
+        ...(l1Execution ? [`--l1=${l1Execution}`] : []),
         ...(l1Consensus ? [`--l1.beacon=${l1Consensus}`] : []),
         "--metrics.enabled",
         "--metrics.addr=0.0.0.0",
@@ -77,7 +86,6 @@ export class OpNodeBeaconService extends NodeService {
         "--p2p.priv.path=/p2p/opnode_p2p_priv.txt",
         "--p2p.peerstore.path=/p2p/opnode_peerstore_db",
         "--p2p.discovery.path=/p2p/opnode_discovery_db",
-        // l2.enginekind=erigon
       ], //command
       null, //entrypoint
       null, //env
@@ -117,7 +125,7 @@ export class OpNodeBeaconService extends NodeService {
     return [
       new ServicePortDefinition(9003, "tcp", "P2P connections"),
       new ServicePortDefinition(9003, "udp", "P2P connections"),
-      new ServicePortDefinition(9545, "", "Op Node Consensus Client HTTP"),
+      new ServicePortDefinition(9545, "tcp", "Op Node Consensus Client HTTP"),
     ];
   }
 }
