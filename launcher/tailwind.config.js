@@ -1,5 +1,5 @@
 module.exports = {
-  content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}", "./node_modules/preline/preline.js"],
+  content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}", "./node_modules/preline/dist/preline.js"],
   theme: {
     extend: {
       backgroundImage: {
@@ -74,5 +74,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwind-scrollbar"), require("tailwindcss-animated"), require("preline/plugin")],
+  plugins: [require("tailwind-scrollbar"), require("tailwindcss-animated")],
 };

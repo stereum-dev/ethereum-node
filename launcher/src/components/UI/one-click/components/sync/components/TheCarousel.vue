@@ -1,5 +1,5 @@
 <template>
-  <div class="relative w-full h-[60px] col-start-5 col-end-13 flex justify-center items-center gap-x-2 px-2">
+  <div class="relative w-full h-[60px] col-start-5 col-end-13 flex justify-center items-center gap-x-12 pr-2 pl-[10px]">
     <Carousel
       ref="carousel"
       v-model="currentSlide"
@@ -15,9 +15,9 @@
           :style="{ 'pointer-events': getCategory === 'execution' ? 'none' : '' }"
         >
           <div v-if="item.name === 'genesis'" class="w-full h-full flex justify-evenly items-center p-1">
-            <div class="w-full h-full flex flex-col justify-evenly items-center text-gray-400 p-1">
-              <span class="w-full font-semibold text-md uppercase">{{ item.name }}</span>
-              <span class="w-full font-semibold text-md uppercase text-teal-600">{{ item.type }}</span>
+            <div class="w-full h-full flex flex-col justify-evenly items-center text-gray-400">
+              <span class="w-full font-semibold text-sm uppercase">{{ item.name }}</span>
+              <span class="w-full font-semibold text-sm uppercase text-teal-600">{{ item.type }}</span>
             </div>
           </div>
           <div
@@ -52,7 +52,7 @@
                 class="w-full h-full flex justify-center items-center bg-[#111315] rounded-md text-gray-400"
                 @click="openDropdown"
               >
-                <span>{{ selectedItem }}</span>
+                <span class="text-sm">{{ selectedItem }}</span>
               </div>
               <div v-else class="w-full h-full bg-[#191b1e] border border-gray-600 flex justify-between items-center rounded-md">
                 <div v-if="selectedIcon !== ''" class="w-1/6" @click="openDropdown">
@@ -80,6 +80,7 @@
       <ul
         v-show="dropdown"
         class="w-[17rem] transition-all min-h-[100px] max-h-[140px] duration-400 ease-in-out absolute right-[25px] top-12 bg-neutral-800/80 border border-gray-700 rounded-lg shadow-lg pt-18 pb-1 z-10 divide-gray-400 overflow-y-auto flex flex-col justify-start items-center divide-y-[1px]"
+        @mouseleave="colseDropdown"
       >
         <li
           v-for="link in selectedLinks"
