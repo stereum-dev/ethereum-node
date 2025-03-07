@@ -1,7 +1,7 @@
 blank_issues_enabled: false
 contact_links:
   - name: 🌐 Stereum Website
-    url: https://stereum.net/
+    url: https://www.stereum.com/?utm_source=github&utm_medium=stereum-issues&utm_id=0
     about: "Get more information about Stereum!"
   - name: 📚 Stereum Documentation
     url: https://stereum-dev.github.io/ethereum-node-web-docs/
