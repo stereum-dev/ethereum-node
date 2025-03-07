@@ -40,13 +40,19 @@ const totalNetworks = computed(() => {
   return setupStore.allSetups.filter((setup) => setup.setupName !== "commonServices").map((setup) => setup).length || 0;
 });
 
+console.log("all networks", manageStore.networkList);
+
 const getSetupNetwork = computed(() => {
   let setupNet;
   const devnet = { name: "Devnet", icon: "/img/icon/network-icons/devnet-circle.png" };
   const net = setupStore.selectedSetup?.network;
+
   if (net) {
-    setupNet = manageStore.networkList.find((network) => network.network === net) ?? devnet;
+    setupNet = manageStore.networkList.find((network) => network.network === net);
+  } else {
+    setupNet = devnet;
   }
+
   return setupNet;
 });
 </script>
