@@ -11,10 +11,10 @@ export class OpRethService extends NodeService {
     const dataDir = "/op-reth";
     const volumes = [new ServiceVolume(workingDir + "/data", dataDir), new ServiceVolume(workingDir + "/op-engine.jwt", JWTDir)];
 
-    network = network.includes("mainnet") ? "optimism-mainnet" : network.includes("sepolia") ? "optimism-sepolia" : network;
-    const sequencer = network === "optimism-mainnet" ? "https://mainnet-sequencer.optimism.io" : "https://sepolia-sequencer.optimism.io";
+    const sequencer = network === "op-mainnet" ? "https://mainnet-sequencer.optimism.io" : "https://sepolia-sequencer.optimism.io";
+    const rethNetwork = network.includes("mainnet") ? "optimism" : "optimism-sepolia";
 
-    const cmd = service.generateOpRethCommand(dataDir, JWTDir, sequencer, network);
+    const cmd = service.generateOpRethCommand(dataDir, JWTDir, sequencer, rethNetwork);
 
     service.init(
       "OpRethService", // service
@@ -36,11 +36,11 @@ export class OpRethService extends NodeService {
     return service;
   }
 
-  generateOpRethCommand(dataDir, JWTDir, sequencer, network) {
+  generateOpRethCommand(dataDir, JWTDir, sequencer, rethNetwork) {
     const commonCmd = [
       `node`,
       `--full`,
-      `--chain=${network}`,
+      `--chain=${rethNetwork}`,
       `--datadir=${dataDir}`,
       `--rollup.sequencer-http=${sequencer}`,
       `--http`,
@@ -59,7 +59,6 @@ export class OpRethService extends NodeService {
     ];
 
     return commonCmd;
-    // return network === "optimism-mainnet" && l2Geth ? [...commonCmd, `--rollup.historicalrpc=${l2Geth}`] : commonCmd;
   }
 
   static buildByConfiguration(config) {
