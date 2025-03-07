@@ -564,19 +564,51 @@ export class OneClickInstall {
     return version;
   }
 
+  resolveUniquePorts(configs) {
+    let usedPorts = new Set();
+
+    const getUniquePort = (hostIp, hostPort, internalPort, protocol) => {
+      let newHostPort = parseInt(hostPort);
+      while (usedPorts.has(`${hostIp}:${newHostPort}/${protocol}`)) {
+        newHostPort++;
+      }
+      usedPorts.add(`${hostIp}:${newHostPort}/${protocol}`);
+      return `${hostIp}:${newHostPort}:${internalPort}/${protocol}`;
+    };
+
+    configs.forEach((config) => {
+      let newPorts = [];
+      config.ports.forEach((port) => {
+        const match = port.match(/([\d.]+):(\d+):(\d+)\/(tcp|udp)/);
+        if (match) {
+          const [, hostIp, hostPort, internalPort, protocol] = match;
+          const uniquePort = getUniquePort(hostIp, hostPort, internalPort, protocol);
+          newPorts.push(uniquePort);
+        } else {
+          newPorts.push(port);
+        }
+      });
+      config.ports = newPorts;
+    });
+
+    return configs;
+  }
+
   async writeConfig() {
     const configs = this.getConfigurations();
     if (configs[0] !== undefined) {
       this.configManager.createMultiSetupYaml(configs, this.network);
+      const updatedConfigs = this.resolveUniquePorts(configs);
+
       await Promise.all(
-        configs.map(async (config) => {
+        updatedConfigs.map(async (config) => {
           await this.nodeConnection.writeServiceConfiguration(config);
         })
       );
       await this.serviceManager.createKeystores(this.needsKeystore);
       await this.serviceManager.prepareSSVDKG(this.extraServices.find((s) => s.service === "SSVDKGService"));
       await this.serviceManager.initKeysAPI(this.extraServices.filter((s) => s.service === "KeysAPIService"));
-      return configs;
+      return updatedConfigs;
     }
   }
 
