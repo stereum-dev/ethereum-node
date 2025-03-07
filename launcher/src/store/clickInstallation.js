@@ -237,7 +237,83 @@ export const useClickInstall = defineStore("clickInstallation", {
           url: "https://beaconstate.info/",
         },
       ],
+      opMainnet: [
+        {
+          id: 1,
+          name: "Attestant",
+          icon: "/img/icon/checkpoint-sync-icons/attestant-checkpoint-icon.png",
+          url: "https://mainnet-checkpoint-sync.attestant.io/",
+        },
+        {
+          id: 2,
+          name: "Lodestar",
+          icon: "/img/icon/checkpoint-sync-icons/lodestar-checkpoint-icon.png",
+          url: "https://beaconstate-mainnet.chainsafe.io/",
+        },
+        {
+          id: 3,
+          name: "EthStaker",
+          icon: "/img/icon/checkpoint-sync-icons/ethstaker-checkpoint-icon.png",
+          url: "https://beaconstate.ethstaker.cc/",
+        },
+        {
+          id: 4,
+          name: "beaconcha.in",
+          icon: "/img/icon/checkpoint-sync-icons/beaconchain-checkpoint-icon.png",
+          url: "https://sync-mainnet.beaconcha.in/",
+        },
+        {
+          id: 5,
+          name: "Sigma Prime",
+          icon: "/img/icon/checkpoint-sync-icons/sigmaprime-checkpoint-icon.png",
+          url: "https://mainnet.checkpoint.sigp.io/",
+        },
+        {
+          id: 6,
+          name: "PietjePuk",
+          icon: "/img/icon/checkpoint-sync-icons/pietjepuk-checkpoint-icon.png",
+          url: "https://checkpointz.pietjepuk.net/",
+        },
+        {
+          id: 7,
+          name: "invis.tools",
+          icon: "/img/icon/checkpoint-sync-icons/invis-tools-checkpoint-icon.png",
+          url: "https://sync.invis.tools/",
+        },
+        {
+          id: 8,
+          name: "stakely.io",
+          icon: "/img/icon/checkpoint-sync-icons/stakely-io-checkpoint-icon.png",
+          url: "https://mainnet-checkpoint-sync.stakely.io/",
+        },
+        {
+          id: 9,
+          name: "BeaconState.info",
+          icon: "",
+          url: "https://beaconstate.info/",
+        },
+      ],
       sepolia: [
+        {
+          id: 1,
+          name: "Lodestar",
+          icon: "/img/icon/checkpoint-sync-icons/lodestar-checkpoint-icon.png",
+          url: "https://beaconstate-sepolia.chainsafe.io/",
+        },
+        {
+          id: 2,
+          name: "Checkpoint",
+          icon: "/img/icon/checkpoint-sync-icons/checkpointz-checkpoint-icon.png",
+          url: "https://checkpoint-sync.sepolia.ethpandaops.io/",
+        },
+        {
+          id: 3,
+          name: "BeaconState.info",
+          icon: "",
+          url: "https://sepolia.beaconstate.info/",
+        },
+      ],
+      opSepolia: [
         {
           id: 1,
           name: "Lodestar",

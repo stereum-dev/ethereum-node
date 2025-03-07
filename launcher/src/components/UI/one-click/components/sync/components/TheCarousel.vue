@@ -139,11 +139,7 @@ const currentNetwork = computed(() => {
   let current;
 
   setupNetwork = manageStore.currentNetwork;
-  if (setupNetwork.network === "op-mainnet") {
-    setupNetwork.network = "mainnet";
-  } else if (setupNetwork.network === "op-sepolia") {
-    setupNetwork.network = "sepolia";
-  }
+
   current = manageStore.networkList.find((network) => network.network === setupNetwork.network);
 
   if (!current) {
@@ -153,7 +149,15 @@ const currentNetwork = computed(() => {
 });
 
 const selectedLinks = computed(() => {
-  return installStore[currentNetwork.value?.network];
+  let output;
+  if (currentNetwork.value?.network === "op-mainnet") {
+    output = installStore["opMainnet"];
+  } else if (currentNetwork.value?.network === "op-sepolia") {
+    output = installStore["opSepolia"];
+  } else {
+    output = installStore[currentNetwork.value?.network];
+  }
+  return output;
 });
 
 watchEffect(() => {
