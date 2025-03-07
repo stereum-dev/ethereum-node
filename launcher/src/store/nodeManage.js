@@ -232,7 +232,7 @@ export const useNodeManage = defineStore("nodeManage", {
           icon: "/img/icon/network-icons/op-sepolia.png",
           currencyIcon: "/img/icon/control-page-icons/network-currency-icons/network-currency-icons-goerli-testnet.png",
           dataEndpoint: "https://sepolia.beaconcha.in/api/v1",
-          support: ["op full node", "op and eth full node", "op node archive", "op and eth node archive"],
+          support: ["op full node", "op and eth full node"],
         },
         {
           id: 6,
