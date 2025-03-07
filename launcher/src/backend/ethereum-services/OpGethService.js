@@ -65,8 +65,6 @@ export class OpGethService extends NodeService {
       `--authrpc.jwtsecret=${JWTDir}`,
       `--rollup.sequencerhttp=${sequencer}`,
       `--rollup.disabletxpoolgossip=true`,
-      `--port=39393`,
-      `--discovery.port=39393`,
       `--db.engine=pebble`,
       `--op-network=${network}`,
       `--metrics`,
