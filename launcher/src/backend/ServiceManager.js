@@ -1215,10 +1215,10 @@ export class ServiceManager {
 
       case "OpGethService":
         ports = [
-          new ServicePort("127.0.0.1", args.port ? args.port : 9993, 8545, servicePortProtocol.tcp),
-          new ServicePort("127.0.0.1", 9994, 8546, servicePortProtocol.tcp),
-          new ServicePort(null, 39393, 39393, servicePortProtocol.tcp),
-          new ServicePort(null, 39393, 39393, servicePortProtocol.udp),
+          new ServicePort("127.0.0.1", args.port ? args.port : 8545, 8545, servicePortProtocol.tcp),
+          new ServicePort("127.0.0.1", 8546, 8546, servicePortProtocol.tcp),
+          new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
+          new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
         ];
         return OpGethService.buildByUserInput(args.network, ports, args.installDir + "/op-geth", args.executionClients);
 
@@ -1237,7 +1237,7 @@ export class ServiceManager {
         );
 
       case "L2GethService":
-        ports = [new ServicePort("127.0.0.1", args.port ? args.port : 9991, 8545, servicePortProtocol.tcp)];
+        ports = [new ServicePort("127.0.0.1", args.port ? args.port : 8545, 8545, servicePortProtocol.tcp)];
         return L2GethService.buildByUserInput(args.network, ports, args.installDir + "/l2-geth");
 
       case "OpErigonService":
