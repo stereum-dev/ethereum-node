@@ -69,11 +69,11 @@
         <template v-else>
           <div
             class="w-full flex flex-col space-y-2 animate__animated animate__zoomIn animate__delay-1s"
-            :style="{ animationDelay: `${filteredSetups.indexOf(setup) * 100}ms` }"
+            :style="{ animationDelay: '500ms' }"
           >
             <div
-              v-for="service in selectedSetup.services"
-              :key="service.id"
+              v-for="service in selectedSetup?.services"
+              :key="service?.id"
               class="flex items-center justify-between p-2 bg-neutral-800 rounded-md border border-gray-700"
             >
               <label class="flex items-center justify-between w-full cursor-pointer">
@@ -106,7 +106,7 @@
 
 <script setup>
 import { computed, ref } from "vue";
-import { useSetups } from "../../../../../../store/setups";
+import { useSetups } from "@/store/setups";
 import CustomModal from "../../modals/CustomModal.vue";
 import { useServices } from "@/store/services";
 import { useDeepClone } from "@/composables/utils";
@@ -157,8 +157,6 @@ const toggleOpNodeSelection = (node) => {
     selectedOpNode.value = null;
   } else {
     selectedOpNode.value = node;
-
-    console.log("selectedOpNode", selectedOpNode.value);
   }
 };
 
