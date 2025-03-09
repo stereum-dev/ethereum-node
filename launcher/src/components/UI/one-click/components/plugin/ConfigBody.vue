@@ -1,4 +1,3 @@
-import { ref, computed, onMounted, watch } from 'vue';
 <template>
   <div class="w-full h-full col-start-1 col-span-full row-start-3 row-end-11 grid grid-cols-12 grid-rows-7 p-2 mx-auto">
     <div
@@ -53,7 +52,7 @@ watch(
 //Lifecycle Hooks
 
 onMounted(() => {
-  clickStore.selectedPreset.includedPlugins = clickStore.selectedPreset.includedPlugins.map((item) => {
+  clickStore.selectedPreset.includedPlugins = clickStore.selectedPreset?.includedPlugins.map((item) => {
     return {
       ...item,
       openReplaceModal: false,
@@ -70,34 +69,38 @@ onMounted(() => {
 //Methods
 const filterMonitoringServices = () => {
   if (clickStore.installMonitoring) {
-    clickStore.selectedPreset.includedPlugins = clickStore.selectedPreset.includedPlugins.concat(
+    clickStore.selectedPreset.includedPlugins = clickStore.selectedPreset?.includedPlugins.concat(
       serviceStore.allServices.filter((s) =>
         ["GrafanaService", "PrometheusNodeExporterService", "PrometheusService", "MetricsExporterService"].includes(s.service)
       )
     );
   } else {
-    clickStore.selectedPreset.includedPlugins = clickStore.selectedPreset.includedPlugins.filter(
+    clickStore.selectedPreset.includedPlugins = clickStore.selectedPreset?.includedPlugins.filter(
       (s) => !["GrafanaService", "PrometheusNodeExporterService", "PrometheusService", "MetricsExporterService"].includes(s.service)
     );
   }
 };
 
 const selectedPluginsValidation = () => {
-  if (Object.keys(clickStore.selectedPreset.includedPlugins).length === 0) {
+  if (Object.keys(clickStore.selectedPreset?.includedPlugins).length === 0) {
     router.push("/oneClick/preset");
   }
 };
 const pluginChangeHandler = (plugin, item, idx) => {
   plugin.openReplaceModal = false;
-  const oldPluginIndex = clickStore.selectedPreset.includedPlugins.findIndex((e) => e.id === plugin?.id);
+  const oldPluginIndex = clickStore.selectedPreset?.includedPlugins.findIndex((e) => e.id === plugin?.id);
 
   if (oldPluginIndex !== -1) {
-    clickStore.selectedPreset.includedPlugins.splice(oldPluginIndex, 1);
+    clickStore.selectedPreset?.includedPlugins.splice(oldPluginIndex, 1);
   }
 
-  clickStore.selectedPreset.includedPlugins.splice(idx, 0, item);
+  clickStore.selectedPreset?.includedPlugins.splice(idx, 0, item);
 
-  if (["staking", "mev boost", "stereum on arm", "archive", "lidocsm"].includes(clickStore.selectedPreset.name)) {
+  if (
+    ["staking", "mev boost", "stereum on arm", "archive", "lidocsm", "op and eth full node", "op and eth node archive"].includes(
+      clickStore.selectedPreset.name
+    )
+  ) {
     if (item.category === "consensus") {
       let valIndex = clickStore.selectedPreset.includedPlugins.findIndex((e) => e.category === "validator");
       clickStore.selectedPreset.includedPlugins[valIndex] = serviceStore.allServices.find(
@@ -139,7 +142,8 @@ const checkPluginCategory = (element) => {
     case "lidocsm":
     case "mev boost":
     case "staking":
-      filter = (item) => item.category === element.category && !/(SSVNetwork|Web3Signer|Charon)/.test(item.service);
+      filter = (item) =>
+        item.category === element.category && !/(SSVNetwork|Web3Signer|Charon|L2Geth|OpGeth|OpNode|OpReth|OpErigon)/.test(item.service);
       if (manageStore.currentNetwork.network == "gnosis") {
         filter = (item) => item.category === element.category && /(Lighthouse|Teku|Nethermind|Erigon|Nimbus|Lodestar)/.test(item.service);
       }
@@ -150,9 +154,9 @@ const checkPluginCategory = (element) => {
         if (element.category === "validator") {
           return item.service === "SSVNetworkService";
         } else if (element.category === "consensus" && item.category === "consensus") {
-          return true;
+          return item.category === element.category && !/(OpNode)/.test(item.service);
         } else if (element.category === "execution" && item.category === "execution") {
-          return true;
+          return item.category === element.category && !/(L2Geth|OpGeth|OpNode|OpReth|OpErigon)/.test(item.service);
         }
         return false;
       };
@@ -160,12 +164,14 @@ const checkPluginCategory = (element) => {
     case "obol":
     case "lidoobol":
       filter = (item) => {
-        if (element.category === "validator" && element.service !== "CharonService") {
-          return /Teku|Lodestar|Lighthouse|Nimbus/.test(item.service) && item.category === element.category;
-        } else if (element.category === "validator") {
+        if (element.category === "execution" && element.service !== "CharonService") {
+          return item.category === element.category && !/(L2Geth|OpGeth|OpNode|OpReth|OpErigon)/.test(item.service);
+        } else if (element.category === "validator" && element.service !== "CharonService") {
+          return item.category === element.category && !/(SSVNetwork|Web3Signer|Charon)/.test(item.service);
+        } else if (element.category === "validator" && element.service === "CharonService") {
           return item.service === "CharonService";
         } else {
-          return item.category === element.category;
+          return item.category === element.category && !/(OpNode)/.test(item.service);
         }
       };
       break;
@@ -173,17 +179,54 @@ const checkPluginCategory = (element) => {
       //filter = (item) => item.category === element.category
       break;
     case "stereum on arm":
-      filter = (item) => item.category === element.category && !/(Prysm|Reth|SSVNetwork|Web3Signer|Charon)/.test(item.service);
+      filter = (item) =>
+        item.category === element.category &&
+        !/(Prysm|Reth|SSVNetwork|Web3Signer|Charon|L2Geth|OpGeth|OpNode|OpReth|OpErigon)/.test(item.service);
       if (manageStore.currentNetwork.network == "gnosis") {
         filter = (item) => item.category === element.category && /(Lighthouse|Teku|Nethermind)/.test(item.service);
       }
       break;
     case "archive":
-      filter = (item) => item.category === element.category && !/(SSVNetwork|Web3Signer|Charon)/.test(item.service);
+      filter = (item) =>
+        item.category === element.category && !/(SSVNetwork|Web3Signer|Charon|L2Geth|OpGeth|OpNode|OpReth|OpErigon)/.test(item.service);
       if (manageStore.currentNetwork.network == "gnosis") {
         filter = (item) => item.category === element.category && /(Lighthouse|Teku|Nethermind|Erigon|Nimbus|Lodestar)/.test(item.service);
       }
       break;
+
+    case "op full node":
+    case "op node archive":
+      filter = (item) => {
+        if (element.service === "OpGethService" || element.service === "OpErigonService" || element.service === "OpRethService") {
+          return item.category === element.category && /(OpGethService|OpErigonService|OpRethService)/.test(item.service);
+        } else if (element.service === "L2GethService") {
+          return item.category === element.category && /L2GethService/.test(item.service);
+        }
+        return (
+          item.category === element.category && item.service === element.service && /OpGethService|OpNodeBeaconService/.test(item.service)
+        );
+      };
+      break;
+
+    case "op and eth full node":
+    case "op and eth node archive":
+      filter = (item) => {
+        if (element.service === "OpGethService" || element.service === "OpErigonService" || element.service === "OpRethService") {
+          return item.category === element.category && /(OpGethService|OpErigonService|OpRethService)/.test(item.service);
+        } else if (element.service === "L2GethService") {
+          return item.category === element.category && /L2GethService/.test(item.service);
+        } else if (element.service === "OpNodeBeaconService") {
+          return item.category === element.category && /OpNodeBeaconService/.test(item.service);
+        }
+
+        return (
+          item.category === element.category &&
+          !/(SSVNetwork|Web3Signer|Charon|L2Geth|OpGeth|OpNode|OpReth|OpErigon)/.test(item.service) &&
+          (manageStore.currentNetwork.network !== "gnosis" || /(Lighthouse|Teku|Nethermind|Erigon|Nimbus|Lodestar)/.test(item.service))
+        );
+      };
+      break;
+
     default:
       break;
   }

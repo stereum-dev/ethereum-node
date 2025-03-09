@@ -7,7 +7,7 @@ import { ref, onMounted, watch } from 'vue';
       </div>
       <div class="col-start-1 col-span-full row-start-2 row-span-full grid grid-cols-12 grid-rows-7 pt-5">
         <div
-          class="col-start-3 col-span-8 row-start-1 row-span-1 bg-gray-200 rounded-md grid grid-cols-6 cursor-pointer"
+          class="col-start-4 col-span-6 row-start-1 row-span-1 bg-gray-200 rounded-md grid grid-cols-6 cursor-pointer"
           @click="dropdownHandler"
         >
           <img
@@ -34,7 +34,7 @@ import { ref, onMounted, watch } from 'vue';
         <Transition name="slide-fade">
           <ul
             v-if="openDropdown"
-            class="col-start-3 col-span-8 row-start-2 row-span-full transition-all max-h-[200px] duration-400 ease-in-out bg-gray-700 rounded-lg shadow-lg pb-1 w-full z-10 divide-y overflow-y-auto flex flex-col justify-start items-center mt-2"
+            class="col-start-4 col-span-6 row-start-2 row-span-full transition-all max-h-[200px] duration-400 ease-in-out bg-gray-700 rounded-lg shadow-lg pb-1 w-full z-10 divide-y overflow-y-auto flex flex-col justify-start items-center mt-2"
           >
             <li
               v-for="item in manageStore.networkList"
@@ -52,19 +52,19 @@ import { ref, onMounted, watch } from 'vue';
           </ul>
         </Transition>
         <div
-          class="col-start-1 col-span-full row-start-2 row-span-full py-4 px-8 grid grid-cols-5 grid-rows-2 overflow-x-hidden overflow-y-auto"
+          class="col-start-1 col-span-full row-start-2 row-span-full py-4 px-8 grid grid-cols-6 grid-rows-3 overflow-x-hidden overflow-y-auto"
         >
           <div
             v-for="preset in clickStore.presets"
             :key="preset.name"
             class="col-span-1 row-span-1 justify-self-center self-center hover:border hover:border-teal-500 rounded-md hover:shadow-lg hover:shadow-[#050505] transition-all duration-300 ease-in-out active:scale-100 active:shadow-none cursor-pointer"
             :class="{
-              'opacity-30 pointer-events-none': !manageStore.currentNetwork?.support?.includes(preset.name) || !displayItem?.name,
+              hidden: !manageStore.currentNetwork?.support?.includes(preset.name) || !displayItem?.name,
             }"
             @click="getPreset(preset)"
           >
             <img
-              class="w-20"
+              class="w-16"
               :class="
                 preset.selected
                   ? 'scale-125 border-2 border-blue-400 rounded-md hover:scale-125 shadow-xl shadow-[#101010] transition-all duration-300 ease-in-out'

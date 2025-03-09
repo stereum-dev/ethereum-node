@@ -44,9 +44,13 @@ const getSetupNetwork = computed(() => {
   let setupNet;
   const devnet = { name: "Devnet", icon: "/img/icon/network-icons/devnet-circle.png" };
   const net = setupStore.selectedSetup?.network;
+
   if (net) {
-    setupNet = manageStore.networkList.find((network) => network.network === net) ?? devnet;
+    setupNet = manageStore.networkList.find((network) => network.network === net);
+  } else {
+    setupNet = devnet;
   }
+
   return setupNet;
 });
 </script>

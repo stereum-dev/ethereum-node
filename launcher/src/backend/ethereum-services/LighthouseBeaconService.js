@@ -12,6 +12,7 @@ export class LighthouseBeaconService extends NodeService {
     const JWTDir = "/engine.jwt";
     const dataDir = "/opt/app/beacon";
     const slasherDir = "/opt/app/slasher";
+    network = network === "op-mainnet" ? "mainnet" : network === "op-sepolia" ? "sepolia" : network;
 
     // volumes
     const volumes = [new ServiceVolume(workingDir + "/beacon", dataDir), new ServiceVolume(workingDir + "/slasher", slasherDir)];
