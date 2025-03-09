@@ -1237,7 +1237,11 @@ export class ServiceManager {
         );
 
       case "L2GethService":
-        ports = [new ServicePort("127.0.0.1", args.port ? args.port : 8545, 8545, servicePortProtocol.tcp)];
+        ports = [
+          new ServicePort("127.0.0.1", args.port ? args.port : 8545, 8545, servicePortProtocol.tcp),
+          new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
+          new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
+        ];
         return L2GethService.buildByUserInput(args.network, ports, args.installDir + "/l2-geth");
 
       case "OpErigonService":
