@@ -94,7 +94,7 @@ test("l2geth installation", async () => {
   expect(ufw.stdout).toMatch(/30303\/udp/);
 
   //check docker container
-  expect(docker.stdout).toMatch(/oplabs-tools-artifacts\/images\/op-geth/);
+  expect(docker.stdout).toMatch(/ethereumoptimism\/l2geth/);
   expect(docker.stdout).toMatch(/30303->30303/);
   if (!executionClient.id.includes("Up")) {
     expect((docker.stdout.match(new RegExp("Up", "g")) || []).length).toBe(1);
