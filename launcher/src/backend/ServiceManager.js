@@ -516,13 +516,6 @@ export class ServiceManager {
         );
         service.command = this.addCommandConnection(service, command, opExecutionService, filter);
 
-        // const executionServices = ["GethService", "ErigonService", "BesuService", "NethermindService", "RethService"];
-        // filter = (e) => {
-        //   if (executionServices.includes(e.service) && typeof e.buildExecutionClientHttpEndpointUrl === "function") {
-        //     return e.buildExecutionClientHttpEndpointUrl();
-        //   }
-        // };
-
         filter = (e) => {
           if (
             e.service === "GethService" ||
@@ -535,8 +528,6 @@ export class ServiceManager {
           }
         };
         command = "--l1=";
-        // const el = ["GethService", "ErigonService", "BesuService", "NethermindService", "RethService"];
-        // const l1ExecutionService = dependencies.filter((e) => el.includes(e.service));
         const l1ExecutionService = dependencies.filter(
           (e) =>
             e.service === "GethService" ||
@@ -545,7 +536,6 @@ export class ServiceManager {
             e.service === "NethermindService" ||
             e.service === "RethService"
         );
-
         service.command = this.addCommandConnection(service, command, l1ExecutionService, filter);
 
         filter = (e) => {
