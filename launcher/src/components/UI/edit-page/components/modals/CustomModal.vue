@@ -56,6 +56,7 @@ const props = defineProps({
   client: {
     type: Object,
     default: () => {},
+    required: false,
   },
   mainTitle: String,
   messageText: String,
@@ -65,7 +66,11 @@ const props = defineProps({
   subTitle: String,
   clickOutsideText: String,
   isLoading: Boolean,
-  icon: String,
+  icon: {
+    type: String,
+    default: "",
+    required: false,
+  },
 });
 
 //Emits

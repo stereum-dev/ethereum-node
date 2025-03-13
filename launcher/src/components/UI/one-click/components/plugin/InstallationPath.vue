@@ -37,7 +37,7 @@
       </div>
     </div>
     <div
-      v-if="clickStore.selectedPreset.name === 'stereum on arm'"
+      v-if="clickStore.selectedPreset?.name === 'stereum on arm'"
       class="w-full col-start-1 col-span-full row-start-5 row-span-2 border rounded-md border-gray-600 mx-auto bg-[#336666]"
     >
       <div class="col-start-1 col-span-full row-start-2 row-span-1 flex justify-center items-center p-1">
@@ -69,13 +69,39 @@
 
 <script setup>
 import { useClickInstall } from "@/store/clickInstallation";
-import { onMounted } from "vue";
+import { computed, onMounted } from "vue";
+import { useServices } from "../../../../../store/services";
+import { useNodeManage } from "@/store/nodeManage";
 
 const clickStore = useClickInstall();
+const serviceStore = useServices();
+const manageStore = useNodeManage();
 
 const validatePath = () => {
   const pathRegex = /^\/(?:[^ /\0*?<>|&{}$;][^ /\0]*\/?)*[^ /\0*?<>|&{}$;]{1,}$/;
   clickStore.isPathValid = pathRegex.test(clickStore.installationPath.trim());
+};
+
+const getLegacyService = computed(() => {
+  return serviceStore.allServices.find((service) => service.service === "L2GethService");
+});
+
+// Check if Legacy Service is Already Added
+const isLegacyAdded = computed(() => {
+  return clickStore.selectedPreset.includedPlugins.some((plugin) => plugin.service === "L2GethService");
+});
+
+// Toggle Add/Remove Functionality
+const toggleLegacyPreset = () => {
+  if (isLegacyAdded.value) {
+    // Remove if already included
+    clickStore.selectedPreset.includedPlugins = clickStore.selectedPreset.includedPlugins.filter(
+      (plugin) => plugin.service !== "L2GethService"
+    );
+  } else {
+    // Add if not included
+    clickStore.selectedPreset.includedPlugins.push(getLegacyService.value);
+  }
 };
 
 onMounted(() => {
