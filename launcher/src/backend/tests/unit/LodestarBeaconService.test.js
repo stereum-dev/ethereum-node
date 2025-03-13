@@ -161,4 +161,10 @@ test("buildByConfiguration", () => {
   expect(l.volumes[0]).toBeDefined();
 });
 
+test("getDataDir", () => {
+  const service = LodestarBeaconService.buildByUserInput("goerli", [], "/opt/stereum/app");
+  const serviceDataDir = service.getDataDir();
+  expect(serviceDataDir).toBe("/opt/stereum/app-" + service.id + "/beacon");
+});
+
 // EOF

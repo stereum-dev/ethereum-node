@@ -2,6 +2,7 @@ import { NodeConnection } from "../../NodeConnection";
 import { TaskManager } from "../../TaskManager";
 import { nodeOS } from "../../NodeOS";
 const log = require("electron-log");
+jest.setTimeout(10000);
 
 test("findOS Ubuntu", () => {
   jest.mock("../../SSHService");

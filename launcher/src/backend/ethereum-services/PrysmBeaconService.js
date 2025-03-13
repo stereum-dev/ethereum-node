@@ -3,7 +3,7 @@ import { ServicePortDefinition } from "./SerivcePortDefinition.js";
 import { ServiceVolume } from "./ServiceVolume.js";
 
 export class PrysmBeaconService extends NodeService {
-  static buildByUserInput(network, ports, dir, executionClients, mevboost, checkpointURL, chainId) {
+  static buildByUserInput(network, ports, dir, executionClients = [], mevboost = [], checkpointURL, chainId) {
     const service = new PrysmBeaconService();
     service.setId();
     const workingDir = service.buildWorkingDir(dir);

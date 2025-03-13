@@ -3,7 +3,7 @@ import { ServicePortDefinition } from "./SerivcePortDefinition.js";
 import { ServiceVolume } from "./ServiceVolume.js";
 
 export class LighthouseValidatorService extends NodeService {
-  static buildByUserInput(network, ports, dir, consensusClients) {
+  static buildByUserInput(network, ports, dir, consensusClients = []) {
     const service = new LighthouseValidatorService();
     service.setId();
     const workingDir = service.buildWorkingDir(dir);

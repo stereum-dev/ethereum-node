@@ -3,7 +3,7 @@ import { ServicePortDefinition } from "./SerivcePortDefinition.js";
 import { ServiceVolume } from "./ServiceVolume.js";
 
 export class LodestarBeaconService extends NodeService {
-  static buildByUserInput(network, ports, dir, executionClients, mevboost, checkpointURL) {
+  static buildByUserInput(network, ports, dir, executionClients = [], mevboost = [], checkpointURL) {
     const service = new LodestarBeaconService();
     service.setId();
     const workingDir = service.buildWorkingDir(dir);

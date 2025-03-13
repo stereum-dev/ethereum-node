@@ -95,4 +95,10 @@ test("buildByConfiguration", () => {
   expect(l.command).toContain("--beaconNodes=http://node1:9596,https://node2:999");
 });
 
+test("getDataDir", () => {
+  const service = LodestarValidatorService.buildByUserInput("goerli", [], "/opt/stereum/app");
+  const serviceDataDir = service.getDataDir();
+  expect(serviceDataDir).toBeFalsy();
+});
+
 // EOF

@@ -3,7 +3,7 @@ import { ServicePortDefinition } from "./SerivcePortDefinition.js";
 import { ServiceVolume } from "./ServiceVolume.js";
 
 export class SSVDKGService extends NodeService {
-  getServiceConfiguration(operatorID = 0, executionClients) {
+  getServiceConfiguration(operatorID = 0, executionClients = []) {
     if (!operatorID) operatorID = 0;
     let ethEndpointURL = executionClients && executionClients.length > 0 ? executionClients[0].buildExecutionClientHttpEndpointUrl() : null;
     if (!ethEndpointURL) ethEndpointURL = "http://ethnode:8545";
@@ -19,7 +19,7 @@ outputPath: ./data/output
 ethEndpointURL: ${ethEndpointURL} #HTTP Address of Execution Node`;
   }
 
-  static buildByUserInput(network, ports, dir, executionClients, otherServices) {
+  static buildByUserInput(network, ports, dir, executionClients = [], otherServices = []) {
     const service = new SSVDKGService();
     service.setId();
     const workingDir = service.buildWorkingDir(dir);

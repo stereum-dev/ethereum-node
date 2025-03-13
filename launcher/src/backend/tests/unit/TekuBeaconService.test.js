@@ -179,4 +179,10 @@ test("buildByConfiguration", () => {
   expect(tekuService.volumes[0]).toBeDefined();
 });
 
+test("getDataDir", () => {
+  const service = TekuBeaconService.buildByUserInput("goerli", [], "/opt/stereum/app");
+  const serviceDataDir = service.getDataDir();
+  expect(serviceDataDir).toBe("/opt/stereum/app-" + service.id + "/data");
+});
+
 // EOF
