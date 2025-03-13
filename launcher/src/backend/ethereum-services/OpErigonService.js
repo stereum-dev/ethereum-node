@@ -12,14 +12,6 @@ export class OpErigonService extends NodeService {
     const volumes = [new ServiceVolume(workingDir + "/data", dataDir), new ServiceVolume(workingDir + "/op-engine.jwt", JWTDir)];
     const sequencer = network === "op-mainnet" ? "https://mainnet-sequencer.optimism.io" : "https://sepolia-sequencer.optimism.io";
 
-    // // L2 geth
-    // const l2Geth = executionClients
-    //   .filter((client) => client.service.includes("L2GethService"))
-    //   .map((client) => {
-    //     return client.buildExecutionClientRPCEndpointUrl();
-    //   })
-    //   .join();
-
     // L2 geth
     const l2Geth =
       executionClients && executionClients.length > 0
