@@ -216,7 +216,7 @@ const checkPluginCategory = (element) => {
         } else if (element.service === "L2GethService") {
           return item.category === element.category && /L2GethService/.test(item.service);
         } else if (element.service === "OpNodeBeaconService") {
-          return item.category === element.category && /OpNodeBeaconService/.test(item.service);
+          return false;
         }
 
         return (
