@@ -82,4 +82,8 @@ export class NethermindService extends NodeService {
   buildPrometheusJob() {
     return `\n  - job_name: stereum-${this.id}\n    static_configs:\n      - targets: [${this.buildExecutionClientMetricsEndpoint()}]`;
   }
+
+  getDataDir() {
+    return this.volumes.find((volume) => volume.servicePath === "/opt/app/data")?.destinationPath;
+  }
 }

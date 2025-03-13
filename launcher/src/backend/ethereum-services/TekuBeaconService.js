@@ -109,6 +109,10 @@ export class TekuBeaconService extends NodeService {
     }\n    scrape_timeout: 10s\n    metrics_path: /metrics\n    scheme: http\n    static_configs:\n      - targets: [${this.buildConsensusClientMetricsEndpoint()}]`;
   }
 
+  getDataDir() {
+    return this.volumes.find((volume) => volume.servicePath === "/opt/app/data")?.destinationPath;
+  }
+
   getAvailablePorts() {
     return [
       new ServicePortDefinition(9001, "tcp", "P2P connections"),

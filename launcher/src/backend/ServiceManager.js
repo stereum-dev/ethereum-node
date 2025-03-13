@@ -258,20 +258,15 @@ export class ServiceManager {
     let services = await this.readServiceConfigurations();
     let client = services.find((service) => service.id === serviceID);
 
-    const dataDir = client.volumes.find(
-      (vol) =>
-        vol.servicePath === "/opt/app/beacon" ||
-        vol.servicePath === "/opt/app/data" ||
-        vol.servicePath === "/opt/data/geth" ||
-        vol.servicePath === "/opt/data/reth" ||
-        vol.servicePath === "/opt/data/erigon"
-    ).destinationPath;
+    const dataDir = client.getDataDir();
 
     let result = await this.nodeConnection.sshService.exec(`test -d ${dataDir}/ `);
 
-    if (dataDir.length > 0 && result.rc == 0) {
+    if (dataDir && result.rc == 0) {
       await this.manageServiceState(serviceID, "stopped");
-      await this.deleteDataVolume(dataDir);
+      await this.nodeConnection.sshService.exec(`rm -r ${dataDir}/*`);
+    } else {
+      log.error("Data directory not found");
     }
 
     this.updateSyncCommand(client, checkpointUrl);
@@ -322,10 +317,6 @@ export class ServiceManager {
     } else {
       client.command = command;
     }
-  }
-
-  async deleteDataVolume(dataDir) {
-    await this.nodeConnection.sshService.exec(`rm -r ${dataDir}/*`);
   }
 
   async deleteSlasherVolume(serviceID) {
