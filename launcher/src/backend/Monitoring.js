@@ -1114,6 +1114,7 @@ export class Monitoring {
         PrysmBeaconService: ["beacon_clock_time_slot", "beacon_head_slot"], // OK - query for job="prysm_beacon"!
         NimbusBeaconService: ["beacon_slot", "beacon_head_slot"], // OK - query for job="nimbus"
         LodestarBeaconService: ["beacon_clock_slot", "beacon_head_slot"], // OK - query for job="lodestar_beacon"
+        // GrandineBeaconService: ["", "beacon_head_slot"], // NOT OK Current Slot is not available - query for job="grandine_beacon"
       },
       execution: {
         GethService: ["chain_head_header", "chain_head_block"], // OK - query for job="geth"
@@ -1127,6 +1128,7 @@ export class Monitoring {
 
     // Prometheus job definitions
     const jobs = {
+      //GrandineBeaconService: "grandine_beacon",
       TekuBeaconService: "teku_beacon",
       LighthouseBeaconService: "lighthouse_beacon",
       PrysmBeaconService: "prysm_beacon",
@@ -1321,6 +1323,7 @@ export class Monitoring {
         PrysmBeaconService: ["p2p_peer_count"], // needs to query for state="Connected"!
         NimbusBeaconService: ["nbc_peers"],
         LodestarBeaconService: ["libp2p_peers"],
+        GrandineBeaconService: ["libp2p_peers"],
       },
       execution: {
         GethService: ["p2p_peers"],
@@ -1333,6 +1336,7 @@ export class Monitoring {
 
     // Prometheus job definitions
     const jobs = {
+      GrandineBeaconService: "grandine_beacon",
       TekuBeaconService: "teku_beacon",
       LighthouseBeaconService: "lighthouse_beacon",
       PrysmBeaconService: "prysm_beacon",
@@ -1449,6 +1453,11 @@ export class Monitoring {
           // See extra dealing with + 10% below!
           optnam = "--target-peers";
           defval = 100;
+        } else if (clt.service == "GrandineBeaconService") {
+          // --target-peers (Default: 80) + 10%
+          // See extra dealing with + 10% below!
+          optnam = "--target-peers";
+          defval = 80;
         } else if (clt.service == "PrysmBeaconService") {
           // --p2p-max-peers (Default: 45)
           optnam = "--p2p-max-peers";
@@ -2552,6 +2561,7 @@ export class Monitoring {
     const services = {
       TekuBeaconService: 5051,
       LighthouseBeaconService: 5052,
+      GrandineBeaconService: 5052,
       PrysmBeaconService: 3500,
       NimbusBeaconService: 5052,
       LodestarBeaconService: 9596,
@@ -2765,6 +2775,7 @@ export class Monitoring {
       consensus: {
         TekuBeaconService: ["network_subnet_peer_count"],
         LighthouseBeaconService: ["gossipsub_mesh_peer_counts"],
+        GrandineBeaconService: ["gossipsub_mesh_peer_counts"],
         PrysmBeaconService: ["p2p_topic_peer_count"],
         NimbusBeaconService: ["libp2p_gossipsub_healthy_peers_topics"],
         LodestarBeaconService: ["gossipsub_topic_peer_count"],
@@ -3250,6 +3261,7 @@ export class Monitoring {
 
   async getCurrentEpochSlot(currBeaconService) {
     try {
+      currBeaconService = currBeaconService.toUpperCase();
       let beaconStatus = await this.getBeaconStatus();
       // Ensure beaconStatus.data is an array
       if (!Array.isArray(beaconStatus.data)) {

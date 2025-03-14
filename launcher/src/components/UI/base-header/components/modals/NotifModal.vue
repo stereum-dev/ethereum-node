@@ -245,13 +245,24 @@ export default {
         for (let i = 0; i < this.installedValidators.length; i++) {
           const item = this.installedValidators[i];
           const res = await ControlService.getServiceYAML(item?.config.serviceID);
-          if (
-            item.service === "LighthouseValidatorService" ||
-            item.service === "LighthouseBeaconService" ||
-            item.service === "LodestarValidatorService" ||
-            item.service === "LodestarBeaconService"
-          ) {
+          if (item.service === "LighthouseValidatorService" || item.service === "LighthouseBeaconService") {
             const matchedValue = res.match(new RegExp("(- --monitoring-endpoint=)(.*)(\\n)"));
+
+            if (matchedValue !== null) {
+              this.connectedValidator = item.config.serviceID;
+              this.fixedConnectedVal = true;
+              this.matchedServiceId = item.config.serviceID;
+            }
+          } else if (item.service === "LodestarValidatorService" || item.service === "LodestarBeaconService") {
+            const matchedValue = res.match(new RegExp("(- --monitoring.endpoint=)(.*)(\\n)"));
+
+            if (matchedValue !== null) {
+              this.connectedValidator = item.config.serviceID;
+              this.fixedConnectedVal = true;
+              this.matchedServiceId = item.config.serviceID;
+            }
+          } else if (item.service === "GrandineBeaconService") {
+            const matchedValue = res.match(new RegExp("(- --remote-metrics-url=)(.*)(\\n)"));
 
             if (matchedValue !== null) {
               this.connectedValidator = item.config.serviceID;
