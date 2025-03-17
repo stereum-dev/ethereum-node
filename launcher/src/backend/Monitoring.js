@@ -1454,8 +1454,6 @@ export class Monitoring {
           optnam = "--target-peers";
           defval = 100;
         } else if (clt.service == "GrandineBeaconService") {
-          // --target-peers (Default: 80) + 10%
-          // See extra dealing with + 10% below!
           optnam = "--target-peers";
           defval = 80;
         } else if (clt.service == "PrysmBeaconService") {
