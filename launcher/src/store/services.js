@@ -2168,8 +2168,8 @@ export const useServices = defineStore("services", {
           path: "/grandine",
           linkUrl: "",
           docsUrl: "https://docs.grandine.io/",
-          icon: "/img/icon/service-icons/consensus/LightHouse.png",
-          sIcon: "/img/icon/service-icons/consensus/Lighthouse-s.png",
+          icon: "/img/icon/service-icons/consensus/Grandine.png",
+          sIcon: "/img/icon/service-icons/consensus/Grandine-s.png",
           headerOption: false,
           expertOptionsModal: false,
           expertOptions: [
