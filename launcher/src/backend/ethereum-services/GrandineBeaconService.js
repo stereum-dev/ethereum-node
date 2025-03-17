@@ -54,6 +54,7 @@ export class GrandineBeaconService extends NodeService {
         "--discovery-port=9000",
         "--quic-port=9001",
         "--target-peers=80",
+        "--metrics",
         "--metrics-address=0.0.0.0",
         "--metrics-port=5054",
         "--prune-storage",
