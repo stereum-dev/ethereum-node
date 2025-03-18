@@ -28,6 +28,9 @@ export class ValidatorEjectorService extends NodeService {
       case "sepolia":
         locatorAddress = "0x8f6254332f69557A72b0DA2D5F0Bc07d4CA991E7"; //https://docs.lido.fi/deployed-contracts/sepolia#core-protocol
         break;
+      case "hoodi":
+        // TBA
+        break;
       default:
         break;
     }

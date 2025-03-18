@@ -102,6 +102,8 @@ export default {
           return "/img/icon/control-page-icons/network-currency-icons/network-currency-icons-ethereum-mainnet.png";
         case "holesky":
           return "/img/icon/control-page-icons/network-currency-icons/network-currency-icons-holesky-testnet.png";
+        case "hoodi":
+          return ""; // TBA - Hoodi
         default:
           return "";
       }

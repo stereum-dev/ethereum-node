@@ -263,6 +263,7 @@ export const useClickInstall = defineStore("clickInstallation", {
           url: "https://checkpoint-sync.holesky.ethpandaops.io",
         },
       ],
+      hoodi: [], // TBA - Hoodi
     };
   },
   actions: {},

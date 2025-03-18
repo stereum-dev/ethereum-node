@@ -383,6 +383,7 @@ export class OneClickInstall {
       const networkFeeAddress = {
         mainnet: "0x388C818CA8B9251b393131C08a736A67ccB19297",
         holesky: "0xE73a3602b99f1f913e72F8bdcBC235e206794Ac8",
+        //hoodi: <tba>
       };
       const serviceFeeAddressCommand = {
         LighthouseValidatorService: "--suggested-fee-recipient=",

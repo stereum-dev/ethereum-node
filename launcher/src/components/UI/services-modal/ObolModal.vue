@@ -180,7 +180,7 @@ const topBlock = () => {
     headerStore.generatedENR = "";
     headerStore.distrubutedValidatorGenerator = false;
   } else {
-    let url = "https://holesky.launchpad.obol.tech/";
+    let url = "https://launchpad.obol.tech/";
     window.open(url, "_blank");
   }
 };
