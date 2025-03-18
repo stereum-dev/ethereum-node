@@ -41,6 +41,9 @@ export class LCOMService extends NodeService {
         HOLESKY_CSMODULE_ADDRESS: "0x4562c3e63c2e586cD1651B958C22F88135aCAd4f",
         HOLESKY_CSACCOUNTING_ADDRESS: "0xc093e53e8F4b55A223c18A2Da6fA00e60DD5EFE1",
         HOLESKY_CSFEEDISTRIBUTOR_ADDRESS: "0xD7ba648C8F72669C6aE649648B516ec03D07c8ED",
+
+        // Hoodini Testnet smart-contract addresses:
+        // TBA
       }, // env
       ports, // ports
       volumes, // volumes

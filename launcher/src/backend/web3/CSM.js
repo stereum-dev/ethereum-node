@@ -35,7 +35,9 @@ async function getContractAddress() {
         case 17000:
           log.info("Connected to Holesky. ID =", chainId.toString());
           return "0x4562c3e63c2e586cD1651B958C22F88135aCAd4f";
-
+        case 560048:
+          log.info("Connected to Hoodi. ID =", chainId.toString());
+          return null; // TBA
         default:
           log.info("Connected to unsupported network. ID =", chainId.toString());
           return null;

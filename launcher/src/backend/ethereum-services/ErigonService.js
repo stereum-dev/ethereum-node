@@ -49,6 +49,7 @@ export class ErigonService extends NodeService {
       // consensusClients
     );
 
+    // will be removed with erigon v3.0.0
     switch (network) {
       case "mainnet":
         service.command.push("--prune=htc", "--prune.r.before=11052984");
@@ -60,6 +61,9 @@ export class ErigonService extends NodeService {
         service.command.push("--prune=htc", "--prune.r.before=1273020");
         break;
       case "holesky":
+        service.command.push("--prune=htc");
+        break;
+      case "hoodi":
         service.command.push("--prune=htc");
         break;
       case "gnosis":
