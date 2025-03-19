@@ -46,7 +46,7 @@
         image: "{{ stereum_service_configuration.image }}"
         hostname: "op-reth-init"
         user: "{{ stereum_service_configuration.user }}"
-        env: "[]"
+        env: "{}"
         command:
           - "init-state"
           - "--without-ovm"
@@ -79,9 +79,11 @@
 
     - name: Remove temporary files
       ansible.builtin.file:
-        path: "{{ item.path }}"
+        path: "{{ item }}"
         state: absent
-      with_items: "{{ query('ansible.builtin.find', paths=op_reth_datadir, patterns=['*.jsonl', '*.jsonl.zst']) }}"
+      with_fileglob:
+        - "{{ op_reth_datadir }}/*.jsonl"
+        - "{{ op_reth_datadir }}/*.jsonl.zst"
       become: true
   when: not op_reth_db.stat.exists
 #EOF
