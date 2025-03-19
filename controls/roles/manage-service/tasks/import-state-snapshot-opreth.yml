@@ -1,0 +1,87 @@
+---
+- name: Check if op-reth db exists
+  ansible.builtin.stat:
+    path: "{{ stereum_service_configuration.volumes | select('search', ':/op-reth') | first | split(':') | first }}/db"
+  register: op_reth_db
+
+- name: Initialize Optimism Reth database
+  block:
+    - name: Gather installed package facts
+      ansible.builtin.package_facts:
+        manager: auto
+
+    - name: Install MegaTools and zstd (Debian)
+      ansible.builtin.apt:
+        name:
+          - megatools
+          - zstd
+        state: present
+      when: ansible_os_family == "Debian" and ('megatools' not in ansible_facts.packages or 'zstd' not in ansible_facts.packages)
+
+    - name: Install MegaTools and zstd (CentOS)
+      ansible.builtin.yum:
+        name:
+          - megatools
+          - zstd
+        state: present
+      when: ansible_os_family == "RedHat" and ('megatools' not in ansible_facts.packages or 'zstd' not in ansible_facts.packages)
+
+    - name: Set data directory variable
+      ansible.builtin.set_fact:
+        op_reth_datadir: "{{ stereum_service_configuration.volumes | select('search', ':/op-reth') | first | split(':') | first }}"
+
+    - name: Download state snapshot at Bedrock
+      ansible.builtin.command:
+        cmd: megadl "https://mega.nz/file/GdZ1xbAT#a9cBv3AqzsTGXYgX7nZc_3fl--tcBmOAIwIA5ND6kwc"
+      args:
+        chdir: "{{ op_reth_datadir }}"
+
+    - name: Extract state file
+      ansible.builtin.shell:
+        cmd: "zstd -d -o {{ op_reth_datadir }}/world_trie_state.jsonl {{ op_reth_datadir }}/*.jsonl.zst"
+
+    - name: Import state snapshot at Bedrock
+      community.docker.docker_container:
+        name: "op-reth-init"
+        image: "{{ stereum_service_configuration.image }}"
+        hostname: "op-reth-init"
+        user: "{{ stereum_service_configuration.user }}"
+        env: "[]"
+        command:
+          - "init-state"
+          - "--without-ovm"
+          - "--chain"
+          - "optimism"
+          - "--datadir"
+          - "/op-reth"
+          - "/op-reth/world_trie_state.jsonl"
+        entrypoint: "{{ stereum_service_configuration.entrypoint }}"
+        restart_policy: "no"
+        state: started
+        volumes:
+          - "{{ stereum_service_configuration.volumes | select('search', ':/op-reth') | first }}"
+        log_driver: "json-file"
+        log_options:
+          max-file: "10"
+          max-size: "100m"
+        auto_remove: true
+      failed_when: false
+      become: true
+
+    - name: Wait till op-reth-init container stopped (max 30 min)
+      command: "docker ps"
+      register: stereum_docker_ps
+      until:
+        - stereum_docker_ps.stdout.find("op-reth-init") == -1
+      retries: 180
+      delay: 10
+      changed_when: false
+
+    - name: Remove temporary files
+      ansible.builtin.file:
+        path: "{{ item.path }}"
+        state: absent
+      with_items: "{{ query('ansible.builtin.find', paths=op_reth_datadir, patterns=['*.jsonl', '*.jsonl.zst']) }}"
+      become: true
+  when: not op_reth_db.stat.exists
+#EOF

@@ -148,6 +148,11 @@
         stereum_service_configuration.service is match("NimbusBeaconService") and
         (stereum.manage_service.state == "started" or stereum.manage_service.state == "restarted")
 
+    - include_tasks: import-state-snapshot-opreth.yml
+      when: >
+        (stereum_service_configuration.service is match("OpRethService") and stereum_service_configuration.network is match("op-mainnet")) and
+        (stereum.manage_service.state == "started" or stereum.manage_service.state == "restarted")
+
     - name: Start service
       community.docker.docker_container:
         command_handling: correct
