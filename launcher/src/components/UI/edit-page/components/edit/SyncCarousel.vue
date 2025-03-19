@@ -1,5 +1,5 @@
 <template>
-  <div class="relative w-full h-[60px] col-start-5 col-end-13 flex justify-center items-center gap-x-2">
+  <div class="relative w-full h-[60px] col-start-5 col-end-13 flex justify-center items-center gap-x-2 z-50">
     <Carousel
       ref="carousel"
       v-model="currentSlide"
@@ -14,7 +14,7 @@
       <slide v-for="(item, index) in installStore.syncType" :key="index" aria-current="0">
         <div class="w-11/12 h-full bg-[#33393e] flex justify-center items-center border border-gray-600 rounded-lg">
           <div v-if="item.name === 'genesis'" class="w-full h-full flex justify-evenly items-center p-1">
-            <div class="w-full h-full flex flex-col justify-evenly items-center text-gray-400 p-1">
+            <div class="w-full h-full flex flex-col justify-evenly items-center text-gray-400">
               <span class="w-full font-semibold text-md uppercase">{{ item.name }}</span>
               <span class="w-full font-semibold text-md uppercase text-teal-600">{{ item.type }}</span>
             </div>
@@ -134,14 +134,22 @@ const getCategory = computed(() => {
 const currentNetwork = computed(() => {
   let setupNetwork;
   let current;
-
   setupNetwork = setupStore.selectedSetup?.network;
   current = manageStore.networkList.find((network) => network.network === setupNetwork);
+
   return current;
 });
 
 const selectedLinks = computed(() => {
-  return installStore[currentNetwork.value?.network];
+  let output;
+  if (currentNetwork.value?.network === "op-mainnet") {
+    output = installStore["opMainnet"];
+  } else if (currentNetwork.value?.network === "op-sepolia") {
+    output = installStore["opSepolia"];
+  } else {
+    output = installStore[currentNetwork.value?.network];
+  }
+  return output;
 });
 
 watchEffect(() => {
