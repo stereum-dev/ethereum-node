@@ -2,7 +2,7 @@ import { NodeService } from "./NodeService";
 import { ServiceVolume } from "./ServiceVolume";
 
 export class ValidatorEjectorService extends NodeService {
-  static buildByUserInput(network, dir, executionClients, consensusClients) {
+  static buildByUserInput(network, dir, executionClients = [], consensusClients = []) {
     const service = new ValidatorEjectorService();
     service.setId();
     const workingDir = service.buildWorkingDir(dir);

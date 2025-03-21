@@ -957,6 +957,31 @@ async function createWindow(type = "main") {
     }
   });
 
+  ipcMain.handle("openDirectoryDialog", async (event, args) => {
+    const { canceled, filePaths } = await dialog.showOpenDialog(win, args);
+    if (canceled) return [];
+    return filePaths;
+  });
+
+  ipcMain.handle("openFilePicker", async (event, dialog_options, read_content = false) => {
+    const { canceled, filePaths } = await dialog.showOpenDialog(win, dialog_options);
+    if (canceled) return [];
+    const fileList = [];
+    for (const filePath of filePaths) {
+      try {
+        if (read_content) {
+          const content = readFileSync(filePath, "utf-8");
+          fileList.push({ path: filePath, name: path.basename(filePath), content: content });
+        } else {
+          fileList.push({ path: filePath, name: path.basename(filePath) });
+        }
+      } catch (error) {
+        log.error("Failed reading local file: ", error);
+      }
+    }
+    return fileList;
+  });
+
   return win;
 }
 

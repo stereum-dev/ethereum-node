@@ -114,3 +114,9 @@ test("buildByConfiguration", () => {
   expect(prysm.command).toMatch(/--wallet-dir=\/opt\/app\/data\/wallets/);
   expect(prysm.command).toMatch(/--wallet-password-file=\/opt\/app\/data\/passwords/);
 });
+
+test("getDataDir", () => {
+  const service = PrysmValidatorService.buildByUserInput("goerli", [], "/opt/stereum/app");
+  const serviceDataDir = service.getDataDir();
+  expect(serviceDataDir).toBeFalsy();
+});

@@ -7,6 +7,7 @@ class ControlService extends EventEmitter {
     this.promiseIpc = window.promiseIpc;
     this.addListener = window.promiseIpc.addListener;
     this.removeListener = window.promiseIpc.removeListener;
+    this.webUtils = window.webUtils;
   }
 
   init(store) {
@@ -435,12 +436,12 @@ class ControlService extends EventEmitter {
       files = args.files;
     } else {
       args.files.forEach((file) => {
-        files.push({ name: file.name, path: file.path });
+        files.push({ name: file.name, path: this.webUtils.getPathForFile(file) });
       });
     }
     if (args.passwordFiles && Array.isArray(args.passwordFiles)) {
       args.passwordFiles.forEach((file) => {
-        passwordFiles.push({ name: file.name, path: file.path });
+        passwordFiles.push({ name: file.name, path: this.webUtils.getPathForFile(file) });
       });
     }
     return await this.promiseIpc.send("checkActiveValidators", {
