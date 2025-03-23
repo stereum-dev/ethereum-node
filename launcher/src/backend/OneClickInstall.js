@@ -533,9 +533,7 @@ export class OneClickInstall {
               service.command = service.command.filter((c) => !c.includes("--prune-storage"));
               break;
           }
-
         });
-
     }
   }
 
