@@ -518,6 +518,10 @@ export class OneClickInstall {
             case "TekuBeaconService":
               service.command[service.command.findIndex((c) => c.includes("--data-storage-mode"))] = "--data-storage-mode=archive";
               break;
+            case "GrandineBeaconService":
+              service.command.push("--back-sync");
+              service.command = service.command.filter((c) => !c.includes("--prune-storage"));
+              break;
           }
         });
     }
