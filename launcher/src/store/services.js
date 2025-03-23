@@ -2154,7 +2154,7 @@ export const useServices = defineStore("services", {
           },
         },
         {
-          id: 34,
+          id: 35,
           name: "OpGeth",
           service: "OpGethService",
           category: "execution",
@@ -2269,7 +2269,7 @@ export const useServices = defineStore("services", {
           },
         },
         {
-          id: 35,
+          id: 36,
           name: "OpNode",
           service: "OpNodeBeaconService",
           category: "consensus",
@@ -2358,7 +2358,7 @@ export const useServices = defineStore("services", {
           },
         },
         {
-          id: 36,
+          id: 37,
           name: "L2Geth",
           service: "L2GethService",
           category: "execution",
@@ -2399,7 +2399,7 @@ export const useServices = defineStore("services", {
           },
         },
         {
-          id: 37,
+          id: 38,
           name: "OpErigon",
           service: "OpErigonService",
           category: "execution",
@@ -2490,7 +2490,7 @@ export const useServices = defineStore("services", {
           },
         },
         {
-          id: 38,
+          id: 39,
           name: "OpReth",
           service: "OpRethService",
           category: "execution",
