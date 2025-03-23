@@ -45,3 +45,9 @@ test("buildByConfiguration", () => {
   expect(grafana.volumes).toHaveLength(1);
   expect(grafana.volumes[0]).toBeDefined();
 });
+
+test("getDataDir", () => {
+  const service = GrafanaService.buildByUserInput("goerli", [], "/opt/stereum/app");
+  const serviceDataDir = service.getDataDir();
+  expect(serviceDataDir).toBeFalsy();
+});

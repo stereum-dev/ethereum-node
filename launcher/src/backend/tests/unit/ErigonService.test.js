@@ -81,4 +81,10 @@ test("buildByConfiguration", () => {
   expect(erigonConfig.configVersion).toBe(1);
 });
 
+test("getDataDir", () => {
+  const service = ErigonService.buildByUserInput("goerli", [], "/opt/stereum/app");
+  const serviceDataDir = service.getDataDir();
+  expect(serviceDataDir).toBe("/opt/stereum/app-" + service.id + "/data");
+});
+
 // EOF

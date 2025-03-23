@@ -3,7 +3,7 @@ import { ServicePortDefinition } from "./SerivcePortDefinition.js";
 import { ServiceVolume } from "./ServiceVolume.js";
 
 export class LodestarBeaconService extends NodeService {
-  static buildByUserInput(network, ports, dir, executionClients, mevboost, checkpointURL) {
+  static buildByUserInput(network, ports, dir, executionClients = [], mevboost = [], checkpointURL) {
     const service = new LodestarBeaconService();
     service.setId();
     const workingDir = service.buildWorkingDir(dir);
@@ -103,6 +103,10 @@ export class LodestarBeaconService extends NodeService {
     return `\n  - job_name: stereum-${
       this.id
     }\n    metrics_path: /metrics\n    static_configs:\n      - targets: [${this.buildConsensusClientMetricsEndpoint()}]`;
+  }
+
+  getDataDir() {
+    return this.volumes.find((volume) => volume.servicePath === "/opt/app/beacon")?.destinationPath;
   }
 
   getAvailablePorts() {

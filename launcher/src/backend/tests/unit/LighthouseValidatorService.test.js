@@ -98,4 +98,10 @@ test("buildByConfiguration", () => {
   expect(lh.command).toContain("--beacon-nodes=http://node1:5052,https://node2:999");
 });
 
+test("getDataDir", () => {
+  const service = LighthouseValidatorService.buildByUserInput("goerli", [], "/opt/stereum/app");
+  const serviceDataDir = service.getDataDir();
+  expect(serviceDataDir).toBeFalsy();
+});
+
 // EOF

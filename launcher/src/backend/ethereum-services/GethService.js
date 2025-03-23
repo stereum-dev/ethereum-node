@@ -102,6 +102,10 @@ export class GethService extends NodeService {
       this.id
     }\n    metrics_path: /debug/metrics/prometheus\n    static_configs:\n      - targets: [${this.buildExecutionClientMetricsEndpoint()}]`;
   }
+
+  getDataDir() {
+    return this.volumes.find((volume) => volume.servicePath === "/opt/data/geth")?.destinationPath;
+  }
 }
 
 // EOF

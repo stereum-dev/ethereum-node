@@ -351,6 +351,22 @@ scrape_configs:
 {% endif %}
         ]
 
+# Grandine
+  - job_name: grandine_beacon
+    metrics_path: /metrics
+    static_configs:
+      - targets: [
+{% set targets = [] %}
+{%- for service_config in service_configs.results %}
+  {%- if (service_config.content | b64decode | from_yaml).service == "GrandineBeaconService" %}
+    {%- set _ = targets.append("stereum-" ~ (service_config.content | b64decode | from_yaml).id ~ ":5054") %}
+  {%- endif %}
+{% endfor %}
+{% if targets %}
+          "{{ targets | join('",\n          "') }}"
+{% endif %}
+        ]
+
 # LCOMService
   - job_name: csm_fast_metrics
     scrape_interval: 10s

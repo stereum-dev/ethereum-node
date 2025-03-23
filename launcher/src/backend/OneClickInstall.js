@@ -200,6 +200,16 @@ export class OneClickInstall {
         })
       );
     }
+
+    if (constellation.includes("GrandineBeaconService")) {
+      //GrandineBeaconService
+      this.beaconService = this.serviceManager.getService("GrandineBeaconService", {
+        ...args,
+        executionClients: [this.executionClient],
+        ...(this.mevboost && { mevboost: [this.mevboost] }),
+      });
+    }
+
     let charon = undefined;
     if (constellation.includes("CharonService")) {
       //SSVNetworkService
@@ -523,7 +533,9 @@ export class OneClickInstall {
               service.command = service.command.filter((c) => !c.includes("--prune-storage"));
               break;
           }
+
         });
+
     }
   }
 

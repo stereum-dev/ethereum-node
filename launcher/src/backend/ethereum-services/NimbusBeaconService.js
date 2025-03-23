@@ -3,7 +3,7 @@ import { ServicePortDefinition } from "./SerivcePortDefinition.js";
 import { ServiceVolume } from "./ServiceVolume.js";
 
 export class NimbusBeaconService extends NodeService {
-  static buildByUserInput(network, ports, dir, executionClients, mevboost, checkpointURL) {
+  static buildByUserInput(network, ports, dir, executionClients = [], mevboost = [], checkpointURL) {
     const service = new NimbusBeaconService();
     service.setId();
     const workingDir = service.buildWorkingDir(dir);
@@ -96,6 +96,10 @@ export class NimbusBeaconService extends NodeService {
 
   buildPrometheusJob() {
     return `\n  - job_name: "nimbus"\n    metrics_path: /metrics\n    static_configs:\n      - targets: [${this.buildConsensusClientMetricsEndpoint()}]`;
+  }
+
+  getDataDir() {
+    return this.volumes.find((volume) => volume.servicePath === "/opt/app/beacon")?.destinationPath;
   }
 
   getAvailablePorts() {

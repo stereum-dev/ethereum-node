@@ -74,3 +74,9 @@ test("buildByConfiguration", () => {
   expect(nethermind.volumes).toHaveLength(1);
   expect(nethermind.volumes[0]).toBeDefined();
 });
+
+test("getDataDir", () => {
+  const service = NethermindService.buildByUserInput("goerli", [], "/opt/stereum/app");
+  const serviceDataDir = service.getDataDir();
+  expect(serviceDataDir).toBe("/opt/stereum/app-" + service.id + "/data");
+});

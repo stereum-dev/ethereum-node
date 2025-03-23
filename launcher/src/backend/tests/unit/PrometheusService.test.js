@@ -73,3 +73,9 @@ test("buildByConfiguration", () => {
   expect(prometheus.volumes).toHaveLength(1);
   expect(prometheus.volumes[0]).toBeDefined();
 });
+
+test("getDataDir", () => {
+  const service = PrometheusService.buildByUserInput("goerli", [], "/opt/stereum/app");
+  const serviceDataDir = service.getDataDir();
+  expect(serviceDataDir).toBeFalsy();
+});

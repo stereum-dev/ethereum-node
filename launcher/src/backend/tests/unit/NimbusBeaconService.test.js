@@ -175,4 +175,10 @@ test("buildByConfiguration", () => {
   expect(nimbus.volumes[0]).toBeDefined();
 });
 
+test("getDataDir", () => {
+  const service = NimbusBeaconService.buildByUserInput("goerli", [], "/opt/stereum/app");
+  const serviceDataDir = service.getDataDir();
+  expect(serviceDataDir).toBe("/opt/stereum/app-" + service.id + "/beacon");
+});
+
 // EOF

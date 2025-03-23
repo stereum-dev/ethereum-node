@@ -86,7 +86,6 @@ const onDrop = (event) => {
       const reader = new FileReader();
       reader.onload = () => {
         enteredPassword.value = reader.result.trim();
-        console.log("Password from file:", enteredPassword.value);
       };
       reader.readAsText(file);
     } else {

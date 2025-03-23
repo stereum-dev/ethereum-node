@@ -291,7 +291,7 @@ const addExistingKeyHandler = async (event) => {
   const file = event.target.files[0];
 
   if (file) {
-    const filePath = file.path;
+    const filePath = window.webUtils.getPathForFile(file);
     const fileExtension = filePath.split(".").pop();
 
     if (fileExtension.toLowerCase() === "pub") {

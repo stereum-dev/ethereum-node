@@ -3,7 +3,7 @@ import { ServicePortDefinition } from "./SerivcePortDefinition.js";
 import { ServiceVolume } from "./ServiceVolume.js";
 
 export class TekuBeaconService extends NodeService {
-  static buildByUserInput(network, ports, dir, executionClients, mevboost, checkpointURL) {
+  static buildByUserInput(network, ports, dir, executionClients = [], mevboost = [], checkpointURL) {
     const service = new TekuBeaconService();
     service.setId();
     const workingDir = service.buildWorkingDir(dir);
@@ -108,6 +108,10 @@ export class TekuBeaconService extends NodeService {
     return `\n  - job_name: stereum-${
       this.id
     }\n    scrape_timeout: 10s\n    metrics_path: /metrics\n    scheme: http\n    static_configs:\n      - targets: [${this.buildConsensusClientMetricsEndpoint()}]`;
+  }
+
+  getDataDir() {
+    return this.volumes.find((volume) => volume.servicePath === "/opt/app/data")?.destinationPath;
   }
 
   getAvailablePorts() {

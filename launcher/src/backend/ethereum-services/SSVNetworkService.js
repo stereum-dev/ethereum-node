@@ -3,7 +3,7 @@ import { ServicePortDefinition } from "./SerivcePortDefinition.js";
 import { ServiceVolume } from "./ServiceVolume.js";
 
 export class SSVNetworkService extends NodeService {
-  getServiceConfiguration(network, executionClients, consensusClients) {
+  getServiceConfiguration(network, executionClients = [], consensusClients = []) {
     return `global:
   # Console output log level 
   LogLevel: info
@@ -46,7 +46,7 @@ OperatorPrivateKey: ""
 MetricsAPIPort: 15000`;
   }
 
-  static buildByUserInput(network, ports, dir, executionClients, consensusClients) {
+  static buildByUserInput(network, ports, dir, executionClients = [], consensusClients = []) {
     const service = new SSVNetworkService();
     service.setId();
     const workingDir = service.buildWorkingDir(dir);

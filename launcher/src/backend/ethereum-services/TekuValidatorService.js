@@ -3,7 +3,7 @@ import { ServicePortDefinition } from "./SerivcePortDefinition.js";
 import { ServiceVolume } from "./ServiceVolume.js";
 
 export class TekuValidatorService extends NodeService {
-  static buildByUserInput(network, ports, dir, consensusClients) {
+  static buildByUserInput(network, ports, dir, consensusClients = []) {
     const service = new TekuValidatorService();
     service.setId();
     const workingDir = service.buildWorkingDir(dir);

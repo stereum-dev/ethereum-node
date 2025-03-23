@@ -2,20 +2,18 @@ import { NodeService } from "./NodeService.js";
 import { ServicePortDefinition } from "./SerivcePortDefinition.js";
 import { ServiceVolume } from "./ServiceVolume.js";
 
-export class LighthouseBeaconService extends NodeService {
+export class GrandineBeaconService extends NodeService {
   static buildByUserInput(network, ports, dir, executionClients = [], mevboost = [], checkpointURL) {
-    const service = new LighthouseBeaconService();
+    const service = new GrandineBeaconService();
     service.setId();
     const workingDir = service.buildWorkingDir(dir);
-    const image = "sigp/lighthouse";
+    const image = "sifrai/grandine";
 
     const JWTDir = "/engine.jwt";
-    const dataDir = "/opt/app/beacon";
-    const slasherDir = "/opt/app/slasher";
-    network = network === "op-mainnet" ? "mainnet" : network === "op-sepolia" ? "sepolia" : network;
+    const dataDir = "/opt/app/data";
 
     // volumes
-    const volumes = [new ServiceVolume(workingDir + "/beacon", dataDir), new ServiceVolume(workingDir + "/slasher", slasherDir)];
+    const volumes = [new ServiceVolume(workingDir + "/data", dataDir)];
 
     // eth1 nodes
     const eth1Nodes = executionClients
@@ -36,31 +34,30 @@ export class LighthouseBeaconService extends NodeService {
       .join();
 
     service.init(
-      "LighthouseBeaconService", //service
+      "GrandineBeaconService", //service
       service.id, //id
       1, // configVersion
       image, //image
-      "v3.1.2", //imageVersion
+      "1.0.0", //imageVersion
       [
-        "lighthouse",
-        "bn",
-        "--debug-level=info",
+        "grandine",
         `--network=${network}`,
-        `--execution-endpoint=${eth1Nodes}`,
-        `--execution-jwt=${JWTDir}`,
-        "--eth1-blocks-per-log-query=150",
-        `--datadir=${dataDir}`,
-        "--http",
+        `--data-dir=${dataDir}`,
+        `--eth1-rpc-urls=${eth1Nodes}`,
+        `--jwt-secret=${JWTDir}`,
+        "--http-port=5052",
         "--http-address=0.0.0.0",
+        "--disable-upnp",
+        "--http-allowed-origins=*",
+        "--listen-address=0.0.0.0",
+        "--libp2p-port=9000",
+        "--discovery-port=9000",
+        "--quic-port=9001",
+        "--target-peers=80",
         "--metrics",
         "--metrics-address=0.0.0.0",
-        "--disable-upnp",
-        "--validator-monitor-auto",
-        "--slasher",
-        `--slasher-dir=${slasherDir}`,
-        "--port=9000",
-        "--enr-tcp-port=9000",
-        "--enr-udp-port=9000",
+        "--metrics-port=5054",
+        "--prune-storage",
       ], //command
       null, //entrypoint
       null, //env
@@ -75,16 +72,14 @@ export class LighthouseBeaconService extends NodeService {
 
     if (checkpointURL) {
       service.command.push("--checkpoint-sync-url=" + checkpointURL);
-    } else {
-      service.command.push("--allow-insecure-genesis-sync");
     }
-    if (mevboostEndpoint) service.command.push(`--builder=${mevboostEndpoint}`);
+    if (mevboostEndpoint) service.command.push(`--builder-api-url=${mevboostEndpoint}`);
 
     return service;
   }
 
   static buildByConfiguration(config) {
-    const service = new LighthouseBeaconService();
+    const service = new GrandineBeaconService();
 
     service.initByConfig(config);
 
@@ -112,7 +107,7 @@ export class LighthouseBeaconService extends NodeService {
   }
 
   getDataDir() {
-    return this.volumes.find((volume) => volume.servicePath === "/opt/app/beacon")?.destinationPath;
+    return this.volumes.find((volume) => volume.servicePath === "/opt/app/data")?.destinationPath;
   }
 
   getAvailablePorts() {

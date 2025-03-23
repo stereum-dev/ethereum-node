@@ -18,6 +18,7 @@ import { PrysmBeaconService } from "./ethereum-services/PrysmBeaconService";
 import { PrysmValidatorService } from "./ethereum-services/PrysmValidatorService";
 import { TekuBeaconService } from "./ethereum-services/TekuBeaconService";
 import { TekuValidatorService } from "./ethereum-services/TekuValidatorService";
+import { GrandineBeaconService } from "./ethereum-services/GrandineBeaconService";
 import { NethermindService } from "./ethereum-services/NethermindService";
 import { FlashbotsMevBoostService } from "./ethereum-services/FlashbotsMevBoostService";
 import { ServicePort, servicePortProtocol, changeablePorts } from "./ethereum-services/ServicePort";
@@ -184,6 +185,7 @@ export class ServiceManager {
               services.push(LCOMService.buildByConfiguration(config));
             } else if (config.service == "KuboIPFSService") {
               services.push(KuboIPFSService.buildByConfiguration(config));
+
             } else if (config.service == "OpGethService") {
               services.push(OpGethService.buildByConfiguration(config));
             } else if (config.service == "OpNodeBeaconService") {
@@ -194,6 +196,10 @@ export class ServiceManager {
               services.push(OpErigonService.buildByConfiguration(config));
             } else if (config.service == "OpRethService") {
               services.push(OpRethService.buildByConfiguration(config));
+
+            } else if (config.service == "GrandineBeaconService") {
+              services.push(GrandineBeaconService.buildByConfiguration(config));
+
             }
           } else {
             log.error("found configuration without service!");
@@ -273,20 +279,15 @@ export class ServiceManager {
     let services = await this.readServiceConfigurations();
     let client = services.find((service) => service.id === serviceID);
 
-    const dataDir = client.volumes.find(
-      (vol) =>
-        vol.servicePath === "/opt/app/beacon" ||
-        vol.servicePath === "/opt/app/data" ||
-        vol.servicePath === "/opt/data/geth" ||
-        vol.servicePath === "/opt/data/reth" ||
-        vol.servicePath === "/opt/data/erigon"
-    ).destinationPath;
+    const dataDir = client.getDataDir();
 
     let result = await this.nodeConnection.sshService.exec(`test -d ${dataDir}/ `);
 
-    if (dataDir.length > 0 && result.rc == 0) {
+    if (dataDir && result.rc == 0) {
       await this.manageServiceState(serviceID, "stopped");
-      await this.deleteDataVolume(dataDir);
+      await this.nodeConnection.sshService.exec(`rm -r ${dataDir}/*`);
+    } else {
+      log.error("Data directory not found");
     }
 
     this.updateSyncCommand(client, checkpointUrl);
@@ -302,6 +303,7 @@ export class ServiceManager {
       PrysmBeaconService: "--checkpoint-sync-url=",
       NimbusBeaconService: "--trusted-node-url=",
       TekuBeaconService: "--initial-state=",
+      GrandineBeaconService: "--checkpoint-sync-url=",
     };
 
     const genesisSyncCommands = {
@@ -339,21 +341,17 @@ export class ServiceManager {
     }
   }
 
-  async deleteDataVolume(dataDir) {
-    await this.nodeConnection.sshService.exec(`rm -r ${dataDir}/*`);
-  }
-
   async deleteSlasherVolume(serviceID) {
     let services = await this.readServiceConfigurations();
     let service = services.find((s) => s.id === serviceID);
-    let workingDir = this.getWorkindDir(service);
+    let workingDir = this.getWorkingDir(service);
     if (!workingDir.endsWith("/")) {
       workingDir += "/";
     }
     await this.nodeConnection.sshService.exec(`rm -r ${workingDir}/slasher`);
   }
 
-  getWorkindDir(service) {
+  getWorkingDir(service) {
     if (service.volumes.length > 0) {
       let volumeWithID = service.volumes.find((v) => v.destinationPath.includes(service.id));
       if (volumeWithID && volumeWithID.destinationPath) return volumeWithID.destinationPath.replace(new RegExp(`(?<=${service.id}).*`), "");
@@ -504,6 +502,7 @@ export class ServiceManager {
           command = "--beacon-node-api-endpoint=";
         }
         break;
+
       case "OpNode": {
         filter = (e) => {
           if (e.service === "OpGethService" || e.service === "OpErigonService" || e.service === "OpRethService") {
@@ -549,6 +548,16 @@ export class ServiceManager {
 
         break;
       }
+
+      case "Grandine":
+        if (service.service.includes("Beacon")) {
+          filter = (e) => e.buildExecutionClientEngineRPCHttpEndpointUrl();
+          command = "--eth1-rpc-urls=";
+        }
+        if (service.service.includes("Validator")) {
+          // Grandine Validator stuff once it is implemented
+        }
+        break;
       case "Charon":
         filter = (e) => e.buildConsensusClientHttpEndpointUrl();
         command = "--beacon-node-endpoints=";
@@ -687,6 +696,9 @@ export class ServiceManager {
         break;
       case "TekuBeaconService":
         builderCommand = "--builder-endpoint=";
+        break;
+      case "GrandineBeaconService":
+        builderCommand = "--builder-api-url=";
         break;
     }
     let fullCommand = command.find((c) => c.includes(builderCommand));
@@ -997,6 +1009,7 @@ export class ServiceManager {
         ports = [
           new ServicePort(null, 9000, 9000, servicePortProtocol.tcp),
           new ServicePort(null, 9000, 9000, servicePortProtocol.udp),
+          new ServicePort(null, 9001, 9001, servicePortProtocol.udp),
           new ServicePort("127.0.0.1", args.port ? args.port : 5052, 5052, servicePortProtocol.tcp),
         ];
         return LighthouseBeaconService.buildByUserInput(
@@ -1102,6 +1115,22 @@ export class ServiceManager {
       case "TekuValidatorService":
         ports = [];
         return TekuValidatorService.buildByUserInput(args.network, ports, args.installDir + "/teku", args.consensusClients);
+
+      case "GrandineBeaconService":
+        ports = [
+          new ServicePort(null, 9000, 9000, servicePortProtocol.tcp),
+          new ServicePort(null, 9000, 9000, servicePortProtocol.udp),
+          new ServicePort(null, 9001, 9001, servicePortProtocol.udp),
+          new ServicePort("127.0.0.1", args.port ? args.port : 5052, 5052, servicePortProtocol.tcp),
+        ];
+        return GrandineBeaconService.buildByUserInput(
+          args.network,
+          ports,
+          args.installDir + "/grandine",
+          args.executionClients,
+          args.mevboost ? args.mevboost : [],
+          args.checkpointURL
+        );
 
       case "PrometheusNodeExporterService":
         return PrometheusNodeExporterService.buildByUserInput(args.network);
@@ -1312,7 +1341,7 @@ export class ServiceManager {
   async initWeb3Signer(services) {
     for (const service of services) {
       await this.manageServiceState(service.id, "started");
-      const workingDir = this.getWorkindDir(service);
+      const workingDir = this.getWorkingDir(service);
       await this.nodeConnection.sshService.exec("docker cp stereum-" + service.id + ":/opt/web3signer/migrations/postgresql " + workingDir);
       await this.manageServiceState(service.id, "stopped");
       service.command = service.command.filter((c) => c != "--slashing-protection-enabled=false");
@@ -1799,7 +1828,7 @@ export class ServiceManager {
     for (const service of services) {
       if (service.volumes.length > 0) {
         //get service data path
-        let path = this.getWorkindDir(service);
+        let path = this.getWorkingDir(service);
         await this.nodeConnection.sshService.exec("rm -rf " + path);
       }
     }
@@ -2236,7 +2265,7 @@ export class ServiceManager {
     try {
       let services = await this.readServiceConfigurations();
       let service = services.find((s) => s.id === serviceID);
-      let workingDir = this.getWorkindDir(service);
+      let workingDir = this.getWorkingDir(service);
       if (!workingDir.endsWith("/")) {
         workingDir += "/";
       }
@@ -2272,6 +2301,7 @@ export class ServiceManager {
       TekuBeaconService: "--metrics-publish-endpoint=",
       LodestarValidatorService: "--monitoring.endpoint=",
       LodestarBeaconService: "--monitoring.endpoint=",
+      GrandineBeaconService: "--remote-metrics-url",
     };
 
     let metricsExporterAdded = false;
@@ -2311,6 +2341,7 @@ export class ServiceManager {
     }
 
     switch (firstConsensusClient.service) {
+      case "GrandineBeaconService":
       case "LighthouseBeaconService":
       case "TekuBeaconService":
       case "LodestarBeaconService":
@@ -2407,6 +2438,7 @@ export class ServiceManager {
       TekuBeaconService: "--metrics-publish-endpoint=",
       LodestarValidatorService: "--monitoring.endpoint=",
       LodestarBeaconService: "--monitoring.endpoint=",
+      GrandineBeaconService: "--remote-metrics-url",
     };
 
     let services = await this.readServiceConfigurations();
@@ -2431,6 +2463,7 @@ export class ServiceManager {
     }
 
     switch (firstConsensusClient.service) {
+      case "GrandineBeaconService":
       case "LighthouseBeaconService":
       case "TekuBeaconService":
       case "LodestarBeaconService":

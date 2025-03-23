@@ -1,4 +1,4 @@
-const { contextBridge, ipcRenderer } = require("electron");
+const { contextBridge, ipcRenderer, webUtils } = require("electron");
 
 contextBridge.exposeInMainWorld("promiseIpc", {
   send: (event, ...args) => ipcRenderer.invoke(event, ...args),
@@ -17,4 +17,8 @@ contextBridge.exposeInMainWorld("promiseIpc", {
     ipcRenderer.on("handle-custom-url", (_, url) => callback(url));
     return () => ipcRenderer.removeListener("handle-custom-url", callback);
   },
+});
+
+contextBridge.exposeInMainWorld("webUtils", {
+  getPathForFile: (file) => webUtils.getPathForFile(file),
 });

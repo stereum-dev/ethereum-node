@@ -111,7 +111,7 @@ export function useImportKeys(forceRefresh) {
       passwordFiles: stakingStore.passwordFiles,
       password: stakingStore.importEnteredPassword,
       serviceID: stakingStore.selectedValidatorService.config?.serviceID,
-      slashingDB: stakingStore.slashingDB?.path || null,
+      slashingDB: stakingStore.slashingDB ? window.webUtils.getPathForFile(stakingStore.slashingDB) : null,
     });
 
     if (

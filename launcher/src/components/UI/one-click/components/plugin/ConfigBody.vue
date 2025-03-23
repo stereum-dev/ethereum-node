@@ -96,22 +96,30 @@ const pluginChangeHandler = (plugin, item, idx) => {
 
   clickStore.selectedPreset?.includedPlugins.splice(idx, 0, item);
 
+
   if (
     ["staking", "mev boost", "stereum on arm", "archive", "lidocsm", "op and eth full node", "op and eth node archive"].includes(
       clickStore.selectedPreset.name
     )
   ) {
-    if (item.category === "consensus") {
+    if (item.category === "consensus" && getCorrespondingValidator(item.name)) {
+
       let valIndex = clickStore.selectedPreset.includedPlugins.findIndex((e) => e.category === "validator");
-      clickStore.selectedPreset.includedPlugins[valIndex] = serviceStore.allServices.find(
-        (e) => e.service === item.name + "ValidatorService"
-      );
-    } else if (item.category === "validator") {
+      clickStore.selectedPreset.includedPlugins[valIndex] = getCorrespondingValidator(item.name);
+    } else if (item.category === "validator" && getCorrespondingConsensus(item.name)) {
       let conIndex = clickStore.selectedPreset.includedPlugins.findIndex((e) => e.category === "consensus");
-      clickStore.selectedPreset.includedPlugins[conIndex] = serviceStore.allServices.find((e) => e.service === item.name + "BeaconService");
+      clickStore.selectedPreset.includedPlugins[conIndex] = getCorrespondingConsensus(item.name);
     }
   }
   sortPlugins();
+};
+
+const getCorrespondingValidator = (serviceName) => {
+  return serviceStore.allServices.find((e) => e.service === serviceName + "ValidatorService");
+};
+
+const getCorrespondingConsensus = (serviceName) => {
+  return serviceStore.allServices.find((e) => e.service === serviceName + "BeaconService");
 };
 
 const sortPlugins = () => {
