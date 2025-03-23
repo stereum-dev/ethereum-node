@@ -96,14 +96,12 @@ const pluginChangeHandler = (plugin, item, idx) => {
 
   clickStore.selectedPreset?.includedPlugins.splice(idx, 0, item);
 
-
   if (
     ["staking", "mev boost", "stereum on arm", "archive", "lidocsm", "op and eth full node", "op and eth node archive"].includes(
       clickStore.selectedPreset.name
     )
   ) {
     if (item.category === "consensus" && getCorrespondingValidator(item.name)) {
-
       let valIndex = clickStore.selectedPreset.includedPlugins.findIndex((e) => e.category === "validator");
       clickStore.selectedPreset.includedPlugins[valIndex] = getCorrespondingValidator(item.name);
     } else if (item.category === "validator" && getCorrespondingConsensus(item.name)) {

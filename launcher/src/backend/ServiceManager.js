@@ -185,7 +185,6 @@ export class ServiceManager {
               services.push(LCOMService.buildByConfiguration(config));
             } else if (config.service == "KuboIPFSService") {
               services.push(KuboIPFSService.buildByConfiguration(config));
-
             } else if (config.service == "OpGethService") {
               services.push(OpGethService.buildByConfiguration(config));
             } else if (config.service == "OpNodeBeaconService") {
@@ -196,10 +195,8 @@ export class ServiceManager {
               services.push(OpErigonService.buildByConfiguration(config));
             } else if (config.service == "OpRethService") {
               services.push(OpRethService.buildByConfiguration(config));
-
             } else if (config.service == "GrandineBeaconService") {
               services.push(GrandineBeaconService.buildByConfiguration(config));
-
             }
           } else {
             log.error("found configuration without service!");
