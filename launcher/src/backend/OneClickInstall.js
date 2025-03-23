@@ -203,11 +203,19 @@ export class OneClickInstall {
 
     if (constellation.includes("GrandineBeaconService")) {
       //GrandineBeaconService
-      this.beaconService = this.serviceManager.getService("GrandineBeaconService", {
-        ...args,
-        executionClients: [this.executionClient],
-        ...(this.mevboost && { mevboost: [this.mevboost] }),
-      });
+      this.beaconService.push(
+        this.serviceManager.getService("GrandineBeaconService", {
+          ...args,
+          executionClients: this.executionClient.filter(
+            (client) =>
+              client.service !== "OpGethService" ||
+              client.service !== "L2GethService" ||
+              client.service !== "OpErigonService" ||
+              client.service !== "OpRethService"
+          ),
+          ...(this.mevboost && { mevboost: [this.mevboost] }),
+        })
+      );
     }
 
     let charon = undefined;
