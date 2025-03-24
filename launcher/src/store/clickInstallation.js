@@ -263,7 +263,44 @@ export const useClickInstall = defineStore("clickInstallation", {
           url: "https://checkpoint-sync.holesky.ethpandaops.io",
         },
       ],
-      hoodi: [], // TBA - Hoodi
+      hoodi: [
+        {
+          id: 1,
+          name: "EthStaker",
+          icon: "/img/icon/checkpoint-sync-icons/ethstaker-checkpoint-icon.png",
+          url: "https://hoodi.beaconstate.ethstaker.cc",
+        },
+        {
+          id: 2,
+          name: "EF DevOps",
+          icon: "/img/icon/checkpoint-sync-icons/ef-devops-checkpoint-icon.png",
+          url: "https://checkpoint-sync.hoodi.ethpandaops.io",
+        },
+        {
+          id: 3,
+          name: "BeaconState.info",
+          icon: "",
+          url: "https://hoodi.beaconstate.info",
+        },
+        {
+          id: 4,
+          name: "Lodestar",
+          icon: "/img/icon/checkpoint-sync-icons/lodestar-checkpoint-icon.png",
+          url: "https://beaconstate-hoodi.chainsafe.io",
+        },
+        {
+          id: 5,
+          name: "stakely.io",
+          icon: "/img/icon/checkpoint-sync-icons/stakely-io-checkpoint-icon.png",
+          url: "https://hoodi-checkpoint-sync.stakely.io/",
+        },
+        {
+          id: 6,
+          name: "Attestant",
+          icon: "/img/icon/checkpoint-sync-icons/attestant-checkpoint-icon.png",
+          url: "https://hoodi-checkpoint-sync.attestant.io/",
+        },
+      ],
     };
   },
   actions: {},
