@@ -192,11 +192,10 @@ onMounted(() => {
 //Methods
 const updateProperties = () => {
   props.properties.executionClients = useDeepClone(list.value.filter((e) => e.category === "execution" && e.isConnected));
-  console.log("executionClients", props.properties.executionClients);
   props.properties.consensusClients = useDeepClone(
     list.value.filter((e) => (e.category === "consensus" || e.service === "CharonService") && e.isConnected)
   );
-  console.log("consensusClients", props.properties.consensusClients);
+
   props.properties.otherServices = list.value.filter((e) => e.category === "service" && e.isConnected);
 };
 

@@ -85,8 +85,6 @@ const getServices = computed(() => {
   return service;
 });
 
-console.log(props.client.category);
-
 //Methods
 
 const switchService = (service) => {
