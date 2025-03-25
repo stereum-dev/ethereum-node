@@ -66,6 +66,24 @@ onMounted(() => {
   clickStore.installMonitoring = false;
 });
 
+const updatePlugins = () => {
+  if (clickStore.selectedPreset.name === "op node archive" || clickStore.selectedPreset.name === "op and eth node archive") {
+    const OpRethExists = clickStore.selectedPreset.includedPlugins.some((item) => item.service === "OpRethService");
+    const L2GethExists = clickStore.selectedPreset.includedPlugins.some((item) => item.service === "L2GethService");
+    if (OpRethExists && L2GethExists) {
+      clickStore.selectedPreset.includedPlugins = clickStore.selectedPreset.includedPlugins.filter(
+        (item) => item.service !== "L2GethService"
+      );
+    } else if (!OpRethExists && !L2GethExists) {
+      clickStore.selectedPreset.includedPlugins = clickStore.selectedPreset.includedPlugins.concat(
+        serviceStore.allServices.filter((s) => s.service === "L2GethService")
+      );
+    }
+
+    return clickStore.selectedPreset.includedPlugins;
+  }
+};
+
 //Methods
 const filterMonitoringServices = () => {
   if (clickStore.installMonitoring) {
@@ -109,6 +127,7 @@ const pluginChangeHandler = (plugin, item, idx) => {
       clickStore.selectedPreset.includedPlugins[conIndex] = getCorrespondingConsensus(item.name);
     }
   }
+  updatePlugins();
   sortPlugins();
 };
 
@@ -138,6 +157,7 @@ const pluginExChange = (el) => {
         checkPluginCategory(item);
       }
     });
+
     el.openReplaceModal = true;
   }
 };
@@ -201,9 +221,10 @@ const checkPluginCategory = (element) => {
       break;
 
     case "op full node":
-    case "op node archive":
       filter = (item) => {
-        if (element.service === "OpGethService" || element.service === "OpErigonService" || element.service === "OpRethService") {
+        if (manageStore.currentNetwork.network == "op-mainnet") {
+          return item.category === element.category && /(OpGethService|OpErigonService)/.test(item.service);
+        } else if (element.service === "OpGethService" || element.service === "OpErigonService" || element.service === "OpRethService") {
           return item.category === element.category && /(OpGethService|OpErigonService|OpRethService)/.test(item.service);
         } else if (element.service === "L2GethService") {
           return item.category === element.category && /L2GethService/.test(item.service);
@@ -215,9 +236,10 @@ const checkPluginCategory = (element) => {
       break;
 
     case "op and eth full node":
-    case "op and eth node archive":
       filter = (item) => {
-        if (element.service === "OpGethService" || element.service === "OpErigonService" || element.service === "OpRethService") {
+        if (manageStore.currentNetwork.network == "op-mainnet") {
+          return item.category === element.category && /(OpGethService|OpErigonService)/.test(item.service);
+        } else if (element.service === "OpGethService" || element.service === "OpErigonService" || element.service === "OpRethService") {
           return item.category === element.category && /(OpGethService|OpErigonService|OpRethService)/.test(item.service);
         } else if (element.service === "L2GethService") {
           return item.category === element.category && /L2GethService/.test(item.service);
@@ -233,9 +255,29 @@ const checkPluginCategory = (element) => {
       };
       break;
 
+    case "op node archive":
+    case "op and eth node archive":
+      filter = (item) => {
+        if (element.category === "execution") {
+          if (/Op(Geth|Erigon|Reth)Service/.test(element.service)) {
+            return item.category === "execution" && /(OpGethService|OpErigonService|OpRethService)/.test(item.service);
+          }
+
+          if (element.service === "L2GethService") {
+            return item.category === "execution" && item.service === "L2GethService";
+          }
+
+          return item.category === "execution" && !/(SSVNetwork|Web3Signer|Charon|L2Geth|OpGeth|OpNode|OpReth|OpErigon)/.test(item.service);
+        }
+
+        return false;
+      };
+      break;
+
     default:
       break;
   }
+
   filteredPluginsOnCategory.value = serviceStore.allServices.filter(filter);
 };
 
