@@ -43,7 +43,8 @@ p2p:
 
 OperatorPrivateKey: ""
 
-MetricsAPIPort: 15000`;
+MetricsAPIPort: 15000
+SSVAPIPort: 16000`;
   }
 
   static buildByUserInput(network, ports, dir, executionClients = [], consensusClients = []) {
@@ -90,6 +91,10 @@ MetricsAPIPort: 15000`;
     return "stereum-" + this.id + ":15000";
   }
 
+  buildSSVNodeApiEndpoint() {
+    return "stereum-" + this.id + ":16000";
+  }
+
   buildPrometheusJob() {
     return `\n  - job_name: ssv\n    metrics_path: /metrics\n    static_configs:\n      - targets: [${this.buildValidatorClientMetricsEndpoint()}]\n  - job_name: ssv_health\n    metrics_path: /health\n    static_configs:\n      - targets: [${this.buildValidatorClientMetricsEndpoint()}]`;
   }
@@ -99,6 +104,7 @@ MetricsAPIPort: 15000`;
       new ServicePortDefinition(13000, "tcp", "P2P connections"),
       new ServicePortDefinition(12000, "udp", "P2P connections"),
       new ServicePortDefinition(15000, "udp", "Metrics port"),
+      new ServicePortDefinition(16000, "tcp", "SSV Node API"),
     ];
   }
 }
