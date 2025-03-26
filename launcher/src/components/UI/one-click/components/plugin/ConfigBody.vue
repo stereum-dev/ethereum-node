@@ -119,11 +119,13 @@ const pluginChangeHandler = (plugin, item, idx) => {
       clickStore.selectedPreset.name
     )
   ) {
-    if (item.category === "consensus" && getCorrespondingValidator(item.name)) {
+    if (item.category === "consensus" && getCorrespondingValidator(item.name) && item.service !== "GrandineBeaconService") {
       let valIndex = clickStore.selectedPreset.includedPlugins.findIndex((e) => e.category === "validator");
       clickStore.selectedPreset.includedPlugins[valIndex] = getCorrespondingValidator(item.name);
     } else if (item.category === "validator" && getCorrespondingConsensus(item.name)) {
-      let conIndex = clickStore.selectedPreset.includedPlugins.findIndex((e) => e.category === "consensus");
+      let conIndex = clickStore.selectedPreset.includedPlugins.findIndex(
+        (e) => e.category === "consensus" && e.service === "GrandineBeaconService"
+      );
       clickStore.selectedPreset.includedPlugins[conIndex] = getCorrespondingConsensus(item.name);
     }
   }
