@@ -233,6 +233,10 @@ const checkPluginCategory = (element) => {
         } else if (element.service === "L2GethService") {
           return item.category === element.category && /L2GethService/.test(item.service);
         }
+
+        if (element.category === "consensus" && element.service === "OpNodeBeaconService") {
+          return item.category === element.category && /(OpNode)/.test(item.service);
+        }
         return (
           item.category === element.category && item.service === element.service && /OpGethService|OpNodeBeaconService/.test(item.service)
         );
@@ -241,25 +245,52 @@ const checkPluginCategory = (element) => {
 
     case "op and eth full node":
       filter = (item) => {
-        if (manageStore.currentNetwork.network == "op-mainnet") {
-          return item.category === element.category && /(OpGethService|OpErigonService)/.test(item.service);
-        } else if (element.service === "OpGethService" || element.service === "OpErigonService" || element.service === "OpRethService") {
-          return item.category === element.category && /(OpGethService|OpErigonService|OpRethService)/.test(item.service);
-        } else if (element.service === "L2GethService") {
-          return item.category === element.category && /L2GethService/.test(item.service);
-        } else if (element.service === "OpNodeBeaconService") {
-          return false;
+        if (element.category === "execution") {
+          if (/Op(Geth|Erigon|Reth)Service/.test(element.service)) {
+            return item.category === "execution" && /(OpGethService|OpErigonService|OpRethService)/.test(item.service);
+          }
+          if (manageStore.currentNetwork.network == "op-mainnet" && /Op(Geth|Erigon|Reth)Service/.test(element.service)) {
+            return item.category === "execution" && /(OpGethService|OpErigonService)/.test(item.service);
+          }
+
+          if (element.service === "L2GethService") {
+            return item.category === "execution" && item.service === "L2GethService";
+          }
+
+          return item.category === "execution" && !/(SSVNetwork|Web3Signer|Charon|L2Geth|OpGeth|OpNode|OpReth|OpErigon)/.test(item.service);
+        }
+
+        if (element.category === "consensus" && element.service === "OpNodeBeaconService") {
+          return item.category === element.category && /(OpNode)/.test(item.service);
         }
 
         return (
-          item.category === element.category &&
-          !/(SSVNetwork|Web3Signer|Charon|L2Geth|OpGeth|OpNode|OpReth|OpErigon)/.test(item.service) &&
-          (manageStore.currentNetwork.network !== "gnosis" || /(Lighthouse|Teku|Nethermind|Erigon|Nimbus|Lodestar)/.test(item.service))
+          item.category === element.category && !/(SSVNetwork|Web3Signer|Charon|L2Geth|OpGeth|OpNode|OpReth|OpErigon)/.test(item.service)
         );
       };
       break;
 
     case "op node archive":
+      filter = (item) => {
+        if (element.category === "execution") {
+          if (/Op(Geth|Erigon|Reth)Service/.test(element.service)) {
+            return item.category === "execution" && /(OpGethService|OpErigonService|OpRethService)/.test(item.service);
+          }
+
+          if (element.service === "L2GethService") {
+            return item.category === "execution" && item.service === "L2GethService";
+          }
+
+          return item.category === "execution" && !/(SSVNetwork|Web3Signer|Charon|L2Geth|OpGeth|OpNode|OpReth|OpErigon)/.test(item.service);
+        }
+        if (element.category === "consensus" && element.service === "OpNodeBeaconService") {
+          return item.category === element.category && /(OpNode)/.test(item.service);
+        }
+
+        return false;
+      };
+      break;
+
     case "op and eth node archive":
       filter = (item) => {
         if (element.category === "execution") {
@@ -274,7 +305,13 @@ const checkPluginCategory = (element) => {
           return item.category === "execution" && !/(SSVNetwork|Web3Signer|Charon|L2Geth|OpGeth|OpNode|OpReth|OpErigon)/.test(item.service);
         }
 
-        return false;
+        if (element.category === "consensus" && element.service === "OpNodeBeaconService") {
+          return item.category === element.category && /(OpNode)/.test(item.service);
+        }
+
+        return (
+          item.category === element.category && !/(SSVNetwork|Web3Signer|Charon|L2Geth|OpGeth|OpNode|OpReth|OpErigon)/.test(item.service)
+        );
       };
       break;
 
