@@ -864,6 +864,10 @@ ipcMain.handle("getSSVClusterInformation", async (event, args) => {
   return await monitoring.getSSVClusterInformation(args.serviceID);
 });
 
+ipcMain.handle("fetchSsvnomsMetrics", async () => {
+  return await monitoring.fetchSsvnomsMetrics();
+});
+
 let mainWindow = null;
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { secure: true, standard: true } }]);
