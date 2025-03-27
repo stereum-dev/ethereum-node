@@ -1,0 +1,27 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+    # ErigonService
+    - name: Read ErigonService file
+      slurp:
+        src: "/etc/stereum/services/50630a95-6c30-446c-b543-d5497f2c9020.yaml"
+      register: erigon_service_configuration_raw
+
+    - name: Parse Service configurations
+      set_fact:
+        erigon_service_configuration: "{{ erigon_service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+    - debug:
+        msg: "{{ erigon_service_configuration }}"
+    - debug:
+        msg: "{{ erigon_service_configuration_raw['content'] | b64decode }}"
+
+    - assert:
+        that:
+          - erigon_service_configuration.command | select('match', '--prune.mode=full') | length == 1
+          - erigon_service_configuration.command | select('match', '--prune.r.before') | length == 0
+          - erigon_service_configuration.command | select('match', '--externalcl') | length == 1
+          - erigon_service_configuration.command | select('match', '--internalcl') | length == 0
+          - erigon_service_configuration.command | select('match', '--prune=htc') | length == 0

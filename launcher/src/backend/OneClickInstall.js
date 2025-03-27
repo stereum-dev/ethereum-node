@@ -497,8 +497,8 @@ export class OneClickInstall {
             case "RethService":
               // archive by default
               break;
-            case "ErigonService":
-              client.command = client.command.filter((c) => !c.includes("--prune"));
+            case "ErigonService":             
+              client.command[client.command.findIndex((c) => c.includes("--prune.mode"))] = "--prune.mode=archive";
               break;
             case "BesuService":
               client.command[client.command.findIndex((c) => c.includes("--sync-mode=SNAP"))] = "--sync-mode=FULL";

@@ -39,6 +39,8 @@ export class ErigonService extends NodeService {
         `--metrics.port=6060`,
         "--db.pagesize=16K",
         "--db.size.limit=8TB",
+        "--externalcl",
+        "--prune.mode=full",
       ], // command
       [], // entrypoint
       null, // env
@@ -49,27 +51,6 @@ export class ErigonService extends NodeService {
       // executionClients
       // consensusClients
     );
-
-    switch (network) {
-      case "mainnet":
-        service.command.push("--prune=htc", "--prune.r.before=11052984");
-        break;
-      case "goerli":
-        service.command.push("--prune=htc", "--prune.r.before=4367322");
-        break;
-      case "sepolia":
-        service.command.push("--prune=htc", "--prune.r.before=1273020");
-        break;
-      case "holesky":
-        service.command.push("--prune=htc");
-        break;
-      case "gnosis":
-        service.command.push("--prune=htc", "--prune.r.before=19469077");
-        break;
-      default:
-        service.command.push("--prune=htc");
-        break;
-    }
 
     return service;
   }

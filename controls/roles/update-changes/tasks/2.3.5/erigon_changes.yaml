@@ -1,0 +1,35 @@
+---
+- name: Read service file
+  slurp:
+    src: "{{ config_file.path }}"
+  register: service_configuration_raw
+
+- name: Parse service's configuration
+  set_fact:
+    service_configuration: "{{ service_configuration_raw['content'] | b64decode | from_yaml }}"
+    service_configuration_text: "{{ service_configuration_raw['content'] | b64decode }}"
+
+- name: Erigon Changes
+  when: service_configuration.service == "ErigonService"
+  block:
+    - name: add --prune.mode=full flag
+      replace:
+        path: "{{ config_file.path }}"
+        regexp: "--prune(=|\\s).*"
+        replace: "--prune.mode=full"
+      when: service_configuration.command | select('match', '--prune.mode') | length == 0
+
+    - name: remove --prune.r.before
+      lineinfile:
+        path: "{{ config_file.path }}"
+        regex: "--prune.r.before"
+        state: absent
+
+    - name: add --externalcl
+      lineinfile:
+        path: "{{ config_file.path }}"
+        insertafter: "- erigon"
+        line: "{{ service_configuration_text | split('\n') | select('match', '^\\s*- --datadir.*') | first | split('-') | first }}- --externalcl"
+      when:
+        - service_configuration.command | select('match', '--externalcl') | length == 0
+        - service_configuration.command | select('match', '--internalcl') | length == 0
