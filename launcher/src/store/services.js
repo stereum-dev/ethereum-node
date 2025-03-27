@@ -2355,8 +2355,8 @@ export const useServices = defineStore("services", {
           path: "/opnode",
           linkUrl: "",
           docsUrl: "https://docs.optimism.io/",
-          icon: require("../../public/img/icon/service-icons/execution/op-node.png"),
-          sIcon: require("../../public/img/icon/service-icons/execution/op-node-s.png"),
+          icon: require("../../public/img/icon/service-icons/consensus/op-node.png"),
+          sIcon: require("../../public/img/icon/service-icons/consensus/op-node-s.png"),
           headerOption: false,
           expertOptionsModal: false,
           expertOptions: [
