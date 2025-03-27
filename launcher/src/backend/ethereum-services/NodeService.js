@@ -24,6 +24,10 @@ export const networks = {
     name: "holesky",
     dataEndpoint: "https://holesky.beaconcha.in/api/v1",
   },
+  hoodi: {
+    name: "hoodi",
+    dataEndpoint: "https://hoodi.beaconcha.in/api/v1",
+  },
 };
 
 export class NodeService {
