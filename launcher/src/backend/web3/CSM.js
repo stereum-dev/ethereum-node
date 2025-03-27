@@ -37,7 +37,7 @@ async function getContractAddress() {
           return "0x4562c3e63c2e586cD1651B958C22F88135aCAd4f";
         case 560048:
           log.info("Connected to Hoodi. ID =", chainId.toString());
-          return null; // TBA
+          return "0x79CEf36D84743222f37765204Bec41E92a93E59d";
         default:
           log.info("Connected to unsupported network. ID =", chainId.toString());
           return null;
