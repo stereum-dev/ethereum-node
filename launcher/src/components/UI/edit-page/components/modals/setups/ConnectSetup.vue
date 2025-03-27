@@ -18,158 +18,145 @@
         </div>
 
         <div class="flex flex-col items-center py-2 px-4 space-y-2 max-h-[400px] overflow-y-auto relative">
-          <!-- Step 1: Select OP Node -->
-          <div
-            v-if="currentStep === 1"
-            :class="[
-              'w-full space-y-2',
-              animateNextClicked ? 'animate__animated animate__fadeOutLeft animate__duration-1s' : 'animate__animated animate__fadeIn',
-            ]"
-          >
-            <div
-              v-for="service in getOpNodeFromOpSetup"
-              :key="service?.config?.serviceID"
-              class="w-full p-2 border border-gray-700 rounded-md shadow-md transition cursor-pointer"
-              :class="isOpNodeSelected(service) ? 'bg-teal-700' : 'bg-neutral-900/90 hover:bg-gray-700'"
-              @click="toggleOpNodeSelection(service)"
-            >
-              <div class="flex items-center justify-between w-full">
-                <div class="flex items-center">
-                  <img v-if="service" :src="service.icon" alt="Setup Icon" class="w-6 h-6 rounded-full mr-3" />
+          <!-- Step container with overflow hidden to contain animations -->
+          <div class="w-full relative overflow-hidden" style="min-height: 240px">
+            <!-- Step 1: Select OP Node -->
+            <div v-show="currentStep === 1" ref="step1" class="w-full space-y-2">
+              <div
+                v-for="service in getOpNodeFromOpSetup"
+                :key="service?.config?.serviceID"
+                class="w-full p-2 border border-gray-700 rounded-md shadow-md transition cursor-pointer"
+                :class="isOpNodeSelected(service) ? 'bg-teal-700' : 'bg-neutral-900/90 hover:bg-gray-700'"
+                @click="toggleOpNodeSelection(service)"
+              >
+                <div class="flex items-center justify-between w-full">
+                  <div class="flex items-center">
+                    <img v-if="service" :src="service.icon" alt="Setup Icon" class="w-6 h-6 rounded-full mr-3" />
+                    <div class="flex flex-col">
+                      <span class="text-sm font-semibold text-gray-200 uppercase">
+                        {{ service.service }}
+                      </span>
+                      <span class="text-xs text-gray-400"> ID: {{ service.config.serviceID }} </span>
+                    </div>
+                  </div>
+
+                  <div v-if="isOpNodeSelected(service)" class="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor">
+                      <path
+                        fill-rule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 2: Select Setup -->
+            <div v-show="currentStep === 2" ref="step2" class="w-full space-y-2 absolute top-0 left-0">
+              <div
+                v-for="setup in filteredSetups"
+                :key="setup.setupId"
+                class="w-full p-2 border border-gray-700 rounded-md shadow-md transition cursor-pointer flex justify-between items-center"
+                :class="isSetupSelected(setup) ? 'bg-teal-700' : 'bg-neutral-900/90 hover:bg-gray-700'"
+                @click="selectSetup(setup)"
+              >
+                <div class="flex items-center mb-2">
+                  <img v-if="setup.services.length > 0" :src="setup.services[0].icon" alt="Setup Icon" class="w-6 h-6 rounded-full mr-3" />
                   <div class="flex flex-col">
-                    <span class="text-sm font-semibold text-gray-200 uppercase">
-                      {{ service.service }}
-                    </span>
-                    <span class="text-xs text-gray-400"> ID: {{ service.config.serviceID }} </span>
+                    <span class="text-sm font-semibold text-gray-200 uppercase">{{ setup.setupName }}</span>
+                    <span class="text-xs text-gray-400">Network: {{ setup.network }}</span>
                   </div>
                 </div>
+                <div class="flex items-center">
+                  <span class="w-5 h-5 rounded-full" :class="setupStore.getBGColor(setup.color)"></span>
 
-                <div v-if="isOpNodeSelected(service)" class="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor">
-                    <path
-                      fill-rule="evenodd"
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                      clip-rule="evenodd"
-                    />
-                  </svg>
+                  <div v-if="isSetupSelected(setup)" class="ml-2 w-5 h-5 rounded-full bg-green-500 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor">
+                      <path
+                        fill-rule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </div>
                 </div>
               </div>
+              <p v-if="filteredSetups.length === 0" class="text-gray-400 italic">No valid setups available.</p>
             </div>
-          </div>
 
-          <!-- Step 2: Select Setup -->
-          <div
-            v-if="currentStep === 2"
-            :class="[
-              'w-full space-y-2',
-              animateNextClicked ? 'animate__animated animate__fadeOutUp animate__duration-1s' : 'animate__animated animate__fadeIn',
-            ]"
-          >
+            <!-- Step 3: Select Services -->
             <div
-              v-for="setup in filteredSetups"
-              :key="setup.setupId"
-              class="w-full p-2 border border-gray-700 rounded-md shadow-md transition cursor-pointer flex justify-between items-center"
-              :class="isSetupSelected(setup) ? 'bg-teal-700' : 'bg-neutral-900/90 hover:bg-gray-700'"
-              @click="selectSetup(setup)"
+              v-show="currentStep === 3"
+              ref="step3"
+              class="w-full space-y-1 absolute top-0 left-0 max-h-[240px] overflow-y-auto p-2 overflow-x-hidden"
             >
-              <div class="flex items-center mb-2">
-                <img v-if="setup.services.length > 0" :src="setup.services[0].icon" alt="Setup Icon" class="w-6 h-6 rounded-full mr-3" />
-                <div class="flex flex-col">
-                  <span class="text-sm font-semibold text-gray-200 uppercase">{{ setup.setupName }}</span>
-                  <span class="text-xs text-gray-400">Network: {{ setup.network }}</span>
-                </div>
+              <div class="text-xs text-center mt-4">
+                <p class="text-gray-400">Select a consensus service first, then choose one or more execution services.</p>
               </div>
-              <div class="flex items-center">
-                <span class="w-5 h-5 rounded-full" :class="setupStore.getBGColor(setup.color)"></span>
-
-                <div v-if="isSetupSelected(setup)" class="ml-2 w-5 h-5 rounded-full bg-green-500 flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor">
-                    <path
-                      fill-rule="evenodd"
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                      clip-rule="evenodd"
-                    />
-                  </svg>
-                </div>
-              </div>
-            </div>
-            <p v-if="filteredSetups.length === 0" class="text-gray-400 italic">No valid setups available.</p>
-          </div>
-
-          <!-- Step 3: Select Services (Revised) -->
-
-          <div
-            v-if="currentStep === 3"
-            class="max-h-[240px] overflow-y-auto p-2 overflow-x-hidden"
-            :class="[
-              'w-full space-y-1',
-              animateNextClicked ? 'animate__animated animate__fadeOut animate__duration-1s' : 'animate__animated animate__fadeIn',
-            ]"
-          >
-            <div class="text-xs text-center mt-4">
-              <p class="text-gray-400">Select a consensus service first, then choose one or more execution services.</p>
-            </div>
-            <div v-for="(group, index) in serviceGroups" :key="index" class="w-full mb-4">
-              <div class="flex items-center gap-2 bg-neutral-900/90 rounded-lg p-1">
-                <div
-                  class="w-[125px] h-[65px] flex-shrink-0 p-1 rounded-md cursor-pointer transition-colors duration-200"
-                  :class="[
-                    isServiceSelected(group.consensus) ? 'bg-teal-700' : 'bg-neutral-800 hover:bg-neutral-700',
-                    'border border-gray-700',
-                  ]"
-                  @click="toggleConsensusSelection(group)"
-                >
-                  <div class="flex flex-col items-start justify-center gap-2">
-                    <div class="flex items-center gap-2">
-                      <img :src="group.consensus.icon" alt="Consensus" class="w-6 h-6" />
-
-                      <div class="uppercase text-xs font-medium text-gray-200">
-                        {{ group.consensus?.name }}
-                      </div>
-                    </div>
-                    <div class="w-full flex justify-center items-center">
-                      <span class="w-full text-[10px] text-gray-300 text-center">{{
-                        useTruncate(group?.consensus.config?.serviceID, 0, 10)
-                      }}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Execution Services -->
-                <template v-for="execution in group.executions" :key="execution.id">
+              <div v-for="(group, index) in serviceGroups" :key="index" class="w-full mb-4">
+                <div class="flex items-center gap-2 bg-neutral-900/90 rounded-lg p-1">
                   <div
-                    class="w-[125px] h-[65px] flex-shrink-0 p-1 rounded-md transition-colors duration-200"
+                    class="w-[125px] h-[65px] flex-shrink-0 p-1 rounded-md cursor-pointer transition-colors duration-200"
                     :class="[
-                      {
-                        'bg-teal-700': isServiceSelected(execution),
-                        'bg-neutral-800 hover:bg-neutral-700': !isServiceSelected(execution),
-                        'cursor-pointer': isServiceSelected(group.consensus),
-                        'opacity-50 cursor-not-allowed': !isServiceSelected(group.consensus),
-                      },
+                      isServiceSelected(group.consensus) ? 'bg-teal-700' : 'bg-neutral-800 hover:bg-neutral-700',
                       'border border-gray-700',
                     ]"
-                    @click="isServiceSelected(group.consensus) && toggleExecutionSelection(group, execution)"
+                    @click="toggleConsensusSelection(group)"
                   >
                     <div class="flex flex-col items-start justify-center gap-2">
                       <div class="flex items-center gap-2">
-                        <img :src="execution?.icon" alt="Consensus" class="w-6 h-6" />
+                        <img :src="group.consensus.icon" alt="Consensus" class="w-6 h-6" />
 
                         <div class="uppercase text-xs font-medium text-gray-200">
-                          {{ execution?.name }}
+                          {{ group.consensus?.name }}
                         </div>
                       </div>
                       <div class="w-full flex justify-center items-center">
                         <span class="w-full text-[10px] text-gray-300 text-center">{{
-                          useTruncate(execution.config?.serviceID, 0, 10)
+                          useTruncate(group?.consensus.config?.serviceID, 0, 10)
                         }}</span>
                       </div>
                     </div>
                   </div>
-                </template>
-              </div>
-            </div>
 
-            <p v-if="serviceGroups.length === 0" class="text-gray-400 italic text-center">No valid service groups available.</p>
+                  <!-- Execution Services -->
+                  <template v-for="execution in group.executions" :key="execution.id">
+                    <div
+                      class="w-[125px] h-[65px] flex-shrink-0 p-1 rounded-md transition-colors duration-200"
+                      :class="[
+                        {
+                          'bg-teal-700': isServiceSelected(execution),
+                          'bg-neutral-800 hover:bg-neutral-700': !isServiceSelected(execution),
+                          'cursor-pointer': isServiceSelected(group.consensus),
+                          'opacity-50 cursor-not-allowed': !isServiceSelected(group.consensus),
+                        },
+                        'border border-gray-700',
+                      ]"
+                      @click="isServiceSelected(group.consensus) && toggleExecutionSelection(group, execution)"
+                    >
+                      <div class="flex flex-col items-start justify-center gap-2">
+                        <div class="flex items-center gap-2">
+                          <img :src="execution?.icon" alt="Consensus" class="w-6 h-6" />
+
+                          <div class="uppercase text-xs font-medium text-gray-200">
+                            {{ execution?.name }}
+                          </div>
+                        </div>
+                        <div class="w-full flex justify-center items-center">
+                          <span class="w-full text-[10px] text-gray-300 text-center">{{
+                            useTruncate(execution.config?.serviceID, 0, 10)
+                          }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </template>
+                </div>
+              </div>
+
+              <p v-if="serviceGroups.length === 0" class="text-gray-400 italic text-center">No valid service groups available.</p>
+            </div>
           </div>
         </div>
 
@@ -177,7 +164,7 @@
           <button
             v-if="currentStep > 1"
             class="min-w-[100px] h-10 bg-gray-600 border border-gray-600 px-5 py-2 text-sm shadow-xl shadow-[#141516] font-medium tracking-wider text-white rounded-full uppercase hover:bg-gray-700 active:scale-95 transition duration-200"
-            @click="goBack"
+            @click="handleGoBack"
           >
             Back
           </button>
@@ -186,7 +173,7 @@
             v-if="!isLoading"
             class="min-w-[100px] h-10 bg-green-500 border border-green-500 px-5 py-2 text-sm shadow-xl shadow-[#141516] font-medium tracking-wider text-white rounded-full uppercase"
             :class="!canProceed ? 'opacity-40 pointer-events-none' : 'hover:bg-green-600 active:scale-95 transition duration-200'"
-            @click="handleNextOrConfirmAction"
+            @click="handleNextAction"
           >
             {{ currentStep === 3 ? "Confirm" : "Next" }}
           </button>
@@ -214,14 +201,23 @@ import { useServices } from "@/store/services";
 import { useDeepClone } from "@/composables/utils";
 import { useSetupConnection } from "@/composables/useSetupConnection";
 import { useTruncate } from "../../../../../../composables/utils";
+import { ref, onMounted, watch } from "vue";
+import gsap from "gsap";
 
 const emit = defineEmits(["closeWindow", "confirmAction"]);
 const setupStore = useSetups();
 const serviceStore = useServices();
 
+// Refs for step elements
+const step1 = ref(null);
+const step2 = ref(null);
+const step3 = ref(null);
+
+// Track direction of navigation
+const isGoingForward = ref(true);
+
 const {
   currentStep,
-  animateNextClicked,
   isLoading,
   getOpNodeFromOpSetup,
   filteredSetups,
@@ -245,6 +241,71 @@ const {
     emit(event);
   }
 });
+
+// Initialize step positions
+onMounted(() => {
+  initializeStepPositions();
+});
+
+// Watch for step changes to trigger animations
+watch(currentStep, (newStep, oldStep) => {
+  if (newStep !== oldStep) {
+    animateStepTransition(newStep, oldStep);
+  }
+});
+
+// Initialize step positions
+const initializeStepPositions = () => {
+  // Position step 1 at center (visible)
+  gsap.set(step1.value, { autoAlpha: 1, x: 0 });
+
+  // Position step 2 and 3 off-screen to the right
+  gsap.set([step2.value, step3.value], { autoAlpha: 0, x: "100%" });
+};
+
+// Animate step transitions
+const animateStepTransition = (newStep, oldStep) => {
+  const stepRefs = [step1.value, step2.value, step3.value];
+  const oldStepRef = stepRefs[oldStep - 1];
+  const newStepRef = stepRefs[newStep - 1];
+
+  // Direction based on step change
+  const goingForward = isGoingForward.value;
+
+  // Animate old step out
+  gsap.to(oldStepRef, {
+    x: goingForward ? "-100%" : "100%",
+    autoAlpha: 0,
+    duration: 0.8,
+    ease: "power2.inOut",
+  });
+
+  // Prepare new step
+  gsap.set(newStepRef, {
+    x: goingForward ? "100%" : "-100%",
+    autoAlpha: 0,
+  });
+
+  // Animate new step in
+  gsap.to(newStepRef, {
+    x: 0,
+    autoAlpha: 1,
+    duration: 0.8,
+    ease: "power2.inOut",
+  });
+};
+
+// Wrapper for goBack to set direction
+const handleGoBack = () => {
+  isGoingForward.value = false;
+  goBack();
+};
+
+// Wrapper for handleNextOrConfirmAction to set direction
+const handleNextAction = () => {
+  isGoingForward.value = true;
+  handleNextOrConfirmAction();
+};
 </script>
 
 <style scoped>

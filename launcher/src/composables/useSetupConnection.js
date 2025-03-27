@@ -99,6 +99,17 @@ export function useSetupConnection(setupStore, serviceStore, emit) {
     return "";
   });
 
+  const goBack = () => {
+    if (currentStep.value > 1) {
+      animateNextClicked.value = true;
+      setTimeout(() => {
+        currentStep.value--;
+        setTimeout(() => {
+          animateNextClicked.value = false;
+        });
+      }, 200);
+    }
+  };
   const handleNextOrConfirmAction = () => {
     if (currentStep.value === totalSteps) {
       if (!hasChanges.value) return;
@@ -266,6 +277,7 @@ export function useSetupConnection(setupStore, serviceStore, emit) {
     toggleConsensusSelection,
     toggleExecutionSelection,
     handleNextOrConfirmAction,
+    goBack,
     closeWindow,
   };
 }
