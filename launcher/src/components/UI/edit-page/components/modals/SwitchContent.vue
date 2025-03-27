@@ -73,16 +73,24 @@ const serviceStore = useServices();
 const setupStore = useSetups();
 //Computed & Watcher
 const getServices = computed(() => {
-  let service;
-  // it's devnet filtering the services
-  if (setupStore.selectedSetup.network === "devnet") {
-    service = [];
-  } //end of devnet filtering
-  else {
-    service = serviceStore.allServices.filter((e) => e?.category == props.client.category && e?.name != props.client.name);
+  if (setupStore.selectedSetup.network === "devnet") return [];
+
+  const excludedOpServices = ["OpReth", "OpErigon", "OpGeth", "L2Geth", "OpNode"];
+  const excludedService = props?.client?.name;
+  const { network } = setupStore.selectedSetup;
+  const { allServices } = serviceStore;
+
+  if (network === "op-sepolia") {
+    return allServices.filter((e) => ["OpReth", "OpErigon", "OpGeth"].includes(e.name) && e.name !== excludedService);
   }
 
-  return service;
+  if (network === "op-mainnet") {
+    return allServices.filter((e) => ["OpErigon", "OpGeth"].includes(e.name) && e.name !== excludedService);
+  }
+
+  return allServices.filter(
+    (e) => e.category === props.client.category && e.name !== excludedService && !excludedOpServices.includes(e.name)
+  );
 });
 
 //Methods
