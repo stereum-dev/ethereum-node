@@ -1,0 +1,64 @@
+---
+- name: Prepare
+  hosts: all
+  tasks:
+    - name: Make sure Stereum's config path exists
+      file:
+        path: "/etc/stereum/services"
+        state: directory
+        owner: "root"
+        group: "root"
+        mode: 0644
+      become: yes
+
+    - name: Create ErigonService config
+      copy:
+        dest: "/etc/stereum/services/50630a95-6c30-446c-b543-d5497f2c9020.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: ErigonService
+          id: 50630a95-6c30-446c-b543-d5497f2c9020
+          configVersion: 1
+          command:
+            - erigon
+            - --chain=hoodi
+            - --datadir=/opt/data/erigon
+            - --authrpc.addr=0.0.0.0
+            - --authrpc.vhosts=*
+            - --authrpc.port=8551
+            - --authrpc.jwtsecret=/engine.jwt
+            - --rpc.returndata.limit=1000000
+            - --ws
+            - --http
+            - --http.vhosts=*
+            - --http.corsdomain=*
+            - --http.addr=0.0.0.0
+            - --http.port=8545
+            - --http.api=engine,net,eth,web3
+            - --metrics
+            - --metrics.addr=0.0.0.0
+            - --metrics.port=6060
+            - --db.pagesize=16K
+            - --db.size.limit=8TB
+            - --prune=htc
+          entrypoint: []
+          env: {}
+          image: erigontech/erigon:v2.61.3
+          ports:
+            - 0.0.0.0:30303:30303/tcp
+            - 0.0.0.0:30303:30303/udp
+            - 127.0.0.1:8545:8545/tcp
+            - 127.0.0.1:8546:8546/tcp
+          volumes:
+            - /opt/stereum/erigon-50630a95-6c30-446c-b543-d5497f2c9020/data:/opt/data/erigon
+            - /opt/stereum/erigon-50630a95-6c30-446c-b543-d5497f2c9020/engine.jwt:/engine.jwt
+          user: root
+          autoupdate: true
+          network: holesky
+          dependencies:
+            executionClients: []
+            consensusClients: []
+            mevboost: []
+            otherServices: []
