@@ -35,8 +35,8 @@ module.exports = [
       "no-prototype-builtins": "off",
       "vue/no-mutating-props": "off",
       "vue/no-v-for-template-key": "off",
-      "no-empty": ["error", { allowEmptyCatch: true }], //empty catch block
-      "no-unused-vars": ["error", { caughtErrors: "none" }], //unused variables in catch block
+      "no-empty": ["error", { allowEmptyCatch: true }], // empty catch block
+      "no-unused-vars": ["error", { caughtErrors: "none" }], // unused variables in catch block
     },
     settings: {
       "prettier/prettier": "error",
