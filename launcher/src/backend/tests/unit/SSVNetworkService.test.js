@@ -115,4 +115,10 @@ test("autoupdate", () => {
   expect(service.autoupdate).toBe(true);
 });
 
+test("getDataDir", () => {
+  const service = SSVNetworkService.buildByUserInput("goerli", [], "/opt/stereum/app");
+  const serviceDataDir = service.getDataDir();
+  expect(serviceDataDir).toBeFalsy();
+});
+
 // EOF

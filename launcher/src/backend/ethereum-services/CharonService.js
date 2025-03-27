@@ -2,7 +2,7 @@ import { NodeService } from "./NodeService";
 import { ServiceVolume } from "./ServiceVolume";
 
 export class CharonService extends NodeService {
-  static buildByUserInput(network, ports, dir, consensusClients) {
+  static buildByUserInput(network, ports, dir, consensusClients = []) {
     const service = new CharonService();
     service.setId();
     const workingDir = service.buildWorkingDir(dir);

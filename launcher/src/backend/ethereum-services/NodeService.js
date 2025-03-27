@@ -161,6 +161,10 @@ export class NodeService {
     if (dir.endsWith("/")) return dir.slice(0, -1, "") + "-" + this.id;
     return dir + "-" + this.id;
   }
+
+  getDataDir() {
+    return this.volumes.find((volume) => volume.servicePath === "/opt/app/data")?.destinationPath;
+  }
 }
 
 // EOF

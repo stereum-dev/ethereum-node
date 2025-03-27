@@ -2,7 +2,7 @@ import { NodeService } from "./NodeService";
 import { ServiceVolume } from "./ServiceVolume";
 
 export class LidoObolExitService extends NodeService {
-  static buildByUserInput(network, ports, dir, consensusClients, otherServices) {
+  static buildByUserInput(network, ports, dir, consensusClients = [], otherServices = []) {
     let ejector = otherServices.find((service) => service.service === "ValidatorEjectorService");
     let charon = consensusClients.find((service) => service.service === "CharonService");
     if (charon) otherServices.push(charon);

@@ -2,7 +2,7 @@ import { NodeService } from "./NodeService";
 import { ServiceVolume } from "./ServiceVolume";
 
 export class LCOMService extends NodeService {
-  static buildByUserInput(network, ports, dir, consensusClients, executionClients, otherServices) {
+  static buildByUserInput(network, ports, dir, consensusClients = [], executionClients = [], otherServices = []) {
     const service = new LCOMService();
     service.setId();
     const workingDir = service.buildWorkingDir(dir);

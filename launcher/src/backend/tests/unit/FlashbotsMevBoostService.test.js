@@ -23,3 +23,9 @@ test("buildByConfiguration", () => {
   expect(mb.volumes).toHaveLength(1);
   expect(mb.volumes[0]).toBeDefined();
 });
+
+test("getDataDir", () => {
+  const service = FlashbotsMevBoostService.buildByUserInput("goerli", [], "/opt/stereum/app");
+  const serviceDataDir = service.getDataDir();
+  expect(serviceDataDir).toBeFalsy();
+});

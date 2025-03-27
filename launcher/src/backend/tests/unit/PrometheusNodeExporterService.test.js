@@ -34,3 +34,9 @@ test("buildByConfiguration", () => {
   expect(pne.volumes).toHaveLength(1);
   expect(pne.volumes[0]).toBeDefined();
 });
+
+test("getDataDir", () => {
+  const service = PrometheusNodeExporterService.buildByUserInput("goerli", [], "/opt/stereum/app");
+  const serviceDataDir = service.getDataDir();
+  expect(serviceDataDir).toBeFalsy();
+});

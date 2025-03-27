@@ -1,7 +1,7 @@
 import { NodeService } from "./NodeService";
 
 export class KeysAPIService extends NodeService {
-  static buildByUserInput(network, ports, executionClients, consensusClients) {
+  static buildByUserInput(network, ports, executionClients = [], consensusClients = []) {
     const service = new KeysAPIService();
     service.setId();
 

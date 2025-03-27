@@ -63,3 +63,9 @@ test("buildByConfiguration", () => {
   expect(besu.volumes).toHaveLength(1);
   expect(besu.volumes[0]).toBeDefined();
 });
+
+test("getDataDir", () => {
+  const service = BesuService.buildByUserInput("goerli", [], "/opt/stereum/app");
+  const serviceDataDir = service.getDataDir();
+  expect(serviceDataDir).toBe("/opt/stereum/app-" + service.id + "/data");
+});

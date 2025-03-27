@@ -151,6 +151,16 @@ export class OneClickInstall {
         ...(this.mevboost && { mevboost: [this.mevboost] }),
       });
     }
+
+    if (constellation.includes("GrandineBeaconService")) {
+      //GrandineBeaconService
+      this.beaconService = this.serviceManager.getService("GrandineBeaconService", {
+        ...args,
+        executionClients: [this.executionClient],
+        ...(this.mevboost && { mevboost: [this.mevboost] }),
+      });
+    }
+
     let charon = undefined;
     if (constellation.includes("CharonService")) {
       //SSVNetworkService
@@ -339,7 +349,7 @@ export class OneClickInstall {
           //archvie by default
           break;
         case "ErigonService":
-          this.executionClient.command = this.executionClient.command.filter((c) => !c.includes("--prune"));
+          this.executionClient.command[this.executionClient.command.findIndex((c) => c.includes("--prune.mode"))] = "--prune.mode=archive";
           break;
         case "BesuService":
           this.executionClient.command[this.executionClient.command.findIndex((c) => c.includes("--sync-mode=SNAP"))] = "--sync-mode=FULL";
@@ -374,6 +384,11 @@ export class OneClickInstall {
         case "TekuBeaconService":
           this.beaconService.command[this.beaconService.command.findIndex((c) => c.includes("--data-storage-mode"))] =
             "--data-storage-mode=archive";
+          break;
+        case "GrandineBeaconService":
+          this.beaconService.command.push("--back-sync");
+          this.beaconService.command = this.beaconService.command.filter((c) => !c.includes("--prune-storage"));
+          break;
       }
     }
   }

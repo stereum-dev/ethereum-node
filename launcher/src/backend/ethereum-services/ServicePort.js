@@ -19,6 +19,7 @@ export const changeablePorts = {
   TekuBeaconService: 5051,
   GrafanaService: 3000,
   PrometheusService: 9090,
+  GrandineBeaconService: 5052,
 };
 
 export const validatorPorts = {

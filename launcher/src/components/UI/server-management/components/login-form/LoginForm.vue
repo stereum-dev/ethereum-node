@@ -498,7 +498,7 @@ const handleFileSelect = (event) => {
   const selectedFile = event.target.files[0];
   if (selectedFile) {
     if (selectedFile.size > 0) {
-      serverStore.loginState.keyPath = selectedFile.path;
+      serverStore.loginState.keyPath = window.webUtils.getPathForFile(selectedFile);
     } else {
       serverStore.loginState.keyPath = "";
     }
