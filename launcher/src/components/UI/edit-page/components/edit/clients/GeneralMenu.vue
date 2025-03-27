@@ -11,6 +11,15 @@
         @mouseleave="footerStore.cursorLocation = ''"
       />
       <img
+        v-if="item.service === 'OpGethService' || item.service === 'OpRethService' || item.service === 'OpErigonService'"
+        class="w-7 bg-gray-900 hover:bg-gray-500 p-1 cursor-pointer active:scale-90 transition duration-200 border border-gray-700 rounded-md"
+        src="/img/icon/edit-node-icons/service-connecting.png"
+        alt="Trash Icon"
+        @click="modifyService"
+        @mouseenter="footerStore.cursorLocation = `${modify} ${item.name} ${connection}`"
+        @mouseleave="footerStore.cursorLocation = ''"
+      />
+      <img
         v-if="
           item.service !== 'ExternalExecutionService' &&
           item.service !== 'ExternalConsensusService' &&
@@ -47,6 +56,7 @@
 <script setup>
 import { useFooter } from "@/store/theFooter";
 import i18n from "@/includes/i18n";
+import { useNodeManage } from "@/store/nodeManage";
 
 const t = i18n.global.t;
 
@@ -66,6 +76,12 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["deleteService", "switchClient", "modifyService", "infoModal"]);
+
+const manageStore = useNodeManage();
+
+console.log("currentNetwork", manageStore.currentNetwork?.network);
+console.log("props", props.item);
+console.log("props network", props.item.config?.network);
 
 const deleteService = () => {
   emit("deleteService", props.item);
