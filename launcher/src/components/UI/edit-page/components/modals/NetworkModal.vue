@@ -16,7 +16,7 @@
           <div class="w-full relative">
             <button
               aria-expanded="false"
-              class="w-full h-[40px] border border-gray-400 shadow-sm shadow-gray-600 rounded-md font-semibold text-lg text-gray-400 px-4 py-2 hover:brightness-110 flex items-center whitespace-nowrap space-x-4 justify-between"
+              class="w-full h-[40px] border border-gray-400 shadow-sm shadow-gray-600 rounded-md font-normal text-lg text-gray-400 px-4 py-2 hover:brightness-110 flex items-center whitespace-nowrap space-x-4 justify-between"
               @click="networkDropdownOpen = !networkDropdownOpen"
             >
               <img v-if="manageStore.selectedNetwork?.id" :src="manageStore.selectedNetwork.icon" alt="Network Icon" class="w-7" />
@@ -34,7 +34,7 @@
             <Transition name="slide">
               <ul
                 v-show="networkDropdownOpen"
-                class="transition-all max-h-[150px] duration-400 ease-in-out absolute bg-gray-600 rounded-lg shadow-lg pt-10 w-full z-10 mt-1 divide-y overflow-x-hidden overflow-y-auto flex flex-col justify-start items-center"
+                class="transition-all max-h-[150px] duration-400 ease-in-out absolute bg-gray-600 rounded-lg shadow-lg py-4 w-full z-10 mt-1 divide-y divide-gray-500 overflow-x-hidden overflow-y-auto flex flex-col justify-start items-center"
                 @mouseleave="networkDropdownOpen = false"
               >
                 <li
@@ -46,7 +46,7 @@
                 >
                   <img class="col-start-1 col-end-2 w-10 p-1" :src="item.icon" alt="Network Icon" />
                   <span
-                    class="col-start-3 col-end-6 px-4 py-2 flex gap-2 justify-start items-center outline-0 whitespace-nowrap cursor-pointer text-lg text-gray-200 font-semibold"
+                    class="col-start-3 col-end-6 px-4 py-2 flex gap-2 justify-start items-center outline-0 whitespace-nowrap cursor-pointer text-sm text-gray-200 font-normal"
                     >{{ item?.name }}</span
                   >
                 </li>
@@ -71,15 +71,11 @@ const manageStore = useNodeManage();
 const setupStore = useSetups();
 const network = ref({});
 
-const getNetworks = computed(() => {
-  let networks = [];
-  if (setupStore.selectedSetup?.network.toLowerCase() === "devnet") {
-    networks = [];
-  } else {
-    networks = manageStore.networkList;
-  }
-  return networks;
-});
+const getNetworks = computed(() =>
+  setupStore.selectedSetup?.network.toLowerCase() === "devnet"
+    ? []
+    : manageStore.networkList.filter((item) => item.network != "op-mainnet" && item.network != "op-sepolia")
+);
 
 onMounted(() => {
   network.value = manageStore.configNetwork?.id ? manageStore.configNetwork : manageStore.currentNetwork;
