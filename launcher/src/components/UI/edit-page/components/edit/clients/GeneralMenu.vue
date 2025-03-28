@@ -92,10 +92,6 @@ const isServiceOpExecution = computed(() => {
 
 const shouldShowEditIcon = computed(() => setupHasL2Geth.value && isServiceOpExecution.value);
 
-console.log("is Service Op Exc", isServiceOpExecution.value);
-
-console.log("should show ???", shouldShowEditIcon.value);
-
 const deleteService = () => {
   emit("deleteService", props.item);
   footerStore.cursorLocation = "";
