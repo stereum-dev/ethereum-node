@@ -3629,6 +3629,106 @@ export class Monitoring {
   }
 
   /**
+   * Fetches metrics from the ssvnoms service (fast and slow registries) and returns their values.
+   * Each metric is retrieved and formatted into an array of objects containing the metric name, value, and optional tags.
+   * Missing metrics will be included with a value of null.
+   * @returns {Object[]} Array of metric values, e.g.,
+   * [
+   *   { name: "ssvnoms_operator_fee", value: 10 },
+   *   { name: "ssvnoms_cluster_balance", tags: { clustertag: "[29, 87, 92, 133]" }, value: 2973601782960000000 },
+   *   { name: "ssvnoms_cluster_balance", tags: { clustertag: "[4, 5, 6, 7]" }, value: 3289502782940000000 },
+   *   { name: "ssvnoms_cluster_burnRate", tags: { clustertag: "[1, 2, 3, 4]" }, value: null }
+   * ]
+   */
+  async fetchSsvnomsMetrics() {
+    try {
+      // Define the Prometheus queries where property names match the exact query string
+      const queries = {
+        // Fast registry metrics
+        ssvnoms_operator_fee: "ssvnoms_operator_fee",
+        ssvnoms_operator_validatorCount: "ssvnoms_operator_validatorCount",
+        ssvnoms_operator_isPrivate: "ssvnoms_operator_isPrivate",
+        ssvnoms_operator_active: "ssvnoms_operator_active",
+        ssvnoms_operator_declaredFee_boolean: "ssvnoms_operator_declaredFee_boolean",
+        ssvnoms_operator_declaredFee_value: "ssvnoms_operator_declaredFee_value",
+        ssvnoms_operator_declaredFee_time1: "ssvnoms_operator_declaredFee_time1",
+        ssvnoms_operator_declaredFee_time2: "ssvnoms_operator_declaredFee_time2",
+        ssvnoms_operator_balance: "ssvnoms_operator_balance",
+        ssvnoms_cluster_balance: "ssvnoms_cluster_balance",
+        ssvnoms_cluster_burnRate: "ssvnoms_cluster_burnRate",
+        ssvnoms_cluster_isLiquidatable: "ssvnoms_cluster_isLiquidatable",
+        ssvnoms_cluster_isLiquidated: "ssvnoms_cluster_isLiquidated",
+        ssvnoms_validator_balance: '{__name__=~"^ssvnoms_validator_balance_.*"}',
+
+        // Slow registry metrics
+        ssvnoms_NetworkFee: "ssvnoms_NetworkFee[30m]",
+        ssvnoms_NetworkEarnings: "ssvnoms_NetworkEarnings[30m]",
+        ssvnoms_LiquidationThresholdPeriod: "ssvnoms_LiquidationThresholdPeriod[30m]",
+        ssvnoms_MinimumLiquidationCollateral: "ssvnoms_MinimumLiquidationCollateral[30m]",
+        ssvnoms_OperatorFeeIncreaseLimit: "ssvnoms_OperatorFeeIncreaseLimit[30m]",
+        ssvnoms_MaximumOperatorFee: "ssvnoms_MaximumOperatorFee[30m]",
+        ssvnoms_ValidatorsPerOperatorLimit: "ssvnoms_ValidatorsPerOperatorLimit[30m]",
+      };
+
+      // Create promises to query Prometheus for all metrics
+      const queryPromises = Object.entries(queries).map(([key, query]) =>
+        this.queryPrometheus(encodeURIComponent(query)).then((result) => ({ key, result }))
+      );
+
+      const results = await Promise.all(queryPromises);
+
+      // Process results and extract metric values, including handling labeled metrics
+      const metrics = results.flatMap((metric) => {
+        if (metric.result.status !== "success" || !metric.result.data.result) {
+          return [];
+        }
+
+        return metric.result.data.result.map((data) => {
+          let parsedValue;
+
+          // Handle time series metrics (e.g., "ssvnoms_MaximumOperatorFee[30m]")
+          if (Array.isArray(data.values) && data.values.length > 0) {
+            const rawValue = data.values[0][1]; // Extract the latest value in the time range
+            parsedValue = rawValue !== undefined && rawValue !== null ? parseFloat(rawValue) : null;
+          } else if (Array.isArray(data.value) && data.value.length > 1) {
+            // Handle instant vector metrics
+            const rawValue = data.value[1];
+            parsedValue = rawValue !== undefined && rawValue !== null ? parseFloat(rawValue) : null;
+          }
+
+          // Extract optional tags (e.g., "clustertag")
+          const tags = data.metric || {};
+
+          // Return the metric object with the name, value, and optional tags
+          return {
+            name: metric.key,
+            value: parsedValue,
+            tags: Object.keys(tags).length > 0 ? tags : undefined,
+          };
+        });
+      });
+
+      // Include missing metrics with value: null if not already present in metrics
+      const allMetricKeys = Object.keys(queries);
+      const finalMetrics = allMetricKeys.flatMap((key) => {
+        const matchingMetrics = metrics.filter((m) => m.name === key);
+
+        if (matchingMetrics.length > 0) {
+          return matchingMetrics; // Keep all instances of this metric (e.g., labeled ones)
+        }
+
+        // Add a null entry for non-labeled missing metrics
+        return [{ name: key, value: null }];
+      });
+
+      return finalMetrics;
+    } catch (error) {
+      log.error("Fetching ssvnoms metrics failed:\n" + error);
+      return [];
+    }
+  }
+
+  /**
    * Fetches metrics from Prometheus and returns their values.
    * If a metric is missing, it will be included in the result with a value of null.
    * @returns {Object[]} Array of metric values e.g. [{ name: "lcoms_stealing_penalty_stolenAmount", value: 150.75 },

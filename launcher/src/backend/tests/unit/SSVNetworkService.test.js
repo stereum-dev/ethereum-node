@@ -100,7 +100,7 @@ test("getServiceConfiguration", () => {
 test("getAvailablePorts", () => {
   const service = SSVNetworkService.buildByUserInput("prater", null, "/opt/stereum/ssv", [], []).getAvailablePorts();
 
-  expect(service).toHaveLength(3);
+  expect(service).toHaveLength(4);
 });
 
 test("service name", () => {

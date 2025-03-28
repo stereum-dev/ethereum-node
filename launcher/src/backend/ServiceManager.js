@@ -36,6 +36,7 @@ import { LidoObolExitService } from "./ethereum-services/LidoObolExitService";
 import { ConfigManager } from "./ConfigManager";
 import { LCOMService } from "./ethereum-services/LCOMService";
 import { KuboIPFSService } from "./ethereum-services/KuboIPFSService";
+import { SSVNOMService } from "./ethereum-services/SSVNOMService";
 
 import YAML from "yaml";
 // import { file } from "jszip";
@@ -182,6 +183,8 @@ export class ServiceManager {
               services.push(KuboIPFSService.buildByConfiguration(config));
             } else if (config.service == "GrandineBeaconService") {
               services.push(GrandineBeaconService.buildByConfiguration(config));
+            } else if (config.service == "SSVNOMService") {
+              services.push(SSVNOMService.buildByConfiguration(config));
             }
           } else {
             log.error("found configuration without service!");
@@ -1091,6 +1094,7 @@ export class ServiceManager {
         ports = [
           new ServicePort(null, 12000, 12000, servicePortProtocol.udp),
           new ServicePort(null, 13000, 13000, servicePortProtocol.tcp),
+          new ServicePort("127.0.0.1", 16000, 16000, servicePortProtocol.tcp),
         ];
         return SSVNetworkService.buildByUserInput(
           args.network,
@@ -1151,6 +1155,17 @@ export class ServiceManager {
           new ServicePort("127.0.0.1", 8080, 8080, servicePortProtocol.tcp),
         ];
         return KuboIPFSService.buildByUserInput(args.network, ports, args.installDir + "/ipfs");
+
+      case "SSVNOMService":
+        ports = [new ServicePort("127.0.0.1", 8000, 8000, servicePortProtocol.tcp)];
+        return SSVNOMService.buildByUserInput(
+          args.network,
+          ports,
+          args.installDir + "/ssvnoms",
+          args.consensusClients,
+          args.executionClients,
+          args.otherServices
+        );
     }
   }
 
