@@ -136,7 +136,7 @@ export const useClickInstall = defineStore("clickInstallation", {
           id: 10,
           name: "op and eth full node",
           defaultPath: "/opt/stereum",
-          icon: "/img/icon/one-click-icons/preset-icons/op-eth-fullnode.png",
+          icon: "/img/icon/one-click-icons/preset-icons/l1-l2-full.png",
           includedPlugins: [],
         },
         {
