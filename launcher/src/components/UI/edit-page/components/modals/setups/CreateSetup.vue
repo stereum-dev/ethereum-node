@@ -8,38 +8,17 @@
     @confirm-action="validationForm"
   >
     <template #content>
-      <div
-        class="w-3/4 max-h-[300px] grid grid-cols-6 grid-rows-8 py-4 px-8 mt-2 gap-y-1 mx-auto"
-      >
-        <div
-          class="h-full col-start-1 col-span-full row-start-1 row-span-1 flex justify-start items-center"
-        >
+      <div class="w-3/4 max-h-[300px] grid grid-cols-6 grid-rows-8 py-4 px-8 mt-2 gap-y-1 mx-auto">
+        <div class="h-full col-start-1 col-span-full row-start-1 row-span-1 flex justify-start items-center">
           <img class="w-6 h-6" :src="props.network.icon" :alt="props.network.name" />
-          <span
-            class="ml-1 text-xs text-center text-gray-100 font-sans font-semibold uppercase"
-            >{{ props.network.name }}</span
-          >
+          <span class="ml-1 text-xs text-center text-gray-100 font-sans font-semibold uppercase">{{ props.network.name }}</span>
         </div>
 
-        <div
-          class="w-full max-h-full col-start-1 col-span-full row-start-2 row-end-9 flex justify-center items-center"
-        >
-          <form
-            class="w-full h-full shadow-md rounded p-1 grid grid-cols-5 grid-rows-3 items-center gap-y-1"
-          >
-            <div
-              class="col-start-1 col-span-full row-start-1 row-span-1 grid grid-cols-2 grid-rows-2 items-center"
-            >
-              <span
-                v-if="nameMsg"
-                class="col-start-1 col-span-full row-start-1 row-span-1 text-red-400 text-xs"
-                >{{ nameMsg }}</span
-              >
-              <span
-                v-else
-                class="col-start-1 col-span-full row-start-1 row-span-1 text-gray-200 text-xs"
-                >Setup Name</span
-              >
+        <div class="w-full max-h-full col-start-1 col-span-full row-start-2 row-end-9 flex justify-center items-center">
+          <form class="w-full h-full shadow-md rounded p-1 grid grid-cols-5 grid-rows-3 items-center gap-y-1">
+            <div class="col-start-1 col-span-full row-start-1 row-span-1 grid grid-cols-2 grid-rows-2 items-center">
+              <span v-if="nameMsg" class="col-start-1 col-span-full row-start-1 row-span-1 text-red-400 text-xs">{{ nameMsg }}</span>
+              <span v-else class="col-start-1 col-span-full row-start-1 row-span-1 text-gray-200 text-xs">Setup Name</span>
               <input
                 id="setupName"
                 ref="setupNameInput"
@@ -50,19 +29,9 @@
                 required
               />
             </div>
-            <div
-              class="col-start-1 col-span-full row-start-2 row-span-1 grid grid-cols-2 grid-rows-2 items-center"
-            >
-              <span
-                v-if="layoutMsg"
-                class="col-start-1 col-span-full row-start-1 row-span-1 text-red-400 text-xs"
-                >{{ layoutMsg }}</span
-              >
-              <span
-                v-else
-                class="col-start-1 col-span-full row-start-1 row-span-1 text-gray-200 text-xs"
-                >Setup Layout</span
-              >
+            <div class="col-start-1 col-span-full row-start-2 row-span-1 grid grid-cols-2 grid-rows-2 items-center">
+              <span v-if="layoutMsg" class="col-start-1 col-span-full row-start-1 row-span-1 text-red-400 text-xs">{{ layoutMsg }}</span>
+              <span v-else class="col-start-1 col-span-full row-start-1 row-span-1 text-gray-200 text-xs">Setup Layout</span>
               <input
                 id="text"
                 v-model="setupLayouts"
@@ -71,38 +40,17 @@
                 placeholder="Setup Layout"
               />
             </div>
-            <div
-              class="col-start-1 col-span-full row-start-3 row-span-1 grid grid-cols-10 grid-rows-2 items-center"
-            >
-              <span
-                v-if="colorMsg"
-                class="col-start-1 col-span-full row-start-1 row-span-1 text-red-400 text-xs"
-                >{{ colorMsg }}</span
-              >
-              <span
-                v-else
-                class="col-start-1 col-span-full row-start-1 row-span-1 text-gray-200 text-xs"
-                >Setup color</span
-              >
+            <div class="col-start-1 col-span-full row-start-3 row-span-1 grid grid-cols-10 grid-rows-2 items-center">
+              <span v-if="colorMsg" class="col-start-1 col-span-full row-start-1 row-span-1 text-red-400 text-xs">{{ colorMsg }}</span>
+              <span v-else class="col-start-1 col-span-full row-start-1 row-span-1 text-gray-200 text-xs">Setup color</span>
               <div
                 v-for="col in colorPalette"
                 :key="col.name"
                 class="w-6 h-6 rounded-full col-span-1 row-start-2 cursor-pointer mx-1 hover:scale-110 transition-all duration-100 hover:shadow-lg hover:shadow-black hover:border hover:border-gray-500 active:scale-120"
-                :class="[
-                  `${col.bg}`,
-                  col.isSelected
-                    ? 'border border-gray-300 scale-125 shadow-black  shadow-lg'
-                    : '',
-                ]"
+                :class="[`${col.bg}`, col.isSelected ? 'border border-gray-300 scale-125 shadow-black  shadow-lg' : '']"
                 @click="getSetupColor(col)"
               >
-                <input
-                  type="radio"
-                  name="ColorOption"
-                  :value="col.name"
-                  class="sr-only"
-                  checked
-                />
+                <input type="radio" name="ColorOption" :value="col.name" class="sr-only" checked />
               </div>
             </div>
           </form>
@@ -151,10 +99,7 @@ const colorPalette = ref([
 ]);
 
 const setupLayouts = computed(() => {
-  if (
-    props.network?.network === "op-mainnet" ||
-    props.network?.network === "op-sepolia"
-  ) {
+  if (props.network?.network === "op-mainnet" || props.network?.network === "op-sepolia") {
     return "OP";
   }
 
@@ -164,11 +109,7 @@ const setupLayouts = computed(() => {
 watch(
   () => [setupName.value, setupColor.value, setupLayouts.value],
   () => {
-    if (
-      setupName.value.trim() !== "" &&
-      setupColor.value !== "" &&
-      setupLayouts.value !== ""
-    ) {
+    if (setupName.value.trim() !== "" && setupColor.value !== "" && setupLayouts.value !== "") {
       buttonDisabled.value = false;
       nameMsg.value = "";
       colorMsg.value = "";
