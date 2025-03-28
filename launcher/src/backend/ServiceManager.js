@@ -926,6 +926,11 @@ export class ServiceManager {
     if (switchTask.service.category != "validator") {
       servicesBelow.forEach((service) => {
         let newDependencies = [];
+        if (service.service === "OpNodeBeaconService") {
+          service.dependencies.consensusClients.forEach((dependency) => {
+            newDependencies.push(dependency);
+          });
+        }
         if (switchTask.service.category === "execution") {
           service.dependencies.executionClients.forEach((dependency) => {
             newDependencies.push(dependency);
