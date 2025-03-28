@@ -34,7 +34,7 @@ const disabledButton = computed(() => {
 });
 
 const monitoringMevboost = computed(() => {
-  return installStore.selectedPreset.includedPlugins.some((plugin) => plugin.service === "FlashbotsMevBoostService");
+  return installStore.selectedPreset?.includedPlugins.some((plugin) => plugin.service === "FlashbotsMevBoostService");
 });
 
 watchEffect(() => {

@@ -11,7 +11,21 @@
         @mouseleave="footerStore.cursorLocation = ''"
       />
       <img
-        v-if="item.service !== 'ExternalExecutionService' && item.service !== 'ExternalConsensusService'"
+        v-if="shouldShowEditIcon"
+        class="w-7 bg-gray-900 hover:bg-gray-500 p-1 cursor-pointer active:scale-90 transition duration-200 border border-gray-700 rounded-md"
+        src="/img/icon/edit-node-icons/service-connecting.png"
+        alt="Trash Icon"
+        @click="modifyService"
+        @mouseenter="footerStore.cursorLocation = `${modify} ${item.name} ${connection}`"
+        @mouseleave="footerStore.cursorLocation = ''"
+      />
+      <img
+        v-if="
+          item.service !== 'ExternalExecutionService' &&
+          item.service !== 'ExternalConsensusService' &&
+          item.service !== 'L2GethService' &&
+          item.service !== 'OpNodeBeaconService'
+        "
         class="w-7 border border-gray-700 bg-gray-900 rounded-md hover:bg-gray-500 p-1 cursor-pointer active:scale-90 transition duration-200"
         src="/img/icon/edit-node-icons/switch-client.png"
         alt="Trash Icon"
@@ -42,6 +56,8 @@
 <script setup>
 import { useFooter } from "@/store/theFooter";
 import i18n from "@/includes/i18n";
+import { computed } from "vue";
+import { useSetups } from "../../../../../../store/setups";
 
 const t = i18n.global.t;
 
@@ -61,6 +77,20 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["deleteService", "switchClient", "modifyService", "infoModal"]);
+
+const setupStore = useSetups();
+
+const setupHasL2Geth = computed(() => {
+  const currentSetup = setupStore.editSetups.find((setup) => setup.setupId === props.item.setupId);
+  return currentSetup?.services.some((s) => s.service === "L2GethService") ?? false;
+});
+
+const isServiceOpExecution = computed(() => {
+  const opServices = ["OpRethService", "OpGethService", "OpErigonService"];
+  return opServices.includes(props.item.service);
+});
+
+const shouldShowEditIcon = computed(() => setupHasL2Geth.value && isServiceOpExecution.value);
 
 const deleteService = () => {
   emit("deleteService", props.item);

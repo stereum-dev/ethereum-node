@@ -9,6 +9,7 @@ export class BesuService extends NodeService {
     const dataDir = "/opt/app/data";
     const JWTDir = "/engine.jwt";
     const volumes = [new ServiceVolume(workingDir + "/data", "/opt/app/data"), new ServiceVolume(workingDir + "/engine.jwt", JWTDir)];
+    network = network === "op-mainnet" ? "mainnet" : network === "op-sepolia" ? "sepolia" : network;
 
     service.init(
       "BesuService", // service

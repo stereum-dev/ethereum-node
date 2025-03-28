@@ -17,7 +17,7 @@ import { useNodeManage } from '@/store/nodeManage'; import { computed } from 'vu
             </div>
           </div>
 
-          <div v-if="messageText" class="text-md font-bold text-gray-400 mt-8">
+          <div v-if="messageText" class="text-md font-medium text-gray-400 mt-8">
             <span>{{ messageText }}</span>
           </div>
         </div>
@@ -56,6 +56,7 @@ const props = defineProps({
   client: {
     type: Object,
     default: () => {},
+    required: false,
   },
   mainTitle: String,
   messageText: String,
@@ -65,7 +66,11 @@ const props = defineProps({
   subTitle: String,
   clickOutsideText: String,
   isLoading: Boolean,
-  icon: String,
+  icon: {
+    type: String,
+    default: "",
+    required: false,
+  },
 });
 
 //Emits

@@ -12,6 +12,7 @@ export class TekuBeaconService extends NodeService {
 
     const JWTDir = "/engine.jwt";
     const dataDir = "/opt/app/data";
+    network = network === "op-mainnet" ? "mainnet" : network === "op-sepolia" ? "sepolia" : network;
 
     const volumes = [new ServiceVolume(workingDir + "/data", dataDir)];
 

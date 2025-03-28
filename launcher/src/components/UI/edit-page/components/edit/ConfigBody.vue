@@ -38,6 +38,7 @@
         @switch-client="switchClient"
         @confirm-consensus="confirmConsensus"
         @info-modal="infoModal"
+        @modify-service="modifyService"
         @mouse-over="lineDraw"
         @mouse-leave="removeLines"
       />

@@ -84,6 +84,10 @@ const networkFilter = (service) => {
       return service.service !== "SSVNetworkService" && service.service !== "SSVDKGService";
     case "gnosis":
       return /(Lighthouse|Teku|Nethermind|Erigon|Grafana|Prometheus)/.test(service.service);
+    case "op-mainnet":
+      return true;
+    case "op-sepolia":
+      return service.service !== "L2GethService";
     case "devnet":
       return;
     default:

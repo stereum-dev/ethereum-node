@@ -1,8 +1,8 @@
 <template>
   <aside class="flex flex-col items-center w-18 h-full custom-gradient" @pointerdown.prevent.stop @mousedown.prevent.stop>
-    <div class="w-full grid grid-rows-3 mt-20 p-1 gap-y-5">
+    <div class="w-full grid grid-rows-3 mt-20 p-1 gap-y-4">
       <div
-        class="col-span-1 row-start-1 row-end-2 p-1 rounded-md text-gray-700 bg-[#23272a] flex justify-center items-center scale-90 hover:scale-105 active:scale-100 border border-[#23272a] hover:border-gray-500 duration-150 hover:shadow-md shadow-[#23272a] transition-all"
+        class="col-span-1 row-span-1 h-[30px] p-1 rounded-md text-gray-700 bg-[#23272a] flex justify-center items-center scale-90 hover:scale-105 active:scale-100 border border-[#23272a] hover:border-gray-500 duration-150 hover:shadow-md shadow-[#23272a] transition-all"
         @mouseenter="footerStore.cursorLocation = `${toNode}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
@@ -12,8 +12,8 @@
       </div>
 
       <button
-        v-if="setupStore.isEditConfigViewActive && setupStore.selectedSetup"
-        class="col-span-1 row-start-2 row-end-3 p-1 rounded-md text-gray-700 bg-[#23272a] flex justify-center items-center scale-90 hover:scale-105 active:scale-100 border border-[#23272a] hover:border-gray-500 duration-150 hover:shadow-md shadow-[#23272a] transition-all ease-in-out"
+        v-if="setupStore.isEditConfigViewActive && setupStore.selectedSetup && !disabledForOP"
+        class="col-span-1 row-start-2 row-end-3 min-h-[30px] p-1 rounded-md text-gray-700 bg-[#23272a] flex justify-center items-center scale-90 hover:scale-105 active:scale-100 border border-[#23272a] hover:border-gray-500 duration-150 hover:shadow-md shadow-[#23272a] transition-all ease-in-out"
         :class="disabledForDevnet ? 'pointer-events-none opacity-50' : ''"
         @click="networkModal"
         @mouseenter="footerStore.cursorLocation = `${setchNet}`"
@@ -39,7 +39,7 @@
 
       <button
         v-if="!setupStore.isEditConfigViewActive && setupStore.selectedSetup === null"
-        class="col-span-1 row-start-2 row-end-3 p-1 rounded-md text-gray-700 bg-[#23272a] flex justify-center items-center scale-90 hover:scale-105 active:scale-100 border border-[#23272a] hover:border-gray-500 duration-150 hover:shadow-md shadow-[#23272a] transition-all ease-in-out"
+        class="col-span-1 row-start-2 row-end-3 min-h-[30px] p-1 rounded-md text-gray-700 bg-[#23272a] flex justify-center items-center scale-90 hover:scale-105 active:scale-100 border border-[#23272a] hover:border-gray-500 duration-150 hover:shadow-md shadow-[#23272a] transition-all ease-in-out"
         @mouseenter="footerStore.cursorLocation = `${nukTheNud}`"
         @mouseleave="footerStore.cursorLocation = ''"
         @click="nukeNode"
@@ -85,6 +85,10 @@ const emit = defineEmits(["nukeNode", "networkModal"]);
 
 const disabledForDevnet = computed(() => {
   return setupStore.selectedSetup?.network.toLowerCase() === "devnet";
+});
+
+const disabledForOP = computed(() => {
+  return setupStore.selectedSetup?.network.toLowerCase().includes("op");
 });
 
 const nukeNode = () => {

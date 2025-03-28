@@ -1,4 +1,3 @@
-import { ref, computed, onMounted, watch } from 'vue';
 <template>
   <div class="w-full h-full col-start-1 col-span-full row-start-3 row-end-11 grid grid-cols-12 grid-rows-7 p-2 mx-auto">
     <div
@@ -53,7 +52,7 @@ watch(
 //Lifecycle Hooks
 
 onMounted(() => {
-  clickStore.selectedPreset.includedPlugins = clickStore.selectedPreset.includedPlugins.map((item) => {
+  clickStore.selectedPreset.includedPlugins = clickStore.selectedPreset?.includedPlugins.map((item) => {
     return {
       ...item,
       openReplaceModal: false,
@@ -67,45 +66,72 @@ onMounted(() => {
   clickStore.installMonitoring = false;
 });
 
+const updatePlugins = () => {
+  if (clickStore.selectedPreset.name === "op node archive" || clickStore.selectedPreset.name === "op and eth node archive") {
+    const OpRethExists = clickStore.selectedPreset.includedPlugins.some((item) => item.service === "OpRethService");
+    const L2GethExists = clickStore.selectedPreset.includedPlugins.some((item) => item.service === "L2GethService");
+    if (OpRethExists && L2GethExists) {
+      clickStore.selectedPreset.includedPlugins = clickStore.selectedPreset.includedPlugins.filter(
+        (item) => item.service !== "L2GethService"
+      );
+    } else if (!OpRethExists && !L2GethExists) {
+      clickStore.selectedPreset.includedPlugins = clickStore.selectedPreset.includedPlugins.concat(
+        serviceStore.allServices.filter((s) => s.service === "L2GethService")
+      );
+    }
+
+    return clickStore.selectedPreset.includedPlugins;
+  }
+};
+
 //Methods
 const filterMonitoringServices = () => {
   if (clickStore.installMonitoring) {
-    clickStore.selectedPreset.includedPlugins = clickStore.selectedPreset.includedPlugins.concat(
+    clickStore.selectedPreset.includedPlugins = clickStore.selectedPreset?.includedPlugins.concat(
       serviceStore.allServices.filter((s) =>
         ["GrafanaService", "PrometheusNodeExporterService", "PrometheusService", "MetricsExporterService"].includes(s.service)
       )
     );
   } else {
-    clickStore.selectedPreset.includedPlugins = clickStore.selectedPreset.includedPlugins.filter(
+    clickStore.selectedPreset.includedPlugins = clickStore.selectedPreset?.includedPlugins.filter(
       (s) => !["GrafanaService", "PrometheusNodeExporterService", "PrometheusService", "MetricsExporterService"].includes(s.service)
     );
   }
 };
 
 const selectedPluginsValidation = () => {
-  if (Object.keys(clickStore.selectedPreset.includedPlugins).length === 0) {
+  if (Object.keys(clickStore.selectedPreset?.includedPlugins).length === 0) {
     router.push("/oneClick/preset");
   }
 };
 const pluginChangeHandler = (plugin, item, idx) => {
   plugin.openReplaceModal = false;
-  const oldPluginIndex = clickStore.selectedPreset.includedPlugins.findIndex((e) => e.id === plugin?.id);
+  const oldPluginIndex = clickStore.selectedPreset?.includedPlugins.findIndex((e) => e.id === plugin?.id);
 
   if (oldPluginIndex !== -1) {
-    clickStore.selectedPreset.includedPlugins.splice(oldPluginIndex, 1);
+    clickStore.selectedPreset?.includedPlugins.splice(oldPluginIndex, 1);
   }
 
-  clickStore.selectedPreset.includedPlugins.splice(idx, 0, item);
+  clickStore.selectedPreset?.includedPlugins.splice(idx, 0, item);
 
-  if (["staking", "mev boost", "stereum on arm", "archive", "lidocsm"].includes(clickStore.selectedPreset.name)) {
+  if (
+    ["staking", "mev boost", "stereum on arm", "archive", "lidocsm", "op and eth full node", "op and eth node archive"].includes(
+      clickStore.selectedPreset.name
+    )
+  ) {
     if (item.category === "consensus" && getCorrespondingValidator(item.name)) {
       let valIndex = clickStore.selectedPreset.includedPlugins.findIndex((e) => e.category === "validator");
       clickStore.selectedPreset.includedPlugins[valIndex] = getCorrespondingValidator(item.name);
-    } else if (item.category === "validator" && getCorrespondingConsensus(item.name)) {
+    } else if (
+      item.category === "validator" &&
+      getCorrespondingConsensus(item.name) &&
+      !clickStore.selectedPreset.includedPlugins.some((e) => e.name === "Grandine")
+    ) {
       let conIndex = clickStore.selectedPreset.includedPlugins.findIndex((e) => e.category === "consensus");
       clickStore.selectedPreset.includedPlugins[conIndex] = getCorrespondingConsensus(item.name);
     }
   }
+  updatePlugins();
   sortPlugins();
 };
 
@@ -135,6 +161,7 @@ const pluginExChange = (el) => {
         checkPluginCategory(item);
       }
     });
+
     el.openReplaceModal = true;
   }
 };
@@ -145,7 +172,8 @@ const checkPluginCategory = (element) => {
     case "lidocsm":
     case "mev boost":
     case "staking":
-      filter = (item) => item.category === element.category && !/(SSVNetwork|Web3Signer|Charon)/.test(item.service);
+      filter = (item) =>
+        item.category === element.category && !/(SSVNetwork|Web3Signer|Charon|L2Geth|OpGeth|OpNode|OpReth|OpErigon)/.test(item.service);
       if (manageStore.currentNetwork.network == "gnosis") {
         filter = (item) => item.category === element.category && /(Lighthouse|Teku|Nethermind|Erigon|Nimbus|Lodestar)/.test(item.service);
       }
@@ -156,9 +184,9 @@ const checkPluginCategory = (element) => {
         if (element.category === "validator") {
           return item.service === "SSVNetworkService";
         } else if (element.category === "consensus" && item.category === "consensus") {
-          return true;
+          return item.category === element.category && !/(OpNode)/.test(item.service);
         } else if (element.category === "execution" && item.category === "execution") {
-          return true;
+          return item.category === element.category && !/(L2Geth|OpGeth|OpNode|OpReth|OpErigon)/.test(item.service);
         }
         return false;
       };
@@ -166,12 +194,14 @@ const checkPluginCategory = (element) => {
     case "obol":
     case "lidoobol":
       filter = (item) => {
-        if (element.category === "validator" && element.service !== "CharonService") {
-          return /Teku|Lodestar|Lighthouse|Nimbus/.test(item.service) && item.category === element.category;
-        } else if (element.category === "validator") {
+        if (element.category === "execution" && element.service !== "CharonService") {
+          return item.category === element.category && !/(L2Geth|OpGeth|OpNode|OpReth|OpErigon)/.test(item.service);
+        } else if (element.category === "validator" && element.service !== "CharonService") {
+          return item.category === element.category && !/(SSVNetwork|Web3Signer|Charon)/.test(item.service);
+        } else if (element.category === "validator" && element.service === "CharonService") {
           return item.service === "CharonService";
         } else {
-          return item.category === element.category;
+          return item.category === element.category && !/(OpNode)/.test(item.service);
         }
       };
       break;
@@ -179,20 +209,116 @@ const checkPluginCategory = (element) => {
       //filter = (item) => item.category === element.category
       break;
     case "stereum on arm":
-      filter = (item) => item.category === element.category && !/(Prysm|Reth|SSVNetwork|Web3Signer|Charon)/.test(item.service);
+      filter = (item) =>
+        item.category === element.category &&
+        !/(Prysm|Reth|SSVNetwork|Web3Signer|Charon|L2Geth|OpGeth|OpNode|OpReth|OpErigon)/.test(item.service);
       if (manageStore.currentNetwork.network == "gnosis") {
         filter = (item) => item.category === element.category && /(Lighthouse|Teku|Nethermind)/.test(item.service);
       }
       break;
     case "archive":
-      filter = (item) => item.category === element.category && !/(SSVNetwork|Web3Signer|Charon)/.test(item.service);
+      filter = (item) =>
+        item.category === element.category && !/(SSVNetwork|Web3Signer|Charon|L2Geth|OpGeth|OpNode|OpReth|OpErigon)/.test(item.service);
       if (manageStore.currentNetwork.network == "gnosis") {
         filter = (item) => item.category === element.category && /(Lighthouse|Teku|Nethermind|Erigon|Nimbus|Lodestar)/.test(item.service);
       }
       break;
+
+    case "op full node":
+      filter = (item) => {
+        if (manageStore.currentNetwork.network == "op-mainnet") {
+          return item.category === element.category && /(OpGethService|OpErigonService)/.test(item.service);
+        } else if (element.service === "OpGethService" || element.service === "OpErigonService" || element.service === "OpRethService") {
+          return item.category === element.category && /(OpGethService|OpErigonService|OpRethService)/.test(item.service);
+        } else if (element.service === "L2GethService") {
+          return item.category === element.category && /L2GethService/.test(item.service);
+        }
+
+        if (element.category === "consensus" && element.service === "OpNodeBeaconService") {
+          return item.category === element.category && /(OpNode)/.test(item.service);
+        }
+        return (
+          item.category === element.category && item.service === element.service && /OpGethService|OpNodeBeaconService/.test(item.service)
+        );
+      };
+      break;
+
+    case "op and eth full node":
+      filter = (item) => {
+        if (element.category === "execution") {
+          if (/Op(Geth|Erigon|Reth)Service/.test(element.service)) {
+            return item.category === "execution" && /(OpGethService|OpErigonService)/.test(item.service);
+          }
+          if (manageStore.currentNetwork.network == "op-mainnet" && /Op(Geth|Erigon|Reth)Service/.test(element.service)) {
+            return item.category === "execution" && /(OpGethService|OpErigonService)/.test(item.service);
+          }
+
+          if (element.service === "L2GethService") {
+            return item.category === "execution" && item.service === "L2GethService";
+          }
+
+          return item.category === "execution" && !/(SSVNetwork|Web3Signer|Charon|L2Geth|OpGeth|OpNode|OpReth|OpErigon)/.test(item.service);
+        }
+
+        if (element.category === "consensus" && element.service === "OpNodeBeaconService") {
+          return item.category === element.category && /(OpNode)/.test(item.service);
+        }
+
+        return (
+          item.category === element.category && !/(SSVNetwork|Web3Signer|Charon|L2Geth|OpGeth|OpNode|OpReth|OpErigon)/.test(item.service)
+        );
+      };
+      break;
+
+    case "op node archive":
+      filter = (item) => {
+        if (element.category === "execution") {
+          if (/Op(Geth|Erigon|Reth)Service/.test(element.service)) {
+            return item.category === "execution" && /(OpGethService|OpErigonService|OpRethService)/.test(item.service);
+          }
+
+          if (element.service === "L2GethService") {
+            return item.category === "execution" && item.service === "L2GethService";
+          }
+
+          return item.category === "execution" && !/(SSVNetwork|Web3Signer|Charon|L2Geth|OpGeth|OpNode|OpReth|OpErigon)/.test(item.service);
+        }
+        if (element.category === "consensus" && element.service === "OpNodeBeaconService") {
+          return item.category === element.category && /(OpNode)/.test(item.service);
+        }
+
+        return false;
+      };
+      break;
+
+    case "op and eth node archive":
+      filter = (item) => {
+        if (element.category === "execution") {
+          if (/Op(Geth|Erigon|Reth)Service/.test(element.service)) {
+            return item.category === "execution" && /(OpGethService|OpErigonService|OpRethService)/.test(item.service);
+          }
+
+          if (element.service === "L2GethService") {
+            return item.category === "execution" && item.service === "L2GethService";
+          }
+
+          return item.category === "execution" && !/(SSVNetwork|Web3Signer|Charon|L2Geth|OpGeth|OpNode|OpReth|OpErigon)/.test(item.service);
+        }
+
+        if (element.category === "consensus" && element.service === "OpNodeBeaconService") {
+          return item.category === element.category && /(OpNode)/.test(item.service);
+        }
+
+        return (
+          item.category === element.category && !/(SSVNetwork|Web3Signer|Charon|L2Geth|OpGeth|OpNode|OpReth|OpErigon)/.test(item.service)
+        );
+      };
+      break;
+
     default:
       break;
   }
+
   filteredPluginsOnCategory.value = serviceStore.allServices.filter(filter);
 };
 
