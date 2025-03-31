@@ -431,4 +431,37 @@ scrape_configs:
 {% endif %}
         ]
 
+# SSVNOMService
+  - job_name: ssvnoms_fast_metrics
+    scrape_interval: 60s
+    metrics_path: /metrics/fast
+    static_configs:
+      - targets: [
+{% set targets = [] %}
+{%- for service_config in service_configs.results %}
+  {%- if (service_config.content | b64decode | from_yaml).service == "SSVNOMService" %}
+    {%- set _ = targets.append("stereum-" ~ (service_config.content | b64decode | from_yaml).id ~ ":8000") %}
+  {%- endif %}
+{% endfor %}
+{% if targets %}
+          "{{ targets | join('",\n          "') }}"
+{% endif %}
+        ]
+
+  - job_name: ssvnoms_slow_metrics
+    scrape_interval: 30m
+    metrics_path: /metrics/slow
+    static_configs:
+      - targets: [
+{% set targets = [] %}
+{%- for service_config in service_configs.results %}
+  {%- if (service_config.content | b64decode | from_yaml).service == "SSVNOMService" %}
+    {%- set _ = targets.append("stereum-" ~ (service_config.content | b64decode | from_yaml).id ~ ":8000") %}
+  {%- endif %}
+{% endfor %}
+{% if targets %}
+          "{{ targets | join('",\n          "') }}"
+{% endif %}
+        ]
+
 # EOF
