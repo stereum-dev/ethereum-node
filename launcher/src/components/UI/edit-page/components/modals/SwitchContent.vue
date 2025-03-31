@@ -89,7 +89,7 @@ const getServices = computed(() => {
   }
 
   if (network === "op-mainnet") {
-    return allServices.filter((e) => ["OpErigon", "OpGeth"].includes(e.name) && e.name !== excludedService);
+    return allServices.filter((e) => ["OpErigon", "OpGeth", "OpReth"].includes(e.name) && e.name !== excludedService);
   }
 
   return allServices.filter(
