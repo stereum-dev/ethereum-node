@@ -1,6 +1,6 @@
 # Contribution Guide
 
-Thank you for your interest in Stereum. The following is a set of instructions for contributing to this project. These are just guidelines, not rules, however it is highly recommended that you follow them in order to pass automated tests and your [pull requests](#pull-requests) get accepted.
+Thank you for your interest in Stereum, the following is a set of instructions for contributing to this project. These are just guidelines, not rules; however, it is highly recommended that you follow them in order to pass automated tests and your [pull requests](#pull-requests) get accepted.
 
 ## Prerequisites
 
@@ -84,7 +84,7 @@ If you have found a bug or wanna have a new feature just [create a new issue](ht
 
 ## Style Guide
 
-If you use the [recommended software and extensions](#recommended-software) described in the [prerequisites](#prerequisites) section usually everything is already auto formatted and/or code issues are announced in the "Problems" tab of [VSCode](https://code.visualstudio.com/).
+If you use the [recommended software and extensions](#recommended-software) described in the [prerequisites](#prerequisites) section, usually everything is already auto formatted and/or code issues are announced in the "Problems" tab of [VSCode](https://code.visualstudio.com/).
 
 However, here are a few hints you may follow to keep your code clean and pass automated tests:
 
