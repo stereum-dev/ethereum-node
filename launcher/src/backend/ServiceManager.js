@@ -1301,7 +1301,7 @@ export class ServiceManager {
           new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
         ];
         return OpRethService.buildByUserInput(args.network, ports, args.installDir + "/op-reth");
-        
+
       case "SSVNOMService":
         ports = [new ServicePort("127.0.0.1", 8000, 8000, servicePortProtocol.tcp)];
         return SSVNOMService.buildByUserInput(
