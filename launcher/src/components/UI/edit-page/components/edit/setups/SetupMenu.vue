@@ -44,7 +44,7 @@ const manageStore = useNodeManage();
 const setupStore = useSetups();
 
 const isSetupOP = computed(() => {
-  return props.setup.setupName?.includes("op");
+  return props.setup.network?.toLowerCase().includes("op");
 });
 
 // Methods
@@ -54,7 +54,6 @@ const deleteSetup = () => {
 };
 
 const connectSetup = () => {
-  console.log("connectSetup");
   setupStore.selectedOPSetup = props.setup;
   setupStore.isConnectSetupModalActive = true;
   footerStore.cursorLocation = "";
