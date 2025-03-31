@@ -2652,5 +2652,14 @@ export const useServices = defineStore("services", {
     };
   },
   getters: {},
-  actions: {},
+  actions: {
+    getServiceCircleIcon(identifier) {
+      const service = this.allServices.find((s) => s.name === identifier || s.service === identifier);
+      return service?.icon || null;
+    },
+    getServiceSqIcon(identifier) {
+      const service = this.allServices.find((s) => s.name === identifier || s.service === identifier);
+      return service?.sIcon || null;
+    },
+  },
 });
