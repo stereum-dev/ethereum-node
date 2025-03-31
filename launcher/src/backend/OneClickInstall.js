@@ -220,12 +220,11 @@ export class OneClickInstall {
 
     let charon = undefined;
     if (constellation.includes("CharonService")) {
-      //SSVNetworkService
+      //CharonService
       charon = this.serviceManager.getService("CharonService", {
         ...args,
-        consensusClients: this.beaconService.filter((service) => service.service !== "OpNodeBeaconService"),
+        consensusClients: [this.beaconService.filter((service) => service.service !== "OpNodeBeaconService")],
       });
-
       this.extraServices.push(charon);
       this.notToStart.push(charon.id);
     }
@@ -378,17 +377,29 @@ export class OneClickInstall {
       );
     }
 
+    if (constellation.includes("SSVNOMService")) {
+      //SSVNOMService
+      this.extraServices.push(
+        this.serviceManager.getService("SSVNOMService", {
+          ...args,
+          consensusClients: [this.beaconService],
+          executionClients: [this.executionClient],
+          otherServices: this.validatorService.service === "SSVNetworkService" ? [this.validatorService] : [],
+        })
+      );
+    }
+
     if (constellation.includes("SSVDKGService")) {
       let SSVDKGService = this.serviceManager.getService("SSVDKGService", {
         ...args,
-        executionClients: this.executionClient.filter(
+        executionClients: [this.executionClient.filter(
           (client) =>
             client.service !== "OpGethService" ||
             client.service !== "L2GethService" ||
             client.service !== "OpErigonService" ||
             client.service !== "OpRethService"
-        ),
-        otherServices: this.validatorService === "SSVNetworkService" ? [this.validatorService] : [],
+        )],
+        otherServices: this.validatorService.service === "SSVNetworkService" ? [this.validatorService] : [],
       });
       this.extraServices.push(SSVDKGService);
     }
@@ -705,7 +716,7 @@ export class OneClickInstall {
         services.push("FlashbotsMevBoostService");
         break;
       case "ssv.network":
-        services.push("SSVNetworkService");
+        services.push("SSVNetworkService", "SSVNOMService");
         break;
       case "obol":
         services.push("FlashbotsMevBoostService", "CharonService");
@@ -721,7 +732,7 @@ export class OneClickInstall {
         services.push("LidoObolExitService", "CharonService", "ValidatorEjectorService", "FlashbotsMevBoostService");
         break;
       case "lidossv":
-        services.push("SSVNetworkService", "SSVDKGService", "FlashbotsMevBoostService");
+        services.push("SSVNetworkService", "SSVDKGService", "FlashbotsMevBoostService", "SSVNOMService");
         break;
       case "lidocsm":
         services.push("FlashbotsMevBoostService", "KeysAPIService", "ValidatorEjectorService", "KuboIPFSService", "LCOMService");

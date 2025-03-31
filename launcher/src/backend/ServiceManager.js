@@ -41,6 +41,7 @@ import { OpErigonService } from "./ethereum-services/OpErigonService";
 import { OpRethService } from "./ethereum-services/OpRethService";
 import { OpNodeBeaconService } from "./ethereum-services/OpNodeBeaconService";
 import { L2GethService } from "./ethereum-services/L2GethService";
+import { SSVNOMService } from "./ethereum-services/SSVNOMService";
 
 import YAML from "yaml";
 // import { file } from "jszip";
@@ -197,6 +198,8 @@ export class ServiceManager {
               services.push(OpRethService.buildByConfiguration(config));
             } else if (config.service == "GrandineBeaconService") {
               services.push(GrandineBeaconService.buildByConfiguration(config));
+            } else if (config.service == "SSVNOMService") {
+              services.push(SSVNOMService.buildByConfiguration(config));
             }
           } else {
             log.error("found configuration without service!");
@@ -1188,6 +1191,7 @@ export class ServiceManager {
         ports = [
           new ServicePort(null, 12000, 12000, servicePortProtocol.udp),
           new ServicePort(null, 13000, 13000, servicePortProtocol.tcp),
+          new ServicePort("127.0.0.1", 16000, 16000, servicePortProtocol.tcp),
         ];
         return SSVNetworkService.buildByUserInput(
           args.network,
@@ -1297,6 +1301,17 @@ export class ServiceManager {
           new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
         ];
         return OpRethService.buildByUserInput(args.network, ports, args.installDir + "/op-reth");
+        
+      case "SSVNOMService":
+        ports = [new ServicePort("127.0.0.1", 8000, 8000, servicePortProtocol.tcp)];
+        return SSVNOMService.buildByUserInput(
+          args.network,
+          ports,
+          args.installDir + "/ssvnoms",
+          args.consensusClients,
+          args.executionClients,
+          args.otherServices
+        );
     }
   }
 
