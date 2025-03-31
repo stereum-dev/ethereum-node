@@ -436,7 +436,6 @@ export class ServiceManager {
     let command = "";
     let filter;
     let keyValuePairs = [];
-
     switch (service.service.replace(/(Beacon|Validator|Service)/gm, "")) {
       case "Lighthouse":
         if (service.service.includes("Beacon")) {
@@ -499,7 +498,6 @@ export class ServiceManager {
           command = "--beacon-node-api-endpoint=";
         }
         break;
-
       case "OpNode": {
         filter = (e) => {
           if (e.service === "OpGethService" || e.service === "OpErigonService" || e.service === "OpRethService") {
@@ -545,7 +543,22 @@ export class ServiceManager {
 
         break;
       }
-
+      case "OpErigon":
+        filter = (e) => {
+          if (e.service === "L2GethService") {
+            return e.buildExecutionClientRPCEndpointUrl();
+          }
+        };
+        command = "--rollup.historicalrpc=";
+        break;
+      case "OpGeth":
+        filter = (e) => {
+          if (e.service === "L2GethService") {
+            return e.buildExecutionClientRPCEndpointUrl();
+          }
+        };
+        command = "--rollup.historicalrpc=";
+        break;
       case "Grandine":
         if (service.service.includes("Beacon")) {
           filter = (e) => e.buildExecutionClientEngineRPCHttpEndpointUrl();
@@ -643,6 +656,8 @@ export class ServiceManager {
       }
     } else if (service.service.includes("Validator") || service.service.includes("Charon")) {
       service.dependencies.consensusClients = dependencies;
+    } else if (service.service.includes("OpErigon") || service.service.includes("OpGeth")) {
+      service.dependencies.executionClients = dependencies.filter((d) => d.service === "L2GethService");
     }
     return service;
   }
@@ -926,6 +941,11 @@ export class ServiceManager {
     if (switchTask.service.category != "validator") {
       servicesBelow.forEach((service) => {
         let newDependencies = [];
+        if (service.service === "OpNodeBeaconService") {
+          service.dependencies.consensusClients.forEach((dependency) => {
+            newDependencies.push(dependency);
+          });
+        }
         if (switchTask.service.category === "execution") {
           service.dependencies.executionClients.forEach((dependency) => {
             newDependencies.push(dependency);
