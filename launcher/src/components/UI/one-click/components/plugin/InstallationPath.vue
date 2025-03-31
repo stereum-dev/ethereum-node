@@ -69,39 +69,13 @@
 
 <script setup>
 import { useClickInstall } from "@/store/clickInstallation";
-import { computed, onMounted } from "vue";
-import { useServices } from "../../../../../store/services";
-import { useNodeManage } from "@/store/nodeManage";
+import { onMounted } from "vue";
 
 const clickStore = useClickInstall();
-const serviceStore = useServices();
-const manageStore = useNodeManage();
 
 const validatePath = () => {
   const pathRegex = /^\/(?:[^ /\0*?<>|&{}$;][^ /\0]*\/?)*[^ /\0*?<>|&{}$;]{1,}$/;
   clickStore.isPathValid = pathRegex.test(clickStore.installationPath.trim());
-};
-
-const getLegacyService = computed(() => {
-  return serviceStore.allServices.find((service) => service.service === "L2GethService");
-});
-
-// Check if Legacy Service is Already Added
-const isLegacyAdded = computed(() => {
-  return clickStore.selectedPreset.includedPlugins.some((plugin) => plugin.service === "L2GethService");
-});
-
-// Toggle Add/Remove Functionality
-const toggleLegacyPreset = () => {
-  if (isLegacyAdded.value) {
-    // Remove if already included
-    clickStore.selectedPreset.includedPlugins = clickStore.selectedPreset.includedPlugins.filter(
-      (plugin) => plugin.service !== "L2GethService"
-    );
-  } else {
-    // Add if not included
-    clickStore.selectedPreset.includedPlugins.push(getLegacyService.value);
-  }
 };
 
 onMounted(() => {
