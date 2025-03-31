@@ -691,11 +691,6 @@ export class OneClickInstall {
       }
     })();
 
-    // const selectedEC =
-    //   setup === "op full node"
-    //     ? this.chooseClient(["GETH", "RETH", "NETHERMIND", "BESU", "ERIGON"])
-    //     : this.chooseClient(["GETH", "BESU", "NETHERMIND"]);
-
     services.push(selectedEC + "Service");
 
     if (network === "gnosis")

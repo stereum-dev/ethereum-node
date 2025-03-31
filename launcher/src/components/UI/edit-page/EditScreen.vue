@@ -369,7 +369,6 @@ const switchClientConfirm = (properties) => {
 // Clients Modifying methods
 
 const confirmModifyingService = (item) => {
-  console.log("op connection itemmmmm", item);
   isModifyModalOpen.value = false;
   if (item.client.service === "FlashbotsMevBoostService") {
     changeMevboostConnection();
@@ -574,7 +573,6 @@ const drawerMouseLeave = () => {
 
 const cancelChangeHandler = (item) => {
   isAddModalOpen.value = false;
-  console.log("cancelChangeHandler", item);
   item.service.isRemoveProcessing = false;
   if (item) {
     if (item.content === "INSTALL") {
