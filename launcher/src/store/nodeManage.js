@@ -248,17 +248,15 @@ export const useNodeManage = defineStore("nodeManage", {
           currencyIcon: "/img/icon/control-page-icons/network-currency-icons/network-currency-icons-goerli-testnet.png",
           dataEndpoint: "https://sepolia.beaconcha.in/api/v1",
           support: ["op full node", "op and eth full node", "op node archive", "op and eth node archive"],
-    },
-
-      { 
-      id: 7,
+        },
+        {
+          id: 7,
           name: "Hoodi Testnet",
           network: "hoodi",
           icon: "/img/icon/network-icons/ethereum-testnet-icon.png",
           currencyIcon: "/img/icon/control-page-icons/network-currency-icons/network-currency-icons-goerli-testnet.png",
           dataEndpoint: "https://hoodi.beaconcha.in/api/v1",
           support: ["staking", "ssv.network", "stereum on arm", "mev boost", "archive", "obol", "lidoobol", "lidossv", "lidocsm"],
-
         },
       ],
       currentNetwork: {},

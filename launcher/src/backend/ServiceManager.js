@@ -1889,10 +1889,8 @@ export class ServiceManager {
       }
     } else {
       command = command.map((c) => {
-
         if (/mainnet|prater|goerli|sepolia|holesky|op-mainnet|op-sepolia|hoodi/.test(c)) {
           c = c.replace(/mainnet|prater|goerli|sepolia|holesky|op-mainnet|op-sepolia|hoodi/, newNetwork);
-
         }
         return c;
       });
