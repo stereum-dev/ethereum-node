@@ -8,20 +8,14 @@ import { ref, computed } from 'vue';
 
       <div class="col-start-1 col-span-full row-start-2 row-end-5 grid grid-cols-12 grid-rows-2 gap-2">
         <div
-          v-if="executionClient"
-          class="h-14 col-start-1 col-span-full row-start-1 row-span-1 w-full flex justify-between items-center space-x-2"
-        >
-          <ExecutionSync :client="executionClient" />
-        </div>
-        <div
           v-if="consensusClient && !isPresetArchive"
-          class="col-start-1 col-span-full row-start-2 row-span-1 w-full h-14 flex justify-between items-center relative space-x-2"
+          class="col-start-1 col-span-full row-start-1 row-span-1 w-full h-14 flex justify-between items-center relative space-x-2"
         >
           <ConsensusSync :client="consensusClient" />
         </div>
         <div
           v-if="consensusClient && isPresetArchive"
-          class="col-start-1 col-span-full row-start-2 row-span-1 w-full h-14 flex justify-between items-center relative space-x-2"
+          class="col-start-1 col-span-full row-start-1 row-span-1 w-full h-14 flex justify-between items-center relative space-x-2"
         >
           <ExecutionSync :client="consensusClient" />
         </div>
@@ -48,12 +42,11 @@ const clickStore = useClickInstall();
 //Refs
 
 //Computed & Watcher
-const executionClient = computed(() => {
-  return clickStore.selectedPreset.includedPlugins.filter((service) => service.category === "execution")[0];
-});
 
 const consensusClient = computed(() => {
-  return clickStore.selectedPreset.includedPlugins.filter((service) => service.category === "consensus")[0];
+  return clickStore.selectedPreset?.includedPlugins.filter(
+    (service) => service.category === "consensus" && service.service !== "OpNodeBeaconService"
+  )[0];
 });
 
 const isPresetArchive = computed(() => {

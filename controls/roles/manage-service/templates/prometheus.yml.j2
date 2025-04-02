@@ -400,6 +400,37 @@ scrape_configs:
 {% endif %}
         ]
 
+# op-geth
+  - job_name: op-geth
+    metrics_path: /debug/metrics/prometheus
+    static_configs:
+      - targets: [
+{% set targets = [] %}
+{%- for service_config in service_configs.results %}
+  {%- if (service_config.content | b64decode | from_yaml).service == "OpGethService" %}
+    {%- set _ = targets.append("stereum-" ~ (service_config.content | b64decode | from_yaml).id ~ ":6060") %}
+  {%- endif %}
+{% endfor %}
+{% if targets %}
+          "{{ targets | join('",\n          "') }}"
+{% endif %}
+        ]
+
+# op-node beacon
+  - job_name: op_node_beacon
+    static_configs:
+      - targets: [
+{% set targets = [] %}
+{%- for service_config in service_configs.results %}
+  {%- if (service_config.content | b64decode | from_yaml).service == "OpNodeBeaconService" %}
+    {%- set _ = targets.append("stereum-" ~ (service_config.content | b64decode | from_yaml).id ~ ":7300") %}
+  {%- endif %}
+{% endfor %}
+{% if targets %}
+          "{{ targets | join('",\n          "') }}"
+{% endif %}
+        ]
+
 # SSVNOMService
   - job_name: ssvnoms_fast_metrics
     scrape_interval: 60s

@@ -15,6 +15,7 @@ export class PrysmValidatorService extends NodeService {
     const passwordDir = "/opt/app/data/passwords";
     const graffitiDir = "/opt/app/graffitis";
     const configYamlDir = "/consensus";
+    network = network === "op-mainnet" ? "mainnet" : network === "op-sepolia" ? "sepolia" : network;
 
     const volumes =
       network === "devnet"

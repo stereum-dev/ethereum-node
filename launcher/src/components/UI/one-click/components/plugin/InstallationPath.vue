@@ -37,7 +37,7 @@
       </div>
     </div>
     <div
-      v-if="clickStore.selectedPreset.name === 'stereum on arm'"
+      v-if="clickStore.selectedPreset?.name === 'stereum on arm'"
       class="w-full col-start-1 col-span-full row-start-5 row-span-2 border rounded-md border-gray-600 mx-auto bg-[#336666]"
     >
       <div class="col-start-1 col-span-full row-start-2 row-span-1 flex justify-center items-center p-1">

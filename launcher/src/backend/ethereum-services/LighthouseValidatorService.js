@@ -12,6 +12,7 @@ export class LighthouseValidatorService extends NodeService {
 
     const dataDir = "/opt/app/validator";
     const graffitiDir = "/opt/app/graffitis";
+    network = network === "op-mainnet" ? "mainnet" : network === "op-sepolia" ? "sepolia" : network;
 
     const volumes = [new ServiceVolume(workingDir + "/validator", dataDir), new ServiceVolume(workingDir + "/graffitis", graffitiDir)];
 

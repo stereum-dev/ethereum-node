@@ -15,6 +15,7 @@ export class PrysmBeaconService extends NodeService {
     const genesisDir = network === "devnet" ? "/consensus" : "/opt/app/genesis";
     const configYamlDir = "/consensus";
     const executionDir = "/execution";
+    network = network === "op-mainnet" ? "mainnet" : network === "op-sepolia" ? "sepolia" : network;
 
     //volumes
     const volumes =

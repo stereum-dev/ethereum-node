@@ -47,17 +47,19 @@
         recurse: yes
       changed_when: false
       become: yes
+
       when:
         - (stereum.manage_service.state == "started" or stereum.manage_service.state == "restarted")
         - item.split(':') | first != '/'
         - item.split(':') | first != '/sys'
         - item.split(':') | first != '/proc'
         - not (stereum_service_configuration.service == "NimbusValidatorService" and item.split(':') | last == '/opt/app/secrets') # ignoring this bc nimbus validator sets this directory to 0600
-      with_items: "{{ stereum_service_configuration.volumes | reject('search', ':/engine.jwt|:/execution/engine.jwt') }}"
+  with_items: "{{ stereum_service_configuration.volumes | reject('search', ':/engine.jwt|:/execution/engine.jwt|:/op-engine.jwt') }}"
+
 
     - name: Set directory permissions for engine.jwt
       file:
-        path: "{{ item.split(':') | first | replace('/engine.jwt', '') | replace('/execution/engine.jwt', '') }}"
+        path: "{{ item.split(':') | first | replace('/engine.jwt', '') | replace('/execution/engine.jwt', '') | replace('/op-engine.jwt', '') }}"
         state: directory
         owner: "{{ stereum_service_configuration.user }}"
         group: "{{ stereum_service_configuration.user }}"
@@ -66,7 +68,7 @@
       changed_when: false
       become: yes
       when: stereum.manage_service.state == "started" or stereum.manage_service.state == "restarted"
-      with_items: "{{ stereum_service_configuration.volumes | select('search', ':/engine.jwt|:/execution/engine.jwt') }}"
+      with_items: "{{ stereum_service_configuration.volumes | select('search', ':/engine.jwt|:/execution/engine.jwt|:/op-engine.jwt') }}"
 
     - name: Stereum's docker network
       docker_network:
@@ -103,15 +105,15 @@
       copy:
         # besu prevents the use of tokens starting with '0x', so we start always with 'ff'
         content: "ff{{ query('community.general.random_string', override_all=hex_chars, length=62) | first }}"
-        dest: "{{ stereum_service_configuration.volumes | select('search', ':/engine.jwt|/execution/engine.jwt') | first | split(':') | first }}"
+        dest: "{{ stereum_service_configuration.volumes | select('search', ':/engine.jwt|/execution/engine.jwt|:/op-engine.jwt') | first | split(':') | first }}"
         force: no
         mode: 0444
       vars:
         hex_chars: "0123456789abcdef"
       become: yes
       when:
-        - stereum_service_configuration.service in ['BesuService', 'GethService', 'RethService', 'NethermindService', 'ErigonService', 'LighthouseBeaconService', 'NimbusBeaconService', 'PrysmBeaconService', 'TekuBeaconService', 'LodestarBeaconService']
-        - stereum_service_configuration.volumes | select('search', ':/engine.jwt|/execution/engine.jwt') | length > 0
+        - stereum_service_configuration.service in ['BesuService', 'GethService', 'RethService', 'NethermindService', 'ErigonService', 'LighthouseBeaconService', 'NimbusBeaconService', 'PrysmBeaconService', 'TekuBeaconService', 'LodestarBeaconService', 'OpGethService', 'OpErigonService', 'OpRethService']
+        - stereum_service_configuration.volumes | select('search', ':/engine.jwt|/execution/engine.jwt|:/op-engine.jwt') | length > 0
 
     - include_tasks: write-graffiti-files.yml
       when: >
@@ -135,6 +137,11 @@
         stereum_service_configuration.command is defined and
         (stereum_service_configuration.command | select('match', "^--trusted-node-url=") | length) == 1 and
         stereum_service_configuration.service is match("NimbusBeaconService") and
+        (stereum.manage_service.state == "started" or stereum.manage_service.state == "restarted")
+
+    - include_tasks: import-state-snapshot-opreth.yml
+      when: >
+        (stereum_service_configuration.service is match("OpRethService") and stereum_service_configuration.network is match("op-mainnet")) and
         (stereum.manage_service.state == "started" or stereum.manage_service.state == "restarted")
 
     - name: Start service

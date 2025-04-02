@@ -11,6 +11,7 @@ export class GrandineBeaconService extends NodeService {
 
     const JWTDir = "/engine.jwt";
     const dataDir = "/opt/app/data";
+    network = network === "op-mainnet" ? "mainnet" : network === "op-sepolia" ? "sepolia" : network;
 
     // volumes
     const volumes = [new ServiceVolume(workingDir + "/data", dataDir)];

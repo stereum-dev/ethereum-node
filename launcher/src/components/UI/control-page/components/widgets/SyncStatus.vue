@@ -47,7 +47,14 @@
           </div>
           <div class="progressBox">
             <sync-circular-progress :color="executionColor" :sync-percent="executionCyrcle" />
-            <img class="w-9 h-9 absolute" :src="setupsStore?.selectedServicePairs?.executionService?.icon" alt="execution" />
+            <img
+              class="w-9 h-9 absolute"
+              :src="
+                setupsStore?.selectedServicePairs?.executionService?.icon ??
+                serviceStore.getServiceCircleIcon(setupsStore?.selectedServicePairs?.executionService?.name)
+              "
+              alt="execution"
+            />
           </div>
           <div class="syncStatusStatus">
             <span :style="{ color: executionColor }">{{ executionState }}</span>
@@ -65,10 +72,12 @@ import NoData from "./NoData.vue";
 import SyncCircularProgress from "./SyncCircularProgress.vue";
 import { useSetups } from "@/store/setups";
 import { computed, watch, ref } from "vue";
+import { useServices } from "../../../../../store/services";
 
 const controlStore = useControlStore();
 const footerStore = useFooter();
 const setupsStore = useSetups();
+const serviceStore = useServices();
 
 const isConsensusMissing = computed(() => footerStore.missingServices?.includes("consensus"));
 const consensusColor = ref("grey");

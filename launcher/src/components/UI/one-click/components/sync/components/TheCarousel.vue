@@ -1,5 +1,5 @@
 <template>
-  <div class="relative w-full h-[60px] col-start-5 col-end-13 flex justify-center items-center gap-x-2 px-2">
+  <div class="relative w-full h-[60px] col-start-5 col-end-13 flex justify-center items-center gap-x-12 pr-2 pl-[10px]">
     <Carousel
       ref="carousel"
       v-model="currentSlide"
@@ -15,9 +15,9 @@
           :style="{ 'pointer-events': getCategory === 'execution' ? 'none' : '' }"
         >
           <div v-if="item.name === 'genesis'" class="w-full h-full flex justify-evenly items-center p-1">
-            <div class="w-full h-full flex flex-col justify-evenly items-center text-gray-400 p-1">
-              <span class="w-full font-semibold text-md uppercase">{{ item.name }}</span>
-              <span class="w-full font-semibold text-md uppercase text-teal-600">{{ item.type }}</span>
+            <div class="w-full h-full flex flex-col justify-evenly items-center text-gray-400">
+              <span class="w-full font-semibold text-sm uppercase">{{ item.name }}</span>
+              <span class="w-full font-semibold text-sm uppercase text-teal-600">{{ item.type }}</span>
             </div>
           </div>
           <div
@@ -52,13 +52,13 @@
                 class="w-full h-full flex justify-center items-center bg-[#111315] rounded-md text-gray-400"
                 @click="openDropdown"
               >
-                <span>{{ selectedItem }}</span>
+                <span class="text-sm">{{ selectedItem }}</span>
               </div>
               <div v-else class="w-full h-full bg-[#191b1e] border border-gray-600 flex justify-between items-center rounded-md">
                 <div v-if="selectedIcon !== ''" class="w-1/6" @click="openDropdown">
                   <img class="w-6 h-6 ml-2" :src="selectedIcon" :alt="selectedItem" />
                 </div>
-                <div v-if="selectedIcon !== ''" class="w-4/6 text-md text-gray-300 font-semibold" @click="openDropdown">
+                <div v-if="selectedIcon !== ''" class="w-4/6 text-md text-gray-300" @click="openDropdown">
                   {{ selectedItem }}
                 </div>
                 <div v-else class="w-4/6 text-gray-500 text-sm" @click="openDropdown">
@@ -75,22 +75,22 @@
 
       <template #addons><navigation v-if="getCategory !== 'execution'" /> </template>
     </Carousel>
-
+    <!-- @mouseleave="colseDropdown" -->
     <Transition name="slide">
       <ul
         v-show="dropdown"
-        class="w-72 transition-all min-h-[100px] max-h-[110px] duration-400 ease-in-out absolute right-[20px] -bottom-25 bg-gray-700 border border-gray-700 rounded-lg shadow-lg pt-18 pb-1 z-10 mt-[9.5rem] divide-gray-400 overflow-y-auto flex flex-col justify-start items-center divide-y-[1px]"
+        class="w-[17rem] transition-all min-h-[100px] max-h-[140px] duration-400 ease-in-out absolute right-[25px] top-12 bg-neutral-800/80 border border-gray-700 rounded-lg shadow-lg pt-18 pb-1 z-10 divide-gray-400 overflow-y-auto flex flex-col justify-start items-center divide-y-[1px]"
         @mouseleave="colseDropdown"
       >
         <li
           v-for="link in selectedLinks"
           :key="link"
-          class="w-full h-12 grid grid-cols-6 p-2 hover:bg-blue-400 bg-[#212225]"
+          class="w-full h-10 grid grid-cols-6 p-2 hover:bg-blue-400 bg-[#212225]"
           @click="linkPicker(link)"
         >
-          <img v-if="link.icon" class="w-7 h-7 col-start-1 col-end-2 self-center justify-self-center" :src="link.icon" alt="service Icon" />
+          <img v-if="link.icon" class="w-6 h-6 col-start-1 col-end-2 self-center justify-self-center" :src="link.icon" alt="service Icon" />
           <span
-            class="col-start-3 col-end-6 px-4 py-1 flex justify-start links-center outline-0 whitespace-nowrap cursor-pointer text-md text-gray-200 font-normal font-sans"
+            class="col-start-3 col-end-6 px-4 py-1 flex justify-start links-center outline-0 whitespace-nowrap cursor-pointer text-sm text-gray-200 font-normal font-sans"
             >{{ link.name }}</span
           >
         </li>
@@ -141,6 +141,7 @@ const currentNetwork = computed(() => {
   setupNetwork = manageStore.currentNetwork;
 
   current = manageStore.networkList.find((network) => network.network === setupNetwork.network);
+
   if (!current) {
     current = manageStore.networkList.find((network) => network.network === props.client.network);
   }
@@ -148,7 +149,15 @@ const currentNetwork = computed(() => {
 });
 
 const selectedLinks = computed(() => {
-  return installStore[currentNetwork.value?.network];
+  let output;
+  if (currentNetwork.value?.network === "op-mainnet") {
+    output = installStore["opMainnet"];
+  } else if (currentNetwork.value?.network === "op-sepolia") {
+    output = installStore["opSepolia"];
+  } else {
+    output = installStore[currentNetwork.value?.network];
+  }
+  return output;
 });
 
 watchEffect(() => {

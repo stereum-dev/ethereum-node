@@ -539,7 +539,6 @@ export default {
           this.currentVolume = savedConfig.savedVolume.volume;
         } else {
           this.volState = false;
-          console.warn("Volume configuration is missing or invalid.");
         }
       } catch (error) {
         console.error("Failed to load saved settings:", error);

@@ -232,6 +232,25 @@ export const useNodeManage = defineStore("nodeManage", {
         },
         {
           id: 5,
+
+          name: "OP Sepolia",
+          network: "op-sepolia",
+          icon: "/img/icon/network-icons/op-sepolia.png",
+          currencyIcon: "/img/icon/control-page-icons/network-currency-icons/network-currency-icons-goerli-testnet.png",
+          dataEndpoint: "https://sepolia.beaconcha.in/api/v1",
+          support: ["op full node", "op and eth full node"],
+        },
+        {
+          id: 6,
+          name: "OP Mainnet",
+          network: "op-mainnet",
+          icon: "/img/icon/network-icons/op-mainnet.png",
+          currencyIcon: "/img/icon/control-page-icons/network-currency-icons/network-currency-icons-goerli-testnet.png",
+          dataEndpoint: "https://sepolia.beaconcha.in/api/v1",
+          support: ["op full node", "op and eth full node", "op node archive", "op and eth node archive"],
+        },
+        {
+          id: 7,
           name: "Hoodi Testnet",
           network: "hoodi",
           icon: "/img/icon/network-icons/ethereum-testnet-icon.png",

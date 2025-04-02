@@ -10,6 +10,7 @@ export class ErigonService extends NodeService {
     const JWTDir = "/engine.jwt";
     const dataDir = "/opt/data/erigon";
     const volumes = [new ServiceVolume(workingDir + "/data", dataDir), new ServiceVolume(workingDir + "/engine.jwt", JWTDir)];
+    network = network === "op-mainnet" ? "mainnet" : network === "op-sepolia" ? "sepolia" : network;
 
     service.init(
       "ErigonService", // service

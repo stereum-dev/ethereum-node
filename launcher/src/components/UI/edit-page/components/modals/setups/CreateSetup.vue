@@ -99,21 +99,11 @@ const colorPalette = ref([
 ]);
 
 const setupLayouts = computed(() => {
-  let layout;
-
-  if (
-    props.network?.network === "mainnet" ||
-    props.network?.network === "holesky" ||
-    props.network?.network === "hoodi" ||
-    props.network?.network === "sepolia" ||
-    props.network?.network === "gnosis"
-  ) {
-    layout = "ETH";
-  } else if (props.network?.network === "optimism") {
-    layout = "OPT";
+  if (props.network?.network === "op-mainnet" || props.network?.network === "op-sepolia") {
+    return "OP";
   }
 
-  return layout;
+  return "ETH";
 });
 
 watch(
@@ -166,7 +156,7 @@ const confirm = async () => {
     name: setupName.value.trim(),
     network: props.network.network,
     color: setupColor.value,
-    type: setupLayouts.value.trim(),
+    type: setupLayouts.value,
     services: [],
   };
 

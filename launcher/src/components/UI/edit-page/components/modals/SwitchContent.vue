@@ -1,14 +1,14 @@
 <template>
   <div class="w-2/3 flex flex-col justify-between items-center py-2 px-4 space-y-4 mx-auto mt-4">
     <div class="w-full flex flex-col justify-between items-center space-y-1">
-      <span class="w-11/12 text-left text-teal-700 font-semibold">{{ $t("editModals.switchTo") }}</span>
-      <div class="w-full relative py-2">
+      <span class="w-full text-left text-teal-700 font-normal">{{ $t("editModals.switchTo") }}</span>
+      <div class="w-full relative">
         <button
           aria-expanded="false"
-          class="w-11/12 h-[40px] mx-auto border border-gray-500 shadow-sm shadow-gray-600 rounded-md font-semibold text-lg text-gray-500 px-4 py-2 hover:brightness-110 flex items-center whitespace-nowrap space-x-2 justify-center relative"
+          class="w-full h-[40px] border border-gray-400 shadow-sm shadow-gray-600 rounded-md font-normal text-md text-gray-400 px-4 py-2 hover:brightness-110 flex items-center whitespace-nowrap space-x-4 justify-center"
           @click="switchDropdownOpen = !switchDropdownOpen"
         >
-          <img v-if="properties.itemToInstall?.icon" class="w-6 h-6 mr-2" :src="properties.itemToInstall?.sIcon" alt="Client Icon" />
+          <img v-if="properties.itemToInstall?.icon" class="w-6" :src="properties.itemToInstall?.sIcon" alt="Client Icon" />
           <span>{{ properties.itemToInstall ? properties.itemToInstall.name : `${$t("editModals.selectClient")}` }}</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -20,20 +20,20 @@
             <path stroke-linecap="round" stroke-width="2" d="M5 10l7 7 7-7"></path>
           </svg>
         </button>
-        <Transition name="slide-fade">
+        <Transition name="slide">
           <ul
             v-show="switchDropdownOpen"
-            class="right-4 transition-all max-h-[200px] duration-400 ease-in-out absolute bg-gray-700 rounded-lg shadow-lg pt-18 pb-1 w-11/12 z-10 mt-1 divide-y overflow-y-auto flex flex-col justify-start items-center"
+            class="transition-all max-h-[150px] duration-400 ease-in-out absolute bg-gray-600 rounded-lg shadow-lg py-2 w-full z-10 mt-1 divide-y divide-gray-500 overflow-x-hidden overflow-y-auto flex flex-col justify-start items-center"
           >
             <li
               v-for="service in getServices"
               :key="service.name"
-              class="w-full min-h-[40px] max-h-[40px] grid grid-cols-6 px-4 hover:bg-blue-400"
+              class="w-full grid grid-cols-6 px-4 hover:bg-blue-400"
               @click="switchService(service)"
             >
-              <img class="h-[30px] col-start-1 col-end-2 self-center justify-self-center" :src="service.sIcon" alt="service Icon" />
+              <img class="col-start-3 w-7 self-center" :src="service.sIcon" alt="service Icon" />
               <span
-                class="col-start-3 col-end-6 px-4 py-1 flex justify-start items-center outline-0 whitespace-nowrap cursor-pointer text-lg text-gray-200 font-semibold"
+                class="col-start-4 col-end-6 px-4 py-2 flex gap-2 justify-start items-center outline-0 whitespace-nowrap cursor-pointer text-sm text-gray-200 font-normal text-left"
                 >{{ service.name }}</span
               >
             </li>
@@ -41,7 +41,11 @@
         </Transition>
       </div>
       <SyncCarousel
-        v-if="isSyncingActived && (client.category === 'execution' || client.category === 'consensus')"
+        v-if="
+          isSyncingActived &&
+          (client.category === 'execution' || client.category === 'consensus') &&
+          !client.name.toLowerCase().includes('op')
+        "
         :cat="client.category"
       />
     </div>
@@ -73,19 +77,25 @@ const serviceStore = useServices();
 const setupStore = useSetups();
 //Computed & Watcher
 const getServices = computed(() => {
-  let service;
-  // it's devnet filtering the services
-  if (setupStore.selectedSetup.network === "devnet") {
-    service = [];
-  } //end of devnet filtering
-  else {
-    service = serviceStore.allServices.filter((e) => e?.category == props.client.category && e?.name != props.client.name);
+  if (setupStore.selectedSetup.network === "devnet") return [];
+
+  const excludedOpServices = ["OpReth", "OpErigon", "OpGeth", "L2Geth", "OpNode"];
+  const excludedService = props?.client?.name;
+  const { network } = setupStore.selectedSetup;
+  const { allServices } = serviceStore;
+
+  if (network === "op-sepolia") {
+    return allServices.filter((e) => ["OpReth", "OpErigon", "OpGeth"].includes(e.name) && e.name !== excludedService);
   }
 
-  return service;
-});
+  if (network === "op-mainnet") {
+    return allServices.filter((e) => ["OpErigon", "OpGeth", "OpReth"].includes(e.name) && e.name !== excludedService);
+  }
 
-console.log(props.client.category);
+  return allServices.filter(
+    (e) => e.category === props.client.category && e.name !== excludedService && !excludedOpServices.includes(e.name)
+  );
+});
 
 //Methods
 
@@ -95,18 +105,4 @@ const switchService = (service) => {
   isSyncingActived.value = true;
 };
 </script>
-<style scoped>
-.slide-fade-enter-active {
-  transition: all 0.3s ease-out;
-}
-
-.slide-fade-leave-active {
-  transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
-}
-
-.slide-fade-enter-from,
-.slide-fade-leave-to {
-  transform: translateY(-20px);
-  opacity: 0;
-}
-</style>
+<style scoped></style>

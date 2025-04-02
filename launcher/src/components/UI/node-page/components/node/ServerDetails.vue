@@ -22,7 +22,7 @@
       <span class="col-start-4 col-end-12 text-sm text-yellow-500 overflow-hidden whitespace-pre">{{ controlStore.ipAddress }}</span>
 
       <img
-        class="w-7 col-start-12 col-span-1 cursor-pointer hover:scale-110 active:scale-95 transition-all duration-200 ease-in-out"
+        class="w-7 col-start-12 col-span-1 cursor-pointer hover:scale-110 active:scale-95 transition-all duration-200 ease-in-out opacity-75"
         src="/img/icon/service-modals-icons/copy.png"
         alt="icon"
         @click="copyServerIp"

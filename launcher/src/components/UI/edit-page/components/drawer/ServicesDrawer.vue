@@ -95,6 +95,14 @@ const filteredServices = computed(() => {
       return service?.service !== "CustomService";
     })
     .filter((service) => {
+      const opServices = ["L2GethService", "OpNodeBeaconService", "OpGethService", "OpErigonService", "OpRethService"];
+      if (setupStore.selectedSetup?.setupType === "OP") {
+        return opServices.includes(service?.service);
+      } else {
+        return !opServices.includes(service?.service);
+      }
+    })
+    .filter((service) => {
       return service?.name.toLowerCase().includes(searchQuery.value.toLowerCase());
     });
 });

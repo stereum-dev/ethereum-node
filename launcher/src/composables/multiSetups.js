@@ -51,9 +51,11 @@ export const useMultiSetups = () => {
     setups = setupStore.serverSetups.map((config) => ({
       setupId: config.configId,
       setupName: config.name,
-      setupType: config.setupType,
+      setupType: config?.name.toLowerCase().includes("op") || config.network.toLowerCase().includes("op") ? "OP" : "ETH",
       network: config.network,
       color: config.color,
+      isConnected: false,
+      isSelected: false,
       services: serviceStore.installedServices
         .filter((service) => config.serviceIds.includes(service.config.serviceID))
         .map((s) => {

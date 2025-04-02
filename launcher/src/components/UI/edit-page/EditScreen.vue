@@ -115,6 +115,12 @@
       <!-- Start Create Setup -->
       <CreateSetup v-if="setupStore.isCreateSetupModalActive" :network="selectedSetupNetwork" />
       <!-- End Create Setup -->
+      <!-- Start Connectiing Setup -->
+      <ConnectSetup
+        v-if="setupStore.isConnectSetupModalActive"
+        @close-window="closeSetupConnectingModal"
+        @confirm-action="confirmModifyingService"
+      />
 
       <!-- Start Setup Infos -->
       <SetupInfos v-if="setupStore.selectedSetupInfos" />
@@ -162,6 +168,7 @@ import SetupInfos from "./components/modals/setups/SetupInfos.vue";
 import ChangesSection from "./sections/ChangesSection.vue";
 import ServiceSection from "./sections/ServiceSection.vue";
 import SidebarSection from "./sections/SidebarSection.vue";
+import ConnectSetup from "./components/modals/setups/ConnectSetup.vue";
 
 const setupStore = useSetups();
 const footerStore = useFooter();
@@ -959,6 +966,7 @@ const backToLogin = async () => {
 };
 
 // Setups methods
+
 const editSetupsPrepration = () => {
   setupStore.editSetups = setupStore.allSetups.map((setup) => {
     if (setup.isActive) {
@@ -1040,6 +1048,12 @@ const closeNukeModal = () => {
 
 const closeSetupModal = () => {
   setupStore.isCreateSetupModalActive = false;
+};
+
+const closeSetupConnectingModal = () => {
+  setupStore.isConnectSetupModalActive = false;
+  setupStore.selectedOPSetup = null;
+  manageStore.confirmChanges = [];
 };
 </script>
 

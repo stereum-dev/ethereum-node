@@ -22,6 +22,7 @@
           @switch-client="switchClient"
           @connect-client="connectClient"
           @delete-service="deleteService"
+          @modify-service="modifyService"
           @info-modal="infoModal"
         />
       </TransitionGroup>
@@ -38,7 +39,7 @@ import GeneralMenu from "./GeneralMenu.vue";
 import { computed } from "vue";
 import { useSetups } from "../../../../../../store/setups";
 
-const emit = defineEmits(["deleteService", "switchClient", "connectClient", "infoModal", "mouseOver", "mouseLeave"]);
+const emit = defineEmits(["deleteService", "switchClient", "connectClient", "infoModal", "mouseOver", "mouseLeave", "modifyService"]);
 const manageStore = useNodeManage();
 const serviceStore = useServices();
 const setupStore = useSetups();
@@ -93,9 +94,9 @@ const connectClient = (item) => {
   emit("connectClient", item);
 };
 
-// const confirmConnection = (item) => {
-//   emit("confirmConnection", item);
-// };
+const modifyService = (item) => {
+  emit("modifyService", item);
+};
 
 const deleteService = (item) => {
   emit("deleteService", item);
