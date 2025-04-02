@@ -76,7 +76,7 @@ export class PrysmBeaconService extends NodeService {
       mevboost //mevboost
     );
 
-    if (network == "holesky" || network == "sepolia") {
+    if (/holesky|sepolia|hoodi/.test(network)) {
       service.command.push(`--genesis-state=/opt/app/genesis/prysm-${network}-genesis.ssz`);
     }
 

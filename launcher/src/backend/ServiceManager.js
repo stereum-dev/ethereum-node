@@ -1875,12 +1875,12 @@ export class ServiceManager {
     }
     if (service.service === "FlashbotsMevBoostService") {
       command = service.entrypoint;
-      let index = command.findIndex((c) => /^-(mainnet|prater|goerli|sepolia|holesky$)/.test(c));
+      let index = command.findIndex((c) => /^-(mainnet|prater|goerli|sepolia|holesky|hoodi$)/.test(c));
       command[index] = "-" + newNetwork;
       index = command.findIndex((c) => c === "-relays") + 1;
       command[index] = '""';
     } else if (service.service === "PrysmBeaconService") {
-      let index = command.findIndex((c) => /--(mainnet|prater|goerli|sepolia|holesky)/.test(c));
+      let index = command.findIndex((c) => /--(mainnet|prater|goerli|sepolia|holesky|hoodi)/.test(c));
       command[index] = "--" + newNetwork;
       if (newNetwork === "mainnet" && command.some((c) => c.includes("--genesis-state"))) {
         command.splice(command.indexOf(command.find((c) => c.includes("--genesis-state"))), 1);
@@ -1889,8 +1889,10 @@ export class ServiceManager {
       }
     } else {
       command = command.map((c) => {
-        if (/mainnet|prater|goerli|sepolia|holesky|op-mainnet|op-sepolia/.test(c)) {
-          c = c.replace(/mainnet|prater|goerli|sepolia|holesky|op-mainnet|op-sepolia/, newNetwork);
+
+        if (/mainnet|prater|goerli|sepolia|holesky|op-mainnet|op-sepolia|hoodi/.test(c)) {
+          c = c.replace(/mainnet|prater|goerli|sepolia|holesky|op-mainnet|op-sepolia|hoodi/, newNetwork);
+
         }
         return c;
       });

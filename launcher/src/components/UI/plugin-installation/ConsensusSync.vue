@@ -112,6 +112,8 @@ export default {
       mainnet: "mainnet",
       sepolia: "sepolia",
       gnosis: "gnosis",
+      holesky: "holesky",
+      hoodi: "hoodi",
     }),
     ...mapWritableState(useNodeManage, {
       currentNetwork: "currentNetwork",
@@ -187,6 +189,9 @@ export default {
           break;
         case 4:
           this.selectedLinks = this.holesky;
+          break;
+        case 5:
+          this.selectedLinks = this.hoodi;
           break;
         default:
           break;

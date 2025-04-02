@@ -99,6 +99,7 @@ const colorPalette = ref([
 ]);
 
 const setupLayouts = computed(() => {
+
   if (props.network?.network === "op-mainnet" || props.network?.network === "op-sepolia") {
     return "OP";
   }

@@ -47,24 +47,15 @@
         recurse: yes
       changed_when: false
       become: yes
-      when: (stereum.manage_service.state == "started" or stereum.manage_service.state == "restarted") and item.split(':') | first != '/' and item.split(':') | first != '/sys' and item.split(':') | first != '/proc'
-      with_items: "{{ stereum_service_configuration.volumes | reject('search', ':/engine.jwt|:/execution/engine.jwt|:/op-engine.jwt') }}"
 
-    - name: Get Nimbus key secret files
-      find:
-        path: "{{ item.split(':') | first }}"
-        file_type: file
-        recurse: yes
-      register: secret_files
-      when: (stereum.manage_service.state == "started" or stereum.manage_service.state == "restarted") and item.split(':') | first != '/' and item.split(':') | first != '/sys' and item.split(':') | first != '/proc' and stereum_service_configuration.image is match("statusim/nimbus-validator-client:*")
-      with_items: "{{ stereum_service_configuration.volumes | select('search', ':/opt/app/secrets') }}"
+      when:
+        - (stereum.manage_service.state == "started" or stereum.manage_service.state == "restarted")
+        - item.split(':') | first != '/'
+        - item.split(':') | first != '/sys'
+        - item.split(':') | first != '/proc'
+        - not (stereum_service_configuration.service == "NimbusValidatorService" and item.split(':') | last == '/opt/app/secrets') # ignoring this bc nimbus validator sets this directory to 0600
+  with_items: "{{ stereum_service_configuration.volumes | reject('search', ':/engine.jwt|:/execution/engine.jwt|:/op-engine.jwt') }}"
 
-    - name: Set permissions for Nimbus secret files
-      include_tasks: set-permission-nimbus-secret.yml
-      with_items: "{{ secret_files.results }}"
-      loop_control:
-        loop_var: results
-      when: secret_files is defined and (stereum.manage_service.state == "started" or stereum.manage_service.state == "restarted")
 
     - name: Set directory permissions for engine.jwt
       file:
@@ -106,7 +97,7 @@
       become: yes
       when: >
         (stereum_service_configuration.service == 'PrysmBeaconService') and
-        (stereum_service_configuration.network == "holesky" or stereum_service_configuration.network == "sepolia") and
+        (stereum_service_configuration.network is match("holesky|sepolia|hoodi")) and
         "genesis" in item
       with_items: "{{ stereum_service_configuration.volumes }}"
 
