@@ -384,6 +384,7 @@ const navToBeaconcha = (network) => {
     sepolia: "https://sepolia.beaconcha.in/",
     mainnet: "https://beaconcha.in/",
     holesky: "https://holesky.beaconcha.in/",
+    hoodi: "https://hoodi.beaconcha.in/",
   };
 
   const url = urls[network] + "validator/" + props.item.key;

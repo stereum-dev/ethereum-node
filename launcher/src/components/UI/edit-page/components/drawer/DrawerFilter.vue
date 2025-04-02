@@ -77,7 +77,7 @@ const archFilter = (service) => {
 const networkFilter = (service) => {
   switch (currentNetwork.value) {
     case "mainnet":
-      return true;
+    case "hoodi":
     case "holesky":
       return true;
     case "sepolia":

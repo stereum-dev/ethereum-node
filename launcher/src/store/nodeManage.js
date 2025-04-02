@@ -49,6 +49,8 @@ export const useNodeManage = defineStore("nodeManage", {
             "https://0x845bd072b7cd566f02faeb0a4033ce9399e42839ced64e8b2adcfc859ed1e8e1a5a293336a49feac6d9a5edb779be53a@boost-relay-sepolia.flashbots.net",
           holesky:
             "https://0xafa4c6985aa049fb79dd37010438cfebeb0f2bd42b115b89dd678dab0670c1de38da0c4e9138c9290a398ecd9a0b3110@boost-relay-holesky.flashbots.net",
+          hoodi:
+            "https://0xafa4c6985aa049fb79dd37010438cfebeb0f2bd42b115b89dd678dab0670c1de38da0c4e9138c9290a398ecd9a0b3110@boost-relay-hoodi.flashbots.net",
           id: 1,
           isSelected: false,
           isRemoved: false,
@@ -103,9 +105,10 @@ export const useNodeManage = defineStore("nodeManage", {
           icon: "/img/icon/one-click-icons/mevboost-icons/aestus.png",
           name: "Aestus",
           mainnet: "https://0xa15b52576bcbf1072f4a011c0f99f9fb6c66f3e1ff321f11f461d15e31b1cb359caa092c71bbded0bae5b5ea401aab7e@aestus.live",
-
           holesky:
             "https://0xab78bf8c781c58078c3beb5710c57940874dd96aef2835e7742c866b4c7c0406754376c2c8285a36c630346aa5c5f833@holesky.aestus.live",
+          hoodi:
+            "https://0x98f0ef62f00780cf8eb06701a7d22725b9437d4768bb19b363e882ae87129945ec206ec2dc16933f31d983f8225772b6@hoodi.aestus.live",
           id: 8,
           isSelected: false,
           isRemoved: false,
@@ -129,6 +132,8 @@ export const useNodeManage = defineStore("nodeManage", {
             "https://0x8c4ed5e24fe5c6ae21018437bde147693f68cda427cd1122cf20819c30eda7ed74f72dece09bb313f2a1855595ab677d@global.titanrelay.xyz",
           holesky:
             "https://0xaa58208899c6105603b74396734a6263cc7d947f444f396a90f7b7d3e65d102aec7e5e5291b27e08d02c50a050825c2f@holesky.titanrelay.xyz",
+          hoodi:
+            "https://0xaa58208899c6105603b74396734a6263cc7d947f444f396a90f7b7d3e65d102aec7e5e5291b27e08d02c50a050825c2f@hoodi.titanrelay.xyz",
           id: 10,
           isSelected: false,
           isRemoved: false,
@@ -223,6 +228,15 @@ export const useNodeManage = defineStore("nodeManage", {
           icon: "/img/icon/network-icons/ethereum-testnet-icon.png",
           currencyIcon: "/img/icon/control-page-icons/network-currency-icons/network-currency-icons-goerli-testnet.png",
           dataEndpoint: "https://holesky.beaconcha.in/api/v1",
+          support: ["staking", "ssv.network", "stereum on arm", "mev boost", "archive", "obol", "lidoobol", "lidossv", "lidocsm"],
+        },
+        {
+          id: 5,
+          name: "Hoodi Testnet",
+          network: "hoodi",
+          icon: "/img/icon/network-icons/ethereum-testnet-icon.png",
+          currencyIcon: "/img/icon/control-page-icons/network-currency-icons/network-currency-icons-goerli-testnet.png",
+          dataEndpoint: "https://hoodi.beaconcha.in/api/v1",
           support: ["staking", "ssv.network", "stereum on arm", "mev boost", "archive", "obol", "lidoobol", "lidossv", "lidocsm"],
         },
       ],

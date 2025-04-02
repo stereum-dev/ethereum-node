@@ -28,6 +28,11 @@ export class ValidatorEjectorService extends NodeService {
       case "sepolia":
         locatorAddress = "0x8f6254332f69557A72b0DA2D5F0Bc07d4CA991E7"; //https://docs.lido.fi/deployed-contracts/sepolia#core-protocol
         break;
+      case "hoodi":
+        locatorAddress = "0xe2EF9536DAAAEBFf5b1c130957AB3E80056b06D8"; //https://docs.lido.fi/deployed-contracts/hoodi#core-protocol
+        oracleAllowList =
+          '["0xcA80ee7313A315879f326105134F938676Cfd7a9", "0xf03B8DC8762B97F13Ac82e6F94bE3Ed002FF7459", "0x1932f53B1457a5987791a40Ba91f71c5Efd5788F"]';
+        break;
       default:
         break;
     }

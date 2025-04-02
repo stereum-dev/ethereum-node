@@ -104,6 +104,7 @@ const setupLayouts = computed(() => {
   if (
     props.network?.network === "mainnet" ||
     props.network?.network === "holesky" ||
+    props.network?.network === "hoodi" ||
     props.network?.network === "sepolia" ||
     props.network?.network === "gnosis"
   ) {

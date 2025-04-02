@@ -76,7 +76,7 @@ export default {
     async getURL() {
       const grafana = this.installedServices.find((service) => service.service === "GrafanaService");
       this.ssvNetworkUrl.operatorUrl = `https://${
-        ["holesky"].includes(this.currentNetwork.network) ? this.currentNetwork.network + "." : ""
+        ["holesky", "hoodi"].includes(this.currentNetwork.network) ? this.currentNetwork.network + "." : ""
       }explorer.ssv.network/operators/${this.operatorData?.id ? this.operatorData?.id : ""}`;
       this.ssvNetworkUrl.grafanaDashboardUrl = grafana.linkUrl ? grafana.linkUrl + "/d/QNiMrdoVz/node-dashboard?orgId=1" : "";
     },
