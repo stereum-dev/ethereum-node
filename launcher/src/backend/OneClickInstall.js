@@ -382,8 +382,14 @@ export class OneClickInstall {
       this.extraServices.push(
         this.serviceManager.getService("SSVNOMService", {
           ...args,
-          consensusClients: [this.beaconService],
-          executionClients: [this.executionClient],
+          consensusClients: this.beaconService.filter((service) => service.service !== "OpNodeBeaconService"),
+          executionClients: this.executionClient.filter(
+            (client) =>
+              client.service !== "OpGethService" ||
+              client.service !== "L2GethService" ||
+              client.service !== "OpErigonService" ||
+              client.service !== "OpRethService"
+          ),
           otherServices: this.validatorService.service === "SSVNetworkService" ? [this.validatorService] : [],
         })
       );
