@@ -1,11 +1,21 @@
 import { ref, onMounted, watch } from 'vue';
 <template>
-  <div class="w-full h-full col-start-1 col-span-full row-start-3 row-end-11 grid grid-cols-12 grid-rows-7 p-2 mx-auto">
-    <div class="w-full h-full col-start-3 col-end-11 row-start-1 row-span-full bg-[#1E2429] rounded-md grid grid-cols-12 grid-rows-7 p-2">
-      <div class="col-start-1 col-span-full row-start-1 row-span-1 flex justify-center items-center">
-        <span class="text-center text-gray-200 text-sm uppercase">{{ $t("oneClick.chooseNetwork") }}</span>
+  <div
+    class="w-full h-full col-start-1 col-span-full row-start-3 row-end-11 grid grid-cols-12 grid-rows-7 p-2 mx-auto"
+  >
+    <div
+      class="w-full h-full col-start-3 col-end-11 row-start-1 row-span-full bg-[#1E2429] rounded-md grid grid-cols-12 grid-rows-7 p-2"
+    >
+      <div
+        class="col-start-1 col-span-full row-start-1 row-span-1 flex justify-center items-center"
+      >
+        <span class="text-center text-gray-200 text-sm uppercase">{{
+          $t("oneClick.chooseNetwork")
+        }}</span>
       </div>
-      <div class="col-start-1 col-span-full row-start-2 row-span-full grid grid-cols-12 grid-rows-7 pt-5">
+      <div
+        class="col-start-1 col-span-full row-start-2 row-span-full grid grid-cols-12 grid-rows-7 pt-5"
+      >
         <div
           class="col-start-4 col-span-6 row-start-1 row-span-1 bg-gray-200 rounded-md grid grid-cols-6 cursor-pointer"
           @click="dropdownHandler"
@@ -16,9 +26,10 @@ import { ref, onMounted, watch } from 'vue';
             :src="displayItem?.icon"
             alt="Arrow icon"
           />
-          <span class="col-start-2 col-end-6 justify-self-center self-center text-center text-gray-800 text-lg font-semibold">{{
-            displayItem?.name ? displayItem?.name : displayItem
-          }}</span>
+          <span
+            class="col-start-2 col-end-6 justify-self-center self-center text-center text-gray-800 text-lg font-semibold"
+            >{{ displayItem?.name ? displayItem?.name : displayItem }}</span
+          >
 
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -43,7 +54,11 @@ import { ref, onMounted, watch } from 'vue';
               :class="item?.state === 'disabled' ? 'pointer-events-none opacity-50' : ''"
               @click="getNetwork(item)"
             >
-              <img class="h-[30px] col-start-1 col-end-2 self-center justify-self-center" :src="item.icon" alt="service Icon" />
+              <img
+                class="h-[30px] col-start-1 col-end-2 self-center justify-self-center"
+                :src="item.icon"
+                alt="service Icon"
+              />
               <span
                 class="col-start-3 col-end-6 px-4 py-1 flex justify-start items-center outline-0 whitespace-nowrap cursor-pointer text-lg text-gray-200 font-semibold"
                 >{{ item.name }}</span
@@ -52,25 +67,27 @@ import { ref, onMounted, watch } from 'vue';
           </ul>
         </Transition>
         <div
-          class="col-start-1 col-span-full row-start-2 row-span-full py-4 px-8 grid grid-cols-6 grid-rows-3 overflow-x-hidden overflow-y-auto"
+          class="col-start-1 col-span-full row-start-2 row-span-full py-4 px-8 grid grid-cols-5 grid-rows-2 overflow-x-hidden overflow-y-auto"
         >
           <div
             v-for="preset in clickStore.presets"
             :key="preset.name"
             class="col-span-1 row-span-1 justify-self-center self-center hover:border hover:border-teal-500 rounded-md hover:shadow-lg hover:shadow-[#050505] transition-all duration-300 ease-in-out active:scale-100 active:shadow-none cursor-pointer"
             :class="{
-              hidden: !manageStore.currentNetwork?.support?.includes(preset.name) || !displayItem?.name,
+              hidden:
+                !manageStore.currentNetwork?.support?.includes(preset.name) ||
+                !displayItem?.name,
             }"
             @click="getPreset(preset)"
           >
             <img
-              class="w-16"
+              class="w-[76px]"
               :class="
                 preset.selected
                   ? 'scale-125 border-2 border-blue-400 rounded-md hover:scale-125 shadow-xl shadow-[#101010] transition-all duration-300 ease-in-out'
                   : ''
               "
-              :src="preset.icon"
+              :src="getPresetIcon(preset)"
               alt="Preset Icon"
             />
           </div>
@@ -92,8 +109,6 @@ const clickStore = useClickInstall();
 //Refs
 let displayItem = ref(null);
 const openDropdown = ref(false);
-
-//watchers
 
 watch(displayItem, () => {
   if (displayItem.value === "Click to select a network") {
@@ -120,6 +135,17 @@ const getNetwork = (network) => {
   manageStore.currentNetwork = network;
   clickStore.selectedNetwork = network;
   displayItem.value = network;
+};
+
+const getPresetIcon = (preset) => {
+  if (
+    clickStore.selectedNetwork?.network === "op-sepolia" &&
+    preset?.name === "op and eth full node"
+  ) {
+    return preset.sepIcon;
+  } else {
+    return preset.icon;
+  }
 };
 
 const getPreset = (preset) => {
