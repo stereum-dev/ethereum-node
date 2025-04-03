@@ -52,7 +52,7 @@ import { ref, onMounted, watch } from 'vue';
           </ul>
         </Transition>
         <div
-          class="col-start-1 col-span-full row-start-2 row-span-full py-4 px-8 grid grid-cols-6 grid-rows-3 overflow-x-hidden overflow-y-auto"
+          class="col-start-1 col-span-full row-start-2 row-span-full py-4 px-8 grid grid-cols-5 grid-rows-2 overflow-x-hidden overflow-y-auto"
         >
           <div
             v-for="preset in clickStore.presets"
@@ -64,13 +64,13 @@ import { ref, onMounted, watch } from 'vue';
             @click="getPreset(preset)"
           >
             <img
-              class="w-16"
+              class="w-[76px]"
               :class="
                 preset.selected
                   ? 'scale-125 border-2 border-blue-400 rounded-md hover:scale-125 shadow-xl shadow-[#101010] transition-all duration-300 ease-in-out'
                   : ''
               "
-              :src="preset.icon"
+              :src="getPresetIcon(preset)"
               alt="Preset Icon"
             />
           </div>
@@ -92,8 +92,6 @@ const clickStore = useClickInstall();
 //Refs
 let displayItem = ref(null);
 const openDropdown = ref(false);
-
-//watchers
 
 watch(displayItem, () => {
   if (displayItem.value === "Click to select a network") {
@@ -120,6 +118,14 @@ const getNetwork = (network) => {
   manageStore.currentNetwork = network;
   clickStore.selectedNetwork = network;
   displayItem.value = network;
+};
+
+const getPresetIcon = (preset) => {
+  if (clickStore.selectedNetwork?.network === "op-sepolia" && preset?.name === "op and eth full node") {
+    return preset.sepIcon;
+  } else {
+    return preset.icon;
+  }
 };
 
 const getPreset = (preset) => {
