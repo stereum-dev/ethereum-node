@@ -175,7 +175,10 @@ const checkPluginCategory = (element) => {
       filter = (item) =>
         item.category === element.category && !/(SSVNetwork|Web3Signer|Charon|L2Geth|OpGeth|OpNode|OpReth|OpErigon)/.test(item.service);
       if (manageStore.currentNetwork.network == "gnosis") {
-        filter = (item) => item.category === element.category && /(Lighthouse|Teku|Nethermind|Erigon|Nimbus|Lodestar)/.test(item.service);
+        filter = (item) =>
+          item.category === element.category &&
+          /(Lighthouse|Teku|Nethermind|Erigon|Nimbus|Lodestar)/.test(item.service) &&
+          !/(OpGeth|OpErigon|OpNode|OpReth|L2Geth)/.test(item.service);
       }
       break;
     case "ssv.network":
@@ -220,7 +223,10 @@ const checkPluginCategory = (element) => {
       filter = (item) =>
         item.category === element.category && !/(SSVNetwork|Web3Signer|Charon|L2Geth|OpGeth|OpNode|OpReth|OpErigon)/.test(item.service);
       if (manageStore.currentNetwork.network == "gnosis") {
-        filter = (item) => item.category === element.category && /(Lighthouse|Teku|Nethermind|Erigon|Nimbus|Lodestar)/.test(item.service);
+        filter = (item) =>
+          item.category === element.category &&
+          /(Lighthouse|Teku|Nethermind|Erigon|Nimbus|Lodestar)/.test(item.service) &&
+          !/(OpGeth|OpErigon|OpNode|OpReth|L2Geth)/.test(item.service);
       }
       break;
 
