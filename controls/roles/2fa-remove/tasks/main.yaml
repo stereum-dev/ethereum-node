@@ -1,5 +1,10 @@
 ---
 # Restore SSH and PAM configurations and clean up Google Authenticator
+- name: Remove check_ssh_key.sh script if it exists
+  ansible.builtin.file:
+    path: /etc/stereum/check_ssh_key.sh
+    state: absent
+
 - name: Restore sshd_config from backup
   copy:
     src: /etc/ssh/sshd_config.stereum.bak
