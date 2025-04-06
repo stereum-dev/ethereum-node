@@ -24,16 +24,12 @@
     remote_src: yes
   when: not pam_sshd_backup.stat.exists
 
-- name: Comment out KbdInteractiveAuthentication, PubkeyAuthentication, and PasswordAuthentication
-  ansible.builtin.lineinfile:
+- name: Comment out KbdInteractiveAuthentication in sshd_config
+  lineinfile:
     path: /etc/ssh/sshd_config
-    regexp: "{{ item }}"
+    regexp: "^KbdInteractiveAuthentication.*$"
     line: '# \0'
     state: present
-  loop:
-    - '^\s*#?\s*KbdInteractiveAuthentication\b.*$'
-    - '^\s*#?\s*PubkeyAuthentication\b.*$'
-    - '^\s*#?\s*PasswordAuthentication\b.*$'
 
 - name: Add 2FA setup to sshd_config
   blockinfile:
