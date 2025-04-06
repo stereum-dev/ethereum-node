@@ -140,13 +140,29 @@ export class SSHService {
           reject(msg);
         }
       });
-      conn.on("keyboard-interactive", function redo(name, instructions, lang, prompts, finish) {
-        if (!connectionInfo.authCode) {
-          currentWindow.send("require2FA", true);
-          conn.end();
-        } else {
-          finish([connectionInfo.authCode.toString()]);
+      conn.on("keyboard-interactive", function (name, instructions, lang, prompts, finish) {
+        let responses = [];
+        let otp = false;
+
+        for (let prompt of prompts) {
+          if (/password/i.test(prompt.prompt)) {
+            responses.push(connectionInfo.password || "");
+          } else if (/verification code/i.test(prompt.prompt)) {
+            if (!connectionInfo.authCode) {
+              otp = true;
+              break;
+            }
+            responses.push(connectionInfo.authCode.toString());
+          } else {
+            responses.push("");
+          }
         }
+        if (otp) {
+          currentWindow?.send("require2FA", true);
+          conn.end();
+          return;
+        }
+        finish(responses);
       });
       conn
         .on("ready", async () => {
