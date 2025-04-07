@@ -84,7 +84,15 @@
     line: "auth required pam_google_authenticator.so grace_period=43200"
     insertafter: EOF
 
+- name: Set SSH service name depending on distribution and version
+  set_fact:
+    ssh_service_name: >-
+      {{ 'ssh'
+         if (ansible_facts['distribution'] == 'Ubuntu'
+             and ansible_facts['distribution_version'] is version('20.04', '>='))
+         else 'sshd' }}
+
 - name: Restart SSH service
   systemd:
-    name: sshd
+    name: "{{ ssh_service_name }}"
     state: restarted
