@@ -37,14 +37,46 @@
     marker: "# {mark} 2FA-Setup"
     block: |
       KbdInteractiveAuthentication yes
-      AuthenticationMethods publickey,keyboard-interactive password,keyboard-interactive
+      AuthenticationMethods publickey,keyboard-interactive keyboard-interactive
 
 - name: Comment out @include common-auth in pam-sshd
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/pam.d/sshd
     regexp: "^@include common-auth$"
     line: "# @include common-auth"
     state: present
+
+- name: Check if /etc/stereum exists
+  ansible.builtin.stat:
+    path: /etc/stereum
+  register: stereum_dir
+
+- name: Configure PAM auth block and check_ssh_key.sh script if stereum exists
+  block:
+    - name: Insert PAM custom auth block
+      ansible.builtin.blockinfile:
+        path: /etc/pam.d/sshd
+        insertafter: "^# @include common-auth$"
+        marker: "# {mark} SSH Key and Password Check"
+        block: |
+          auth [success=1 default=ignore] pam_exec.so quiet /etc/stereum/check_ssh_key.sh
+          auth    required        pam_unix.so
+
+    - name: Create /etc/stereum/check_ssh_key.sh Perl script
+      ansible.builtin.copy:
+        dest: /etc/stereum/check_ssh_key.sh
+        content: |
+          #!/usr/bin/perl
+
+          if ($ENV{'SSH_AUTH_INFO_0'} =~ /^publickey /) {
+            exit(0); # ssh key detected -> skip password
+          } else {
+            exit(1); # no ssh key -> require password
+          }
+        owner: root
+        group: root
+        mode: "0700"
+  when: stereum_dir.stat.exists
 
 - name: Add Google Authenticator configuration to pam-sshd
   lineinfile:
