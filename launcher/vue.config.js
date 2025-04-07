@@ -41,13 +41,7 @@ module.exports = {
 
   chainWebpack: (config) => {
     config.resolve.alias.set("vue-i18n", "vue-i18n/dist/vue-i18n.cjs.js");
-    config.module
-      .rule("vue")
-      .use("vue-loader")
-      .loader("vue-loader")
-      .end()
-      .use("css-loader")
-      .loader("css-loader");
+    config.module.rule("vue").use("vue-loader").loader("vue-loader").end().use("css-loader").loader("css-loader");
     config.plugin("define").tap((definitions) => {
       Object.assign(definitions[0], {
         __VUE_OPTIONS_API__: "true",
