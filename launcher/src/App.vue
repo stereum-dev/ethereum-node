@@ -4,13 +4,13 @@
   </div>
 </template>
 <script setup>
-import { onMounted } from "vue";
+// import { onMounted } from "vue";
 
-onMounted(() => {
-  setTimeout(() => {
-    window.HSStaticMethods.autoInit();
-  }, 100);
-});
+// onMounted(() => {
+//   setTimeout(() => {
+//     window.HSStaticMethods.autoInit();
+//   }, 100);
+// });
 </script>
 <style>
 * {
