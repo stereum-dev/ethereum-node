@@ -18,7 +18,7 @@ import ServerHeader from './components/ServerHeader.vue';
     <PasswordModal v-if="serverStore.isPasswordChanged" :res="serverStore.passResponse" />
     <GenerateKey v-if="serverStore.isGenerateModalActive" @close-modal="closeGenerateModal" @generate-key="generateKeyHandler" />
     <RemoveModal v-if="serverStore.isRemoveModalActive" @remove-handler="removeServerHandler" @close-window="closeWindow" />
-    <TwofactorModal v-if="isTwoFactorAuthActive" @submit-auth="submitAuthHandler" @close-window="closeAndCancel" />
+    <EnterOTPModal v-if="isTwoFactorAuthActive" @submit-auth="submitAuthHandler" @close-window="closeAndCancel" />
     <ChangeOTPModal v-if="serverStore.isOTPActive" @submit-password="submitPasswordHandler" @close-window="closeAndCancel" />
     <ErrorModal v-if="serverStore.errorMsgExists" :description="serverStore.error" @close-window="closeErrorDialog" />
     <QRcodeModal v-if="authStore.isBarcodeModalActive" @close-window="closeBarcode" />
@@ -31,7 +31,7 @@ import ServerHeader from "./components/ServerHeader.vue";
 import ServerBody from "./components/ServerBody.vue";
 import PasswordModal from "./components/modals/PasswordModal.vue";
 import SwitchAnimation from "./components/SwitchAnimation.vue";
-import TwofactorModal from "./components/modals/TwofactorModal.vue";
+import EnterOTPModal from "./components/modals/EnterOTPModal.vue";
 import GenerateKey from "./components/modals/GenerateKey.vue";
 import ChangeOTPModal from "./components/modals/ChangeOTPModal.vue";
 
@@ -88,6 +88,7 @@ watchEffect(() => {
 // const passSSHRow = computed(() => (!selectedConnection.value.useAuthKey ? "pass" : "ssh"));
 
 onMounted(async () => {
+  authStore.isSetupConfirming = false;
   await loadStoredConnections();
   await readSSHKeyFile();
 
@@ -117,7 +118,7 @@ const closeAndCancel = async () => {
 
 // authentification handling
 const submitAuthHandler = async (val) => {
-  loginHandler(val);
+  await loginHandler(val);
 };
 
 const submitPasswordHandler = async (pass) => {
@@ -147,6 +148,7 @@ const loginHandler = async (authCode) => {
   try {
     if (router.currentRoute.value.path === "/login") {
       await login(loginAbortController.signal, authCode);
+      serverStore.isOTPVerifying = false;
     } else {
       serverStore.connectingProcess = true;
       serverStore.isServerAnimationActive = true;
@@ -155,6 +157,7 @@ const loginHandler = async (authCode) => {
       await ControlService.stopShell();
       await login(loginAbortController.signal, authCode);
 
+      serverStore.isOTPVerifying = false;
       setTimeout(() => {
         serverStore.isServerAnimationActive = false;
         serverStore.connectingProcess = false;
@@ -162,6 +165,7 @@ const loginHandler = async (authCode) => {
     }
   } catch (error) {
     console.error("Login failed:", error);
+    serverStore.isOTPVerifying = false;
   }
   loginAbortController = null;
 };
