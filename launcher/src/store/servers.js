@@ -12,6 +12,7 @@ export const useServers = defineStore("servers", {
 
       connectingAnimActive: false,
       connectingProcess: false,
+      isOTPVerifying: false,
       errorMsgExists: false,
       error: "",
       alertBox: false,
