@@ -168,7 +168,7 @@ import axios from "axios";
 import { toRaw } from "vue";
 import ConfirmBox from "./plugin/ConfirmBox.vue";
 import ImportBox from "./plugin/ImportBox.vue";
-import PasswordBox from "./plugin/PasswordBox";
+import PasswordBox from "./plugin/PasswordBox.vue";
 import { useRestartService } from "@/composables/services";
 import { useNodeManage } from "@/store/nodeManage";
 const JSZip = require("jszip");
