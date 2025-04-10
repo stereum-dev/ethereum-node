@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 "use strict";
 
 import { app, protocol, BrowserWindow, shell, dialog, ipcMain, Menu } from "electron";
@@ -909,11 +910,12 @@ async function createWindow(type = "main") {
   win.setMenuBarVisibility(false);
 
   // Load correct URL based on environment
-  if (process.env.WEBPACK_DEV_SERVER_URL) {
-    const url = type === "update" ? `${process.env.WEBPACK_DEV_SERVER_URL}#/update` : process.env.WEBPACK_DEV_SERVER_URL;
+  const devServerUrl = process.env.VITE_DEV_SERVER_URL || process.env.WEBPACK_DEV_SERVER_URL;
+
+  if (devServerUrl) {
+    const url = type === "update" ? `${devServerUrl}#/update` : devServerUrl;
 
     await win.loadURL(url);
-
     if (!process.env.IS_TEST) win.webContents.openDevTools();
   } else {
     createProtocol("app");
