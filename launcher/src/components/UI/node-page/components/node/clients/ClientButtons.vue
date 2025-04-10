@@ -41,7 +41,7 @@ import { useNodeStore } from '@/store/theNode';
       @mouseenter="footerStore.cursorLocation = `${restart}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <img src="/img/icon//node-page-icons/service-command-restart.png" alt="icon" class="w-4 active:scale-95" />
+      <img src="/img/icon/node-page-icons/service-command-restart.png" alt="icon" class="w-4 active:scale-95" />
     </button>
     <button
       class="col-span-1 p-1 transition-colors duration-200 bg-gray-900 hover:bg-gray-600 rounded-md"

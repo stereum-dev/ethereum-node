@@ -103,7 +103,7 @@ import { onMounted, watch, onUnmounted, ref } from 'vue';
 
 <script setup>
 import { onMounted, ref, watchEffect } from "vue";
-import SyncCarousel from "../edit/SyncCarousel";
+import SyncCarousel from "../edit/SyncCarousel.vue";
 import ControlService from "@/store/ControlService";
 import { useNodeManage } from "@/store/nodeManage";
 

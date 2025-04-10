@@ -12,7 +12,7 @@
   </div>
 </template>
 <script setup>
-import TheEpoch from "./TheEpoch";
+import TheEpoch from "./TheEpoch.vue";
 
 const { epoch } = defineProps({
   epoch: {

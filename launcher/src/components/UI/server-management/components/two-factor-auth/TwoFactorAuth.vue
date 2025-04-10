@@ -115,7 +115,7 @@
 <script setup>
 import TwoFactorBtn from "./TwoFactorBtn.vue";
 import TwoFactorCheckLine from "./TwoFactorCheckLine.vue";
-import TwoFactoSetupBox from "./TwoFactoSetupBox";
+import TwoFactoSetupBox from "./TwoFactoSetupBox.vue";
 import TwoFactorBackup from "./TwoFactorBackup.vue";
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useTwoFactorAuth } from "@/store/twoFactorAuth";

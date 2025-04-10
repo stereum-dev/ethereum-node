@@ -56,7 +56,7 @@
 <script setup>
 import { useNodeHeader } from "@/store/nodeHeader";
 import { ref, onMounted } from "vue";
-import DkgGenerator from "./plugin/DkgGenerator";
+import DkgGenerator from "./plugin/DkgGenerator.vue";
 
 const headerStore = useNodeHeader();
 
