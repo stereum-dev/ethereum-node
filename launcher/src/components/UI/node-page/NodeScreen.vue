@@ -63,7 +63,7 @@ import ExpertWindow from "./sections/ExpertWindow.vue";
 import LogsSection from "./sections/LogsSection.vue";
 import NodeSection from "./sections/NodeSection.vue";
 import ServiceSection from "./sections/ServiceSection.vue";
-import SidebarSection from "./sections/SidebarSection";
+import SidebarSection from "./sections/SidebarSection.vue";
 
 //*****************  Store & Refs *****************
 const nodeStore = useNodeStore();
