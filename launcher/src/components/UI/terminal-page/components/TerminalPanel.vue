@@ -10,7 +10,7 @@ import ControlService from "@/store/ControlService";
 import { useServers } from "@/store/servers";
 
 const serverStore = useServers();
-const { getTerminal, getFitAddon, onData, clearTerminalRefs } = useTerminal();
+const { getTerminal, getFitAddon, onData, clearTerminalRefs, resetTerminal } = useTerminal();
 
 const terminalContainer = ref(null);
 let terminalOutputListener = null;
@@ -105,17 +105,19 @@ const onKillTerminal = async () => {
 const onNewTerminal = async () => {
   if (!isTerminalRunning.value) {
     await ControlService.startShell();
+
     setTimeout(() => {
+      resetTerminal();
+
       const terminal = getTerminal();
-      terminal.clear();
-      terminal.focus();
+      if (!terminal) return;
+
+      terminal.open(terminalContainer.value);
       getFitAddon().fit();
-      if (terminalContainer.value && terminal.element && terminal.element.parentNode !== terminalContainer.value) {
-        terminalContainer.value.innerHTML = "";
-        terminalContainer.value.appendChild(terminal.element);
-      }
+      terminal.focus();
+
       attachListenersOnce();
-    }, 500);
+    }, 1000);
   }
 };
 
