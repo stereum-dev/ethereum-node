@@ -8,6 +8,8 @@ export const useTwoFactorAuth = defineStore("twoFactorAuth", {
       scratchCodeSaved: false,
       isBarcodeModalActive: false,
       QRcode: "",
+      isSendingCode: false,
+      isSetupConfirming: false,
     };
   },
   actions: {},

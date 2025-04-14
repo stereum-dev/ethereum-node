@@ -9,16 +9,16 @@
         t("twoFactorAuth.urSecret")
       }}</span>
       <div
-        class="key-code w-[68%] h-full bg-black flex justify-between items-center rounded-full text-gray-300 pl-2 text-xs rounded-l-none"
+        class="key-code w-[68%] h-full bg-black flex justify-between items-center rounded-full text-gray-300 pl-2 text-[10px] font-normal rounded-l-none"
       >
         {{ !props.secretKey ? wait : props.secretKey }}
         <div
-          class="send-btn w-16 h-[95%] rounded-xl text-2xs uppercase bg-teal-700 hover:bg-teal-900 flex justify-center items-center text-gray-100 cursor-pointer right-[1px]"
+          class="send-btn w-8 h-8 rounded-md text-2xs uppercase bg-teal-700 hover:bg-teal-900 flex justify-center items-center text-gray-100 cursor-pointer right-[1px]"
           @click="copyKey"
           @mouseenter="footerStore.cursorLocation = `${t('twoFactor.copy')} `"
           @mouseleave="footerStore.cursorLocation = ''"
         >
-          <span>{{ !copy ? t("twoFactorAuth.copyBtn") : t("twoFactorAuth.copied") }}</span>
+          <img class="w-4 h-4 ml-1" :src="copyIconHandler" alt="copied" />
         </div>
       </div>
     </div>
@@ -29,23 +29,34 @@
         t("twoFactorAuth.enterCode")
       }}</span>
       <input
+        ref="codeInput"
         v-model="authStore.varificationCode"
         type="text"
         placeholder="Enter Code Here"
         class="key-code w-[68%] bg-black h-full flex justify-center items-center rounded-full text-gray-50 pl-2 text-xs rounded-l-none"
       />
       <div
-        v-if="props.timeBased"
-        class="send-btn w-16 h-[95%] rounded-xl text-2xs uppercase bg-teal-700 hover:bg-teal-900 flex justify-center items-center text-gray-100 cursor-pointer absolute right-[1px]"
+        v-if="props.timeBased && !authStore.isSendingCode"
+        class="send-btn w-16 h-8 rounded-md text-2xs uppercase bg-teal-700 hover:bg-teal-900 flex justify-center items-center text-gray-100 cursor-pointer absolute right-[1px]"
         @click="sendCode"
         @mouseenter="footerStore.cursorLocation = `${t('twoFactor.send')} `"
         @mouseleave="footerStore.cursorLocation = ''"
       >
         <span>{{ t("twoFactorAuth.send") }}</span>
       </div>
+      <div
+        v-if="props.timeBased && authStore.isSendingCode"
+        class="send-btn w-16 h-8 rounded-md text-2xs uppercase bg-teal-700 hover:bg-teal-900 flex justify-center items-center space-x-2 text-gray-100 cursor-pointer absolute right-[1px]"
+        @click="sendCode"
+        @mouseenter="footerStore.cursorLocation = `${t('twoFactor.send')} `"
+        @mouseleave="footerStore.cursorLocation = ''"
+      >
+        <span class="border-2 rounded-full border-l-none"></span>
+        <span>Sending...</span>
+      </div>
     </div>
     <div class="col-start-1 col-end-10 row-start-2 row-span-2 w-full h-full grid grid-cols-2 grid-rows-2 py-2">
-      <span class="col-start-1 col-span-full row-start-1 row-span-1 text-left text-xs text-gray-200 w-full h-full"
+      <span class="col-start-1 col-span-full row-start-1 row-span-1 text-left text-[10px] font-normal text-gray-200 w-full h-full"
         ><ol>
           <li>1. {{ t("twoFactorAuth.scanCode") }}</li>
           <li>2. {{ t("twoFactorAuth.enterCodeApp") }}</li>
@@ -78,12 +89,12 @@
 import { useTwoFactorAuth } from "@/store/twoFactorAuth";
 import i18n from "@/includes/i18n";
 import { useFooter } from "@/store/theFooter";
-import { ref, watch } from "vue";
+import { ref, watch, computed, onMounted, nextTick } from "vue";
 
 const t = i18n.global.t;
 
 const wait = t("twoFactorAuth.wait");
-
+const codeInput = ref(null);
 const footerStore = useFooter();
 const authStore = useTwoFactorAuth();
 
@@ -96,6 +107,13 @@ const props = defineProps({
 });
 
 const copy = ref(false);
+
+const copyIconHandler = computed(() => {
+  if (copy.value === true) {
+    return "/img/icon/service-log-icons/copied.png";
+  }
+  return "/img/icon/staking-page-icons/copy.png";
+});
 
 watch(copy, () => {
   setTimeout(() => {
@@ -121,8 +139,15 @@ const copyKey = () => {
 };
 
 const sendCode = () => {
+  authStore.isSendingCode = true;
   emit("sendCode");
 };
+
+onMounted(() => {
+  nextTick(() => {
+    codeInput.value?.focus();
+  });
+});
 </script>
 <style scoped>
 .send-btn:active {

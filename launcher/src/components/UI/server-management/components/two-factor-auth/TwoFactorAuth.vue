@@ -1,7 +1,23 @@
 <template>
   <div
-    class="2-fa-auth w-full h-full col-start-1 col-span-full row-start-1 row-span-full bg-[#1b1b1d] rounded-md grid grid-cols-24 grid-rows-14 p-2 gap-1"
+    class="2-fa-auth w-full h-full col-start-1 col-span-full row-start-1 row-span-full bg-[#1b1b1d] rounded-md grid grid-cols-24 grid-rows-14 p-2 gap-1 relative"
   >
+    <div
+      v-if="authStore.isSetupConfirming"
+      class="absolute inset-0 bg-white bg-opacity-60 z-40 h-full w-full flex items-center justify-center rounded-lg"
+    >
+      <div class="flex items-center">
+        <span class="text-3xl mr-4">Please wait...</span>
+        <svg class="animate-spin h-8 w-8 text-gray-800" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
+        </svg>
+      </div>
+    </div>
     <span class="top-ttl row-start-1 text-gray-300">{{ titleManager }}</span>
     <TwoFactorBtn
       v-if="!twoFactorIsEnabled && !twoFactorSetupIsActive && !configured2fa"
@@ -190,6 +206,7 @@ const startSetup = async () => {
     authStore.scratchCodeSaved = false;
     await ControlService.beginAuthSetup(isTimeBaseActive.value, isOrgGenTimeLimit.value, isRateLimiting.value);
   } else {
+    authStore.isSetupConfirming = true;
     //setup two factor authentication
     finishSetupActive.value = true;
     await ControlService.finishAuthSetup();
@@ -235,6 +252,7 @@ const rateLimiting = (value) => {
 //function to send the code
 const sendTheCode = async () => {
   await ControlService.authenticatorVerification(authStore.varificationCode);
+  authStore.isSendingCode = false;
 };
 
 //function to save the scratch Code

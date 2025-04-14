@@ -1,3 +1,4 @@
+// useTerminal.js
 import { Terminal } from "@xterm/xterm";
 import { FitAddon } from "@xterm/addon-fit";
 import "@xterm/xterm/css/xterm.css";
@@ -5,22 +6,55 @@ import "@xterm/xterm/css/xterm.css";
 let terminalInstance = null;
 let fitAddonInstance = null;
 
-export function useTerminal() {
-  if (!terminalInstance) {
-    terminalInstance = new Terminal({
-      allowTransparency: true,
-      rightClickSelectsWord: true,
-    });
-    fitAddonInstance = new FitAddon();
-    terminalInstance.loadAddon(fitAddonInstance);
-  }
+function createTerminal() {
+  terminalInstance = new Terminal({
+    allowTransparency: true,
+    convertEol: true,
+    cursorBlink: true,
+    theme: {
+      background: "#000000",
+    },
+  });
+  fitAddonInstance = new FitAddon();
+  terminalInstance.loadAddon(fitAddonInstance);
+}
 
-  const onData = (callback) => {
-    return terminalInstance.onData(callback); // Return the disposable directly
+function ensureTerminal() {
+  if (!terminalInstance || terminalInstance._disposed) {
+    createTerminal();
+  }
+}
+
+export function useTerminal() {
+  const getTerminal = () => {
+    ensureTerminal();
+    return terminalInstance;
   };
 
-  const getTerminal = () => terminalInstance;
-  const getFitAddon = () => fitAddonInstance;
+  const getFitAddon = () => {
+    ensureTerminal();
+    return fitAddonInstance;
+  };
 
-  return { getTerminal, getFitAddon, onData };
+  const resetTerminal = () => {
+    if (terminalInstance) {
+      terminalInstance.dispose();
+    }
+    createTerminal();
+  };
+
+  const clearTerminalRefs = () => {
+    terminalInstance = null;
+    fitAddonInstance = null;
+  };
+
+  const onData = (cb) => getTerminal().onData(cb);
+
+  return {
+    getTerminal,
+    getFitAddon,
+    onData,
+    resetTerminal,
+    clearTerminalRefs,
+  };
 }
