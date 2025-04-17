@@ -1007,26 +1007,38 @@ app.on("window-all-closed", async () => {
 });
 
 app.on("ready", async () => {
-  if (app.isReady()) {
-    if (process.env.WEBPACK_DEV_SERVER_URL) {
-      app.setAsDefaultProtocolClient("stereumlauncher", process.execPath, [path.resolve(process.argv[1])]);
-      createWindow();
-      //stereumUpdater.runDebug();
-    } else {
-      app.setAsDefaultProtocolClient("stereumlauncher");
-      const hideMenuItems = ["viewmenu", "windowmenu"];
-      const menu = Menu.getApplicationMenu();
-      if (menu && menu.items) {
-        menu.items.filter((item) => hideMenuItems.includes(item.role)).forEach((item) => (item.visible = false));
-        Menu.setApplicationMenu(menu);
-      }
+  const isDev = process.env.WEBPACK_DEV_SERVER_URL;
 
-      // Checks for Updates installs them and restarts the app
-      // If no updates are available it will start the app with createWindow()
-      stereumUpdater.checkForUpdates();
-      //stereumUpdater.runDebug();
+  if (isDev) {
+    app.setAsDefaultProtocolClient("stereumlauncher", process.execPath, [path.resolve(process.argv[1])]);
+  } else {
+    app.setAsDefaultProtocolClient("stereumlauncher");
+
+    const hideMenuItems = ["viewmenu", "windowmenu"];
+    const menu = Menu.getApplicationMenu();
+    if (menu && menu.items) {
+      menu.items.filter((item) => hideMenuItems.includes(item.role)).forEach((item) => (item.visible = false));
+      Menu.setApplicationMenu(menu);
+    }
+
+    // Handle update
+    try {
+      const storedConfig = await storageService.readConfig();
+      const lastCheck = storedConfig.lastUpdateCheck?.value || 0;
+      const updateInterval = (storedConfig.updateTimer ?? 0) * 86400000 + (storedConfig.updateTimerTime ?? 0) * 3600000;
+
+      if (lastCheck + updateInterval <= Date.now()) {
+        storedConfig.lastUpdateCheck = { value: Date.now() };
+        await storageService.writeConfig(storedConfig);
+        stereumUpdater.checkForUpdates();
+        return;
+      }
+    } catch (error) {
+      console.error("Update check error:", error);
     }
   }
+
+  await createWindow();
 });
 
 app.on("activate", async () => {
