@@ -49,7 +49,20 @@ const onOff = computed(() => {
 
 const updateSettings = async () => {
   let settings = await ControlService.getStereumSettings();
-  settings.stereum.settings.updates.unattended.install = isAutoUpdateEnabled.value === true;
+  const unattended = settings.stereum.settings.updates.unattended;
+  // for max: update unattended user input into stereum.yaml (interval_days, hour <format - 24h>, min)
+  unattended.install = isAutoUpdateEnabled.value === true;
+
+  if (!("interval_days" in unattended)) {
+    unattended.interval_days = 7;
+  }
+  if (!("hour" in unattended)) {
+    unattended.hour = 3;
+  }
+  if (!("min" in unattended)) {
+    unattended.min = 0;
+  }
+
   await ControlService.setStereumSettings(toRaw(settings));
 };
 
