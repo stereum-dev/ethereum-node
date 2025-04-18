@@ -1,5 +1,5 @@
 ---
-- name: Configure unattended update via cron
+- name: Configure unattended update
   ansible.builtin.cron:
     name: "stereum auto unattended update"
     minute: "{{ stereum.settings.updates.unattended.minute | default('0') }}"
