@@ -8,3 +8,6 @@ stereum_settings:
       lane: {{ stereum.settings.updates.lane | default(stereum.defaults.updates.lane) }}
       unattended:
         install: {{ stereum.settings.updates.unattended.install | default(stereum.defaults.updates.unattended.install) }}
+        interval_days: {{ stereum.settings.updates.unattended.interval_days | default(stereum.defaults.updates.unattended.interval_days) }}
+        hour: {{ stereum.settings.updates.unattended.install | default(stereum.defaults.updates.unattended.hour) }}
+        min: {{ stereum.settings.updates.unattended.install | default(stereum.defaults.updates.unattended.min) }}
