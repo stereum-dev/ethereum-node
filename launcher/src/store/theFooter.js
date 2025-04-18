@@ -23,8 +23,6 @@ export const useFooter = defineStore("theFooter", {
       idleTimer: false,
       idleTimerTime: 5,
       logBackups: 3,
-      updateTimer: 7,
-      updateTimerTime: 12,
     };
   },
   getters: {},
