@@ -40,8 +40,8 @@ export class KeysAPIService extends NodeService {
 
         // chain id
         // for mainnet 1
-        // for testnet 17000
-        CHAIN_ID: network == "mainnet" ? "1" : "17000",
+        // for testnet 560048
+        CHAIN_ID: network == "mainnet" ? "1" : "560048",
 
         DB_NAME: "node_operator_keys_service_db",
         DB_PORT: "5432",
