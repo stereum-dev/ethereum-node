@@ -103,7 +103,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch, toRaw, onBeforeMount } from "vue";
+import { ref, computed, onMounted, toRaw, onBeforeMount } from "vue";
 import ControlService from "@/store/ControlService";
 import { useUpdateCheck } from "@/composables/version.js";
 import { useFooter } from "@/store/theFooter";
