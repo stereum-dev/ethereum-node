@@ -13,7 +13,7 @@
           @mouseenter="footerStore.cursorLocation = t('serverSetting.tgl')"
           @mouseleave="footerStore.cursorLocation = ''"
         >
-          <input type="checkbox" class="sr-only" v-model="isAutoUpdateEnabled" @input="turnOnOff" />
+          <input v-model="isAutoUpdateEnabled" type="checkbox" class="sr-only" @input="turnOnOff" />
           <div
             class="w-full h-full flex items-center rounded-full p-1 transition-colors duration-300 ease-in-out"
             :class="isAutoUpdateEnabled ? 'bg-green-500' : 'bg-red-500'"
@@ -91,10 +91,10 @@
       </div>
 
       <button
-        @click="confirmChanges"
         class="col-start-1 col-span-full row-start-7 row-span-1 bg-gradient-to-r from-[#336666] to-[#4a8080] hover:from-[#4a8080] hover:to-[#336666] text-xs uppercase text-white font-medium py-1 px-4 rounded-md transition-all duration-300 ease-in-out transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
         :class="!isEditActive ? 'cursor-not-allowed opacity-50 pointer-events-none' : ''"
         :disabled="!areInputsValid || !isEditActive"
+        @click="confirmChanges"
       >
         Confirm
       </button>
@@ -195,7 +195,6 @@ const updateConfigFile = async () => {
     const config = await ControlService.readConfig();
     config.autoUpdate = isAutoUpdateEnabled.value;
     await ControlService.writeConfig(config);
-    const test = await ControlService.readConfig();
   } catch (error) {
     console.error("Error updating config file:", error);
   }
