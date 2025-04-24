@@ -1,8 +1,8 @@
 <template>
   <div
-    class="w-full h-full col-start-1 col-span-full row-start-1 row-span-full bg-[#1b1b1d] rounded-md grid grid-cols-12 grid-rows-12 p-2 space-y-2"
+    class="w-full h-full col-start-1 col-span-full row-start-1 row-span-full bg-[#1b1b1d] rounded-md grid grid-cols-12 grid-rows-12 p-2 space-y-2 divide-y divide-gray-500"
   >
-    <div class="col-start-1 col-span-full row-start-1 row-span-2 border-b border-gray-700 p-1 grid grid-cols-12 grid-rows-2">
+    <div class="col-start-1 col-span-full row-start-1 row-span-2 p-1 grid grid-cols-12 grid-rows-2">
       <div class="col-start-1 col-span-full row-start-1 row-span-1 text-xs font-bold uppercase text-[#336666]">
         {{ t("serverSetting.nodeServerTtl") }}
       </div>
@@ -27,12 +27,15 @@
         </label>
       </div>
     </div>
-    <div
-      v-if="isAutoUpdateEnabled"
-      class="col-start-1 col-span-full row-start-3 row-span-8 border-b border-gray-700 p-1 grid grid-cols-12 grid-rows-7 gap-y-3"
-    >
-      <div class="col-start-1 col-span-full row-start-1 row-span-1 text-xs font-bold uppercase text-[#336666]">
+    <div v-if="isAutoUpdateEnabled" class="col-start-1 col-span-full row-start-3 row-span-8 p-1 grid grid-cols-12 grid-rows-7 gap-y-3">
+      <div class="col-start-1 col-span-10 row-start-1 row-span-1 text-xs font-bold uppercase text-[#336666]">
         Set your update time and date
+      </div>
+      <div
+        class="col-start-12 col-span-1 row-start-1 row-span-1 flex items-center justify-center p-1 w-8 h-full bg-black rounded-md cursor-pointer hover:scale-110 active:scale-95 transition-all duration-300 ease-in-out"
+        @click="activeEdit"
+      >
+        <img src="/img/icon/service-setting-icons/edit.png" alt="Edit" class="w-6 h-6" />
       </div>
 
       <div v-if="inputMsg" class="col-start-1 col-span-full row-start-2 row-span-1 text-xs text-red-500 bg-[#2a2a2c] p-2 rounded-md">
@@ -48,6 +51,8 @@
             min="1"
             max="100"
             class="w-full h-7 bg-[#2a2a2c] text-white border border-gray-700 rounded-md p-2 text-sm focus:border-[#336666] focus:outline-none transition-colors"
+            :class="!isEditActive ? 'cursor-not-allowed opacity-50' : ''"
+            :disabled="!isEditActive"
             placeholder="1-100"
           />
         </div>
@@ -63,6 +68,8 @@
             max="23"
             class="w-full h-7 bg-[#2a2a2c] text-white border border-gray-700 rounded-md p-2 text-sm focus:border-[#336666] focus:outline-none transition-colors"
             placeholder="0-23"
+            :class="!isEditActive ? 'cursor-not-allowed opacity-50' : ''"
+            :disabled="!isEditActive"
           />
         </div>
       </div>
@@ -77,6 +84,8 @@
             max="59"
             class="w-full h-7 bg-[#2a2a2c] text-white border border-gray-700 rounded-md p-2 text-sm focus:border-[#336666] focus:outline-none transition-colors"
             placeholder="0-59"
+            :class="!isEditActive ? 'cursor-not-allowed opacity-50' : ''"
+            :disabled="!isEditActive"
           />
         </div>
       </div>
@@ -84,7 +93,8 @@
       <button
         @click="confirmChanges"
         class="col-start-1 col-span-full row-start-7 row-span-1 bg-gradient-to-r from-[#336666] to-[#4a8080] hover:from-[#4a8080] hover:to-[#336666] text-xs uppercase text-white font-medium py-1 px-4 rounded-md transition-all duration-300 ease-in-out transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
-        :disabled="!areInputsValid"
+        :class="!isEditActive ? 'cursor-not-allowed opacity-50 pointer-events-none' : ''"
+        :disabled="!areInputsValid || !isEditActive"
       >
         Confirm
       </button>
@@ -108,6 +118,7 @@ const hourInput = ref(3);
 const minuteInput = ref(0);
 const isChangesConfirmed = ref(false);
 const inputMsg = ref("");
+const isEditActive = ref(false);
 
 const areInputsValid = computed(() => {
   if (intervalDayInput.value === null || hourInput.value === null || minuteInput.value === null) {
@@ -125,6 +136,10 @@ const onOff = computed(() => {
   return isAutoUpdateEnabled.value ? "absolute left-3" : "absolute right-3";
 });
 
+const activeEdit = () => {
+  isEditActive.value = !isEditActive.value;
+};
+
 const turnOnOff = () => {
   isAutoUpdateEnabled.value = !isAutoUpdateEnabled.value;
   if (!isAutoUpdateEnabled.value) {
@@ -133,7 +148,7 @@ const turnOnOff = () => {
   }
 };
 
-const confirmChanges = () => {
+const confirmChanges = async () => {
   if (!areInputsValid.value) {
     if (intervalDayInput.value < 1 || intervalDayInput.value > 100) {
       inputMsg.value = "Days must be between 1 and 100";
@@ -152,16 +167,18 @@ const confirmChanges = () => {
 
   inputMsg.value = "";
   isChangesConfirmed.value = true;
+  isEditActive.value = false;
   footerStore.cursorLocation = t("serverSetting.confirmed");
   setTimeout(() => {
     footerStore.cursorLocation = "";
   }, 2000);
+  await updateSettings();
+  updateConfigFile();
 };
 
 const updateSettings = async () => {
   let settings = await ControlService.getStereumSettings();
   const unattended = settings.stereum.settings.updates.unattended;
-
   unattended.install = isAutoUpdateEnabled.value;
 
   if (isAutoUpdateEnabled.value && isChangesConfirmed.value) {
@@ -179,19 +196,10 @@ const updateConfigFile = async () => {
     config.autoUpdate = isAutoUpdateEnabled.value;
     await ControlService.writeConfig(config);
     const test = await ControlService.readConfig();
-    console.log("test", test);
-    console.log("Config file updated successfully");
   } catch (error) {
     console.error("Error updating config file:", error);
   }
 };
-
-watch(isChangesConfirmed, (newVal) => {
-  if (newVal) {
-    updateSettings();
-    updateConfigFile();
-  }
-});
 
 const getSettings = async () => {
   let settings = await ControlService.getStereumSettings();
