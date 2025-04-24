@@ -582,7 +582,7 @@ export class OneClickInstall {
     }
     if (this.extraServices.some((s) => s.service === "ValidatorEjectorService")) {
       const moduleIDs = {
-        lidocsm: "4",
+        lidocsm: "3",
         lidossv: "2",
         lidoobol: "2",
       };
