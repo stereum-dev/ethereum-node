@@ -223,7 +223,7 @@ export class OneClickInstall {
       //CharonService
       charon = this.serviceManager.getService("CharonService", {
         ...args,
-        consensusClients: [this.beaconService.filter((service) => service.service !== "OpNodeBeaconService")],
+        consensusClients: this.beaconService.filter((service) => service.service !== "OpNodeBeaconService"),
       });
       this.extraServices.push(charon);
       this.notToStart.push(charon.id);
