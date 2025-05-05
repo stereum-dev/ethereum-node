@@ -8,6 +8,7 @@
     :confirm-text="confirmButtonText"
     :message-text="getDetailsText"
     :is-processing="isProcessing"
+    :isExporting="isExporting"
     :active-button="activeButton"
     @close-modal="closeModal"
     @confirm-action="onConfirmAction"
@@ -105,6 +106,8 @@ const getTextMessage = computed(() => {
 
 const buttonClicked = ref(false);
 
+const isExporting = ref(false);
+
 const activeButton = computed(() => {
   return !!stakingStore.withdrawIsChecked;
 });
@@ -162,6 +165,7 @@ const confirmWithdraw = () => {
 };
 
 const exportMessage = () => {
+  isExporting.value = true;
   emit("exportMessage");
 };
 
