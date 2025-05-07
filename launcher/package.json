@@ -29,6 +29,7 @@
     "format:check": "prettier .  --check"
   },
   "dependencies": {
+    "@babel/runtime": "^7.27.1",
     "@headlessui/vue": "^1.7.23",
     "@heroicons/vue": "^2.2.0",
     "@sapien99/vue-cli-plugin-electron-builder-notarize": "^1.1.3",
