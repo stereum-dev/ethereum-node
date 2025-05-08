@@ -612,7 +612,8 @@ const exportExitMessage = async () => {
 };
 
 const saveExitMessage = (data, type) => {
-  const content = type === "single" ? JSON.stringify(data, null, 2) : data.map((entry) => JSON.stringify(entry, null, 2)).join("\n\n");
+  const content =
+    type === "single" ? JSON.stringify(data.data, null, 2) : data.map((entry) => JSON.stringify(entry.data, null, 2)).join("\n\n");
 
   const fileName = type === "single" ? "single_exit_message.txt" : "multiple_exit_messages.txt";
   const blob = new Blob([content], { type: "application/json;charset=utf-8" });

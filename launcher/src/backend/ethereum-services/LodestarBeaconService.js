@@ -60,7 +60,7 @@ export class LodestarBeaconService extends NodeService {
         `--enr.udp=9000`,
       ], //command
       ["node", "./packages/cli/bin/lodestar"], //entrypoint
-      null, //env
+      { NODE_OPTIONS: "--max-old-space-size=8192" }, //env
       ports, //ports
       volumes, //volumes
       null, //user

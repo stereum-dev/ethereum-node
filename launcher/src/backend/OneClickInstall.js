@@ -226,7 +226,7 @@ export class OneClickInstall {
       //CharonService
       charon = this.serviceManager.getService("CharonService", {
         ...args,
-        consensusClients: [this.beaconService.filter((service) => service.service !== "OpNodeBeaconService")],
+        consensusClients: this.beaconService.filter((service) => service.service !== "OpNodeBeaconService"),
       });
       this.extraServices.push(charon);
       this.notToStart.push(charon.id);
@@ -585,7 +585,7 @@ export class OneClickInstall {
     }
     if (this.extraServices.some((s) => s.service === "ValidatorEjectorService")) {
       const moduleIDs = {
-        lidocsm: "4",
+        lidocsm: "3",
         lidossv: "2",
         lidoobol: "2",
       };

@@ -21,9 +21,17 @@ import { useNodeManage } from '@/store/nodeManage'; import { computed } from 'vu
         <slot name="content"></slot>
         <div class="col-start-1 col-span-full row-start-7 row-span-1 grid grid-cols-12 items-center px-2">
           <button
-            v-if="props.confirmText === 'Withdraw & Exit'"
+            v-if="!props.isExporting && props.confirmText === 'Withdraw & Exit'"
             class="col-start-1 col-end-5 ml-4 min-w-[100px] max-h-10 bg-blue-500 px-5 py-2 shadow-xl shadow-[#141516] tracking-wider rounded-full uppercase active:scale-90 transition-all duration-150 flex justify-evenly items-center space-x-2"
             @click="exportAction"
+          >
+            <img class="h-4" src="/img/icon/staking-page-icons/export.png" alt="Export Icon" />
+            <span class="text-sm text-gray-200 font-semibold">{{ $t("stakingPage.expMsg") }}</span>
+          </button>
+          <button
+            v-if="props.isExporting && props.confirmText === 'Withdraw & Exit'"
+            class="opacity-40 col-start-1 col-end-5 ml-4 min-w-[100px] max-h-10 bg-blue-500 px-5 py-2 shadow-xl shadow-[#141516] tracking-wider rounded-full uppercase flex justify-evenly items-center space-x-2"
+            disabled
           >
             <img class="h-4" src="/img/icon/staking-page-icons/export.png" alt="Export Icon" />
             <span class="text-sm text-gray-200 font-semibold">{{ $t("stakingPage.expMsg") }}</span>
@@ -113,6 +121,10 @@ const props = defineProps({
   height: {
     type: String,
     default: "",
+  },
+  isExporting: {
+    type: Boolean,
+    default: false,
   },
 });
 
