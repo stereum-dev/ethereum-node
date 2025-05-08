@@ -144,7 +144,7 @@
 import { useNodeHeader } from "@/store/nodeHeader";
 import EnrGenerator from "./EnrGenerator.vue";
 import { ref, onMounted } from "vue";
-import ConfirmBox from "./plugin/ConfirmBox";
+import ConfirmBox from "./plugin/ConfirmBox.vue";
 import ControlService from "@/store/ControlService";
 
 const importedENR = ref("");

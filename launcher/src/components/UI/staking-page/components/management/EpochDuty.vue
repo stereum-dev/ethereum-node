@@ -11,7 +11,7 @@ import { ref } from 'vue';
 
 <script setup>
 import DutyHeader from "./components/epoch-duty/DutyHeader.vue";
-import DutyBody from "./components/epoch-duty/DutyBody";
+import DutyBody from "./components/epoch-duty/DutyBody.vue";
 import DutyFooter from "./components/epoch-duty/DutyFooter.vue";
 import { ref, onMounted, onUnmounted, computed } from "vue";
 import { useStakingStore } from "@/store/theStaking";
