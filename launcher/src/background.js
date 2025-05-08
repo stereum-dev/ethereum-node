@@ -1023,12 +1023,8 @@ app.on("ready", async () => {
 
       // Checks for Updates installs them and restarts the app
       // If no updates are available it will start the app with createWindow()
-      // check autoupdate is enabled, if not check for updates
-      const storedConfig = await storageService.readConfig();
-      if (storedConfig.autoUpdate !== true) {
-        stereumUpdater.checkForUpdates();
-        //stereumUpdater.runDebug();
-      }
+      stereumUpdater.checkForUpdates();
+      //stereumUpdater.runDebug();
     }
   }
 });
