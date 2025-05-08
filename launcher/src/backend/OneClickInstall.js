@@ -25,6 +25,9 @@ export class OneClickInstall {
             lane: "stable",
             unattended: {
               install: false,
+              interval_days: 7,
+              hour: 3,
+              min: 0,
             },
           },
         },
