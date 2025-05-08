@@ -11,14 +11,9 @@
   register: service_configs
   with_items: "{{ restart_service_config_files.files }}"
 
-- name: Restart service in parallel
+- name: Restart service
   include_tasks: restart-service.yaml
   loop: "{{ service_configs.results | map(attribute='content') | map('b64decode') | map('from_yaml') | map(attribute='id') | list }}"
-  loop_control:
-    label: "{{ item }}"
-  async: 800 # Timeout in seconds; adjust as needed
-  poll: 0 # Don't wait for task completion (fire and forget)
-  register: async_jobs
 
 - name: Docker system prune
   community.docker.docker_prune:
