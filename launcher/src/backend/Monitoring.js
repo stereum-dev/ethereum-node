@@ -3451,7 +3451,7 @@ export class Monitoring {
             `-d '${JSON.stringify(exitMsg)}' -i -s`;
 
           const runExitCommand = await this.nodeConnection.sshService.exec(exitCommand);
-          log.info(runExitCommand);
+          log.debug("Generated Exit Message(s):", runExitCommand);
 
           if (SSHService.checkExecError(runExitCommand) && runExitCommand.stderr) {
             throw new Error(SSHService.extractExecError(runExitCommand));
