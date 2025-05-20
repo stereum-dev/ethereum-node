@@ -4,8 +4,8 @@
     paths: "/etc/stereum/services"
   register: service_config_files
 
-- name: Include Prysm Changes
-  include_tasks: prysm_changes.yaml
+- name: Include Ejector Changes
+  include_tasks: ejector_changes.yaml
   loop: "{{ service_config_files.files }}"
   loop_control:
     loop_var: config_file
