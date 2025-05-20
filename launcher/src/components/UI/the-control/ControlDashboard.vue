@@ -25,9 +25,6 @@
     <dashboard-card class="the-cpu">
       <the-cpu @mouseenter="cursorLocation = `${cpuUse}`" @mouseleave="cursorLocation = ''" />
     </dashboard-card>
-    <dashboard-card class="amsterdam">
-      <amsterdam-component />
-    </dashboard-card>
     <dashboard-card class="sync-status"
       ><sync-status @mouseenter="cursorLocation = `${syncInfo}`" @mouseleave="cursorLocation = ''"
     /></dashboard-card>
@@ -67,7 +64,6 @@ import TheCpu from "../control-page/components/widgets/TheCpu.vue";
 import TheHard from "./TheHard.vue";
 import MachineName from "./MachineName.vue";
 import DashboardCard from "./DashboardCard.vue";
-import AmsterdamComponent from "./AmsterdamComponent.vue";
 import TheRam from "../control-page/components/widgets/TheRam.vue";
 import PeerToPeer from "./PeerToPeer.vue";
 import TheNetwork from "./TheNetwork.vue";
@@ -88,7 +84,6 @@ export default {
     SyncStatus,
     TheHard,
     DashboardCard,
-    AmsterdamComponent,
     MachineName,
     TheRam,
     // NewPeerToPeer,
@@ -196,14 +191,6 @@ export default {
 .disk-speed {
   grid-column: 1/2;
   grid-row: 4/5;
-}
-.amsterdam {
-  grid-row: 3/4;
-  grid-column: 2/3;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-sizing: border-box;
 }
 .the-cpu {
   grid-row: 5/6;
