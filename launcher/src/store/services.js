@@ -1828,8 +1828,8 @@ export const useServices = defineStore("services", {
               type: "text",
               changeValue: null,
               icon: "/img/icon/service-setting-icons/GasLimitIcon.png",
-              pattern: ["(- --max_cumulative_gas=)(.*)(\\n)"],
-              commands: ["--max_cumulative_gas"],
+              pattern: ["(- --txpool.gas-limit=)(.*)(\\n)"],
+              commands: ["--txpool.gas-limit"],
             },
             {
               title: "RPC Authentication Host Address",
