@@ -56,10 +56,10 @@ test("grandine consensus client", async () => {
   await nodeConnection.findStereumSettings();
   await nodeConnection.prepareStereumNode(nodeConnection.settings.stereum.settings.controls_install_path);
 
-  let geth = serviceManager.getService("GethService", { network: "holesky", installDir: "/opt/stereum" });
+  let geth = serviceManager.getService("GethService", { network: "hoodi", installDir: "/opt/stereum" });
 
   let grandineBC = serviceManager.getService("GrandineBeaconService", {
-    network: "holesky",
+    network: "hoodi",
     installDir: "/opt/stereum",
     executionClients: [geth],
   });

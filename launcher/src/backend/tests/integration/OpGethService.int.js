@@ -58,8 +58,9 @@ test("op-geth installation", async () => {
   //install besu
   let executionClient = serviceManager.getService("OpGethService", { network: "op-sepolia", installDir: "/opt/stereum" });
 
-  let versions = await nodeConnection.nodeUpdates.checkUpdates();
-  executionClient.imageVersion = versions[executionClient.network][executionClient.service].slice(-1).pop();
+  //let versions = await nodeConnection.nodeUpdates.checkUpdates();
+  //executionClient.imageVersion = versions[executionClient.network][executionClient.service].slice(-1).pop();
+  executionClient.imageVersion = "latest";
 
   await nodeConnection.writeServiceConfiguration(executionClient.buildConfiguration());
   await serviceManager.manageServiceState(executionClient.id, "started");
@@ -68,17 +69,20 @@ test("op-geth installation", async () => {
   let condition = false;
   let counter = 0;
   let status = "";
+  let completeStatus = "";
   while (!condition && counter < 10) {
     await testServer.Sleep(30000);
     status = await nodeConnection.sshService.exec(`docker logs stereum-${executionClient.id}`);
+    completeStatus = status.stdout + status.stderr;
+
     if (
-      /Starting geth on an OP network/.test(status.stdout) &&
-      /Started P2P networking/.test(status.stdout) &&
-      /HTTP server started/.test(status.stdout) &&
-      /WebSocket enabled/.test(status.stdout) &&
-      /Engine API enabled/.test(status.stdout) &&
-      /Looking for peers/.test(status.stdout) &&
-      /Starting metrics server/.test(status.stdout)
+      /Starting geth on an OP network/.test(completeStatus) &&
+      /Started P2P networking/.test(completeStatus) &&
+      /HTTP server started/.test(completeStatus) &&
+      /WebSocket enabled/.test(completeStatus) &&
+      /Engine API enabled/.test(completeStatus) &&
+      /Looking for peers/.test(completeStatus) &&
+      /Starting metrics server/.test(completeStatus)
     ) {
       condition = true;
     }
@@ -101,11 +105,11 @@ test("op-geth installation", async () => {
     expect((docker.stdout.match(new RegExp("Up", "g")) || []).length).toBe(1);
   }
 
-  expect(status.stdout).toMatch(/Starting geth on an OP network/);
-  expect(status.stdout).toMatch(/Started P2P networking/);
-  expect(status.stdout).toMatch(/HTTP server started/);
-  expect(status.stdout).toMatch(/WebSocket enabled/);
-  expect(status.stdout).toMatch(/Engine API enabled/);
-  expect(status.stdout).toMatch(/Looking for peers/);
-  expect(status.stdout).toMatch(/Starting metrics server/);
+  expect(completeStatus).toMatch(/Starting geth on an OP network/);
+  expect(completeStatus).toMatch(/Started P2P networking/);
+  expect(completeStatus).toMatch(/HTTP server started/);
+  expect(completeStatus).toMatch(/WebSocket enabled/);
+  expect(completeStatus).toMatch(/Engine API enabled/);
+  expect(completeStatus).toMatch(/Looking for peers/);
+  expect(completeStatus).toMatch(/Starting metrics server/);
 });

@@ -7,6 +7,9 @@ stereum_static:
       lane: stable
       unattended:
         install: false
+        interval_days: 1
+        hour: 1
+        min: 30
     arch: x86_64
     versions:
       # consensus clients

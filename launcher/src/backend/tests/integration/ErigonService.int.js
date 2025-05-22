@@ -56,7 +56,7 @@ test("erigon installation", async () => {
   await nodeConnection.prepareStereumNode(nodeConnection.settings.stereum.settings.controls_install_path);
 
   //install erigon
-  let executionClient = serviceManager.getService("ErigonService", { network: "holesky", installDir: "/opt/stereum" });
+  let executionClient = serviceManager.getService("ErigonService", { network: "hoodi", installDir: "/opt/stereum" });
 
   let versions = await nodeConnection.nodeUpdates.checkUpdates();
   executionClient.imageVersion = versions[executionClient.network][executionClient.service].slice(-1).pop();

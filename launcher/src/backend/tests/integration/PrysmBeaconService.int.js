@@ -58,16 +58,16 @@ test("prysm validator import", async () => {
   await nodeConnection.prepareStereumNode(nodeConnection.settings.stereum.settings.controls_install_path);
 
   //install geth
-  let geth = serviceManager.getService("GethService", { network: "holesky", installDir: "/opt/stereum" });
+  let geth = serviceManager.getService("GethService", { network: "hoodi", installDir: "/opt/stereum" });
 
   let prysmBC = serviceManager.getService("PrysmBeaconService", {
-    network: "holesky",
+    network: "hoodi",
     installDir: "/opt/stereum",
     executionClients: [geth],
   });
 
   let prysmVC = serviceManager.getService("PrysmValidatorService", {
-    network: "holesky",
+    network: "hoodi",
     installDir: "/opt/stereum",
     consensusClients: [prysmBC],
   });
@@ -100,7 +100,8 @@ test("prysm validator import", async () => {
     ],
     passwords: ["MyTestPassword", "MyTestPassword", "MyTestPassword"],
   });
-  await validatorAccountManager.importKey(prysmVC.id);
+  const importResult = await validatorAccountManager.importKey(prysmVC.id);
+  log.info(importResult);
 
   await Promise.all([serviceManager.manageServiceState(prysmBC.id, "stopped"), serviceManager.manageServiceState(prysmVC.id, "stopped")]);
 

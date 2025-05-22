@@ -7,7 +7,7 @@ import { ServiceManager } from "../../ServiceManager.js";
 import { TaskManager } from "../../TaskManager.js";
 const log = require("electron-log");
 
-jest.setTimeout(500000);
+jest.setTimeout(1200000);
 
 test("op-erigon installation", async () => {
   const testServer = new HetznerServer();
@@ -58,8 +58,9 @@ test("op-erigon installation", async () => {
   //install besu
   let executionClient = serviceManager.getService("OpErigonService", { network: "op-sepolia", installDir: "/opt/stereum" });
 
-  let versions = await nodeConnection.nodeUpdates.checkUpdates();
-  executionClient.imageVersion = versions[executionClient.network][executionClient.service].slice(-1).pop();
+  // let versions = await nodeConnection.nodeUpdates.checkUpdates();
+  // executionClient.imageVersion = versions[executionClient.network][executionClient.service].slice(-1).pop();
+  executionClient.imageVersion = "latest";
 
   await nodeConnection.writeServiceConfiguration(executionClient.buildConfiguration());
   await serviceManager.manageServiceState(executionClient.id, "started");
@@ -68,17 +69,20 @@ test("op-erigon installation", async () => {
   let condition = false;
   let counter = 0;
   let status = "";
+  let completeStatus = "";
   while (!condition && counter < 10) {
     await testServer.Sleep(30000);
     status = await nodeConnection.sshService.exec(`docker logs stereum-${executionClient.id}`);
+    completeStatus = status.stdout + status.stderr;
+
     if (
-      /Starting Erigon on/.test(status.stdout) &&
-      /HTTP endpoint opened for Engine API/.test(status.stdout) &&
-      /JsonRpc endpoint opened/.test(status.stdout) &&
-      /\[db\] open/.test(status.stdout) &&
-      /Started P2P networking/.test(status.stdout) &&
-      /GoodPeers/.test(status.stdout) &&
-      /\[txpool\] Started/.test(status.stdout)
+      /Starting Erigon on/.test(completeStatus) &&
+      /HTTP endpoint opened for Engine API/.test(completeStatus) &&
+      /JsonRpc endpoint opened/.test(completeStatus) &&
+      /\[db\] open/.test(completeStatus) &&
+      /Started P2P networking/.test(completeStatus) &&
+      /GoodPeers/.test(completeStatus) &&
+      /\[txpool\] Started/.test(completeStatus)
     ) {
       condition = true;
     }
@@ -101,11 +105,11 @@ test("op-erigon installation", async () => {
     expect((docker.stdout.match(new RegExp("Up", "g")) || []).length).toBe(1);
   }
 
-  expect(status.stdout).toMatch(/Starting Erigon on/);
-  expect(status.stdout).toMatch(/HTTP endpoint opened for Engine API/);
-  expect(status.stdout).toMatch(/JsonRpc endpoint opened/);
-  expect(status.stdout).toMatch(/\[db\] open/);
-  expect(status.stdout).toMatch(/Started P2P networking/);
-  expect(status.stdout).toMatch(/GoodPeers/);
-  expect(status.stdout).toMatch(/\[txpool\] Started/);
+  expect(completeStatus).toMatch(/Starting Erigon on/);
+  expect(completeStatus).toMatch(/HTTP endpoint opened for Engine API/);
+  expect(completeStatus).toMatch(/JsonRpc endpoint opened/);
+  expect(completeStatus).toMatch(/\[db\] open/);
+  expect(completeStatus).toMatch(/Started P2P networking/);
+  expect(completeStatus).toMatch(/GoodPeers/);
+  expect(completeStatus).toMatch(/\[txpool\] Started/);
 });

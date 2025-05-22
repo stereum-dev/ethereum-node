@@ -57,16 +57,16 @@ test("lodestar validator import", async () => {
   await nodeConnection.findStereumSettings();
   await nodeConnection.prepareStereumNode(nodeConnection.settings.stereum.settings.controls_install_path);
 
-  let geth = serviceManager.getService("GethService", { network: "holesky", installDir: "/opt/stereum" });
+  let geth = serviceManager.getService("GethService", { network: "hoodi", installDir: "/opt/stereum" });
 
   let lBC = serviceManager.getService("LodestarBeaconService", {
-    network: "holesky",
+    network: "hoodi",
     installDir: "/opt/stereum",
     executionClients: [geth],
   });
 
   let lVC = serviceManager.getService("LodestarValidatorService", {
-    network: "holesky",
+    network: "hoodi",
     installDir: "/opt/stereum",
     consensusClients: [lBC],
   });
@@ -100,7 +100,8 @@ test("lodestar validator import", async () => {
     ],
     passwords: ["MyTestPassword", "MyTestPassword", "MyTestPassword"],
   });
-  await validatorAccountManager.importKey(lVC.id);
+  const importResult = await validatorAccountManager.importKey(lVC.id);
+  log.info(importResult);
 
   //get logs
   let condition = false;
