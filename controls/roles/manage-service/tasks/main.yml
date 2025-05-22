@@ -43,17 +43,15 @@
         state: directory
         owner: "{{ stereum_service_configuration.user }}"
         group: "{{ stereum_service_configuration.user }}"
-        mode: 0700
+        mode: "{{ '0600' if (stereum_service_configuration.service == 'NimbusValidatorService' and item.split(':') | last == '/opt/app/secrets') else '0700'}}"
         recurse: yes
       changed_when: false
       become: yes
-
       when:
         - (stereum.manage_service.state == "started" or stereum.manage_service.state == "restarted")
         - item.split(':') | first != '/'
         - item.split(':') | first != '/sys'
         - item.split(':') | first != '/proc'
-        - not (stereum_service_configuration.service == "NimbusValidatorService" and item.split(':') | last == '/opt/app/secrets') # ignoring this bc nimbus validator sets this directory to 0600
       with_items: "{{ stereum_service_configuration.volumes | reject('search', ':/engine.jwt|:/execution/engine.jwt|:/op-engine.jwt') }}"
 
     - name: Set directory permissions for engine.jwt
