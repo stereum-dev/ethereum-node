@@ -53,7 +53,7 @@ export class TekuBeaconService extends NodeService {
         "--metrics-host-allowlist=*",
         "--metrics-publish-interval=10",
         `--data-path=${dataDir}`,
-        "--data-storage-mode=prune",
+        "--data-storage-mode=minimal",
         "--rest-api-port=5051",
         "--rest-api-host-allowlist=*",
         "--rest-api-interface=0.0.0.0",
