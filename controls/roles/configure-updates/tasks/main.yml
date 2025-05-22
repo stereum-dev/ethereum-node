@@ -2,9 +2,9 @@
 - name: Configure unattended update
   ansible.builtin.cron:
     name: "stereum auto unattended update"
-    minute: "{{ stereum.settings.updates.unattended.min | default('0') }}"
-    hour: "{{ stereum.settings.updates.unattended.hour | default('3') }}" # default: 3:00 am
-    day: "*/{{ stereum.settings.updates.unattended.interval_days | default(7) }}" # default: every 7 days
+    minute: "{{ stereum.settings.updates.unattended.min | default(59 | random) }}"
+    hour: "{{ stereum.settings.updates.unattended.hour | default(3 | random) }}" # default: 3:00 am
+    day: "*/{{ stereum.settings.updates.unattended.interval_days | default(1) }}" # default: every day
     job: >
       cd "{{ stereum.settings.controls_install_path | default('/opt/stereum') }}/ansible/controls"
       && ./unattended-update.sh

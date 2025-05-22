@@ -49,11 +49,11 @@
             v-model="intervalDayInput"
             type="number"
             min="1"
-            max="100"
+            max="28"
             class="w-full h-7 bg-[#2a2a2c] text-white border border-gray-700 rounded-md p-2 text-sm focus:border-[#336666] focus:outline-none transition-colors"
             :class="!isEditActive ? 'cursor-not-allowed opacity-50' : ''"
             :disabled="!isEditActive"
-            placeholder="1-100"
+            placeholder="1-28"
           />
         </div>
       </div>
@@ -92,8 +92,8 @@
 
       <button
         class="col-start-1 col-span-full row-start-7 row-span-1 bg-gradient-to-r from-[#336666] to-[#4a8080] hover:from-[#4a8080] hover:to-[#336666] text-xs uppercase text-white font-medium py-1 px-4 rounded-md transition-all duration-300 ease-in-out transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
-        :class="!isEditActive ? 'cursor-not-allowed opacity-50 pointer-events-none' : ''"
-        :disabled="!areInputsValid || !isEditActive"
+        :class="!areInputsValid ? 'cursor-not-allowed opacity-50 pointer-events-none' : ''"
+        :disabled="!areInputsValid"
         @click="confirmChanges"
       >
         Confirm
@@ -113,9 +113,10 @@ const t = i18n.global.t;
 const footerStore = useFooter();
 
 const isAutoUpdateEnabled = ref(false);
-const intervalDayInput = ref(7);
-const hourInput = ref(3);
-const minuteInput = ref(0);
+const intervalDayInput = ref(1);
+// set random default value for hour and minute
+const hourInput = ref(Math.floor(Math.random() * 3));
+const minuteInput = ref(Math.floor(Math.random() * 60));
 const isChangesConfirmed = ref(false);
 const inputMsg = ref("");
 const isEditActive = ref(false);
@@ -125,7 +126,7 @@ const areInputsValid = computed(() => {
     return false;
   }
 
-  const dayValid = intervalDayInput.value >= 1 && intervalDayInput.value <= 100;
+  const dayValid = intervalDayInput.value >= 1 && intervalDayInput.value <= 28;
   const hourValid = hourInput.value >= 0 && hourInput.value <= 23;
   const minuteValid = minuteInput.value >= 0 && minuteInput.value <= 59;
 
@@ -150,8 +151,8 @@ const turnOnOff = () => {
 
 const confirmChanges = async () => {
   if (!areInputsValid.value) {
-    if (intervalDayInput.value < 1 || intervalDayInput.value > 100) {
-      inputMsg.value = "Days must be between 1 and 100";
+    if (intervalDayInput.value < 1 || intervalDayInput.value > 28) {
+      inputMsg.value = "Days must be between 1 and 28";
       return;
     }
     if (hourInput.value < 0 || hourInput.value > 23) {
