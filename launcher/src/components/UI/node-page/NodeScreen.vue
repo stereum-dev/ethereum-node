@@ -130,8 +130,9 @@ onUnmounted(() => {
 const openDefaultSetup = () => {
   setupStore.selectedSetup = null;
   if (setupStore.allSetups.filter((s) => s.setupName !== "commonServices").length == 1) {
-    setupStore.allSetups[0].isActive = true;
-    setupStore.selectedSetup = setupStore.allSetups[0];
+    const nonDefaultSetup = setupStore.allSetups.find((s) => s.setupName !== "commonServices");
+    nonDefaultSetup.isActive = true;
+    setupStore.selectedSetup = nonDefaultSetup;
     setupStore.isConfigViewActive = true;
   }
 };
