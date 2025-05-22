@@ -4,7 +4,7 @@
 driver:
   name: docker
 platforms:
-  - name: "update-changes--2.2.4--ubuntu-24.04"
+  - name: "update-changes--2.4.1--ubuntu-24.04"
     image: ubuntu:noble
   # - name: "configure-updates--default--centos-8"
   #   image: geerlingguy/docker-centos8-ansible

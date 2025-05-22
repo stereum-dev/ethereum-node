@@ -1,20 +1,12 @@
-- name: Include 2.2.2 Update Scripts
-  include_tasks: "2.2.2/updates-222.yaml"
-  ignore_errors: yes
-
-- name: Include 2.2.3 Update Scripts
-  include_tasks: "2.2.3/updates-223.yaml"
-  ignore_errors: yes
-
-- name: Include 2.2.4 Update Scripts
-  include_tasks: "2.2.4/updates-224.yaml"
-  ignore_errors: yes
-
 - name: Include 2.3.2 Update Scripts
   include_tasks: "2.3.2/updates-232.yaml"
   ignore_errors: yes
 
 - name: Include 2.3.5 Update Scripts
   include_tasks: "2.3.5/updates-235.yaml"
+  ignore_errors: yes
+
+- name: Include 2.4.1 Update Scripts
+  include_tasks: "2.4.1/updates-241.yaml"
   ignore_errors: yes
 # EOF

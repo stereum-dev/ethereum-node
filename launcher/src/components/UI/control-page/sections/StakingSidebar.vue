@@ -7,7 +7,7 @@
       v-if="controlStore.pickedService == 'exeCons' || controlStore.pickedService == 'vld'"
       class="amsterdam-widget col-start-1 col-span-6 row-start-4 row-span-3 text-white"
     >
-      <AmsterdamComponent v-if="controlStore.pickedService == 'exeCons'" />
+      <PeerToPeer v-if="controlStore.pickedService == 'exeCons'" />
       <TheStaking v-else-if="controlStore.pickedService == 'vld'" />
     </WidgetCard>
     <WidgetCard
@@ -19,9 +19,6 @@
       v-if="controlStore.pickedService == 'exeCons'"
       class="p2pNetwork-widget col-start-1 col-span-6 row-start-10 row-span-3 text-white"
       ><PeersOverTime
-    /></WidgetCard>
-    <WidgetCard v-if="controlStore.pickedService == 'exeCons'" class="p2p-widget col-start-1 col-span-6 row-start-13 row-span-3 text-white"
-      ><PeerToPeer
     /></WidgetCard>
     <WidgetCard class="connected-validator-widget col-start-7 col-span-12 row-start-1 row-span-3 text-white"
       ><ConnectedValidatorWidget v-if="controlStore.pickedService == 'exeCons'" /><ConnectedClientPair
@@ -49,7 +46,6 @@
 <script setup>
 import WidgetCard from "../components/cards/WidgetCard.vue";
 import SelectServiceWidget from "../components/widgets/SelectServiceWidget.vue";
-import AmsterdamComponent from "../components/widgets/AmsterdamComponent.vue";
 import TheStaking from "../components/widgets/TheStaking.vue";
 import EndpointWidget from "../components/widgets/EndpointWidget.vue";
 import PeerToPeer from "../components/widgets/PeerToPeer.vue";
