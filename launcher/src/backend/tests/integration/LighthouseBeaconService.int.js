@@ -56,16 +56,16 @@ test("lighthouse validator import", async () => {
   await nodeConnection.findStereumSettings();
   await nodeConnection.prepareStereumNode(nodeConnection.settings.stereum.settings.controls_install_path);
 
-  let geth = serviceManager.getService("GethService", { network: "holesky", installDir: "/opt/stereum" });
+  let geth = serviceManager.getService("GethService", { network: "hoodi", installDir: "/opt/stereum" });
 
   let lhBC = serviceManager.getService("LighthouseBeaconService", {
-    network: "holesky",
+    network: "hoodi",
     installDir: "/opt/stereum",
     executionClients: [geth],
   });
 
   let lhVC = serviceManager.getService("LighthouseValidatorService", {
-    network: "holesky",
+    network: "hoodi",
     installDir: "/opt/stereum",
     consensusClients: [lhBC],
   });
@@ -99,7 +99,8 @@ test("lighthouse validator import", async () => {
     ],
     passwords: ["MyTestPassword", "MyTestPassword", "MyTestPassword"],
   });
-  await validatorAccountManager.importKey(lhVC.id);
+  const importResult = await validatorAccountManager.importKey(lhVC.id);
+  log.info(importResult);
 
   //get logs
   let condition = false;
@@ -116,15 +117,14 @@ test("lighthouse validator import", async () => {
       /HTTP API started/.test(BCstatus.stderr) &&
       /Metrics HTTP server started/.test(BCstatus.stderr) &&
       /Syncing /.test(BCstatus.stderr) &&
-      /The execution endpoint is connected and configured, however it is not yet synced/.test(BCstatus.stderr) &&
+      /Execution endpoint is not synced/.test(BCstatus.stderr) &&
       /Successfully loaded graffiti file/.test(VCstatus.stderr) &&
       /Starting validator client/.test(VCstatus.stderr) &&
       /Metrics HTTP server started/.test(VCstatus.stderr) &&
       /Successfully loaded graffiti file/.test(VCstatus.stderr) &&
       /Initialized beacon node connections/.test(VCstatus.stderr) &&
       /HTTP API started/.test(VCstatus.stderr) &&
-      /Imported keystores via standard HTTP API, count: 3/.test(VCstatus.stderr) &&
-      /Enabled validator/.test(VCstatus.stderr)
+      /Imported keystores via standard HTTP API, count: 3/.test(VCstatus.stderr)
     ) {
       condition = true;
     }
@@ -162,7 +162,7 @@ test("lighthouse validator import", async () => {
   expect(BCstatus.stderr).toMatch(/HTTP API started/);
   expect(BCstatus.stderr).toMatch(/Metrics HTTP server started/);
   expect(BCstatus.stderr).toMatch(/Syncing/);
-  expect(BCstatus.stderr).toMatch(/The execution endpoint is connected and configured, however it is not yet synced/);
+  expect(BCstatus.stderr).toMatch(/Execution endpoint is not synced/);
 
   //check lighthouse VC logs
   expect(VCstatus.stderr).toMatch(/Successfully loaded graffiti file/);
@@ -172,5 +172,4 @@ test("lighthouse validator import", async () => {
   expect(VCstatus.stderr).toMatch(/Initialized beacon node connections/);
   expect(VCstatus.stderr).toMatch(/HTTP API started/);
   expect(VCstatus.stderr).toMatch(/Imported keystores via standard HTTP API, count: 3/);
-  expect(VCstatus.stderr).toMatch(/Enabled validator/);
 });

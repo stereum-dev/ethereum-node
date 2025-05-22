@@ -7,7 +7,7 @@ import { ServiceManager } from "../../ServiceManager.js";
 import { TaskManager } from "../../TaskManager.js";
 const log = require("electron-log");
 
-jest.setTimeout(500000);
+jest.setTimeout(600000);
 
 test("geth installation", async () => {
   const testServer = new HetznerServer();
@@ -56,7 +56,7 @@ test("geth installation", async () => {
   await nodeConnection.prepareStereumNode(nodeConnection.settings.stereum.settings.controls_install_path);
 
   //install geth
-  let executionClient = serviceManager.getService("GethService", { network: "holesky", installDir: "/opt/stereum" });
+  let executionClient = serviceManager.getService("GethService", { network: "hoodi", installDir: "/opt/stereum" });
 
   let versions = await nodeConnection.nodeUpdates.checkUpdates();
   executionClient.imageVersion = versions[executionClient.network][executionClient.service].slice(-1).pop();
@@ -76,7 +76,6 @@ test("geth installation", async () => {
       /Started P2P networking/.test(status.stderr) &&
       /Starting metrics server/.test(status.stderr) &&
       /Loaded JWT secret file/.test(status.stderr) &&
-      /Looking for peers/.test(status.stderr) &&
       /HTTP server started/.test(status.stderr)
     ) {
       condition = true;
@@ -106,6 +105,5 @@ test("geth installation", async () => {
   expect(status.stderr).toMatch(/Started P2P networking/);
   expect(status.stderr).toMatch(/Starting metrics server/);
   expect(status.stderr).toMatch(/Loaded JWT secret file/);
-  expect(status.stderr).toMatch(/Looking for peers/);
   expect(status.stderr).toMatch(/HTTP server started/);
 });

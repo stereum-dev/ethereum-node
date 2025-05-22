@@ -44,7 +44,7 @@
         owner: "{{ stereum_service_configuration.user }}"
         group: "{{ stereum_service_configuration.user }}"
         mode: 0700
-        recurse: yes
+        recurse: "{{ 'no' if (stereum_service_configuration.service == 'NimbusValidatorService' and item.split(':') | last == '/opt/app/secrets') else 'yes' }}"
       changed_when: false
       become: yes
       when:

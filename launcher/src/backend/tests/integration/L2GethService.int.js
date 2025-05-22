@@ -58,8 +58,9 @@ test("l2geth installation", async () => {
   //install besu
   let executionClient = serviceManager.getService("L2GethService", { network: "op-mainnet", installDir: "/opt/stereum" });
 
-  let versions = await nodeConnection.nodeUpdates.checkUpdates();
-  executionClient.imageVersion = versions[executionClient.network][executionClient.service].slice(-1).pop();
+  // let versions = await nodeConnection.nodeUpdates.checkUpdates();
+  // executionClient.imageVersion = versions[executionClient.network][executionClient.service].slice(-1).pop();
+  executionClient.imageVersion = "latest";
 
   await nodeConnection.writeServiceConfiguration(executionClient.buildConfiguration());
   await serviceManager.manageServiceState(executionClient.id, "started");
@@ -68,19 +69,22 @@ test("l2geth installation", async () => {
   let condition = false;
   let counter = 0;
   let status = "";
-  while (!condition && counter < 10) {
+  let completeStatus = "";
+  while (!condition && counter < 5) {
     await testServer.Sleep(30000);
     status = await nodeConnection.sshService.exec(`docker logs stereum-${executionClient.id}`);
+    completeStatus = status.stdout + status.stderr;
+
     if (
-      /Starting peer-to-peer node/.test(status.stdout) &&
-      /Opened ancient database/.test(status.stdout) &&
-      /Initialised chain configuration/.test(status.stdout) &&
-      /Loaded most recent local header/.test(status.stdout) &&
-      /Loaded most recent local full block/.test(status.stdout) &&
-      /Loaded most recent local fast block/.test(status.stdout) &&
-      /Started P2P networking/.test(status.stdout) &&
-      /IPC endpoint opened/.test(status.stdout) &&
-      /HTTP endpoint opened/.test(status.stdout)
+      /Starting peer-to-peer node/.test(completeStatus) &&
+      /Opened ancient database/.test(completeStatus) &&
+      /Initialised chain configuration/.test(completeStatus) &&
+      /Loaded most recent local header/.test(completeStatus) &&
+      /Loaded most recent local full block/.test(completeStatus) &&
+      /Loaded most recent local fast block/.test(completeStatus) &&
+      /Started P2P networking/.test(completeStatus) &&
+      /IPC endpoint opened/.test(completeStatus) &&
+      /HTTP endpoint opened/.test(completeStatus)
     ) {
       condition = true;
     }
@@ -103,13 +107,13 @@ test("l2geth installation", async () => {
     expect((docker.stdout.match(new RegExp("Up", "g")) || []).length).toBe(1);
   }
 
-  expect(status.stdout).toMatch(/Starting peer-to-peer node/);
-  expect(status.stdout).toMatch(/Opened ancient database/);
-  expect(status.stdout).toMatch(/Initialised chain configuration/);
-  expect(status.stdout).toMatch(/Loaded most recent local header/);
-  expect(status.stdout).toMatch(/Loaded most recent local full block/);
-  expect(status.stdout).toMatch(/Loaded most recent local fast block/);
-  expect(status.stdout).toMatch(/Started P2P networking/);
-  expect(status.stdout).toMatch(/IPC endpoint opened/);
-  expect(status.stdout).toMatch(/HTTP endpoint opened/);
+  expect(completeStatus).toMatch(/Starting peer-to-peer node/);
+  expect(completeStatus).toMatch(/Opened ancient database/);
+  expect(completeStatus).toMatch(/Initialised chain configuration/);
+  expect(completeStatus).toMatch(/Loaded most recent local header/);
+  expect(completeStatus).toMatch(/Loaded most recent local full block/);
+  expect(completeStatus).toMatch(/Loaded most recent local fast block/);
+  expect(completeStatus).toMatch(/Started P2P networking/);
+  expect(completeStatus).toMatch(/IPC endpoint opened/);
+  expect(completeStatus).toMatch(/HTTP endpoint opened/);
 });

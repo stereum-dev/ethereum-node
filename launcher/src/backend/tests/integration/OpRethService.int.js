@@ -58,8 +58,9 @@ test("op-reth installation", async () => {
   //install besu
   let executionClient = serviceManager.getService("OpRethService", { network: "optimism-sepolia", installDir: "/opt/stereum" });
 
-  let versions = await nodeConnection.nodeUpdates.checkUpdates();
-  executionClient.imageVersion = versions[executionClient.network][executionClient.service].slice(-1).pop();
+  // let versions = await nodeConnection.nodeUpdates.checkUpdates();
+  // executionClient.imageVersion = versions[executionClient.network][executionClient.service].slice(-1).pop();
+  executionClient.imageVersion = "latest";
 
   await nodeConnection.writeServiceConfiguration(executionClient.buildConfiguration());
   await serviceManager.manageServiceState(executionClient.id, "started");
@@ -82,7 +83,7 @@ test("op-reth installation", async () => {
       /RPC HTTP server started/.test(status.stdout) &&
       /RPC WS server started/.test(status.stdout) &&
       /RPC IPC server started/.test(status.stdout) &&
-      /Status connected_peers/.test(status.stdout)
+      /Status.*connected_peers/.test(status.stdout)
     ) {
       condition = true;
     }
@@ -114,5 +115,5 @@ test("op-reth installation", async () => {
   expect(status.stdout).toMatch(/RPC HTTP server started/);
   expect(status.stdout).toMatch(/RPC WS server started/);
   expect(status.stdout).toMatch(/RPC IPC server started/);
-  expect(status.stdout).toMatch(/Status connected_peers/);
+  expect(status.stdout).toMatch(/Status.*connected_peers/);
 });

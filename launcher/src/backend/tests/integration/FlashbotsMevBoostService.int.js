@@ -57,9 +57,9 @@ test("mevboost installation", async () => {
 
   //install mevboost
   let mevboost = serviceManager.getService("FlashbotsMevBoostService", {
-    network: "holesky",
+    network: "hoodi",
     relays:
-      "https://0xafa4c6985aa049fb79dd37010438cfebeb0f2bd42b115b89dd678dab0670c1de38da0c4e9138c9290a398ecd9a0b3110@boost-relay-holesky.flashbots.net",
+      "https://0xafa4c6985aa049fb79dd37010438cfebeb0f2bd42b115b89dd678dab0670c1de38da0c4e9138c9290a398ecd9a0b3110@boost-relay-hoodi.flashbots.net",
   });
 
   let versions = await nodeConnection.nodeUpdates.checkUpdates();
@@ -76,7 +76,7 @@ test("mevboost installation", async () => {
     await testServer.Sleep(30000);
     status = await nodeConnection.sshService.exec(`docker logs stereum-${mevboost.id}`);
     if (
-      /Listening on 0.0.0.0:18550/.test(status.stdout) &&
+      /listening on 0.0.0.0:18550/.test(status.stdout) &&
       /using 1 relays/.test(status.stdout) &&
       !/Invalid relay URL/.test(status.stdout)
     ) {
@@ -97,7 +97,7 @@ test("mevboost installation", async () => {
   }
 
   // check if Mevboost service is running properly
-  expect(status.stdout).toMatch(/Listening on 0.0.0.0:18550/);
+  expect(status.stdout).toMatch(/listening on 0.0.0.0:18550/);
   expect(status.stdout).toMatch(/using 1 relays/);
   expect(status.stdout).not.toMatch(/Invalid relay URL/);
 });
