@@ -93,7 +93,7 @@
 </template>
 
 <script setup>
-import StateModal from "../components/modals/StateModal";
+import StateModal from "../components/modals/StateModal.vue";
 import ControlService from "@/store/ControlService";
 import { useServices } from "@/store/services";
 import { useNodeStore } from "@/store/theNode";
