@@ -612,8 +612,15 @@ const exportExitMessage = async () => {
 };
 
 const saveExitMessage = (data, type) => {
+  // Helper to strip a potential `data` wrapper returned by the API
+  const unwrap = (entry) => (entry && entry.data ? entry.data : entry);
+
   const content =
-    type === "single" ? JSON.stringify(data.data, null, 2) : data.map((entry) => JSON.stringify(entry.data, null, 2)).join("\n\n");
+    type === "single"
+      ? JSON.stringify(unwrap(data), null, 2)
+      : data
+          .map((entry) => JSON.stringify(unwrap(entry), null, 2))
+          .join("\n\n");
 
   const fileName = type === "single" ? "single_exit_message.txt" : "multiple_exit_messages.txt";
   const blob = new Blob([content], { type: "application/json;charset=utf-8" });
