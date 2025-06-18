@@ -25,6 +25,7 @@
         @confirm-rename="confirmRename"
         @reset-name="resetName"
         @confirm-feerecepient="confirmFeerecepient"
+        @delete-feerecepient="deleteFeerecepient"
         @confirm-graffiti="confirmGraffiti"
         @confirm-remote="confirmRemote"
         @remove-group="removeGroup"
@@ -57,6 +58,7 @@ const emit = defineEmits([
   "confirmRename",
   "renameSingle",
   "confirmFeerecepient",
+  "deleteFeerecepient",
   "deletePreview",
   "resetName",
   "confirmGraffiti",
@@ -110,6 +112,10 @@ const onDrop = (event) => {
 
 const confirmFeerecepient = (item) => {
   emit("confirmFeerecepient", item);
+};
+
+const deleteFeerecepient = (item) => {
+  emit("deleteFeerecepient");
 };
 
 const confirmGraffiti = (item) => {

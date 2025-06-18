@@ -13,7 +13,18 @@
 
       <p class="mt-2 text-sm text-red-700">{{ alertMessage }}</p>
     </div>
-    <div class="w-full h-full grid grid-cols-12 grid-rows-1 py-[2px]">
+    <div
+      v-if="infoMessage !== ''"
+      role="info"
+      class="absolute -top-[90px] left-14 w-2/3 max-h-36 rounded border-s-4 p-4 z-60 bg-gray-100 border-gray-400 "
+    >
+      <div class="flex items-center gap-2 text-info-800">
+        <strong class="block font-medium">Info</strong>
+      </div>
+
+      <p class="mt-2 text-sm">{{ infoMessage }}</p>
+    </div>
+    <div class="w-full h-full grid grid-cols-13 grid-rows-1 py-[2px]">
       <img
         class="w-6 h-6 self-center col-start-1 col-span-1 justify-self-center"
         src="/img/icon/staking-page-icons/option-fee-recepient.png"
@@ -49,6 +60,14 @@
           <img class="w-4 h-4" src="/img/icon/staking-page-icons/check.png" alt="Check Icon" @mousedown.prevent />
         </div>
       </div>
+      <div class="col-start-13 col-span-1 flex justify-center items-center p-1">
+        <div
+          class="w-6 h-6 rounded-md bg-[#171D22] p-1 flex justify-center items-center hover:scale-110 border border-[#171D22] active:scale-100 hover:shadow-md hover:shadow-[#101214] hover:border-[#3f4851] active:shadow-none transition-all duration-150"
+          @click="deleteFeerecepient"
+        >
+          <img class="w-4 h-4" src="/img/icon/edit-node-icons/service-delete.png" alt="Check Icon" @mousedown.prevent />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -56,7 +75,7 @@
 import { ref, watch, computed } from "vue";
 import { useStakingStore } from "@/store/theStaking";
 
-const emit = defineEmits(["confirmFeerecepient"]);
+const emit = defineEmits(["confirmFeerecepient","deleteFeerecepient"]);
 const stakingStore = useStakingStore();
 
 const validName = ref("");
@@ -64,6 +83,7 @@ const alertMessage = ref("");
 const isAddressValid = ref(false);
 
 const feeRecepientAddress = computed(() => stakingStore.enteredFeeRecipientAddress);
+const infoMessage = computed(() => stakingStore.feeRecipientInfoMessage || "");
 
 const inputClass = computed(() => {
   if (!feeRecepientAddress.value) {
@@ -82,7 +102,7 @@ watch(feeRecepientAddress, (newValue) => {
   const isValidEthereumAddress = /^0x[a-fA-F0-9]{40}$/.test(trimmedName);
 
   if (!trimmedName) {
-    alertMessage.value = "Please enter a wallet address";
+    alertMessage.value = "";
     isAddressValid.value = false;
   } else if (!isValidEthereumAddress) {
     alertMessage.value = "Invalid wallet address";
@@ -97,11 +117,16 @@ watch(feeRecepientAddress, (newValue) => {
 
 const confirmFeerecepient = () => {
   if (!isAddressValid.value) return;
+  stakingStore.feeRecipientInfoMessage = `Applying new fee recipient address...`;
   emit("confirmFeerecepient", stakingStore.feeRecepientAddress);
 };
 const cancelFeeRecepient = () => {
   stakingStore.keys.find((key) => key.key === stakingStore.selectKeyForFee.key).selected = false;
   stakingStore.enteredFeeRecipientAddress = "";
   stakingStore.setActivePanel(null);
+};
+const deleteFeerecepient = () => {
+  stakingStore.feeRecipientInfoMessage = `Deleting current fee recipient address...`;
+  emit("deleteFeerecepient");
 };
 </script>

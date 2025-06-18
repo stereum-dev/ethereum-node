@@ -203,6 +203,8 @@ import { useSetups } from "@/store/setups";
 import { useFooter } from "@/store/theFooter";
 import { useStakingStore } from "@/store/theStaking";
 import { computed } from "vue";
+import ControlService from '@/store/ControlService';
+
 
 const props = defineProps({
   item: {
@@ -448,7 +450,12 @@ const withdrawHandler = () => {
   stakingStore.setActiveModal("withdraw");
 };
 
-const FeeRecepient = () => {
+const FeeRecepient = async () => {
+  stakingStore.feeRecipientInfoMessage = "Loading fee recipient address...";
+  ControlService.getFeeRecipient({serviceID: props.item.validatorID, pubkey: props.item.key})
+    .then((res) => {
+      stakingStore.feeRecipientInfoMessage = res.data?.ethaddress || "";
+    })
   props.item.selected = true;
   stakingStore.selectKeyForFee = props.item;
   stakingStore.setActivePanel(null);

@@ -19,6 +19,7 @@
         @reset-name="resetValidatorKeyName"
         @withdraw-single="withdrawModalHandler"
         @confirm-feerecepient="confirmFeeRecepient"
+        @delete-feerecepient="deleteFeeRecepient"
         @delete-preview="deletePreviewKey"
         @confirm-graffiti="confirmEnteredGrafiti"
         @confirm-remote="confirmImportRemoteKeys"
@@ -447,13 +448,21 @@ const confirmFeeRecepient = async () => {
       pubkey: key.key,
       address: stakingStore.enteredFeeRecipientAddress,
     });
-    stakingStore.enteredFeeRecipientAddress = "";
-  } else {
+  }
+  key.selected = false;
+  stakingStore.enteredFeeRecipientAddress = "";
+  stakingStore.setActivePanel(null);
+};
+
+const deleteFeeRecepient = async (item) => {
+  const key = stakingStore.selectKeyForFee;
+  if (key){
     await ControlService.deleteFeeRecipient({
       serviceID: key.validatorID,
       pubkey: key.key,
     });
   }
+  key.selected = false;
   stakingStore.enteredFeeRecipientAddress = "";
   stakingStore.setActivePanel(null);
 };
