@@ -454,9 +454,9 @@ const confirmFeeRecepient = async () => {
   stakingStore.setActivePanel(null);
 };
 
-const deleteFeeRecepient = async (item) => {
+const deleteFeeRecepient = async () => {
   const key = stakingStore.selectKeyForFee;
-  if (key){
+  if (key) {
     await ControlService.deleteFeeRecipient({
       serviceID: key.validatorID,
       pubkey: key.key,

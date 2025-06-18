@@ -115,7 +115,7 @@ const confirmFeerecepient = (item) => {
 };
 
 const deleteFeerecepient = (item) => {
-  emit("deleteFeerecepient");
+  emit("deleteFeerecepient", item);
 };
 
 const confirmGraffiti = (item) => {

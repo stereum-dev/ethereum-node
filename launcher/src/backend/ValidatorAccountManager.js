@@ -302,7 +302,12 @@ export class ValidatorAccountManager {
       if (picked) return data.slashing_protection;
       return data;
     } catch (err) {
-      this.nodeConnection.taskManager.otherTasksHandler(ref, `Deleting Keys Failed`, false, "Deleting Validators Failed:\n" + JSON.stringify(err));
+      this.nodeConnection.taskManager.otherTasksHandler(
+        ref,
+        `Deleting Keys Failed`,
+        false,
+        "Deleting Validators Failed:\n" + JSON.stringify(err)
+      );
       this.nodeConnection.taskManager.otherTasksHandler(ref);
       log.error("Deleting Validators Failed:\n", JSON.stringify(err));
       return err;

@@ -16,7 +16,7 @@
     <div
       v-if="infoMessage !== ''"
       role="info"
-      class="absolute -top-[90px] left-14 w-2/3 max-h-36 rounded border-s-4 p-4 z-60 bg-gray-100 border-gray-400 "
+      class="absolute -top-[90px] left-14 w-2/3 max-h-36 rounded border-s-4 p-4 z-60 bg-gray-100 border-gray-400"
     >
       <div class="flex items-center gap-2 text-info-800">
         <strong class="block font-medium">Info</strong>
@@ -75,7 +75,7 @@
 import { ref, watch, computed } from "vue";
 import { useStakingStore } from "@/store/theStaking";
 
-const emit = defineEmits(["confirmFeerecepient","deleteFeerecepient"]);
+const emit = defineEmits(["confirmFeerecepient", "deleteFeerecepient"]);
 const stakingStore = useStakingStore();
 
 const validName = ref("");
