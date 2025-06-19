@@ -60,6 +60,7 @@ export class TekuBeaconService extends NodeService {
         "--rest-api-docs-enabled=true",
         "--rest-api-enabled=true",
         "--log-destination=CONSOLE",
+        "--beacon-liveness-tracking-enabled=true",
       ], // command
       ["/opt/teku/bin/teku"], // entrypoint
       { JAVA_OPTS: "-Xmx6g" }, // env
