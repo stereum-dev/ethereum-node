@@ -2131,7 +2131,7 @@ export class NodeConnection {
             true,
             err + "\n\n" + (retry.maxTries - retry.counter) + " tries left."
           );
-          log.info(" Could not connect.\n" + (retry.maxTries - retry.counter) + " tries left.");
+          log.info("Could not connect. " + (retry.maxTries - retry.counter) + " tries left.");
           await new Promise((resolve) => setTimeout(resolve, 5000)); // Wait 5 seconds before retrying
         }
       }
