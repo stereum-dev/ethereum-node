@@ -87,12 +87,6 @@ export class ErigonService extends NodeService {
     return "stereum-" + this.id + ":6060";
   }
 
-  buildPrometheusJob() {
-    return `\n  - job_name: stereum-${
-      this.id
-    }\n    metrics_path: /debug/metrics/prometheus\n    static_configs:\n      - targets: [${this.buildExecutionClientMetricsEndpoint()}]`;
-  }
-
   getDataDir() {
     return this.volumes.find((volume) => volume.servicePath === "/opt/data/erigon")?.destinationPath;
   }

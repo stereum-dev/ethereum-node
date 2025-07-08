@@ -77,7 +77,8 @@ test("lodestar validator import", async () => {
   lBC.imageVersion = versions[lBC.network][lBC.service].slice(-1).pop();
   lVC.imageVersion = versions[lVC.network][lVC.service].slice(-1).pop();
 
-  await nodeConnection.writeServiceConfiguration(geth.buildConfiguration()), await serviceManager.manageServiceState(geth.id, "started");
+  await serviceManager.manageServiceState(geth.id, "started");
+  await nodeConnection.writeServiceConfiguration(geth.buildConfiguration());
 
   //write configs for lodestar BC and VC
   await nodeConnection.writeServiceConfiguration(lBC.buildConfiguration());

@@ -2111,10 +2111,10 @@ export class NodeConnection {
       this.taskManager.otherTasksHandler(ref, "trigger restart", true);
       await this.sshService.disconnect();
       await new Promise((resolve) => setTimeout(resolve, 10000)); // Wait for the disconnect to be fully done
-      const retry = { connected: false, counter: 0, maxTries: 300 };
+      const retry = { connected: false, counter: 0, maxTries: 60 };
       log.info("Connecting via SSH");
 
-      while (!retry.connected && retry.counter < retry.maxTries) {
+      while (!retry.connected && retry.counter <= retry.maxTries) {
         try {
           retry.counter++;
           log.info(`Trying to connect (${retry.counter})`);
@@ -2131,10 +2131,11 @@ export class NodeConnection {
             true,
             err + "\n\n" + (retry.maxTries - retry.counter) + " tries left."
           );
-          log.info(" Could not connect.\n" + (retry.maxTries - retry.counter) + " tries left.");
+          log.info("Could not connect. " + (retry.maxTries - retry.counter) + " tries left.");
+          await new Promise((resolve) => setTimeout(resolve, 5000)); // Wait 5 seconds before retrying
         }
       }
-      log.info("OUT OF WHILE LOOP");
+
       if (retry.connected) {
         await this.establish(this.taskManager);
         this.taskManager.otherTasksHandler(ref, "Connected", true);

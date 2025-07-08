@@ -153,10 +153,6 @@ export class PrysmBeaconService extends NodeService {
     return "stereum-" + this.id + ":8080";
   }
 
-  buildPrometheusJob() {
-    return `\n  - job_name: stereum-${this.id}\n    static_configs:\n      - targets: [${this.buildConsensusClientMetricsEndpoint()}]`;
-  }
-
   getDataDir() {
     return this.volumes.find((volume) => volume.servicePath === "/opt/app/beacon")?.destinationPath;
   }

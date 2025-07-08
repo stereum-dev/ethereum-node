@@ -80,10 +80,6 @@ export class BesuService extends NodeService {
     return "stereum-" + this.id + ":9545";
   }
 
-  buildPrometheusJob() {
-    return `\n  - job_name: stereum-${this.id}\n    static_configs:\n      - targets: [${this.buildExecutionClientMetricsEndpoint()}]`;
-  }
-
   getDataDir() {
     return this.volumes.find((volume) => volume.servicePath === "/opt/app/data")?.destinationPath;
   }
