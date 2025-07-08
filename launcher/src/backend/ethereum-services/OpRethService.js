@@ -88,12 +88,6 @@ export class OpRethService extends NodeService {
   buildExecutionClientMetricsEndpoint() {
     return "stereum-" + this.id + ":6060";
   }
-
-  buildPrometheusJob() {
-    return `\n  - job_name: stereum-${
-      this.id
-    }\n    metrics_path: /debug/metrics/prometheus\n    static_configs:\n      - targets: [${this.buildExecutionClientMetricsEndpoint()}]`;
-  }
 }
 
 // EOF

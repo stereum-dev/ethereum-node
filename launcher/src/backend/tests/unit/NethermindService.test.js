@@ -47,11 +47,6 @@ test("buildExecutionClientMetricsEndpoint", () => {
   expect(nethermindMetricsEndpoint).toMatch(/stereum-.{36}:6060/);
 });
 
-test("buildPrometheusJob", () => {
-  const nethermindPrometheusJob = NethermindService.buildByUserInput("goerli", [], "/opt/stereum/nethermind").buildPrometheusJob();
-  expect(nethermindPrometheusJob).toMatch(/\n {2}- job_name: stereum-.{36}\n {4}static_configs:\n {6}- targets: \[stereum-.{36}:6060]/);
-});
-
 test("buildByConfiguration", () => {
   const nethermind = NethermindService.buildByConfiguration({
     id: "297",

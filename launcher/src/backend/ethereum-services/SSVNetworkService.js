@@ -95,10 +95,6 @@ SSVAPIPort: 16000`;
     return "stereum-" + this.id + ":16000";
   }
 
-  buildPrometheusJob() {
-    return `\n  - job_name: ssv\n    metrics_path: /metrics\n    static_configs:\n      - targets: [${this.buildValidatorClientMetricsEndpoint()}]\n  - job_name: ssv_health\n    metrics_path: /health\n    static_configs:\n      - targets: [${this.buildValidatorClientMetricsEndpoint()}]`;
-  }
-
   getAvailablePorts() {
     return [
       new ServicePortDefinition(13000, "tcp", "P2P connections"),

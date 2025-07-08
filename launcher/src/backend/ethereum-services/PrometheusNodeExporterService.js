@@ -40,10 +40,4 @@ export class PrometheusNodeExporterService extends NodeService {
   buildPrometheusNodeExporterClientMetricsEndpoint() {
     return "stereum-" + this.id + ":9100";
   }
-
-  buildPrometheusJob() {
-    return `\n  - job_name: stereum-${
-      this.id
-    }\n    static_configs:\n      - targets: [${this.buildPrometheusNodeExporterClientMetricsEndpoint()}]`;
-  }
 }

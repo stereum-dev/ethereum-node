@@ -36,11 +36,6 @@ test("buildExecutionClientMetricsEndpoint", () => {
   expect(besuMetricsEndpoint).toMatch(/stereum-.{36}:9545/);
 });
 
-test("buildPrometheusJob", () => {
-  const besuPrometheusJob = BesuService.buildByUserInput("goerli", [], "/opt/stereum/besu").buildPrometheusJob();
-  expect(besuPrometheusJob).toMatch(/\n {2}- job_name: stereum-.{36}\n {4}static_configs:\n {6}- targets: \[stereum-.{36}:9545]/);
-});
-
 test("buildByConfiguration", () => {
   const besu = BesuService.buildByConfiguration({
     id: "297",

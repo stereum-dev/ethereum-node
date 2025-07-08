@@ -103,10 +103,6 @@ export class GrandineBeaconService extends NodeService {
     return "stereum-" + this.id + ":5054";
   }
 
-  buildPrometheusJob() {
-    return `\n  - job_name: stereum-${this.id}\n    static_configs:\n      - targets: [${this.buildConsensusClientMetricsEndpoint()}]`;
-  }
-
   getDataDir() {
     return this.volumes.find((volume) => volume.servicePath === "/opt/app/data")?.destinationPath;
   }

@@ -105,12 +105,6 @@ export class TekuBeaconService extends NodeService {
     return "stereum-" + this.id + ":8008";
   }
 
-  buildPrometheusJob() {
-    return `\n  - job_name: stereum-${
-      this.id
-    }\n    scrape_timeout: 10s\n    metrics_path: /metrics\n    scheme: http\n    static_configs:\n      - targets: [${this.buildConsensusClientMetricsEndpoint()}]`;
-  }
-
   getDataDir() {
     return this.volumes.find((volume) => volume.servicePath === "/opt/app/data")?.destinationPath;
   }
