@@ -26,7 +26,7 @@
     "stereum": "concurrently \"npm:electron:serve\" \"npm:watch:css\"",
     "backend:watch": "nodemon --watch 'src/backend' --exec 'npm run electron:serve'",
     "format": "prettier .  --write",
-    "format:check": "prettier .  --check"
+    "format:check": "prettier .  --check --list-different"
   },
   "dependencies": {
     "@headlessui/vue": "^1.7.23",
