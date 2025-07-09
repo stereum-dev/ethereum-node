@@ -1120,8 +1120,11 @@ export class ValidatorAccountManager {
         const response = await axios.get(
           `https://api.ssv.network/api/v4/${service.network}/operators/public_key/` + ssvConfig.privateKeyFileData.publicKey
         );
-        if (response.status !== 200 && !response?.data?.data?.id)
-          throw new Error(`Couldn't get Operator ID from SSV Network ${response.status} ${response.statusText}`);
+
+        if (response.status !== 200 || !response?.data?.data?.id)
+          throw new Error(
+            `Couldn't get Operator ID from SSV Network ${response.status} ${response.statusText}${response?.data ? "\n" + JSON.stringify(response.data) : ""}`
+          );
         const operatorID = response.data.data.id;
 
         //get pagination info
