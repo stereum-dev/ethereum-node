@@ -1437,7 +1437,7 @@
           "datasource": "${DS_PROMETHEUS}",
           "editorMode": "code",
           "exemplar": false,
-          "expr": "rate(app_start_time_secs{cluster_name=\"$cluster_name\",cluster_hash=\"$cluster_hash\",cluster_peer=\"$cluster_peer\"}) > 0",
+          "expr": "rate(app_start_time_secs{cluster_name=\"$cluster_name\",cluster_hash=\"$cluster_hash\",cluster_peer=\"$cluster_peer\"}[5m]) > 0",
           "hide": false,
           "instant": false,
           "interval": "$interval",
@@ -6380,25 +6380,6 @@
     "list": [
       {
         "current": {
-          "selected": false,
-          "text": "default",
-          "value": "default"
-        },
-        "hide": 0,
-        "includeAll": false,
-        "label": "datasource",
-        "multi": false,
-        "name": "DS_PROMETHEUS",
-        "options": [],
-        "query": "prometheus",
-        "queryValue": "",
-        "refresh": 1,
-        "regex": "",
-        "skipUrlSync": false,
-        "type": "datasource"
-      },
-      {
-        "current": {
           "selected": true,
           "text": [
             "All"
@@ -6443,9 +6424,14 @@
             "selected": false,
             "text": "gnosis",
             "value": "gnosis"
+          },
+          {
+            "selected": false,
+            "text": "hoodi",
+            "value": "hoodi"
           }
         ],
-        "query": "mainnet,goerli,holesky,sepolia,gnosis",
+        "query": "mainnet,goerli,holesky,sepolia,gnosis,hoodi",
         "queryValue": "",
         "skipUrlSync": false,
         "type": "custom"
@@ -6453,8 +6439,8 @@
       {
         "current": {
           "selected": false,
-          "text": "test-lido-cluster",
-          "value": "test-lido-cluster"
+          "text": "test-cluster",
+          "value": "test-cluster"
         },
         "datasource": "${DS_PROMETHEUS}",
         "definition": "label_values(app_peer_name{cluster_network=~\"$cluster_network\"},cluster_name)",
