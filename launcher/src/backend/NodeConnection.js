@@ -29,6 +29,7 @@ export class NodeConnection {
     this.nodeConnectionParams = nodeConnectionParams;
     this.os = null;
     this.osv = null;
+    this.settings = null;
     this.nodeUpdates = new NodeUpdates(this);
     this.configManager = new ConfigManager(this);
   }

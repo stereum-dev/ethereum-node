@@ -5,9 +5,13 @@
     state: absent
   become: yes
 
+- name: Set lane suffix
+  set_fact:
+    updates_lane_suffix: "{{ '.dev' if (stereum.settings.updates.lane | default('stable')) == 'dev' else '' }}"
+
 - name: Download update metadata
   uri:
-    url: https://stereum.net/downloads/updates.json
+    url: "https://stereum.net/downloads/updates{{ updates_lane_suffix }}.json"
     method: GET
     return_content: true
     status_code: 200
