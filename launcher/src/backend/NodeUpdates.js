@@ -37,10 +37,10 @@ export class NodeUpdates {
    * @returns {Object} - updates available for services
    */
   async checkUpdates() {
-    if (!this.nodeConnection?.settings?.lane) {
+    if (!this.nodeConnection.settings?.stereum?.settings?.updates?.lane) {
       await this.nodeConnection.findStereumSettings();
     }
-    const lane = this.nodeConnection?.settings?.lane || "stable";
+    const lane = this.nodeConnection.settings?.stereum?.settings?.updates?.lane || "stable";
     let response = await axios.get(`https://stereum.net/downloads/updates${lane == "dev" ? ".dev" : ""}.json`);
     if (global.branch === "main") response.data.stereum.push({ name: "HEAD", commit: "main" });
     return response.data;

@@ -110,7 +110,7 @@ test("findStereumSettings failure", async () => {
 
   await nodeConnection.findStereumSettings();
 
-  expect(nodeConnection.settings).toBeUndefined();
+  expect(nodeConnection.settings).toBeNull();
 });
 
 test("prepareStereumNode failure ubuntu installpkg", async () => {
@@ -188,6 +188,7 @@ test("prepareStereumNode failure ubuntu install", async () => {
   mMock
     .mockReturnValueOnce({ rc: 0, stdout: "ubuntu" }) // find OS
     .mockReturnValueOnce({ rc: 0 }) // install pkg
+    .mockReturnValueOnce({ rc: 0, stdout: "stereum_settings:\n  settings:\n    controls_install_path: /opt/tests" }) // find settings
     .mockReturnValueOnce({ rc: 1, stderr: "" }); // install
   SSHService.SSHService.mockImplementation(() => {
     return {
@@ -203,7 +204,7 @@ test("prepareStereumNode failure ubuntu install", async () => {
     expect(e).toEqual(new Error("Can't install ansible role: <stderr empty>"));
   });
 
-  expect(mMock.mock.calls.length).toBe(4);
+  expect(mMock.mock.calls.length).toBe(5);
 });
 
 test("prepareStereumNode error ubuntu install", async () => {
@@ -214,6 +215,7 @@ test("prepareStereumNode error ubuntu install", async () => {
     .mockReturnValueOnce({ rc: 0, stdout: "ubuntu" }) // find OS
     .mockReturnValueOnce({ rc: 0 }) // delete ansible roles if exist
     .mockReturnValueOnce({ rc: 0 }) // install pkg
+    .mockReturnValueOnce({ rc: 0, stdout: "stereum_settings:\n  settings:\n    controls_install_path: /opt/tests" }) // find settings
     .mockRejectedValue("connection lost"); // install
   SSHService.SSHService.mockImplementation(() => {
     return {
@@ -229,7 +231,7 @@ test("prepareStereumNode error ubuntu install", async () => {
     expect(e).toEqual(new Error("Can't install ansible roles: connection lost"));
   });
 
-  expect(mMock.mock.calls.length).toBe(4);
+  expect(mMock.mock.calls.length).toBe(5);
 });
 
 test("prepareStereumNode success", async () => {
@@ -239,8 +241,9 @@ test("prepareStereumNode success", async () => {
   mMock
     .mockReturnValueOnce({ rc: 0, stdout: "stereum_settings:\n  settings:\n    controls_install_path: /opt/tests" }) // find settings
     .mockReturnValueOnce({ rc: 0, stdout: "ubuntu" }) // find OS
-    .mockReturnValueOnce({ rc: 0 }) // delete ansible roles if exist
     .mockReturnValueOnce({ rc: 0 }) // install pkg
+    .mockReturnValueOnce({ rc: 0 }) // delete ansible roles if exist
+    .mockReturnValueOnce({ rc: 0, stdout: "stereum_settings:\n  settings:\n    controls_install_path: /opt/tests" }) // find settings
     .mockReturnValueOnce({ rc: 0 }) // install
     .mockReturnValueOnce({ rc: 0 }) // playbook ansible
     .mockReturnValueOnce({ rc: 0 }); // playbook ansible
@@ -267,7 +270,7 @@ test("prepareStereumNode success", async () => {
     playbookRunRef: expect.any(String),
   });
 
-  expect(mMock.mock.calls.length).toBe(7);
+  expect(mMock.mock.calls.length).toBe(8);
 
   expect(mMock.mock.calls[0][0]).toMatch(/cat/);
   expect(mMock.mock.calls[0][0]).toMatch(/stereum.yaml/);
@@ -277,10 +280,13 @@ test("prepareStereumNode success", async () => {
 
   expect(mMock.mock.calls[2][0]).toMatch(/apt install/);
 
-  expect(mMock.mock.calls[4][0]).toMatch(/git checkout/);
+  expect(mMock.mock.calls[4][0]).toMatch(/cat/);
+  expect(mMock.mock.calls[4][0]).toMatch(/stereum.yaml/);
 
-  expect(mMock.mock.calls[5][0]).toMatch(/ansible-playbook/);
-  expect(mMock.mock.calls[5][0]).toMatch(/ansible-playbook/);
+  expect(mMock.mock.calls[5][0]).toMatch(/git checkout/);
+
+  expect(mMock.mock.calls[6][0]).toMatch(/ansible-playbook/);
+  expect(mMock.mock.calls[6][0]).toMatch(/ansible-playbook/);
 });
 
 test("prepareStereumNode error playbook", async () => {
@@ -292,6 +298,7 @@ test("prepareStereumNode error playbook", async () => {
     .mockReturnValueOnce({ rc: 0, stdout: "ubuntu" }) // find OS
     .mockReturnValueOnce({ rc: 0 }) // delete ansible roles if exist
     .mockReturnValueOnce({ rc: 0 }) // install pkg
+    .mockReturnValueOnce({ rc: 0, stdout: "stereum_settings:\n  settings:\n    controls_install_path: /opt/tests" }) // find settings
     .mockReturnValueOnce({ rc: 0 }) // install
     .mockRejectedValue("connection interrupted"); // playbook ansible
   SSHService.SSHService.mockImplementation(() => {
@@ -309,16 +316,19 @@ test("prepareStereumNode error playbook", async () => {
     expect(e).toEqual(new Error("Can't run setup playbook: Error: Can't run playbook: connection interrupted"));
   });
 
-  expect(mMock.mock.calls.length).toBe(6);
+  expect(mMock.mock.calls.length).toBe(7);
 
   expect(mMock.mock.calls[1][0]).toMatch(/cat/);
   expect(mMock.mock.calls[1][0]).toMatch(/release/);
 
   expect(mMock.mock.calls[2][0]).toMatch(/apt install/);
 
-  expect(mMock.mock.calls[4][0]).toMatch(/git checkout/);
+  expect(mMock.mock.calls[4][0]).toMatch(/cat/);
+  expect(mMock.mock.calls[4][0]).toMatch(/stereum.yaml/);
 
-  expect(mMock.mock.calls[5][0]).toMatch(/ansible-playbook/);
+  expect(mMock.mock.calls[5][0]).toMatch(/git checkout/);
+
+  expect(mMock.mock.calls[6][0]).toMatch(/ansible-playbook/);
 });
 
 test("prepareStereumNode failure playbook", async () => {
@@ -326,10 +336,11 @@ test("prepareStereumNode failure playbook", async () => {
   const SSHService = require("../../SSHService");
   const mMock = jest.fn();
   mMock
-    .mockReturnValueOnce({ rc: 0, stdout: "stereum_settings:\n  settings:\n    controls_install_path: /opt/tests" }) // find settings
+    .mockReturnValueOnce({ rc: 0, stdout: "stereum_settings:\n  settings:\n    controls_install_path: /opt/tests\n    lane: stable" }) // find settings
     .mockReturnValueOnce({ rc: 0, stdout: "ubuntu" }) // find OS
     .mockReturnValueOnce({ rc: 0 }) // delete ansible roles if exist
     .mockReturnValueOnce({ rc: 0 }) // install pkg
+    .mockReturnValueOnce({ rc: 0, stdout: "stereum_settings:\n  settings:\n    controls_install_path: /opt/tests\n    lane: stable" }) // find settings
     .mockReturnValueOnce({ rc: 0 }) // install
     .mockReturnValueOnce({ rc: 1, stderr: "asdf" }); // playbook ansible
   SSHService.SSHService.mockImplementation(() => {
@@ -347,15 +358,18 @@ test("prepareStereumNode failure playbook", async () => {
     expect(e).toEqual(new Error("Can't run setup playbook: Error: Failed running 'setup': asdf"));
   });
 
-  expect(mMock.mock.calls.length).toBe(6);
+  expect(mMock.mock.calls.length).toBe(7);
   expect(mMock.mock.calls[1][0]).toMatch(/cat/);
   expect(mMock.mock.calls[1][0]).toMatch(/release/);
 
   expect(mMock.mock.calls[2][0]).toMatch(/apt install/);
 
-  expect(mMock.mock.calls[4][0]).toMatch(/git checkout/);
+  expect(mMock.mock.calls[4][0]).toMatch(/cat/);
+  expect(mMock.mock.calls[4][0]).toMatch(/stereum.yaml/);
 
-  expect(mMock.mock.calls[5][0]).toMatch(/ansible-playbook/);
+  expect(mMock.mock.calls[5][0]).toMatch(/git checkout/);
+
+  expect(mMock.mock.calls[6][0]).toMatch(/ansible-playbook/);
 });
 
 test("playbookStatus error", async () => {
