@@ -17,7 +17,7 @@
 <script setup>
 import { ref } from "vue";
 import CustomModal from "./CustomModal.vue";
-import SwitchContent from "./SwitchContent";
+import SwitchContent from "./SwitchContent.vue";
 import { useClickInstall } from "@/store/clickInstallation";
 
 const installStore = useClickInstall();

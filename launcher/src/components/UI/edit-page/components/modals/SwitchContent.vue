@@ -55,7 +55,7 @@
 import { ref, computed } from "vue";
 import { useServices } from "@/store/services";
 import { useSetups } from "@/store/setups";
-import SyncCarousel from "../edit/SyncCarousel";
+import SyncCarousel from "../edit/SyncCarousel.vue";
 
 const props = defineProps({
   client: {
