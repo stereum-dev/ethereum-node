@@ -50,7 +50,6 @@ export class TekuValidatorService extends NodeService {
         `--validator-api-keystore-file=${dataDir}/teku_api_keystore`,
         `--validator-api-keystore-password-file=${dataDir}/teku_api_password.txt`,
         "--validators-builder-registration-default-enabled=true",
-        "--validators-proposer-blinded-blocks-enabled=true",
         "--doppelganger-detection-enabled=true",
       ], // command
       ["/opt/teku/bin/teku"], // entrypoint

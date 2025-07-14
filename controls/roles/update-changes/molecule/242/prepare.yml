@@ -1,0 +1,67 @@
+---
+- name: Prepare
+  hosts: all
+  tasks:
+    - name: Make sure Stereum's config path exists
+      file:
+        path: "/etc/stereum/services"
+        state: directory
+        owner: "root"
+        group: "root"
+        mode: 0644
+      become: yes
+
+    - name: Create ValidatorEjectorService config
+      copy:
+        dest: "/etc/stereum/services/365500b1-285c-f88d-7d6c-3cde7b3ed973.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: TekuValidatorService
+          id: 365500b1-285c-f88d-7d6c-3cde7b3ed973
+          configVersion: 1
+          command:
+            - vc
+            - --beacon-node-api-endpoint=http://stereum-5c7d873b-bf84-5b58-ffcc-7d9c115f5365:5051
+            - --network=hoodi
+            - --logging=INFO
+            - --data-path=/opt/app/data
+            - --validators-keystore-locking-enabled=true
+            - --validators-proposer-default-fee-recipient=0x0000000000000000000000000000000000000000
+            - --validators-graffiti-file=/opt/app/graffitis/graffitis.yaml
+            - --log-destination=CONSOLE
+            - --metrics-enabled=true
+            - --metrics-port=8008
+            - --metrics-interface=0.0.0.0
+            - --metrics-host-allowlist=*
+            - --metrics-publish-interval=10
+            - --validator-api-enabled=true
+            - --validator-api-port=5052
+            - --validator-api-host-allowlist=*
+            - --validator-api-cors-origins=*
+            - --validator-api-keystore-file=/opt/app/data/teku_api_keystore
+            - --validator-api-keystore-password-file=/opt/app/data/teku_api_password.txt
+            - --validators-builder-registration-default-enabled=true
+            - --validators-proposer-blinded-blocks-enabled=true
+            - --doppelganger-detection-enabled=true
+          entrypoint:
+            - /opt/teku/bin/teku
+          env:
+            JAVA_OPTS: -Xmx4g
+          image: consensys/teku:25.4.1
+          ports: []
+          volumes:
+            - /opt/stereum/teku-365500b1-285c-f88d-7d6c-3cde7b3ed973/data:/opt/app/data
+            - /opt/stereum/teku-365500b1-285c-f88d-7d6c-3cde7b3ed973/graffitis:/opt/app/graffitis
+          user: "2000"
+          autoupdate: true
+          network: hoodi
+          dependencies:
+            executionClients: []
+            consensusClients:
+              - service: TekuBeaconService
+                id: 5c7d873b-bf84-5b58-ffcc-7d9c115f5365
+            mevboost: []
+            otherServices: []
+      become: yes
