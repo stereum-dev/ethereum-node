@@ -1,0 +1,19 @@
+---
+- name: Read service file
+  slurp:
+    src: "{{ config_file.path }}"
+  register: service_configuration_raw
+
+- name: Parse service's configuration
+  set_fact:
+    service_configuration: "{{ service_configuration_raw['content'] | b64decode | from_yaml }}"
+    service_configuration_text: "{{ service_configuration_raw['content'] | b64decode }}"
+
+- name: Teku Changes
+  when: service_configuration.service == "TekuValidatorService"
+  block:
+    - name: remove --validators-proposer-blinded-blocks-enabled
+      lineinfile:
+        path: "{{ config_file.path }}"
+        regex: "--validators-proposer-blinded-blocks-enabled"
+        state: absent
