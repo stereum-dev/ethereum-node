@@ -31,7 +31,7 @@
 
 <script setup>
 import { useNodeManage } from "@/store/nodeManage";
-import ChangesBox from "../components/changes/ChangesBox";
+import ChangesBox from "../components/changes/ChangesBox.vue";
 import { useFooter } from "@/store/theFooter";
 import i18n from "@/includes/i18n";
 
