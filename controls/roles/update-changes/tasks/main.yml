@@ -6,10 +6,6 @@
   include_tasks: "2.3.5/updates-235.yaml"
   ignore_errors: yes
 
-- name: Include 2.4.1 Update Scripts
-  include_tasks: "2.4.1/updates-241.yaml"
-  ignore_errors: yes
-
 - name: Include 2.4.2 Update Scripts
   include_tasks: "2.4.2/updates-242.yaml"
   ignore_errors: yes

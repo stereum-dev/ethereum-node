@@ -1,0 +1,43 @@
+---
+- name: Read service file
+  slurp:
+    src: "{{ config_file.path }}"
+  register: service_configuration_raw
+
+- name: Parse service's configuration
+  set_fact:
+    service_configuration: "{{ service_configuration_raw['content'] | b64decode | from_yaml }}"
+    service_configuration_text: "{{ service_configuration_raw['content'] | b64decode }}"
+    mainnet_oracle_allowlist: '["0x73181107c8D9ED4ce0bbeF7A0b4ccf3320C41d12","0x285f8537e1dAeEdaf617e96C742F2Cf36d63CcfB","0x404335BcE530400a5814375E7Ec1FB55fAff3eA2","0x946D3b081ed19173dC83Cd974fC69e1e760B7d78","0x007DE4a5F7bc37E2F26c0cb2E8A95006EE9B89b5","0xc79F702202E3A6B0B6310B537E786B9ACAA19BAf","0x61c91ECd902EB56e314bB2D5c5C07785444Ea1c8","0xe57B3792aDCc5da47EF4fF588883F0ee0c9835C9","0x4118DAD7f348A4063bD15786c299De2f3B1333F3"]'
+    holesky_oracle_allowlist: '["0x12A1D74F8697b9f4F1eEBb0a9d0FB6a751366399","0xD892c09b556b547c80B7d8c8cB8d75bf541B2284"]'
+    hoodi_oracle_allowlist: '["0xcA80ee7313A315879f326105134F938676Cfd7a9","0xf03B8DC8762B97F13Ac82e6F94bE3Ed002FF7459","0x1932f53B1457a5987791a40Ba91f71c5Efd5788F","0xf7aE520e99ed3C41180B5E12681d31Aa7302E4e5","0x99B2B75F490fFC9A29E4E1f5987BE8e30E690aDF","0x219743f1911d84B32599BdC2Df21fC8Dba6F81a2","0xD3b1e36A372Ca250eefF61f90E833Ca070559970","0x4c75FA734a39f3a21C57e583c1c29942F021C6B7","0x948A62cc0414979dc7aa9364BA5b96ECb29f8736","0xfe43A8B0b481Ae9fB1862d31826532047d2d538c","0x43C45C2455C49eed320F463fF4f1Ece3D2BF5aE2"]'
+
+- name: Update Oracle Allow List
+  replace:
+    path: "{{ config_file.path }}"
+    regexp: '(?s)ORACLE_ADDRESSES_ALLOWLIST:.*?]["'']{1}'
+    replace: "ORACLE_ADDRESSES_ALLOWLIST: '{{ mainnet_oracle_allowlist }}'"
+  when:
+    - service_configuration.service == "ValidatorEjectorService"
+    - service_configuration.network == "mainnet"
+    - (service_configuration.env.ORACLE_ADDRESSES_ALLOWLIST | from_yaml | difference(mainnet_oracle_allowlist | from_yaml) | length != 0) or (service_configuration.env.ORACLE_ADDRESSES_ALLOWLIST | from_yaml | length) != (mainnet_oracle_allowlist | from_yaml | length)
+
+- name: Update Oracle Allow List
+  replace:
+    path: "{{ config_file.path }}"
+    regexp: '(?s)ORACLE_ADDRESSES_ALLOWLIST:.*?]["'']{1}'
+    replace: "ORACLE_ADDRESSES_ALLOWLIST: '{{ holesky_oracle_allowlist }}'"
+  when:
+    - service_configuration.service == "ValidatorEjectorService"
+    - service_configuration.network == "holesky"
+    - (service_configuration.env.ORACLE_ADDRESSES_ALLOWLIST | from_yaml | difference(holesky_oracle_allowlist | from_yaml) | length != 0) or (service_configuration.env.ORACLE_ADDRESSES_ALLOWLIST | from_yaml | length) != (holesky_oracle_allowlist | from_yaml | length)
+
+- name: Update Oracle Allow List
+  replace:
+    path: "{{ config_file.path }}"
+    regexp: '(?s)ORACLE_ADDRESSES_ALLOWLIST:.*?]["'']{1}'
+    replace: "ORACLE_ADDRESSES_ALLOWLIST: '{{ hoodi_oracle_allowlist }}'"
+  when:
+    - service_configuration.service == "ValidatorEjectorService"
+    - service_configuration.network == "hoodi"
+    - (service_configuration.env.ORACLE_ADDRESSES_ALLOWLIST | from_yaml | difference(hoodi_oracle_allowlist | from_yaml) | length != 0) or (service_configuration.env.ORACLE_ADDRESSES_ALLOWLIST | from_yaml | length) != (hoodi_oracle_allowlist | from_yaml | length)

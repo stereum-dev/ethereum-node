@@ -70,7 +70,6 @@ jobs:
           [
             { role: "update-changes", test: "232" },
             { role: "update-changes", test: "235" },
-            { role: "update-changes", test: "241" },
             { role: "update-changes", test: "242" },
           ]
       fail-fast: false
