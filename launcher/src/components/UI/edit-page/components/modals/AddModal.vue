@@ -18,8 +18,8 @@
 </template>
 <script setup>
 import CustomModal from "./CustomModal.vue";
-import AddPanel from "./AddPanel";
-import AddConnection from "./AddConnection";
+import AddPanel from "./AddPanel.vue";
+import AddConnection from "./AddConnection.vue";
 import MevboostRelays from "./MevboostRelays.vue";
 import { ref, onMounted, computed } from "vue";
 import { useNodeManage } from "@/store/nodeManage";
