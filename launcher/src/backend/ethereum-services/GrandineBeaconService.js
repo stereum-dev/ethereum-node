@@ -59,6 +59,7 @@ export class GrandineBeaconService extends NodeService {
         "--metrics-address=0.0.0.0",
         "--metrics-port=5054",
         "--prune-storage",
+        "--track-liveness",
       ], //command
       null, //entrypoint
       null, //env
