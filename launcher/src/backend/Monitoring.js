@@ -1114,7 +1114,7 @@ export class Monitoring {
         PrysmBeaconService: ["beacon_clock_time_slot", "beacon_head_slot"], // OK - query for job="prysm_beacon"!
         NimbusBeaconService: ["beacon_slot", "beacon_head_slot"], // OK - query for job="nimbus"
         LodestarBeaconService: ["beacon_clock_slot", "beacon_head_slot"], // OK - query for job="lodestar_beacon"
-        GrandineBeaconService: ["beacon_head_slot", "beacon_head_slot"], // NOT OK Current Slot (based on genesis time and clock) is not available - query for job="grandine_beacon"
+        GrandineBeaconService: ["beacon_clock_slot", "beacon_head_slot"], // OK, once grandine releases new metric - query for job="grandine_beacon"
       },
       execution: {
         GethService: ["chain_head_header", "chain_head_block"], // OK - query for job="geth"
