@@ -177,7 +177,9 @@ export async function useUpdateValidatorStats() {
       if (key.network === "gnosis") {
         dateActive.setMilliseconds(dateActive.getMilliseconds() - (latestEpoch - activationEpoch) * 80000);
         dateExit =
-          exitEpoch > latestEpoch ? null : dateExit.setMilliseconds(dateExit.getMilliseconds() - (latestEpoch - exitEpoch) * 80000);
+          exitEpoch > latestEpoch
+            ? null
+            : new Date(dateExit.setMilliseconds(dateExit.getMilliseconds() - (latestEpoch - exitEpoch) * 80000));
         dateWithdrawable =
           withdrawableEpoch > latestEpoch
             ? null
