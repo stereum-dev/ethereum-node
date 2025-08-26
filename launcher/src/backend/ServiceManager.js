@@ -25,7 +25,6 @@ import { ServicePort, servicePortProtocol, changeablePorts } from "./ethereum-se
 import { StringUtils } from "./StringUtils";
 import { ServiceVolume } from "./ethereum-services/ServiceVolume";
 import { Web3SignerService } from "./ethereum-services/Web3SignerService";
-import { NotificationService } from "./ethereum-services/NotificationService";
 import { MetricsExporterService } from "./ethereum-services/MetricsExporterService";
 import { ValidatorEjectorService } from "./ethereum-services/ValidatorEjectorService";
 import { KeysAPIService } from "./ethereum-services/KeysAPIService";
@@ -164,8 +163,6 @@ export class ServiceManager {
               services.push(FlashbotsMevBoostService.buildByConfiguration(config));
             } else if (config.service == "Web3SignerService") {
               services.push(Web3SignerService.buildByConfiguration(config));
-            } else if (config.service == "NotificationService") {
-              services.push(NotificationService.buildByConfiguration(config));
             } else if (config.service == "MetricsExporterService") {
               services.push(MetricsExporterService.buildByConfiguration(config));
             } else if (config.service == "ValidatorEjectorService") {
@@ -1168,9 +1165,6 @@ export class ServiceManager {
 
       case "Web3SignerService":
         return Web3SignerService.buildByUserInput(args.network, [], args.installDir + "/web3signer");
-
-      case "NotificationService":
-        return NotificationService.buildByUserInput(args.network, args.installDir + "/notification");
 
       case "MetricsExporterService":
         return MetricsExporterService.buildByUserInput(args.network);

@@ -2,7 +2,7 @@
   <div class="w-full h-full absolute inset-0 flex justify-center items-center">
     <div class="w-full h-full absolute indent-0 bg-black opacity-80 rounded-lg z-10" @click="$emit('closeWindow')"></div>
     <div class="notif-modal-content">
-      <div v-if="qrPage && !beaconchaDashboard" class="content">
+      <div v-if="!beaconchaDashboard" class="content">
         <div class="notif-Title">
           <span>{{ $t("notifModal.addNotif") }}</span>
         </div>
@@ -10,15 +10,7 @@
           <span>{{ $t("notifModal.chooseNotif") }}</span>
         </div>
         <ul class="notif-box">
-          <li @click="qrPage = false">
-            <div class="notif-row_icon">
-              <img src="/img/icon/stereum-icons/stereum-node-monitor-logo.png" alt="notif logo" />
-            </div>
-            <div class="notif-row_name">
-              <span>{{ $t("notifModal.stereumMonitor") }} (Mobile App)</span>
-            </div>
-          </li>
-          <li @click="((beaconchaDashboard = true), (qrPage = true))">
+          <li @click="beaconchaDashboard = true">
             <div class="notif-row_icon">
               <img src="/img/icon/checkpoint-sync-icons/beaconchain-checkpoint-icon.png" alt="notif logo" />
             </div>
@@ -27,33 +19,6 @@
             </div>
           </li>
         </ul>
-        <span class="close">{{ $t("notifModal.close") }}</span>
-      </div>
-      <div v-if="!qrPage && !beaconchaDashboard" class="qrPage_content">
-        <div class="banner" @click="qrViewer">
-          <div class="banner_icon">
-            <img src="/img/icon/stereum-icons/stereum-node-monitor-logo.png" />
-          </div>
-          <div class="banner_title">
-            <span>{{ $t("notifModal.stereumMonitor") }}</span>
-          </div>
-        </div>
-        <div class="qrContent">
-          <div class="qrCode-boxes">
-            <span class="mb-2">1# {{ $t("notifModal.stepOne") }} </span>
-            <span class="mb-2">2# {{ $t("notifModal.stepTwo") }}</span>
-            <span class="mb-2">3# {{ $t("notifModal.stepThree") }}</span>
-            <span class="mb-2">4# {{ $t("notifModal.stepFour") }}</span>
-            <span>5# {{ $t("notifModal.stepFive") }}</span>
-          </div>
-          <div class="qrCode-boxes">
-            <div class="qrCode-place-holder">
-              <div class="qrCode">
-                <img :src="qrCode" />
-              </div>
-            </div>
-          </div>
-        </div>
         <span class="close">{{ $t("notifModal.close") }}</span>
       </div>
       <div v-if="beaconchaDashboard" class="qrPage_content">
@@ -125,11 +90,8 @@ import ControlService from "@/store/ControlService";
 export default {
   data() {
     return {
-      qrPage: true,
       beaconchaDashboard: false,
       banner: "/img/icon/base-header-icons/notification-modal-selection-stereum-node-monitor.png",
-      qrCode: "/animation/loading/turning-circle-blue.gif",
-      ErrorQRCode: "/img/icon/base-header-icons/notification-modal-dummy-qr-code.png",
       selectedVal: "",
       machineName: "",
       apiKey: "",
@@ -183,7 +145,6 @@ export default {
     },
   },
   mounted() {
-    this.getqrcode();
     this.beaconChainConnectionController();
   },
   methods: {
@@ -236,9 +197,6 @@ export default {
       this.readyToRemove = false;
 
       this.fixedConnectedVal = false;
-    },
-    qrViewer() {
-      this.qrPage = !this.qrPage;
     },
     async beaconChainConnectionController() {
       try {
@@ -307,14 +265,6 @@ export default {
         }
       } catch (error) {
         console.error("Error Connection Result:", error);
-      }
-    },
-    async getqrcode() {
-      const response = await ControlService.getQRCode();
-      if (response instanceof Error) {
-        this.qrCode = this.ErrorQRCode;
-      } else {
-        this.qrCode = response;
       }
     },
     openBeaconcha() {

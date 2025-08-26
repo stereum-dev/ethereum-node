@@ -1,0 +1,59 @@
+---
+- name: Prepare
+  hosts: all
+  roles:
+    - role: "../"
+  vars_files:
+    - ../../../../defaults/stereum_defaults.yaml
+
+  tasks:
+    - name: Install python for Ansible (Ubuntu)
+      apt:
+        update_cache: yes
+        name: pip
+        state: present
+      become: true
+      changed_when: false
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Install python for Ansible (CentOS 8)
+      raw: yum install -y python38 tar && yum remove -y python36
+      become: true
+      changed_when: false
+      when: ansible_distribution == "CentOS"
+
+    - include_role:
+        name: "setup"
+
+    - include_role:
+        name: "configure-firewall"
+
+    - name: "Include manage-service"
+      block:
+        - name: set id for notification service
+          set_fact:
+            notification_service: "1738844e-3164-47de-85a8-ac7d07f2ee31"
+        - set_fact:
+            stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+        - name: "Include manage-service"
+          include_role:
+            name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: NotificationService
+              id: "1738844e-3164-47de-85a8-ac7d07f2ee31"
+              image: "stereum/notifications:v1.1.0"
+              env:
+                STEREUM_SERVER_URL: https://notifications.stereum.cloud
+                PORT: "3000"
+                QRCODE_FILENAME: /opt/app/qrcode/qrcode.png
+                STEREUM_APIKEY: "FOO_BAR"
+                KEY_FILENAME: /opt/app/qrcode/keys.json
+              user: "2000"
+              volumes:
+                - "/opt/stereum/notification-1738844e-3164-47de-85a8-ac7d07f2ee31/qrcode:/opt/app/qrcode/"
+              network: prater

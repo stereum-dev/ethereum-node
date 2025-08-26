@@ -305,11 +305,6 @@ export class OneClickInstall {
       this.extraServices.push(this.serviceManager.getService("GrafanaService", args));
     }
 
-    if (constellation.includes("NotificationService")) {
-      //NotificationService
-      this.extraServices.push(this.serviceManager.getService("NotificationService", args));
-    }
-
     if (constellation.includes("KeysAPIService")) {
       //KeysAPIService
       this.extraServices.push(
@@ -673,7 +668,7 @@ export class OneClickInstall {
     this.clearSetup();
     this.setup = setup;
     this.network = network;
-    let services = ["GrafanaService", "PrometheusNodeExporterService", "PrometheusService", "NotificationService"];
+    let services = ["GrafanaService", "PrometheusNodeExporterService", "PrometheusService"];
 
     // const selectedCC_VC = this.chooseClient(["PRYSM", "LIGHTHOUSE", "NIMBUS", "TEKU", "LODESTAR"]);
     const selectedCC_VC = (() => {
@@ -711,7 +706,6 @@ export class OneClickInstall {
         "GrafanaService",
         "PrometheusNodeExporterService",
         "PrometheusService",
-        "NotificationService",
       ];
 
     switch (setup) {
@@ -727,9 +721,7 @@ export class OneClickInstall {
         services.push("FlashbotsMevBoostService", "CharonService");
         break;
       case "stereum on arm":
-        services = services.filter(
-          (s) => !["GrafanaService", "PrometheusNodeExporterService", "PrometheusService", "NotificationService"].includes(s)
-        );
+        services = services.filter((s) => !["GrafanaService", "PrometheusNodeExporterService", "PrometheusService"].includes(s));
         break;
       case "archive":
         break;
