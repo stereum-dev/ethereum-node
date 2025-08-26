@@ -490,15 +490,7 @@ export class OneClickInstall {
   }
 
   handleArchiveTags(selectedPreset) {
-    if (/mev boost|staking/.test(selectedPreset)) {
-      this.executionClient.forEach((client) => {
-        switch (client.service) {
-          case "RethService":
-            client.command.push("--full");
-            break;
-        }
-      });
-    } else if (selectedPreset == "archive") {
+    if (selectedPreset == "archive") {
       this.executionClient
         .filter(
           (service) => service.service !== "OpGethService" || service.service !== "OpErigonService" || service.service !== "OpRethService"
@@ -511,6 +503,8 @@ export class OneClickInstall {
               break;
             case "RethService":
               // archive by default
+              // remove --full
+              client.command = client.command.filter((c) => !c.includes("--full"));
               break;
             case "ErigonService":
               client.command[client.command.findIndex((c) => c.includes("--prune.mode"))] = "--prune.mode=archive";

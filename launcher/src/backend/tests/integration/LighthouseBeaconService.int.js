@@ -76,8 +76,8 @@ test("lighthouse validator import", async () => {
   lhBC.imageVersion = versions[lhBC.network][lhBC.service].slice(-1).pop();
   lhVC.imageVersion = versions[lhVC.network][lhVC.service].slice(-1).pop();
 
-  await serviceManager.manageServiceState(geth.id, "started");
   await nodeConnection.writeServiceConfiguration(geth.buildConfiguration());
+  await serviceManager.manageServiceState(geth.id, "started");
 
   //write configs for lighhouse BC and VC
   await nodeConnection.writeServiceConfiguration(lhBC.buildConfiguration());
