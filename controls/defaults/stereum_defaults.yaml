@@ -1,8 +1,6 @@
 stereum_static:
   defaults:
     controls_install_path: /opt/stereum
-    cloud:
-      notifications_api_key: 4cTLZL8gcZ5knP49murPh2qaZSchryfHraHQHFDPuuA8jqJLrSdr7Bd4s4TSSVBW
     updates:
       lane: stable
       unattended:
@@ -36,7 +34,6 @@ stereum_static:
       grafana: "10.1.5"
       node_exporter: v1.6.1
       prometheus: v2.47.2
-      notifications: v1.1.0
 
     devnet:
       # consensus clients

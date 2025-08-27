@@ -133,8 +133,7 @@ const isloading = computed({
 });
 
 const checkStatus = computed(() => {
-  let servicesToManage = serviceStore.installedServices.filter((service) => service.name !== "Notifications");
-  return !servicesToManage.some((s) => s.state == "running");
+  return !serviceStore.installedServices.some((s) => s.state == "running");
 });
 
 const closeUpdatePowerStateModal = () => {
@@ -151,10 +150,7 @@ const stateButtonHandler = async (state) => {
   loading.value = true;
   closeUpdatePowerStateModal();
   try {
-    //this is the temporary solution until notification service is exiting correctly
-    let servicesToManage = serviceStore.installedServices.filter((service) => service.name !== "Notifications");
-
-    let promises = servicesToManage.map(async (service, index) => {
+    let promises = serviceStore.installedServices.map(async (service, index) => {
       new Promise((resolve) => setTimeout(resolve, index * 1000)).then(() => {
         ControlService.manageServiceState({
           id: service.config.serviceID,

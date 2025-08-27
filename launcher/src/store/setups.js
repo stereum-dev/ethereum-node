@@ -94,7 +94,7 @@ export const useSetups = defineStore("setups", {
     selectedOPSetup: null,
 
     //Setup Others
-    serverServices: ["PrometheusService", "GrafanaService", "PrometheusNodeExporterService", "NotificationService"],
+    serverServices: ["PrometheusService", "GrafanaService", "PrometheusNodeExporterService"],
 
     colorMappings: {
       default: { text: "text-gray-100", background: "bg-[#336666]" },

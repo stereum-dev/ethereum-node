@@ -4,14 +4,9 @@ dependency:
 driver:
   name: molecule_hetznercloud
 platforms:
-  - name: "manage-service--notifications--ubuntu-22.04"
-    hostname: ubuntu
+  - name: "update-changes--2.4.3--ubuntu-24.04"
     server_type: cx22
-    image: ubuntu-22.04
-#  - name: "manage-service--notifications--centos-stream-8"
-#    hostname: "centos"
-#    server_type: cx22
-#    image: centos-stream-8
+    image: ubuntu-24.04
 provisioner:
   name: ansible
   config_options:
@@ -29,6 +24,6 @@ scenario:
     - create
     - prepare
     - converge
-    #- idempotence
+    - idempotence
     - verify
     - destroy

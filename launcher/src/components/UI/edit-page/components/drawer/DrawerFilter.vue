@@ -71,7 +71,7 @@ const selectFilter = (filter) => {
 const archFilter = (service) => {
   const armArchs = ["arm", "arm64", "aarch64_be", "aarch64", "armv8b", "armv8l"];
 
-  return armArchs.includes(manageStore.architecture) ? !/(Prysm|ValidatorEjector|KeysAPI|Notification)/.test(service.service) : true;
+  return armArchs.includes(manageStore.architecture) ? !/(Prysm|ValidatorEjector|KeysAPI)/.test(service.service) : true;
 };
 
 const networkFilter = (service) => {

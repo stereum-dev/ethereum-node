@@ -7,7 +7,7 @@ export class ConfigManager {
     this.nodeConnection = nodeConnection;
     this.serviceManager = null;
     this.multiSetupPath = "/etc/stereum/multisetup.yaml";
-    this.commonServices = ["PrometheusService", "GrafanaService", "PrometheusNodeExporterService", "NotificationService"];
+    this.commonServices = ["PrometheusService", "GrafanaService", "PrometheusNodeExporterService"];
   }
   setServiceManager(serviceManager) {
     this.serviceManager = serviceManager;

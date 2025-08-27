@@ -69,8 +69,8 @@ test("grandine consensus client", async () => {
   geth.imageVersion = versions[geth.network][geth.service].slice(-1).pop();
   grandineBC.imageVersion = versions[grandineBC.network][grandineBC.service].slice(-1).pop();
 
-  await serviceManager.manageServiceState(geth.id, "started");
   await nodeConnection.writeServiceConfiguration(geth.buildConfiguration());
+  await serviceManager.manageServiceState(geth.id, "started");
 
   //write configs for grandine BC
   await nodeConnection.writeServiceConfiguration(grandineBC.buildConfiguration());

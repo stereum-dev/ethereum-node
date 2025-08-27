@@ -1,0 +1,32 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+    # config
+    - find: path=/etc/stereum/services
+      register: stereum_services_dir
+    - debug:
+        msg: "{{ stereum_services_dir }}"
+    - assert:
+        that:
+          - stereum_services_dir.matched == 0
+
+    # docker container
+    - shell: docker ps -a
+      register: stereum_docker_ps
+    - debug:
+        msg: "{{ stereum_docker_ps }}"
+    - assert:
+        that:
+          - "'stereum/notifications' not in stereum_docker_ps.stdout"
+
+    # data dir
+    - stat: path=/opt/stereum/notification-1738844e-3164-47de-85a8-ac7d07f2ee31
+      register: notification_data_dir
+    - debug:
+        msg: "{{ notification_data_dir }}"
+    - assert:
+        that:
+          - notification_data_dir.stat.exists == false
+# EOF

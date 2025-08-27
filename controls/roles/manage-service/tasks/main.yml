@@ -183,10 +183,4 @@
         stereum_service_configuration.image is match("prom/prometheus:*") and
         (stereum.manage_service.state == "started" or stereum.manage_service.state == "restarted")
 
-    - include_tasks: configure-grafana.yml
-      when: >
-        stereum_service_configuration.image is match("grafana/grafana:*") and
-        (stereum.manage_service.state == "started" or stereum.manage_service.state == "restarted") and
-        stereum_service_configuration.overwrite | default(true)
-
   when: stereum.manage_service.state is defined

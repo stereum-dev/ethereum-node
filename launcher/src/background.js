@@ -501,10 +501,6 @@ ipcMain.handle("getValidatorState", async (event, args) => {
   return await monitoring.getValidatorState(args);
 });
 
-ipcMain.handle("getQRCode", async () => {
-  return await monitoring.getQRCode();
-});
-
 ipcMain.handle("checkActiveValidators", async (event, args) => {
   return await validatorAccountManager.checkActiveValidators(
     args.files,

@@ -1,0 +1,16 @@
+---
+- name: Read service file
+  slurp:
+    src: "{{ config_file.path }}"
+  register: service_configuration_raw
+
+- name: Parse service's configuration
+  set_fact:
+    service_configuration: "{{ service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+- name: Remove Notification Service if present
+  when: service_configuration.service == "NotificationService"
+  include_role:
+    name: delete-service
+  vars:
+    service: "{{ service_configuration.id }}"
