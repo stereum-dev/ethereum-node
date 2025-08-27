@@ -62,6 +62,7 @@ test("lighthouse validator import", async () => {
     network: "hoodi",
     installDir: "/opt/stereum",
     executionClients: [geth],
+    checkpointURL: "https://hoodi.beaconstate.ethstaker.cc",
   });
 
   let lhVC = serviceManager.getService("LighthouseValidatorService", {
@@ -113,19 +114,18 @@ test("lighthouse validator import", async () => {
     VCstatus = await await nodeConnection.sshService.exec(`docker logs stereum-${lhVC.id}`);
     BCstatus = await nodeConnection.sshService.exec(`docker logs stereum-${lhBC.id}`);
     if (
-      /Block production enabled/.test(BCstatus.stderr) &&
-      /Beacon chain initialized/.test(BCstatus.stderr) &&
-      /HTTP API started/.test(BCstatus.stderr) &&
-      /Metrics HTTP server started/.test(BCstatus.stderr) &&
-      /Syncing /.test(BCstatus.stderr) &&
-      /Execution endpoint is not synced/.test(BCstatus.stderr) &&
-      /Successfully loaded graffiti file/.test(VCstatus.stderr) &&
-      /Starting validator client/.test(VCstatus.stderr) &&
-      /Metrics HTTP server started/.test(VCstatus.stderr) &&
-      /Successfully loaded graffiti file/.test(VCstatus.stderr) &&
-      /Initialized beacon node connections/.test(VCstatus.stderr) &&
-      /HTTP API started/.test(VCstatus.stderr) &&
-      /Imported keystores via standard HTTP API, count: 3/.test(VCstatus.stderr)
+      /Block production enabled/.test(BCstatus.stdout) &&
+      /Beacon chain initialized/.test(BCstatus.stdout) &&
+      /HTTP API started/.test(BCstatus.stdout) &&
+      /Metrics HTTP server started/.test(BCstatus.stdout) &&
+      /Syncing /.test(BCstatus.stdout) &&
+      /Head is optimistic/.test(BCstatus.stdout) &&
+      /Successfully loaded graffiti file/.test(VCstatus.stdout) &&
+      /Starting validator client/.test(VCstatus.stdout) &&
+      /Metrics HTTP server started/.test(VCstatus.stdout) &&
+      /Initialized beacon node connections/.test(VCstatus.stdout) &&
+      /HTTP API started/.test(VCstatus.stdout) &&
+      /Imported keystores via standard HTTP API.*count: 3/.test(VCstatus.stdout)
     ) {
       condition = true;
     }
@@ -158,19 +158,18 @@ test("lighthouse validator import", async () => {
   }
 
   //check lighthouse BC logs
-  expect(BCstatus.stderr).toMatch(/Block production enabled/);
-  expect(BCstatus.stderr).toMatch(/Beacon chain initialized/);
-  expect(BCstatus.stderr).toMatch(/HTTP API started/);
-  expect(BCstatus.stderr).toMatch(/Metrics HTTP server started/);
-  expect(BCstatus.stderr).toMatch(/Syncing/);
-  expect(BCstatus.stderr).toMatch(/Execution endpoint is not synced/);
+  expect(BCstatus.stdout).toMatch(/Block production enabled/);
+  expect(BCstatus.stdout).toMatch(/Beacon chain initialized/);
+  expect(BCstatus.stdout).toMatch(/HTTP API started/);
+  expect(BCstatus.stdout).toMatch(/Metrics HTTP server started/);
+  expect(BCstatus.stdout).toMatch(/Syncing/);
+  expect(BCstatus.stdout).toMatch(/Head is optimistic/);
 
   //check lighthouse VC logs
-  expect(VCstatus.stderr).toMatch(/Successfully loaded graffiti file/);
-  expect(VCstatus.stderr).toMatch(/Starting validator client/);
-  expect(VCstatus.stderr).toMatch(/Metrics HTTP server started/);
-  expect(VCstatus.stderr).toMatch(/Successfully loaded graffiti file/);
-  expect(VCstatus.stderr).toMatch(/Initialized beacon node connections/);
-  expect(VCstatus.stderr).toMatch(/HTTP API started/);
-  expect(VCstatus.stderr).toMatch(/Imported keystores via standard HTTP API, count: 3/);
+  expect(VCstatus.stdout).toMatch(/Successfully loaded graffiti file/);
+  expect(VCstatus.stdout).toMatch(/Starting validator client/);
+  expect(VCstatus.stdout).toMatch(/Metrics HTTP server started/);
+  expect(VCstatus.stdout).toMatch(/Initialized beacon node connections/);
+  expect(VCstatus.stdout).toMatch(/HTTP API started/);
+  expect(VCstatus.stdout).toMatch(/Imported keystores via standard HTTP API.*count: 3/);
 });
