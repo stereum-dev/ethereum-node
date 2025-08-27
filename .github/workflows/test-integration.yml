@@ -20,7 +20,7 @@ jobs:
           node-version: "22"
       - run: npm install
         working-directory: ./launcher
-      - run: npm run test --testPathPattern 'tests/(?=.*BeaconService).*\.int\.js$' --silent
+      - run: npm run test:beacon
         working-directory: ./launcher
         env:
           HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
@@ -38,7 +38,7 @@ jobs:
           node-version: "22"
       - run: npm install
         working-directory: ./launcher
-      - run: npm run test --testPathPattern 'tests/(?=.*Service)(?!.*Beacon).*\.int\.js$' --silent
+      - run: npm run test:service
         working-directory: ./launcher
         env:
           HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
@@ -54,7 +54,7 @@ jobs:
           node-version: "22"
       - run: npm install
         working-directory: ./launcher
-      - run: npm run test --testPathPattern 'tests/(?!.*Service).*\.int\.js$' --silent
+      - run: npm run test:other
         working-directory: ./launcher
         env:
           HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
