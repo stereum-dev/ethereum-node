@@ -1,10 +1,7 @@
-name: Tests Integration
+name: Tests Integration Legacy
 
 on:
-  push:
-    branches: [main]
-
-  workflow_dispatch:
+   workflow_dispatch:
 
 jobs:
   setup:
