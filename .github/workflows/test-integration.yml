@@ -14,7 +14,7 @@ jobs:
       - Other-Integration-test
       - Execution-Client-test
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
@@ -32,7 +32,7 @@ jobs:
     needs:
       - Other-Integration-test
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
@@ -48,7 +48,7 @@ jobs:
     runs-on: ubuntu-24.04
     name: Other Integration Tests
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
