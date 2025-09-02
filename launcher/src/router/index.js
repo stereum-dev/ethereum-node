@@ -2,7 +2,7 @@ import { createRouter, createWebHashHistory } from "vue-router";
 
 // import BaseHome from "../pages/BaseHome.vue";
 import LanguagePage from "../pages/LanguagePage.vue";
-import LoginPage from "../pages/LoginPage.vue";
+import LoginPage from "@/pages/LoginPage.vue";
 import OneclickPage from "@/pages/OneclickPage.vue";
 import SelectPreset from "../../src/components/UI/one-click/sections/SelectPreset.vue";
 import ConfigPlugins from "../../src/components/UI/one-click/sections/ConfigPlugins.vue";

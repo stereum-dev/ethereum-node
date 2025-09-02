@@ -27,10 +27,10 @@
 </template>
 <script setup>
 import SideBar from "./section/SideBar.vue";
-import MainBox from "./section/MainBox";
-import SidebarBtn from "./components/SidebarBtn";
-import ItemRow from "./section/ItemRow";
-import VolumeSlider from "./components/VolumeSlider";
+import MainBox from "./section/MainBox.vue";
+import SidebarBtn from "./components/SidebarBtn.vue";
+import ItemRow from "./section/ItemRow.vue";
+import VolumeSlider from "./components/VolumeSlider.vue";
 import OutputOptions from "./components/OutputOptions.vue";
 import LanguageBtn from "./components/LanguageBtn.vue";
 import CreditButtons from "./section/CreditButtons.vue";

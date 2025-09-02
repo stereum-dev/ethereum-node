@@ -55,7 +55,7 @@ import RemoveGroup from "./components/modals/RemoveGroup.vue";
 import RemoveValidators from "./components/modals/RemoveValidators.vue";
 import RiskWarning from "./components/modals/RiskWarning.vue";
 import WithdrawMultiple from "./components/modals/WithdrawMultiple.vue";
-import ListSection from "./sections/ListSection";
+import ListSection from "./sections/ListSection.vue";
 import ManagementSection from "./sections/ManagementSection.vue";
 import SidebarSection from "./sections/SidebarSection.vue";
 
