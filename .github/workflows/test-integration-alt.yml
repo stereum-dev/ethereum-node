@@ -1,0 +1,58 @@
+name: Tests Integration Alternative
+
+on:
+  workflow_dispatch:
+
+jobs:
+  Validator-Import-test:
+    runs-on: ubuntu-24.04
+    name: Validator Import Tests
+    needs:
+      - Other-Integration-test
+      - Execution-Client-test
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm install
+        working-directory: ./launcher
+      - run: npm run test:beacon
+        working-directory: ./launcher
+        env:
+          HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
+          IS_DEV: "true"
+
+  Execution-Client-test:
+    runs-on: ubuntu-24.04
+    name: Execution Client Tests
+    needs:
+      - Other-Integration-test
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm install
+        working-directory: ./launcher
+      - run: npm run test:service
+        working-directory: ./launcher
+        env:
+          HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
+          IS_DEV: "true"
+
+  Other-Integration-test:
+    runs-on: ubuntu-24.04
+    name: Other Integration Tests
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm install
+        working-directory: ./launcher
+      - run: npm run test:other
+        working-directory: ./launcher
+        env:
+          HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
+          IS_DEV: "true"
