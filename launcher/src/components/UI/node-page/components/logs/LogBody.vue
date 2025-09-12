@@ -29,7 +29,7 @@
   </div>
 </template>
 <script setup>
-import LogSidebar from "./LogSidebar";
+import LogSidebar from "./LogSidebar.vue";
 import { useNodeStore } from "@/store/theNode";
 import { computed, ref } from "vue";
 

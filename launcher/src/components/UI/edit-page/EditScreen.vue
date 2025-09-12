@@ -152,7 +152,7 @@ import DrawerBox from "./components/drawer/DrawerBox.vue";
 import DrawerMenu from "./components/drawer/DrawerMenu.vue";
 import ServicesDrawer from "./components/drawer/ServicesDrawer.vue";
 import SetupsDrawer from "./components/drawer/SetupsDrawer.vue";
-import EditBody from "./components/edit/EditBody";
+import EditBody from "./components/edit/EditBody.vue";
 import LoaderAnime from "./components/loader-anime/LoaderAnime.vue";
 import AddModal from "./components/modals/AddModal.vue";
 import InfoModal from "./components/modals/InfoModal.vue";

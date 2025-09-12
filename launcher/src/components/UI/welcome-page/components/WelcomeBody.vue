@@ -3,7 +3,7 @@
     <div class="col-start-1 col-end-13 row-start-1 row-end-2 w-full h-full flex justify-center items-center">
       <span class="text-xl text-gray-300 font-normal text-center">{{ $t("welcomePage.chooseInstallNode") }}</span>
     </div>
-    <div class="col-start-1 col-end-13 row-start-2 row-end-7 w-full h-full flex justify-evenly items-center space-x-2">
+    <div class="col-start-1 col-end-13 row-start-2 row-end-7 w-full h-full flex justify-evenly items-center space-x-2 bg-white">
       <CardItem v-for="item in welStore.installationOptions" :key="item" :item="item" />
     </div>
   </div>
