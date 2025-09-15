@@ -24,6 +24,7 @@
     "test:other": "jest --silent --testPathPattern 'tests/(?!.*Service).*\\.int\\.js$'",
     "test:beacon": "jest --silent --testPathPattern 'tests/(?=.*BeaconService).*\\.int\\.js$'",
     "test:service": "jest --silent --testPathPattern 'tests/(?=.*Service)(?!.*Beacon).*\\.int\\.js$'",
+    "test:cleanup": "node src/backend/tests/integration/Cleanup.js",
     "watch:css": "npx tailwindcss -i ./src/main.css -o ./public/output.css --watch",
     "lint:fix": "eslint src --fix",
     "stereum": "concurrently \"npm:electron:serve\" \"npm:watch:css\"",

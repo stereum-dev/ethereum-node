@@ -11,10 +11,10 @@ jest.setTimeout(500000);
 
 test("op-geth installation", async () => {
   const testServer = new HetznerServer();
-  const keyResponse = await testServer.createSSHKey("OpGeth--integration-test--ubuntu-2204");
+  const keyResponse = await testServer.createSSHKey("Optimism-Geth--integration-test--ubuntu-2204");
 
   const serverSettings = {
-    name: "OpGeth--integration-test--ubuntu-2204",
+    name: "Optimism-Geth--integration-test--ubuntu-2204",
     image: "ubuntu-22.04",
     server_type: "cpx21",
     start_after_create: true,

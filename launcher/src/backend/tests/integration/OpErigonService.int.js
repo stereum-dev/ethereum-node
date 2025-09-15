@@ -11,10 +11,10 @@ jest.setTimeout(1200000);
 
 test("op-erigon installation", async () => {
   const testServer = new HetznerServer();
-  const keyResponse = await testServer.createSSHKey("OpErigon--integration-test--ubuntu-2204");
+  const keyResponse = await testServer.createSSHKey("Optimism-Erigon--integration-test--ubuntu-2204");
 
   const serverSettings = {
-    name: "OpErigon--integration-test--ubuntu-2204",
+    name: "Optimism-Erigon--integration-test--ubuntu-2204",
     image: "ubuntu-22.04",
     server_type: "cpx21",
     start_after_create: true,
