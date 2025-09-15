@@ -32,7 +32,9 @@ module.exports = {
           artifactName: "Stereum-Launcher-${version}.${ext}",
         },
         win: {
-          sign: "./customsign.js", //change to windows-signing.js
+          signtoolOptions: {
+            sign: "./customSign.js",
+          },
           artifactName: "Stereum-Launcher-Setup-${version}.${ext}",
         },
       },

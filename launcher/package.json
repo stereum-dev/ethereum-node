@@ -13,7 +13,7 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "build-themes": "node-sass src/styles/themes -o public/themes",
-    "electron:build": "vue-cli-service electron:build",
+    "electron:build": "vue-cli-service electron:build --publish never",
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps",
@@ -43,7 +43,7 @@
     "@xterm/xterm": "^5.5.0",
     "animate.css": "^4.1.1",
     "axios": "^1.12.2",
-    "electron-builder": "^26.0.12",
+    "electron-builder": "^26.0.20",
     "electron-log": "^5.4.3",
     "electron-store": "^10.1.0",
     "electron-updater": "^6.6.2",
@@ -83,7 +83,7 @@
     "autoprefixer": "^10.4.21",
     "concurrently": "^9.2.1",
     "electron": "^38.1.0",
-    "electron-builder": "^26.0.12",
+    "electron-builder": "^26.0.20",
     "eslint": "^9.35.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-node": "^11.1.0",
@@ -105,7 +105,7 @@
   "license": "https://wrapbootstrap.com/help/licenses",
   "overrides": {
     "vue-cli-plugin-electron-builder": {
-      "electron-builder": "^26.0.12"
+      "electron-builder": "^26.0.20"
     }
   },
   "repository": {

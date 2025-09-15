@@ -22,7 +22,7 @@ jobs:
       - name: Ensure Node Version
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
 
       - name: Set Version from package.json
         id: variables
@@ -65,7 +65,7 @@ jobs:
       - name: macOS build args
         if: matrix.os == 'macos-latest'
         run: echo "BUILD_ARGS=--universal" >> $GITHUB_ENV
-      
+
       - name: Install Dependencies
         run: |
           cd launcher && npm i
@@ -218,4 +218,3 @@ jobs:
         run: |
           gh release upload --clobber "${{ steps.variables.outputs.version }}-draft" dist/*
         if: ${{ !contains(github.event.head_commit.message, '[NOCI]') && !contains(github.event.head_commit.message, '[DRAFT]') }}
-
