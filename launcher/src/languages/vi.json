@@ -1101,6 +1101,7 @@
   },
   "csmStateWidget": {
     "servceCount": "{count} Monitoring services {isAre} running.",
-    "inque": "The number of keys in the queueis {number}."
+    "inque": "The number of keys in the queueis {number}.",
+    "nodeStatus": "Node Status"
   }
 }
