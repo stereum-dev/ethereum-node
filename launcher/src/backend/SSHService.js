@@ -2,6 +2,7 @@ const {
   Client,
   utils: { generateKeyPairSync },
 } = require("ssh2");
+import { pipeline } from "stream/promises";
 import { createTunnel } from "./SSHServiceTunnel";
 import { StringUtils } from "./StringUtils";
 import * as fs from "fs";
@@ -594,9 +595,7 @@ export class SSHService {
    */
   async readDirectoryLocal(localPath) {
     try {
-      log.info("localPath", localPath);
       const filenames = await fs.promises.readdir(localPath, { withFileTypes: true });
-      log.info("filenames", filenames);
       return filenames;
     } catch (error) {
       console.error("Failed reading local directory: ", error);
@@ -615,14 +614,21 @@ export class SSHService {
    */
   async downloadFileSSH(remotePath, localPath, conn = this.getConnectionFromPool()) {
     return new Promise((resolve, reject) => {
-      const writeStream = fs.createWriteStream(localPath);
-      writeStream.on("error", reject);
-      writeStream.on("close", resolve);
+      conn.exec(`sudo cat ${StringUtils.escapeStringForShell(remotePath)}`, async (err, stream) => {
+        try {
+          if (err) throw err;
+          const writeStream = fs.createWriteStream(localPath);
+          stream.on("error", (error) => {
+            writeStream.close();
+            fs.unlinkSync(localPath);
+            reject(new Error("Failed to read remote file: " + error.message));
+          });
 
-      conn.exec(`sudo cat ${remotePath}`, function (err, stream) {
-        if (err) throw err;
-        stream.on("error", reject);
-        stream.pipe(writeStream);
+          await pipeline(stream, writeStream);
+          resolve();
+        } catch (error) {
+          reject(error);
+        }
       });
     });
   }
@@ -634,12 +640,8 @@ export class SSHService {
    * @param {Client} [conn]
    * @returns `true` if download was successful, `false` otherwise
    */
-  async downloadDirectorySSH(remotePath, localPath, conn = null) {
+  async downloadDirectorySSH(remotePath, localPath, conn = this.getConnectionFromPool()) {
     try {
-      if (!conn) {
-        conn = await this.getConnectionFromPool();
-      }
-
       if (!fs.existsSync(localPath)) {
         fs.mkdirSync(localPath, { recursive: true });
       }
@@ -668,20 +670,30 @@ export class SSHService {
    * @param {Client} [conn]
    * @returns `void`
    */
-  async uploadFileSSH(localPath, remotePath, conn) {
-    if (!conn) {
-      conn = await this.getConnectionFromPool();
-    }
+  async uploadFileSSH(localPath, remotePath, conn = this.getConnectionFromPool()) {
     return new Promise((resolve, reject) => {
-      const readStream = fs.createReadStream(localPath);
-      readStream.on("error", reject);
-      readStream.on("close", resolve);
+      conn.exec(`sudo cat > ${StringUtils.escapeStringForShell(remotePath)}`, async (err, stream) => {
+        try {
+          if (err) throw err;
+          const readStream = fs.createReadStream(localPath);
+          // Handle read stream end
+          readStream.on("end", () => {
+            fs.unlinkSync(localPath);
+          });
 
-      conn.exec(`sudo cat > ${remotePath}`, function (err, stream) {
-        if (err) throw err;
-        stream.on("error", reject);
-        stream.on("close", resolve);
-        readStream.pipe(stream.stdin);
+          // Handle read stream errors
+          readStream.on("error", (error) => {
+            fs.unlinkSync(localPath);
+            stream.end();
+            reject(new Error("Failed to read local file: " + error.message));
+          });
+
+          // pipeline ends destination stream when the source ends
+          await pipeline(readStream, stream);
+          resolve();
+        } catch (error) {
+          reject(error);
+        }
       });
     });
   }

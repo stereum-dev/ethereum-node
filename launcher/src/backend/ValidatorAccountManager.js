@@ -1095,7 +1095,7 @@ export class ValidatorAccountManager {
       let charonClient = services.find((service) => service.service === "CharonService");
       if (!charonClient) throw "Couldn't find CharonService";
       const dataDir = path.posix.join(charonClient.getDataDir(), ".charon");
-      await this.nodeConnection.sshService.exec(`rm -rf ${dataDir}`);
+      await this.nodeConnection.sshService.exec(`rm -rf ${charonClient.getDataDir()}`);
       const result = await this.nodeConnection.sshService.uploadDirectorySSH(path.normalize(localPath), dataDir);
       if (result) {
         log.info("Obol Backup uploaded from: ", localPath);
