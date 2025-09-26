@@ -604,6 +604,26 @@ const exportExitMessage = async () => {
         .filter((item) => item.validatorID === stakingStore.selectedServiceToFilter?.config?.serviceID)
         .map((item) => item.key);
 
+      // if there are more than 50 keys, split them into chunks of 50
+      const chunkSize = 50;
+      if (pubkeys.length > chunkSize) {
+        let allResults = [];
+        for (let i = 0; i < pubkeys.length; i += chunkSize) {
+          const chunk = pubkeys.slice(i, i + chunkSize);
+          const results = await Promise.all(
+            chunk.map(async (key) => {
+              return ControlService.getExitValidatorMessage({
+                pubkey: key,
+                serviceID: stakingStore.selectedServiceToFilter.config?.serviceID,
+              });
+            })
+          );
+          allResults = allResults.concat(results);
+        }
+        saveExitMessage(allResults, "multiple");
+        return;
+      }
+
       const results = await Promise.all(
         pubkeys.map(async (key) => {
           return ControlService.getExitValidatorMessage({
@@ -625,7 +645,9 @@ const saveExitMessage = (data, type) => {
   const unwrap = (entry) => (entry && entry.data ? entry.data : entry);
 
   const content =
-    type === "single" ? JSON.stringify(unwrap(data), null, 2) : data.map((entry) => JSON.stringify(unwrap(entry), null, 2)).join("\n\n");
+    type === "single"
+      ? JSON.stringify(unwrap(data), null, 2)
+      : "[" + data.map((entry) => JSON.stringify(unwrap(entry), null, 2)).join(",\n") + "]";
 
   const fileName = type === "single" ? "single_exit_message.txt" : "multiple_exit_messages.txt";
   const blob = new Blob([content], { type: "application/json;charset=utf-8" });
