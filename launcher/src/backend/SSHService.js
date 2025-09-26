@@ -676,14 +676,8 @@ export class SSHService {
         try {
           if (err) throw err;
           const readStream = fs.createReadStream(localPath);
-          // Handle read stream end
-          readStream.on("end", () => {
-            fs.unlinkSync(localPath);
-          });
-
           // Handle read stream errors
           readStream.on("error", (error) => {
-            fs.unlinkSync(localPath);
             stream.end();
             reject(new Error("Failed to read local file: " + error.message));
           });
