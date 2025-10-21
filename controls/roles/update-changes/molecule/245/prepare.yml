@@ -11,7 +11,7 @@
         mode: 0644
       become: yes
 
-    - name: Create TekuValidatorService config
+    - name: Create LighthouseBeaconService config
       copy:
         dest: "/etc/stereum/services/365500b1-285c-f88d-7d6c-3cde7b3ed973.yaml"
         owner: "root"
@@ -41,7 +41,7 @@
             - --port=9000
             - --enr-tcp-port=9000
             - --enr-udp-port=9000
-            - --builder=http://stereum-c296447b-6f2d-aea1-487b-3613ec06e6ee:18550
+            - --builder=http://stereum-foo-bar:18550
             - --checkpoint-sync-url=https://hoodi.beaconstate.ethstaker.cc
           entrypoint: []
           env: {}
