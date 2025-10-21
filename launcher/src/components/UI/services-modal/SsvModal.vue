@@ -610,8 +610,7 @@ export default {
       if (!network) {
         throw new Error("openOperatorPage -> Network unknown");
       }
-      let net = network == "mainnet" ? "" : network + ".";
-      let url = `https://${net}explorer.ssv.network/operators/${operatorID}`;
+      let url = `https://explorer.ssv.network/${network}/operator/${operatorID}`;
       window.open(url, "_blank");
     },
     openRegisterPage(network) {
