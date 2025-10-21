@@ -1,0 +1,19 @@
+---
+- name: Read service file
+  slurp:
+    src: "{{ config_file.path }}"
+  register: service_configuration_raw
+
+- name: Parse service's configuration
+  set_fact:
+    service_configuration: "{{ service_configuration_raw['content'] | b64decode | from_yaml }}"
+    service_configuration_text: "{{ service_configuration_raw['content'] | b64decode }}"
+
+- name: Lighthouse Changes
+  when: service_configuration.service == "LighthouseBeaconService"
+  block:
+    - name: remove --eth1-blocks-per-log-query
+      lineinfile:
+        path: "{{ config_file.path }}"
+        regex: "--eth1-blocks-per-log-query"
+        state: absent
