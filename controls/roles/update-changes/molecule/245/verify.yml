@@ -1,0 +1,24 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+    # LighthouseBeaconService
+    - name: Read LighthouseBeaconService file
+      slurp:
+        src: "/etc/stereum/services/365500b1-285c-f88d-7d6c-3cde7b3ed973.yaml"
+      register: Lighthouse_service_configuration_raw
+
+    - name: Parse Service configurations
+      set_fact:
+        Lighthouse_service_configuration: "{{ Lighthouse_service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+    - debug:
+        msg: "{{ Lighthouse_service_configuration }}"
+    - debug:
+        msg: "{{ Lighthouse_service_configuration_raw['content'] | b64decode }}"
+
+    - assert:
+        that:
+          - Lighthouse_service_configuration.command | select('match', '--eth1-blocks-per-log-query') | length == 0
+# EOF

@@ -1,0 +1,65 @@
+---
+- name: Prepare
+  hosts: all
+  tasks:
+    - name: Make sure Stereum's config path exists
+      file:
+        path: "/etc/stereum/services"
+        state: directory
+        owner: "root"
+        group: "root"
+        mode: 0644
+      become: yes
+
+    - name: Create LighthouseBeaconService config
+      copy:
+        dest: "/etc/stereum/services/365500b1-285c-f88d-7d6c-3cde7b3ed973.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: LighthouseBeaconService
+          id: 365500b1-285c-f88d-7d6c-3cde7b3ed973
+          configVersion: 1
+          command:
+            - lighthouse
+            - bn
+            - --debug-level=info
+            - --network=hoodi
+            - --execution-endpoint=http://stereum-foo-bar:8551
+            - --execution-jwt=/engine.jwt
+            - --eth1-blocks-per-log-query=150
+            - --datadir=/opt/app/beacon
+            - --http
+            - --http-address=0.0.0.0
+            - --metrics
+            - --metrics-address=0.0.0.0
+            - --disable-upnp
+            - --validator-monitor-auto
+            - --slasher
+            - --slasher-dir=/opt/app/slasher
+            - --port=9000
+            - --enr-tcp-port=9000
+            - --enr-udp-port=9000
+            - --builder=http://stereum-foo-bar:18550
+            - --checkpoint-sync-url=https://hoodi.beaconstate.ethstaker.cc
+          entrypoint: []
+          env: {}
+          image: sigp/lighthouse:v8.0.0-rc.1
+          ports:
+            - 0.0.0.0:9000:9000/tcp
+            - 0.0.0.0:9000:9000/udp
+            - 0.0.0.0:5052:5052/tcp
+          volumes:
+            - /opt/stereum/lighthouse-365500b1-285c-f88d-7d6c-3cde7b3ed973/beacon:/opt/app/beacon
+            - /opt/stereum/lighthouse-365500b1-285c-f88d-7d6c-3cde7b3ed973/slasher:/opt/app/slasher
+          user: "2000"
+          autoupdate: true
+          network: hoodi
+          dependencies:
+            executionClients: []
+            consensusClients: []
+            mevboost: []
+            otherServices: []
+      become: yes
+# EOF
