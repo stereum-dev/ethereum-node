@@ -145,12 +145,12 @@ async function getSigningKeys(contract, nodeOperatorId, startIndex, keysCount) {
   }
 }
 
-async function getDepositQueue(contract) {
+async function getDepositQueue(contract, index) {
   try {
     if (!contract) {
       throw new Error("Contract is not initialized.");
     }
-    const queueInfo = await contract.methods.depositQueue().call();
+    const queueInfo = await contract.methods.depositQueuePointers(index).call();
 
     const head = Number(queueInfo[0]);
     const tail = Number(queueInfo[1]);
@@ -162,13 +162,13 @@ async function getDepositQueue(contract) {
   }
 }
 
-async function getDepositQueueItem(contract, index) {
+async function getDepositQueueItem(contract, queuePriority, index) {
   try {
     if (!contract) {
       throw new Error("Contract is not initialized.");
     }
     // Fetch the batch item from the contract
-    const batchItem = await contract.methods.depositQueueItem(index).call();
+    const batchItem = await contract.methods.depositQueueItem(queuePriority, index).call();
 
     // Function to extract batch information
     const extractBatchInfo = (batch) => ({
@@ -184,6 +184,19 @@ async function getDepositQueueItem(contract, index) {
     return { nodeId, keysCount, nextBatch };
   } catch (error) {
     log.error("Error calling getDepositQueueItem:", error);
+    return null;
+  }
+}
+
+async function getLowestPriorityQueueIndex(contract) {
+  try {
+    if (!contract) {
+      throw new Error("Contract is not initialized.");
+    }
+    const lowestPriority = await contract.methods.QUEUE_LOWEST_PRIORITY().call();
+    return lowestPriority;
+  } catch (error) {
+    log.error("Error calling getLowestPriorityQueueIndex:", error);
     return null;
   }
 }
@@ -243,6 +256,7 @@ async function getSigningKeysWithQueueInfo(monitoring) {
     // Retrieve enqueued count
     const nodeOperatorInfo = await getNodeOperatorInfo(contract, nodeOperatorId);
     const enqueuedCount = nodeOperatorInfo.enqueuedCount;
+
     if (enqueuedCount === null || enqueuedCount <= 0) {
       log.info("No enqueued validators for this Node Operator.");
     }
@@ -261,44 +275,52 @@ async function getSigningKeysWithQueueInfo(monitoring) {
       return null;
     }
 
-    // Initialize queue data
-    const queueData = await getDepositQueue(contract);
-    if (!queueData) {
-      log.error("Failed to retrieve deposit queue data.");
-      return null;
-    }
-    const { head, tail } = queueData;
+    // Get the number of priority queues that exist (index 0 - LOWEST_PRIORITY)
+    const LOWEST_PRIORITY = await getLowestPriorityQueueIndex(contract);
 
     // Prepare results
     const signingKeysWithQueueInfo = signingKeys.map((key) => ({ key, queuePosition: 0 })); // Default queuePosition to 0
 
-    if (enqueuedCount > 0) {
-      let remainingKeysToMark = Number(enqueuedCount);
+    // then loop over all queues and get their head/tail pointers
+    for (let queuePriority = 0; queuePriority <= LOWEST_PRIORITY; queuePriority++) {
+      // Initialize queue data
+      const queueData = await getDepositQueue(contract, queuePriority);
+      if (!queueData) {
+        log.error("Failed to retrieve deposit queue data.");
+        return null;
+      }
+      const { head, tail } = queueData;
 
-      // Traverse the deposit queue from tail to head
-      for (let index = tail; index >= head && remainingKeysToMark > 0; index--) {
-        const queueItem = await getDepositQueueItem(contract, index);
+      if (enqueuedCount > 0) {
+        let remainingKeysToMark = Number(enqueuedCount);
 
-        if (queueItem.nodeId === BigInt(nodeOperatorId)) {
-          const keysCountInQueue = Number(queueItem.keysCount);
+        // Traverse the deposit queue from tail to head
+        for (let index = tail; index >= head && remainingKeysToMark > 0; index--) {
+          const queueItem = await getDepositQueueItem(contract, queuePriority, index);
 
-          // Calculate queue position
-          const queuePosition = queueItem.nextBatch - BigInt(head);
+          if (queueItem.nodeId === BigInt(nodeOperatorId)) {
+            const keysCountInQueue = Number(queueItem.keysCount);
 
-          // Determine range of keys to mark in reverse order
-          const startIndex = signingKeysWithQueueInfo.length - remainingKeysToMark;
-          const endIndex = startIndex + keysCountInQueue;
+            // Calculate queue position
+            const queuePosition = queueItem.nextBatch - BigInt(head);
 
-          for (let i = endIndex - 1; i >= startIndex; i--) {
-            signingKeysWithQueueInfo[i].queuePosition = queuePosition;
+            // Determine range of keys to mark in reverse order
+            const startIndex = signingKeysWithQueueInfo.length - remainingKeysToMark;
+            const endIndex = startIndex + keysCountInQueue;
+
+            for (let i = endIndex - 1; i >= startIndex; i--) {
+              signingKeysWithQueueInfo[i].queuePosition = queuePosition;
+            }
+
+            // Reduce the remaining keys to mark
+            remainingKeysToMark -= keysCountInQueue;
           }
-
-          // Reduce the remaining keys to mark
-          remainingKeysToMark -= keysCountInQueue;
         }
+      } else {
+        log.info("No enqueued validators to process in the deposit queue.");
       }
     }
-
+    log.info(`Retrieved signing keys with queue information for ${signingKeysWithQueueInfo.length} keys. (${enqueuedCount} enqueued)`);
     // Return signing keys with queue information
     return signingKeysWithQueueInfo;
   } catch (error) {
