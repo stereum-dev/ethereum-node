@@ -122,7 +122,7 @@ test("prysm validator import", async () => {
       /Starting initial chain sync/.test(BCstatus.stderr) &&
       /Connected peers/.test(BCstatus.stderr) &&
       /Connected to new endpoint/.test(BCstatus.stderr) &&
-      /Beacon chain started/.test(VCstatus.stderr) &&
+      /Starting validator node/.test(VCstatus.stderr) &&
       /Waiting for beacon node to sync to latest chain head/.test(VCstatus.stderr)
     ) {
       condition = true;
@@ -185,7 +185,7 @@ test("prysm validator import", async () => {
   expect(BCstatus.stderr).toMatch(/Connected to new endpoint/);
 
   //check prysm VC logs
-  expect(VCstatus.stderr).toMatch(/Beacon chain started/);
+  expect(VCstatus.stderr).toMatch(/Starting validator node/);
   expect(VCstatus.stderr).toMatch(/Waiting for beacon node to sync to latest chain head/);
   expect(runningValidator).toMatch(/Showing .{1} validator accounts/);
 });
