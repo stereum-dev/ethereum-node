@@ -40,7 +40,7 @@ export class ErigonService extends NodeService {
         "--db.pagesize=16K",
         "--db.size.limit=8TB",
         "--externalcl",
-        "--prune.mode=full",
+        "--prune.mode=minimal",
       ], // command
       [], // entrypoint
       null, // env
