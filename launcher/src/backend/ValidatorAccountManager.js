@@ -620,7 +620,7 @@ export class ValidatorAccountManager {
     this.nodeConnection.taskManager.otherTasksHandler(ref, `Exit msg for ${pubkey?.substring(0, 6)}..`);
     try {
       let service = await this.nodeConnection.readServiceConfiguration(serviceID);
-      const result = await this.keymanagerAPI(service, "POST", `/eth/v1/validator/${pubkey}/voluntary_exit`, []);
+      const result = await this.keymanagerAPI(service, "POST", `/eth/v1/validator/${pubkey}/voluntary_exit?epoch=256`, []);
       if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
 
       log.info(result);
