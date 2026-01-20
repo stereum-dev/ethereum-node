@@ -66,23 +66,11 @@ jobs:
         if: matrix.os == 'macos-latest'
         run: echo "BUILD_ARGS=--universal" >> $GITHUB_ENV
 
-      - name: Check notarization credentials (Apple ID still valid)
-        if: matrix.os == 'macos-latest'
-        run: |
-          xcrun notarytool history \
-            --apple-id "$APPLE_ID" \
-            --password "$APPLE_APP_SPECIFIC_PASSWORD" \
-            --team-id "$APPLE_TEAM_ID"
-        env:
-          APPLE_ID: ${{ secrets.apple_id }}
-          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.apple_app_specific_password }}
-          APPLE_TEAM_ID: ${{ secrets.team_id }}
-
       - name: Install Dependencies
         run: |
           cd launcher && npm i
 
-      - name: Build Electron app
+      - name: Build Electron app (windows and linux)
         uses: samuelmeuli/action-electron-builder@v1
         with:
           github_token: ${{ secrets.github_token }}
@@ -90,17 +78,25 @@ jobs:
           use_vue_cli: true
           release: never
           build_script_name: dist
-          mac_certs: ${{ secrets.mac_certs }}
-          mac_certs_password: ${{ secrets.mac_certs_password }}
           args: ${{ env.BUILD_ARGS }}
         env:
-          APPLE_ID: ${{ secrets.apple_id }}
-          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.apple_app_specific_password }}
-          TEAM_SHORT_NAME: ${{ secrets.team_short_name }}
-          APP_ID: "com.stereum.launcher"
-          APPLE_TEAM_ID: ${{ secrets.team_id }}
+          NOTARIZE: "true"
           KEYPAIR_ALIAS: ${{ secrets.KEYPAIR_ALIAS }}
-        if: ${{ !contains(github.event.head_commit.message, '[NOCI]') }}
+        if: ${{ !contains(github.event.head_commit.message, '[NOCI]') && matrix.os != 'macos-latest' }}
+
+      - name: Build Electron app (macOS, unsigned)
+        uses: samuelmeuli/action-electron-builder@v1
+        with:
+          github_token: ${{ secrets.github_token }}
+          package_root: launcher
+          use_vue_cli: true
+          release: never
+          build_script_name: dist
+          args: ${{ env.BUILD_ARGS }}
+        env:
+          NOTARIZE: "false"
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+        if: ${{ !contains(github.event.head_commit.message, '[NOCI]') && matrix.os == 'macos-latest'}}
 
       - name: Verify Signing using Signtool on windows-latest
         run: |
