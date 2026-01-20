@@ -75,7 +75,7 @@ export class EthrexService extends NodeService {
   }
 
   buildExecutionClientMetricsEndpoint() {
-    return "stereum-" + this.id + ":9545";
+    return "stereum-" + this.id + ":9090";
   }
 
   getDataDir() {
