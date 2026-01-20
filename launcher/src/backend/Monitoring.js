@@ -962,6 +962,7 @@ export class Monitoring {
       BesuService: 8545,
       NethermindService: 8545,
       ErigonService: 8545,
+      EthrexService: 8545,
     };
 
     // Extract additional params
@@ -1109,6 +1110,7 @@ export class Monitoring {
         NethermindService: ["nethermind_blocks", "nethermind_blocks"], // OK [there is only one label] - query for job="nethermind"
         // Note: Erigon labels are taken from their official Grafana Dashboard, however those are not available thru Prometheus!
         ErigonService: ["chain_head_header", "chain_head_block"], // TODO - query for job="erigon"
+        EthrexService: ["block_number", "head_height"], // NOT OK - query for job="ethrex"
       },
     };
 
@@ -1125,6 +1127,7 @@ export class Monitoring {
       BesuService: "besu",
       NethermindService: "nethermind",
       ErigonService: "erigon",
+      EthrexService: "ethrex",
     };
 
     // Execution clients that should be queried by RPC for chain head block
@@ -1134,6 +1137,7 @@ export class Monitoring {
       // 'BesuService',
       "NethermindService",
       "ErigonService",
+      "EthrexService",
     ];
 
     // Merge all labels for Prometheus query
@@ -1317,6 +1321,7 @@ export class Monitoring {
         BesuService: ["ethereum_peer_count"],
         NethermindService: ["nethermind_sync_peers"],
         ErigonService: ["p2p_peers"],
+        EthrexService: ["ethrex_p2p_peer_count"],
       },
     };
 
@@ -1333,6 +1338,7 @@ export class Monitoring {
       BesuService: "besu",
       NethermindService: "nethermind",
       ErigonService: "erigon",
+      EthrexService: "ethrex",
     };
 
     // Merge all labels for Prometheus query
@@ -1477,6 +1483,11 @@ export class Monitoring {
           // --maxpeers (Default: 100)
           // https://github.com/ledgerwatch/erigon/issues/2853
           optnam = "--maxpeers";
+          defval = 100;
+        } else if (clt.service == "EthrexService") {
+          // --p2p.target-peers (Default: 100)
+          // https://docs.ethrex.xyz/CLI.html
+          optnam = "--p2p.target-peers";
           defval = 100;
         } else {
           return;
