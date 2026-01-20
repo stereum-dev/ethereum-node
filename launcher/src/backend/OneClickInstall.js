@@ -114,6 +114,11 @@ export class OneClickInstall {
       this.executionClient.push(this.serviceManager.getService("ErigonService", args));
     }
 
+    if (constellation.includes("EthrexService")) {
+      //EthrexService
+      this.executionClient.push(this.serviceManager.getService("EthrexService", args));
+    }
+
     if (constellation.includes("FlashbotsMevBoostService")) {
       //FlashbotsMevBoostService
       this.mevboost = this.serviceManager.getService("FlashbotsMevBoostService", args);
@@ -516,6 +521,9 @@ export class OneClickInstall {
               client.command[client.command.findIndex((c) => c.includes("--config"))] += "_archive";
               client.command[client.command.findIndex((c) => c.includes("--Pruning.Mode="))] = "--Pruning.Mode=None";
               client.command = client.command.filter((c) => !c.includes("--Pruning.FullPruningTrigger"));
+              break;
+            case "EthrexService":
+              // TODO: add archive flags for ethrex (when they are available)
               break;
           }
         });
