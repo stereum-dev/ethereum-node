@@ -66,6 +66,18 @@ jobs:
         if: matrix.os == 'macos-latest'
         run: echo "BUILD_ARGS=--universal" >> $GITHUB_ENV
 
+      - name: Check notarization credentials (Apple ID still valid)
+        if: matrix.os == 'macos-latest'
+        run: |
+          xcrun notarytool history \
+            --apple-id "$APPLE_ID" \
+            --password "$APPLE_APP_SPECIFIC_PASSWORD" \
+            --team-id "$APPLE_TEAM_ID"
+        env:
+          APPLE_ID: ${{ secrets.apple_id }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.apple_app_specific_password }}
+          APPLE_TEAM_ID: ${{ secrets.team_id }}
+
       - name: Install Dependencies
         run: |
           cd launcher && npm i
