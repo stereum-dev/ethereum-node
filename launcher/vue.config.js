@@ -1,3 +1,4 @@
+const shouldNotarize = process.env.NOTARIZE === "true";
 module.exports = {
   parallel: false,
   pluginOptions: {
@@ -10,7 +11,7 @@ module.exports = {
         },
         appId: "com.stereum.launcher",
         productName: "Stereum-Launcher",
-        afterSign: "@sapien99/vue-cli-plugin-electron-builder-notarize",
+        ...(shouldNotarize ? { afterSign: "@sapien99/vue-cli-plugin-electron-builder-notarize" } : {}),
         buildDependenciesFromSource: false,
         nodeGypRebuild: false,
         npmRebuild: false,
