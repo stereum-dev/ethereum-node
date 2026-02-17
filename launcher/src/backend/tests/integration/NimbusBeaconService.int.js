@@ -21,6 +21,7 @@ test("nimbus validator import", async () => {
     server_type: "cpx31",
     start_after_create: true,
     ssh_keys: [keyResponse.ssh_key.id],
+    location: "hil",
   };
 
   await testServer.create(serverSettings);
