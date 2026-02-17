@@ -1,17 +1,15 @@
 ---
-dependency:
-  name: galaxy
+#dependency:
+#  name: galaxy
 driver:
-  name: molecule_hetznercloud
+  name: docker
 platforms:
-  - name: "update-changes--2.4.3--ubuntu-24.04"
-    server_type: cx22
-    image: ubuntu-24.04
+  - name: "update-changes--2.4.6--ubuntu-24.04"
+    image: ubuntu:noble
+  # - name: "configure-updates--default--centos-8"
+  #   image: geerlingguy/docker-centos8-ansible
 provisioner:
   name: ansible
-  config_options:
-    ssh_connection:
-      ssh_args: -o ServerAliveInterval=30 -o ControlMaster=auto -o ControlPersist=60s
   env:
     ANSIBLE_PIPELINING: "True"
     ANSIBLE_ROLES_PATH: "${MOLECULE_PROJECT_DIRECTORY}/..:./roles:~/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles"

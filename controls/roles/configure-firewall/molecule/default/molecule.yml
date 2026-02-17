@@ -30,5 +30,6 @@ provisioner:
   name: ansible
   env:
     ANSIBLE_PIPELINING: "True"
+    ANSIBLE_ROLES_PATH: "${MOLECULE_PROJECT_DIRECTORY}/..:./roles:~/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles"
 verifier:
   name: ansible

@@ -1,0 +1,40 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+    # TekuBeaconService
+    - name: Read TekuBeaconService file
+      slurp:
+        src: "/etc/stereum/services/353b6184-928a-b686-31b4-f4db2073224a.yaml"
+      register: Teku_service_configuration_raw
+
+    - name: Parse Service configurations
+      set_fact:
+        Teku_service_configuration: "{{ Teku_service_configuration_raw['content'] | b64decode | from_yaml }}"
+        data_volume: "/opt/stereum/teku-353b6184-928a-b686-31b4-f4db2073224a/data"
+
+    - name: check if db version file exists
+      stat:
+        path: "{{ data_volume }}/beacon/db.version"
+      register: db_version_file
+
+    - name: check if db dir exists
+      stat:
+        path: "{{ data_volume }}/beacon/db"
+      register: db_dir
+
+    - debug:
+        msg: "{{ Teku_service_configuration }}"
+    - debug:
+        msg: "{{ Teku_service_configuration_raw['content'] | b64decode }}"
+    - debug:
+        msg: "db version file exists: {{ db_version_file.stat.exists }}, db dir exists: {{ db_dir.stat.exists }}"
+
+    - assert:
+        that:
+          - Teku_service_configuration.command | select('match', '--Xp2p-reworked-sidecar-recovery-enabled') | length == 0
+          - Teku_service_configuration.command | select('match', '--Xdata-storage-create-db-version=6') | length == 0
+          - db_version_file.stat.exists == false
+          - db_dir.stat.exists == false
+# EOF

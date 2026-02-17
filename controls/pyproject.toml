@@ -7,13 +7,13 @@ readme = "README.md"
 package-mode = false
 
 [tool.poetry.dependencies]
-python = "^3.10"
-ansible = "^10.3.0"
-molecule = {extras = ["docker-lint"], version = "^24.8.0"}
-molecule-docker = "^2.1.0"
-molecule-hetznercloud = "^2.3.0"
+python = "^3.12"
+ansible = "^13.3.0"
+molecule = {extras = ["docker-lint"], version = "^25.12.0"}
+molecule-plugins = {extras = ["docker"], version = "^25.8.12"}
+molecule-hetznercloud = "^2.7.0"
 docker = "^7.1.0"
-hcloud = "^2.2.1"
+hcloud = "^2.16.0"
 
 [build-system]
 requires = ["poetry-core"]
