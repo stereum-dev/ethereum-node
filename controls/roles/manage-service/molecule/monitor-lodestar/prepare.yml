@@ -2,7 +2,7 @@
 - name: Prepare
   hosts: all
   roles:
-    - role: '../'
+    - role: "../"
   vars_files:
     - ../../../../defaults/stereum_defaults.yaml
   vars:
@@ -16,13 +16,13 @@
         state: present
       become: true
       changed_when: false
-      when: ansible_distribution == "Ubuntu"
+      when: ansible_facts['distribution'] == "Ubuntu"
 
     - name: Install python for Ansible (CentOS 8)
       raw: yum install -y python38 tar && yum remove -y python36
       become: true
       changed_when: false
-      when: ansible_distribution == "CentOS"
+      when: ansible_facts['distribution'] == "CentOS"
 
     - include_role:
         name: "setup"
@@ -30,13 +30,13 @@
     - include_role:
         name: "configure-firewall"
 
-   # lodestar beacon service
+    # lodestar beacon service
     - block:
-      - set_fact:
-          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
-      - name: "Include manage-service"
-        include_role:
-          name: "manage-service"
+        - set_fact:
+            stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+        - name: "Include manage-service"
+          include_role:
+            name: "manage-service"
       vars:
         stereum_args:
           manage_service:

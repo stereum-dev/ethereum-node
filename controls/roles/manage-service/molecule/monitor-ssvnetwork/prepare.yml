@@ -2,7 +2,7 @@
 - name: Prepare
   hosts: all
   roles:
-    - role: '../'
+    - role: "../"
   vars_files:
     - ../../../../defaults/stereum_defaults.yaml
   vars:
@@ -18,13 +18,13 @@
         state: present
       become: true
       changed_when: false
-      when: ansible_distribution == "Ubuntu"
+      when: ansible_facts['distribution'] == "Ubuntu"
 
     - name: Install python for Ansible (CentOS 8)
       raw: yum install -y python38 tar && yum remove -y python36
       become: true
       changed_when: false
-      when: ansible_distribution == "CentOS"
+      when: ansible_facts['distribution'] == "CentOS"
 
     - include_role:
         name: "setup"
@@ -33,11 +33,11 @@
         name: "configure-firewall"
 
     - block:
-      - set_fact:
-          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
-      - name: "Include manage-service"
-        include_role:
-          name: "manage-service"
+        - set_fact:
+            stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+        - name: "Include manage-service"
+          include_role:
+            name: "manage-service"
       vars:
         stereum_args:
           manage_service:
@@ -74,11 +74,11 @@
                 - "/opt/app/services/{{ geth_service }}/engine.jwt:/engine.jwt"
 
     - block:
-      - set_fact:
-          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
-      - name: "Include manage-service"
-        include_role:
-          name: "manage-service"
+        - set_fact:
+            stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+        - name: "Include manage-service"
+          include_role:
+            name: "manage-service"
       vars:
         stereum_args:
           manage_service:
@@ -119,9 +119,9 @@
 
     # ssv operator keys
     - block:
-      - name: "Include ssv-key-generator"
-        include_role:
-          name: "ssv-key-generator"
+        - name: "Include ssv-key-generator"
+          include_role:
+            name: "ssv-key-generator"
       vars:
         ssv_key_service: "{{ ssv_service }}"
 
@@ -141,7 +141,7 @@
         state: directory
         owner: "2000"
         group: "2000"
-        mode: '0744'
+        mode: "0744"
       become: yes
 
     - name: Write SSV-Service's config
@@ -159,16 +159,16 @@
           MetricsAPIPort: 15000
         owner: "2000"
         group: "2000"
-        mode: '0644'
+        mode: "0644"
       become: yes
 
     # ssv service
     - block:
-      - set_fact:
-          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
-      - name: "Include manage-service"
-        include_role:
-          name: "manage-service"
+        - set_fact:
+            stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+        - name: "Include manage-service"
+          include_role:
+            name: "manage-service"
       vars:
         stereum_args:
           manage_service:
@@ -184,10 +184,9 @@
               env:
                 CONFIG_PATH: /data/config.yaml
               command: bash -c "make BUILD_PATH=/go/bin/ssvnode start-node &&
-                                docker logs ssv_node"
+                docker logs ssv_node"
               entrypoint: []
               user: "2000"
               volumes:
                 - "/opt/app/services/{{ ssv_service }}/data:/data"
-
 # EOF

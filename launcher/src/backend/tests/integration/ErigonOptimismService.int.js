@@ -19,6 +19,7 @@ test("op-erigon installation", async () => {
     server_type: "cpx21",
     start_after_create: true,
     ssh_keys: [keyResponse.ssh_key.id],
+    location: "hil",
   };
 
   await testServer.create(serverSettings);

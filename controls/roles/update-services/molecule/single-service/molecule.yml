@@ -5,9 +5,10 @@ driver:
   name: molecule_hetznercloud
 platforms:
   # cpx31 for the storage requirements
-  - name: "update-services--single-service--ubuntu-22.04"
+  - name: "update-services--single-service--ubuntu-24.04"
     server_type: cpx31
-    image: ubuntu-22.04
+    image: ubuntu-24.04
+    location: hil
 #  - name: "update-services--default--centos-stream-8"
 #    server_type: cpx31
 #    image: centos-stream-8

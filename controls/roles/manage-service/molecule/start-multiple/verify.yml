@@ -2,33 +2,33 @@
 - name: Verify
   hosts: all
   tasks:
-  - stat: path=/etc/stereum/services
-    register: stereum_services_dir
-  - debug:
-      msg: "{{ stereum_services_dir }}"
-  - shell: docker ps
-    register: stereum_docker_ps
-  - debug:
-      msg: "{{ stereum_docker_ps }}"
-  - assert:
-      that:
-      - stereum_docker_ps.stdout.find("sigp/lighthouse") != -1
-      - stereum_docker_ps.stdout.find("9000->9000") != -1
-  - shell: ufw status
-    register: stereum_ufw_status
-  - debug:
-      msg: "{{ stereum_ufw_status }}"
-  - assert:
-      that:
-      - stereum_ufw_status.stdout.find("9000/tcp") != -1
-      - stereum_ufw_status.stdout.find("9000/udp") != -1
-      - stereum_ufw_status.stdout.find("30303/tcp") != -1
-      - stereum_ufw_status.stdout.find("30303/udp") != -1
-  - assert:
-      that:
-      - stereum_ufw_status.stdout | regex_findall("ALLOW") | length == 11
-    when: ansible_distribution == "Ubuntu"
-  - assert:
-      that:
-      - stereum_ufw_status.stdout | regex_findall("ALLOW") | length == 15
-    when: ansible_distribution == "CentOS"
+    - stat: path=/etc/stereum/services
+      register: stereum_services_dir
+    - debug:
+        msg: "{{ stereum_services_dir }}"
+    - shell: docker ps
+      register: stereum_docker_ps
+    - debug:
+        msg: "{{ stereum_docker_ps }}"
+    - assert:
+        that:
+          - stereum_docker_ps.stdout.find("sigp/lighthouse") != -1
+          - stereum_docker_ps.stdout.find("9000->9000") != -1
+    - shell: ufw status
+      register: stereum_ufw_status
+    - debug:
+        msg: "{{ stereum_ufw_status }}"
+    - assert:
+        that:
+          - stereum_ufw_status.stdout.find("9000/tcp") != -1
+          - stereum_ufw_status.stdout.find("9000/udp") != -1
+          - stereum_ufw_status.stdout.find("30303/tcp") != -1
+          - stereum_ufw_status.stdout.find("30303/udp") != -1
+    - assert:
+        that:
+          - stereum_ufw_status.stdout | regex_findall("ALLOW") | length == 11
+      when: ansible_facts['distribution'] == "Ubuntu"
+    - assert:
+        that:
+          - stereum_ufw_status.stdout | regex_findall("ALLOW") | length == 15
+      when: ansible_facts['distribution'] == "CentOS"

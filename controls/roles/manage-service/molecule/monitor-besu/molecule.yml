@@ -4,10 +4,11 @@ dependency:
 driver:
   name: molecule_hetznercloud
 platforms:
-  - name: "manage-service--monitor-besu--ubuntu-22.04"
+  - name: "manage-service--monitor-besu--ubuntu-24.04"
     hostname: ubuntu
     server_type: cpx31
-    image: ubuntu-22.04
+    image: ubuntu-24.04
+    location: hil
 provisioner:
   name: ansible
   config_options:

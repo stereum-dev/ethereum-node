@@ -29,7 +29,7 @@
 
 - name: Add Docker Repository
   apt_repository:
-    repo: "deb https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+    repo: "deb https://download.docker.com/linux/ubuntu {{ ansible_facts['distribution_release'] }} stable"
 
 - name: Update apt and install docker-ce
   apt:

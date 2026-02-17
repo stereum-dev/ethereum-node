@@ -1,11 +1,11 @@
 ---
 - name: Docker on CentOS
   include_tasks: docker-centos.yaml
-  when: ansible_distribution == "CentOS"
+  when: ansible_facts['distribution'] == "CentOS"
 
 - name: Docker on Ubuntu
   include_tasks: docker-ubuntu.yaml
-  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  when: ansible_facts['distribution'] == 'Debian' or ansible_facts['distribution'] == 'Ubuntu'
 
 - name: Enable service docker
   systemd:

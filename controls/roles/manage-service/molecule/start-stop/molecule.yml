@@ -4,11 +4,12 @@ dependency:
 driver:
   name: molecule_hetznercloud
 platforms:
-  - name: "manage-service--start-stop--ubuntu-22.04"
+  - name: "manage-service--start-stop--ubuntu-24.04"
     server_type: cpx21
-    image: ubuntu-22.04
+    image: ubuntu-24.04
+    location: hil
   # - name: "role-manage-service-centos-7"
-  #   server_type: cx22
+  #   server_type: cpx11
   #   image: centos-7
 provisioner:
   name: ansible

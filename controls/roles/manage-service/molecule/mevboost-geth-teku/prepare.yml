@@ -2,7 +2,7 @@
 - name: Prepare
   hosts: all
   roles:
-    - role: '../'
+    - role: "../"
   vars_files:
     - ../../../../defaults/stereum_defaults.yaml
 
@@ -18,19 +18,19 @@
         state: present
       become: true
       changed_when: false
-      when: ansible_distribution == "Ubuntu"
+      when: ansible_facts['distribution'] == "Ubuntu"
 
     - name: Install python for Ansible (CentOS 8)
       raw: yum install -y python38 tar && yum remove -y python36
       become: true
       changed_when: false
-      when: ansible_distribution == "CentOS"
+      when: ansible_facts['distribution'] == "CentOS"
 
     - name: Install keytool for creating Keystore (CentOS 8)
       raw: yum install -y java-1.8.0-openjdk
       become: true
       changed_when: false
-      when: ansible_distribution == "CentOS"
+      when: ansible_facts['distribution'] == "CentOS"
 
     - name: Install pip, expect (CentOS 8)
       yum:
@@ -39,12 +39,11 @@
           - expect
         state: latest
       become: true
-      when: ansible_distribution == "CentOS"
+      when: ansible_facts['distribution'] == "CentOS"
 
     - include_role:
         name: "setup"
 
     - include_role:
         name: "configure-firewall"
-
 # EOF

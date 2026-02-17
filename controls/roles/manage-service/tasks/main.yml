@@ -80,7 +80,7 @@
         proto: "{{ item.split('/')[1] | default('any') }}"
         delete: "{{ 'yes' if stereum.manage_service.state == 'stopped' else 'no' }}"
       environment:
-        PATH: /sbin:{{ ansible_env.PATH }}
+        PATH: /sbin:{{ ansible_facts['env'].PATH }}
       with_items: "{{ stereum_service_configuration.ports }}"
       when: stereum.manage_service.state != "restarted" and stereum_service_configuration.ports is defined
 

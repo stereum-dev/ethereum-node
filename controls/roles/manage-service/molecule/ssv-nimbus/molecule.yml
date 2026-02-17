@@ -4,13 +4,14 @@ dependency:
 driver:
   name: molecule_hetznercloud
 platforms:
-  - name: "manage-service--ssv-nimbus--ubuntu-22.04"
+  - name: "manage-service--ssv-nimbus--ubuntu-24.04"
     hostname: ubuntu
-    server_type: cx42
-    image: ubuntu-22.04
+    server_type: cpx31
+    image: ubuntu-24.04
+    location: hil
 #  - name: "manage-service--ssv-nimbus--centos-stream-8"
 #    hostname: "centos"
-#    server_type: cx42
+#    server_type: cpx31
 #    image: centos-stream-8
 provisioner:
   name: ansible

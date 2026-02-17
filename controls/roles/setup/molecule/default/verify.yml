@@ -5,33 +5,32 @@
   hosts: all
   gather_facts: false
   tasks:
+    # Stereum config files
+    - stat: path=/etc/stereum/stereum.yaml
+      register: stereum_config_file
+    - stat: path=/etc/stereum/services
+      register: stereum_services_dir
+    - debug:
+        msg: "{{ stereum_config_file }}"
+    - name: Check for config
+      assert:
+        that:
+          - stereum_config_file.stat.exists
+          - stereum_services_dir.stat.isdir is defined and stereum_services_dir.stat.isdir
 
-  # Stereum config files
-  - stat: path=/etc/stereum/stereum.yaml
-    register: stereum_config_file
-  - stat: path=/etc/stereum/services
-    register: stereum_services_dir
-  - debug:
-      msg: "{{ stereum_config_file }}"
-  - name: Check for config
-    assert:
-      that:
-        - stereum_config_file.stat.exists
-        - stereum_services_dir.stat.isdir is defined and stereum_services_dir.stat.isdir
-  
-  # Docker installation
-  - shell: docker info
-    register: stereum_docker_info
-  - name: Check for docker
-    assert:
-      that:
-        - stereum_docker_info.rc == 0
+    # Docker installation
+    - shell: docker info
+      register: stereum_docker_info
+    - name: Check for docker
+      assert:
+        that:
+          - stereum_docker_info.rc == 0
 
-  # Timesyncd
-  - shell: timedatectl status
-    register: stereum_timesyncd_status
-  - name: Check timedatectl status
-    assert:
-      that:
-        - stereum_timesyncd_status.rc == 0
-        - stereum_timesyncd_status.stdout.find("NTP service: active") != -1
+    # Timesyncd
+    - shell: timedatectl status
+      register: stereum_timesyncd_status
+    - name: Check timedatectl status
+      assert:
+        that:
+          - stereum_timesyncd_status.rc == 0
+          - "'NTP service: active' in stereum_timesyncd_status.stdout"

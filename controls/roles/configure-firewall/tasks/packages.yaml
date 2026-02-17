@@ -4,7 +4,7 @@
     name:
       - ufw
       - fail2ban
-  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  when: ansible_facts['distribution'] == 'Debian' or ansible_facts['distribution'] == 'Ubuntu'
 
 - name: Install ufw, fail2ban
   yum:
@@ -12,6 +12,5 @@
       - ufw
       - fail2ban
     state: present
-  when: ansible_distribution == "CentOS"
-
+  when: ansible_facts['distribution'] == "CentOS"
 # EOF

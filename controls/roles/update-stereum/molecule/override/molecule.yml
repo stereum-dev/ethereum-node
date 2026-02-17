@@ -4,11 +4,12 @@ dependency:
 driver:
   name: molecule_hetznercloud
 platforms:
-  - name: "update-stereum--override--ubuntu-22.04"
-    server_type: cx22
-    image: ubuntu-22.04
+  - name: "update-stereum--override--ubuntu-24.04"
+    server_type: cpx11
+    image: ubuntu-24.04
+    location: hil
 #  - name: "update-stereum--default--centos-stream-8"
-#    server_type: cx22
+#    server_type: cpx11
 #    image: centos-stream-8
 provisioner:
   name: ansible
