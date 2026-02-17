@@ -84,19 +84,31 @@
       with_items: "{{ stereum_service_configuration.ports }}"
       when: stereum.manage_service.state != "restarted" and stereum_service_configuration.ports is defined
 
+    - name: Get genesis volume path
+      set_fact:
+        genesis_volume_path: "{{ stereum_service_configuration.volumes | select('search', 'genesis') | first | split(':') | first }}"
+      when: >
+        (stereum_service_configuration.service == 'PrysmBeaconService') and
+        (stereum_service_configuration.network is match("holesky|sepolia|hoodi")) and
+        (stereum_service_configuration.volumes is defined) and
+        ((stereum_service_configuration.volumes | select('search', 'genesis') | length) > 0)
+
+    - name: Check if genesis file exists
+      stat:
+        path: "{{ genesis_volume_path }}/prysm-{{ stereum_service_configuration.network }}-genesis.ssz"
+      register: genesis_file
+      become: yes
+      when: genesis_volume_path is defined
+
     - name: Download genesis file
       ansible.builtin.get_url:
         url: https://github.com/eth-clients/{{ stereum_service_configuration.network }}/raw/main/metadata/genesis.ssz
-        dest: "{{ item.split(':') | first }}/prysm-{{ stereum_service_configuration.network }}-genesis.ssz"
+        dest: "{{ genesis_volume_path }}/prysm-{{ stereum_service_configuration.network }}-genesis.ssz"
         mode: 0644
         force: false
         timeout: 200
       become: yes
-      when: >
-        (stereum_service_configuration.service == 'PrysmBeaconService') and
-        (stereum_service_configuration.network is match("holesky|sepolia|hoodi")) and
-        "genesis" in item
-      with_items: "{{ stereum_service_configuration.volumes }}"
+      when: genesis_volume_path is defined and not genesis_file.stat.exists
 
     - name: Generate JWT (execution client only)
       copy:
