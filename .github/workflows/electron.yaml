@@ -17,7 +17,7 @@ jobs:
 
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Ensure Node Version
         uses: actions/setup-node@v4
@@ -163,7 +163,7 @@ jobs:
 
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Set Versions
         id: variables
@@ -226,3 +226,4 @@ jobs:
         run: |
           gh release upload --clobber "${{ steps.variables.outputs.version }}-draft" dist/*
         if: ${{ !contains(github.event.head_commit.message, '[NOCI]') && !contains(github.event.head_commit.message, '[DRAFT]') }}
+
