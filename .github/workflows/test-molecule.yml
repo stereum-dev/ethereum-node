@@ -40,7 +40,7 @@ jobs:
           /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule==25.12.0
           /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule[docker.lint]"
           /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-plugins==25.8.12
-          pip install "molecule-plugins[docker]"
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule-plugins[docker]"
           /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-hetznercloud
           /opt/pipx/venvs/ansible-core/bin/python -m pip install docker
           /opt/pipx/venvs/ansible-core/bin/python -m pip install hcloud
