@@ -36,6 +36,10 @@ jobs:
           ansible-galaxy collection install community.docker
       - name: Install dependency for pipx
         run: |
+          python -V
+          which python
+          /opt/pipx/venvs/ansible-core/bin/python -V
+          /opt/pipx/venvs/ansible-core/bin/python -c "import sys; print(sys.executable, sys.version)"
           /opt/pipx/venvs/ansible-core/bin/python -m pip install ansible==13.3.0
           /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule==25.12.0
           /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule[docker.lint]"
