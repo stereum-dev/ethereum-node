@@ -1,10 +1,10 @@
 ---
 - name: Get distribution version
   setup:
-    filter: ansible_distribution*
+    filter: ansible_facts['distribution']*
 - name: Skip if not Ubuntu 22.04
   meta: end_host
-  when: ansible_distribution != 'Ubuntu' or ansible_distribution_version != '22.04'
+  when: ansible_facts['distribution'] != 'Ubuntu' or ansible_facts['distribution']_version != '22.04'
 - name: apt clean
   ansible.builtin.apt:
     autoclean: true

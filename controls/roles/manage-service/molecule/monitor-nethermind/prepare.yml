@@ -2,7 +2,7 @@
 - name: Prepare
   hosts: all
   roles:
-    - role: '../'
+    - role: "../"
   vars_files:
     - ../../../../defaults/stereum_defaults.yaml
   vars:
@@ -16,13 +16,13 @@
         state: present
       become: true
       changed_when: false
-      when: ansible_distribution == "Ubuntu"
+      when: ansible_facts['distribution'] == "Ubuntu"
 
     - name: Install python for Ansible (CentOS 8)
       raw: yum install -y python38 tar && yum remove -y python36
       become: true
       changed_when: false
-      when: ansible_distribution == "CentOS"
+      when: ansible_facts['distribution'] == "CentOS"
 
     - include_role:
         name: "setup"
@@ -32,11 +32,11 @@
 
     # nethermind
     - block:
-      - set_fact:
-          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
-      - name: "Include manage-service"
-        include_role:
-          name: "manage-service"
+        - set_fact:
+            stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+        - name: "Include manage-service"
+          include_role:
+            name: "manage-service"
       vars:
         stereum_args:
           manage_service:
@@ -52,20 +52,19 @@
               entrypoint: ["./nethermind"]
               env: {}
               command:
-              - --config=goerli
-              - --log=debug
-              - --datadir=/opt/app/data
-              - --Network.DiscoveryPort=30303
-              - --Network.P2PPort=30303
-              - --JsonRpc.Enabled=true
-              - --JsonRpc.Host=0.0.0.0
-              - --Init.WebSocketsEnabled=true
-              - --JsonRpc.WebSocketsPort=8546
-              - --JsonRpc.EnabledModules=[web3,eth,subscribe,net]
-              - --Metrics.Enabled=true
-              - --Metrics.ExposePort=6060
+                - --config=goerli
+                - --log=debug
+                - --datadir=/opt/app/data
+                - --Network.DiscoveryPort=30303
+                - --Network.P2PPort=30303
+                - --JsonRpc.Enabled=true
+                - --JsonRpc.Host=0.0.0.0
+                - --Init.WebSocketsEnabled=true
+                - --JsonRpc.WebSocketsPort=8546
+                - --JsonRpc.EnabledModules=[web3,eth,subscribe,net]
+                - --Metrics.Enabled=true
+                - --Metrics.ExposePort=6060
               user: "root"
               volumes:
                 - "/opt/app/services/{{ nethermind_service }}/data:/opt/app/data"
-
 # EOF

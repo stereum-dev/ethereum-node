@@ -35,7 +35,7 @@
           - "{{ ssh_key_name }}"
         volumes: "{{ item.volumes | default(omit) }}"
         image: "{{ item.image }}"
-        datacenter: "{{ item.datacenter | default(omit) }}"
+        location: "{{ item.location | default(omit) }}"
         user_data: "{{ item.user_data | default(omit) }}"
         api_token: "{{ lookup('env', 'HCLOUD_TOKEN') }}"
         state: present
@@ -64,14 +64,15 @@
 
     - name: Populate instance config dict
       set_fact:
-        instance_conf_dict: {
-          'instance': "{{ item.hcloud_server.name }}",
-          'ssh_key_name': "{{ ssh_key_name }}",
-          'address': "{{ item.hcloud_server.ipv4_address }}",
-          'user': "{{ ssh_user }}",
-          'port': "{{ ssh_port }}",
-          'identity_file': "{{ ssh_path }}",
-        }
+        instance_conf_dict:
+          {
+            "instance": "{{ item.hcloud_server.name }}",
+            "ssh_key_name": "{{ ssh_key_name }}",
+            "address": "{{ item.hcloud_server.ipv4_address }}",
+            "user": "{{ ssh_user }}",
+            "port": "{{ ssh_port }}",
+            "identity_file": "{{ ssh_path }}",
+          }
       with_items: "{{ hetzner_jobs.results }}"
       register: instance_config_dict
       when: server.changed | bool

@@ -7,7 +7,8 @@ platforms:
   - name: "manage-service--ssv-lighthouse--ubuntu-22.04"
     hostname: ubuntu
     server_type: cx42
-    image: ubuntu-22.04
+    image: ubuntu-24.04
+    location: hil
 #  - name: "manage-service--ssv-lighthouse--centos-stream-8"
 #    hostname: "centos"
 #    server_type: cx42

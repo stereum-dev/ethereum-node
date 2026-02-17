@@ -5,16 +5,16 @@
   when: stereum is undefined
 
 - include_tasks: update-os-ubuntu.yml
-  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  when: ansible_facts['distribution'] == 'Debian' or ansible_facts['distribution'] == 'Ubuntu'
 
 - include_tasks: update-os-centos.yml
-  when: ansible_distribution == "CentOS"
+  when: ansible_facts['distribution'] == "CentOS"
 
 - include_tasks: timesyncd.yml
 
 - include_tasks: docker.yml
 
 - include_tasks: zip-centos.yml
-  when: ansible_distribution == "CentOS"
+  when: ansible_facts['distribution'] == "CentOS"
 
 - include_tasks: stereum-config.yml

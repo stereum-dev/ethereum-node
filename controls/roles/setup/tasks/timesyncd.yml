@@ -3,13 +3,13 @@
   package:
     name: systemd-timesyncd
     state: present
-  when: ansible_distribution == 'Ubuntu'
+  when: ansible_facts['distribution'] == 'Ubuntu'
 
 - name: Install timesyncd
   yum:
     name: systemd-timesyncd
     state: present
-  when: ansible_distribution == "CentOS"
+  when: ansible_facts['distribution'] == "CentOS"
 
 - name: enable service systemd-timesyncd
   systemd:

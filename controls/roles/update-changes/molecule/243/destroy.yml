@@ -24,7 +24,9 @@
         state: absent
       register: server
       with_items: "{{ instance_conf }}"
-      when: not skip_instances
+      when:
+        - not skip_instances
+        - instance_conf | length > 0
       async: 7200
       poll: 0
 
@@ -34,7 +36,11 @@
       register: hetzner_jobs
       until: hetzner_jobs.finished
       retries: 300
-      with_items: "{{ server.results }}"
+      delay: 5
+      loop: "{{ (server.results | default([])) }}"
+      when:
+        - not skip_instances
+        - instance_conf | length > 0
 
     - name: Remove registered SSH key
       hcloud_ssh_key:
@@ -42,7 +48,7 @@
         state: absent
       when:
         - not skip_instances
-        - instance_conf | length # must contain at least one instance
+        - instance_conf | length > 0 # must contain at least one instance
 
     - name: Populate instance config
       set_fact:

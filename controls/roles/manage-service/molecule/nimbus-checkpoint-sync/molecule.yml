@@ -7,7 +7,8 @@ platforms:
   - name: "manage-service--nimbus-checkpointsync--ubuntu-22.04"
     hostname: ubuntu
     server_type: cpx21
-    image: ubuntu-22.04
+    image: ubuntu-24.04
+    location: hil
 #  - name: "nimbus-checkpointsync--default--centos-stream-8"
 #    hostname: "centos"
 #    server_type: cpx21

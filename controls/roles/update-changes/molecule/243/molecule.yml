@@ -7,6 +7,7 @@ platforms:
   - name: "update-changes--2.4.3--ubuntu-24.04"
     server_type: cx22
     image: ubuntu-24.04
+    location: hil
 provisioner:
   name: ansible
   config_options:

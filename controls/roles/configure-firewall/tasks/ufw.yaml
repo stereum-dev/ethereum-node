@@ -20,7 +20,7 @@
     direction: incoming
     policy: deny
   environment:
-    PATH: /sbin:{{ ansible_env.PATH }}
+    PATH: /sbin:{{ ansible_facts['env'].PATH }}
 
 - name: Firewall allow ssh ports
   ufw:
@@ -30,6 +30,5 @@
     proto: tcp
   with_items: "{{ common_ssh_ports }}"
   environment:
-    PATH: /sbin:{{ ansible_env.PATH }}
-
+    PATH: /sbin:{{ ansible_facts['env'].PATH }}
 # EOF

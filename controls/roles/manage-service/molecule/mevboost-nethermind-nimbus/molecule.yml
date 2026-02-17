@@ -7,7 +7,8 @@ platforms:
   - name: "manage-service--mevboost-nethermind-nimbus--ubuntu-22.04"
     hostname: ubuntu
     server_type: cpx31
-    image: ubuntu-22.04
+    image: ubuntu-24.04
+    location: hil
 #  - name: "manage-service--mevboost-nethermind-nimbus--centos-stream-8"
 #    hostname: "centos"
 #    server_type: cpx31

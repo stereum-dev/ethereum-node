@@ -35,7 +35,7 @@
           - "{{ ssh_key_name }}"
         volumes: "{{ item.volumes | default(omit) }}"
         image: "{{ item.image }}"
-        datacenter: "{{ item.datacenter | default(omit) }}"
+        location: "{{ item.location | default(omit) }}"
         user_data: "{{ item.user_data | default(omit) }}"
         api_token: "{{ lookup('env', 'HCLOUD_TOKEN') }}"
         state: present

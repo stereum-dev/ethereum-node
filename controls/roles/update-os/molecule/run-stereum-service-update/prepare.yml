@@ -2,7 +2,7 @@
 - name: Prepare
   hosts: all
   roles:
-    - role: '../'
+    - role: "../"
   vars_files:
     - ../../../../defaults/stereum_defaults.yaml
 
@@ -13,20 +13,20 @@
         upgrade: dist
       become: true
       changed_when: false
-      when: ansible_distribution == "Ubuntu"
+      when: ansible_facts['distribution'] == "Ubuntu"
     - name: Install python for Ansible (Ubuntu)
       apt:
         name: pip
         state: present
       become: true
       changed_when: false
-      when: ansible_distribution == "Ubuntu"
+      when: ansible_facts['distribution'] == "Ubuntu"
 
     - name: Install python for Ansible (CentOS 8)
       raw: yum install -y python38 tar && yum remove -y python36
       become: true
       changed_when: false
-      when: ansible_distribution == "CentOS"
+      when: ansible_facts['distribution'] == "CentOS"
 
     - name: Install p3-pip, expect (Ubuntu)
       apt:
@@ -35,7 +35,7 @@
           - expect
           - git
       become: true
-      when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+      when: ansible_facts['distribution'] == 'Debian' or ansible_facts['distribution'] == 'Ubuntu'
 
     - name: Install pip, expect (CentOS 8)
       yum:
@@ -45,7 +45,7 @@
           - git
         state: latest
       become: true
-      when: ansible_distribution == "CentOS"
+      when: ansible_facts['distribution'] == "CentOS"
 
     - name: dummy directories
       file:
@@ -64,5 +64,4 @@
         group: "root"
         mode: 0755
       become: true
-
 # EOF

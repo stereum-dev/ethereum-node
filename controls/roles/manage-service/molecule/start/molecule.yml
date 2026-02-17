@@ -6,7 +6,8 @@ driver:
 platforms:
   - name: "manage-service--start--ubuntu-22.04"
     server_type: cpx21
-    image: ubuntu-22.04
+    image: ubuntu-24.04
+    location: hil
   # - name: "role-manage-service-centos-7"
   #   server_type: cx22
   #   image: centos-7

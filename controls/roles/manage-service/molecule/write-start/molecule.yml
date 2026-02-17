@@ -6,7 +6,8 @@ driver:
 platforms:
   - name: "manage-service--write-start--ubuntu-22.04"
     server_type: cx22
-    image: ubuntu-22.04
+    image: ubuntu-24.04
+    location: hil
   # - name: "role-manage--write-start--ubuntu-20.04"
   #   server_type: cx22
   #   image: centos-7
