@@ -4,8 +4,8 @@
 driver:
   name: docker
 platforms:
-  - name: "configure-updates--default--ubuntu-22.04"
-    image: ubuntu:jammy
+  - name: "configure-updates--default--ubuntu-24.04"
+    image: ubuntu:noble
   # - name: "configure-updates--default--centos-8"
   #   image: geerlingguy/docker-centos8-ansible
 provisioner:

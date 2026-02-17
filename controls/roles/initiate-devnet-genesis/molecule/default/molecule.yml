@@ -4,7 +4,7 @@ dependency:
 driver:
   name: molecule_hetznercloud
 platforms:
-  - name: "initiate-devnet-genesis--default--ubuntu-22.04"
+  - name: "initiate-devnet-genesis--default--ubuntu-24.04"
     server_type: cpx11
     image: ubuntu-24.04
     location: hil

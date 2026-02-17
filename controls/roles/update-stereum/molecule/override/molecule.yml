@@ -4,7 +4,7 @@ dependency:
 driver:
   name: molecule_hetznercloud
 platforms:
-  - name: "update-stereum--override--ubuntu-22.04"
+  - name: "update-stereum--override--ubuntu-24.04"
     server_type: cpx11
     image: ubuntu-24.04
     location: hil
