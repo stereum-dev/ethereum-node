@@ -5,11 +5,11 @@ driver:
   name: molecule_hetznercloud
 platforms:
   - name: "setup--default--ubuntu-22.04"
-    server_type: cx22
+    server_type: cpx11
     image: ubuntu-24.04
     location: hil
 #  - name: "setup--default--centos-stream-8"
-#    server_type: cx22
+#    server_type: cpx11
 #    image: centos-stream-8
 provisioner:
   name: ansible

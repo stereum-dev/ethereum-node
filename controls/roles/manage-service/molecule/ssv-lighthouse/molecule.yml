@@ -6,12 +6,12 @@ driver:
 platforms:
   - name: "manage-service--ssv-lighthouse--ubuntu-22.04"
     hostname: ubuntu
-    server_type: cx42
+    server_type: cpx31
     image: ubuntu-24.04
     location: hil
 #  - name: "manage-service--ssv-lighthouse--centos-stream-8"
 #    hostname: "centos"
-#    server_type: cx42
+#    server_type: cpx31
 #    image: centos-stream-8
 provisioner:
   name: ansible

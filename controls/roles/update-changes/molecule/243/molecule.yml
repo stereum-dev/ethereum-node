@@ -5,7 +5,7 @@ driver:
   name: molecule_hetznercloud
 platforms:
   - name: "update-changes--2.4.3--ubuntu-24.04"
-    server_type: cx22
+    server_type: cpx11
     image: ubuntu-24.04
     location: hil
 provisioner:
