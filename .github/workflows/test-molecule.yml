@@ -22,23 +22,25 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: "3.12"
       - name: Install depencencies
         run: |
-          pip install ansible==10.3.0
-          pip install molecule==24.8.0
+          pip install ansible==13.3.0
+          pip install molecule==25.12.0
           pip install "molecule[docker.lint]"
-          pip install molecule-docker
+          pip install molecule-plugins==25.8.12
+          pip install "molecule-plugins[docker]"
           pip install molecule-hetznercloud
           pip install docker
           pip install hcloud
           ansible-galaxy collection install community.docker
       - name: Install dependency for pipx
         run: |
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install ansible==10.3.0
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule==24.8.0
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install ansible==13.3.0
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule==25.12.0
           /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule[docker.lint]"
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-docker
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-plugins==25.8.12
+          pip install "molecule-plugins[docker]"
           /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-hetznercloud
           /opt/pipx/venvs/ansible-core/bin/python -m pip install docker
           /opt/pipx/venvs/ansible-core/bin/python -m pip install hcloud
@@ -66,15 +68,7 @@ jobs:
   update-changes:
     strategy:
       matrix:
-        tests:
-          [
-            { role: "update-changes", test: "232" },
-            { role: "update-changes", test: "235" },
-            { role: "update-changes", test: "242" },
-            { role: "update-changes", test: "243" },
-            { role: "update-changes", test: "244" },
-            { role: "update-changes", test: "245" },
-          ]
+        tests: [{ role: "update-changes", test: "246" }]
       fail-fast: false
     concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
     runs-on: ubuntu-22.04
@@ -83,23 +77,25 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: "3.12"
       - name: Install depencencies
         run: |
-          pip install ansible==10.3.0
-          pip install molecule==24.8.0
+          pip install ansible==13.3.0
+          pip install molecule==25.12.0
           pip install "molecule[docker.lint]"
-          pip install molecule-docker
+          pip install molecule-plugins==25.8.12
+          pip install "molecule-plugins[docker]"
           pip install molecule-hetznercloud
           pip install docker
           pip install hcloud
           ansible-galaxy collection install community.docker
       - name: Install dependency for pipx
         run: |
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install ansible==10.3.0
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule==24.8.0
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install ansible==13.3.0
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule==25.12.0
           /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule[docker.lint]"
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-docker
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-plugins==25.8.12
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule-plugins[docker]"
           /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-hetznercloud
           /opt/pipx/venvs/ansible-core/bin/python -m pip install docker
           /opt/pipx/venvs/ansible-core/bin/python -m pip install hcloud
@@ -136,23 +132,25 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: "3.12"
       - name: Install depencencies
         run: |
-          pip install ansible==10.3.0
-          pip install molecule==24.8.0
+          pip install ansible==13.3.0
+          pip install molecule==25.12.0
           pip install "molecule[docker.lint]"
-          pip install molecule-docker
+          pip install molecule-plugins==25.8.12
+          pip install "molecule-plugins[docker]"
           pip install molecule-hetznercloud
           pip install docker
           pip install hcloud
           ansible-galaxy collection install community.docker
       - name: Install dependency for pipx
         run: |
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install ansible==10.3.0
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule==24.8.0
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install ansible==13.3.0
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule==25.12.0
           /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule[docker.lint]"
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-docker
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-plugins==25.8.12
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule-plugins[docker]"
           /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-hetznercloud
           /opt/pipx/venvs/ansible-core/bin/python -m pip install docker
           /opt/pipx/venvs/ansible-core/bin/python -m pip install hcloud
@@ -189,23 +187,25 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: "3.12"
       - name: Install depencencies
         run: |
-          pip install ansible==10.3.0
-          pip install molecule==24.8.0
+          pip install ansible==13.3.0
+          pip install molecule==25.12.0
           pip install "molecule[docker.lint]"
-          pip install molecule-docker
+          pip install molecule-plugins==25.8.12
+          pip install "molecule-plugins[docker]"
           pip install molecule-hetznercloud
           pip install docker
           pip install hcloud
           ansible-galaxy collection install community.docker
       - name: Install dependency for pipx
         run: |
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install ansible==10.3.0
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule==24.8.0
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install ansible==13.3.0
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule==25.12.0
           /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule[docker.lint]"
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-docker
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-plugins==25.8.12
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule-plugins[docker]"
           /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-hetznercloud
           /opt/pipx/venvs/ansible-core/bin/python -m pip install docker
           /opt/pipx/venvs/ansible-core/bin/python -m pip install hcloud
@@ -242,23 +242,25 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: "3.12"
       - name: Install depencencies
         run: |
-          pip install ansible==10.3.0
-          pip install molecule==24.8.0
+          pip install ansible==13.3.0
+          pip install molecule==25.12.0
           pip install "molecule[docker.lint]"
-          pip install molecule-docker
+          pip install molecule-plugins==25.8.12
+          pip install "molecule-plugins[docker]"
           pip install molecule-hetznercloud
           pip install docker
           pip install hcloud
           ansible-galaxy collection install community.docker
       - name: Install dependency for pipx
         run: |
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install ansible==10.3.0
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule==24.8.0
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install ansible==13.3.0
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule==25.12.0
           /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule[docker.lint]"
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-docker
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-plugins==25.8.12
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule-plugins[docker]"
           /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-hetznercloud
           /opt/pipx/venvs/ansible-core/bin/python -m pip install docker
           /opt/pipx/venvs/ansible-core/bin/python -m pip install hcloud
@@ -301,20 +303,22 @@ jobs:
   #         python-version: '3.9'
   #     - name: Install depencencies
   #       run: |
-  #         pip install ansible==10.3.0
-  #         pip install molecule==24.8.0
+  #         pip install ansible==13.3.0
+  #         pip install molecule==25.12.0
   #         pip install "molecule[docker.lint]"
-  #         pip install molecule-docker
+  #         pip install molecule-plugins==25.8.12
+  #         pip install "molecule-plugins[docker]"
   #         pip install molecule-hetznercloud
   #         pip install docker
   #         pip install hcloud
   #         ansible-galaxy collection install community.docker
   #     - name: Install dependency for pipx
   #       run: |
-  #         /opt/pipx/venvs/ansible-core/bin/python -m pip install ansible==10.3.0
-  #         /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule==24.8.0
+  #         /opt/pipx/venvs/ansible-core/bin/python -m pip install ansible==13.3.0
+  #         /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule==25.12.0
   #         /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule[docker.lint]"
-  #         /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-docker
+  #         /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-plugins==25.8.12
+  #         /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule-plugins[docker]"
   #         /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-hetznercloud
   #         /opt/pipx/venvs/ansible-core/bin/python -m pip install docker
   #         /opt/pipx/venvs/ansible-core/bin/python -m pip install hcloud
@@ -351,23 +355,25 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: "3.12"
       - name: Install depencencies
         run: |
-          pip install ansible==10.3.0
-          pip install molecule==24.8.0
+          pip install ansible==13.3.0
+          pip install molecule==25.12.0
           pip install "molecule[docker.lint]"
-          pip install molecule-docker
+          pip install molecule-plugins==25.8.12
+          pip install "molecule-plugins[docker]"
           pip install molecule-hetznercloud
           pip install docker
           pip install hcloud
           ansible-galaxy collection install community.docker
       - name: Install dependency for pipx
         run: |
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install ansible==10.3.0
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule==24.8.0
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install ansible==13.3.0
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule==25.12.0
           /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule[docker.lint]"
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-docker
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-plugins==25.8.12
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule-plugins[docker]"
           /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-hetznercloud
           /opt/pipx/venvs/ansible-core/bin/python -m pip install docker
           /opt/pipx/venvs/ansible-core/bin/python -m pip install hcloud
@@ -456,23 +462,25 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: "3.12"
       - name: Install depencencies
         run: |
-          pip install ansible==10.3.0
-          pip install molecule==24.8.0
+          pip install ansible==13.3.0
+          pip install molecule==25.12.0
           pip install "molecule[docker.lint]"
-          pip install molecule-docker
+          pip install molecule-plugins==25.8.12
+          pip install "molecule-plugins[docker]"
           pip install molecule-hetznercloud
           pip install docker
           pip install hcloud
           ansible-galaxy collection install community.docker
       - name: Install dependency for pipx
         run: |
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install ansible==10.3.0
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule==24.8.0
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install ansible==13.3.0
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule==25.12.0
           /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule[docker.lint]"
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-docker
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-plugins==25.8.12
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule-plugins[docker]"
           /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-hetznercloud
           /opt/pipx/venvs/ansible-core/bin/python -m pip install docker
           /opt/pipx/venvs/ansible-core/bin/python -m pip install hcloud
@@ -511,23 +519,25 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: "3.12"
       - name: Install depencencies
         run: |
-          pip install ansible==10.3.0
-          pip install molecule==24.8.0
+          pip install ansible==13.3.0
+          pip install molecule==25.12.0
           pip install "molecule[docker.lint]"
-          pip install molecule-docker
+          pip install molecule-plugins==25.8.12
+          pip install "molecule-plugins[docker]"
           pip install molecule-hetznercloud
           pip install docker
           pip install hcloud
           ansible-galaxy collection install community.docker
       - name: Install dependency for pipx
         run: |
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install ansible==10.3.0
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule==24.8.0
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install ansible==13.3.0
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule==25.12.0
           /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule[docker.lint]"
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-docker
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-plugins==25.8.12
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule-plugins[docker]"
           /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-hetznercloud
           /opt/pipx/venvs/ansible-core/bin/python -m pip install docker
           /opt/pipx/venvs/ansible-core/bin/python -m pip install hcloud
@@ -570,23 +580,25 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: "3.12"
       - name: Install depencencies
         run: |
-          pip install ansible==10.3.0
-          pip install molecule==24.8.0
+          pip install ansible==13.3.0
+          pip install molecule==25.12.0
           pip install "molecule[docker.lint]"
-          pip install molecule-docker
+          pip install molecule-plugins==25.8.12
+          pip install "molecule-plugins[docker]"
           pip install molecule-hetznercloud
           pip install docker
           pip install hcloud
           ansible-galaxy collection install community.docker
       - name: Install dependency for pipx
         run: |
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install ansible==10.3.0
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule==24.8.0
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install ansible==13.3.0
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule==25.12.0
           /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule[docker.lint]"
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-docker
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-plugins==25.8.12
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule-plugins[docker]"
           /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-hetznercloud
           /opt/pipx/venvs/ansible-core/bin/python -m pip install docker
           /opt/pipx/venvs/ansible-core/bin/python -m pip install hcloud
@@ -630,23 +642,25 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: "3.12"
       - name: Install depencencies
         run: |
-          pip install ansible==10.3.0
-          pip install molecule==24.8.0
+          pip install ansible==13.3.0
+          pip install molecule==25.12.0
           pip install "molecule[docker.lint]"
-          pip install molecule-docker
+          pip install molecule-plugins==25.8.12
+          pip install "molecule-plugins[docker]"
           pip install molecule-hetznercloud
           pip install docker
           pip install hcloud
           ansible-galaxy collection install community.docker
       - name: Install dependency for pipx
         run: |
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install ansible==10.3.0
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule==24.8.0
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install ansible==13.3.0
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule==25.12.0
           /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule[docker.lint]"
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-docker
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-plugins==25.8.12
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule-plugins[docker]"
           /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-hetznercloud
           /opt/pipx/venvs/ansible-core/bin/python -m pip install docker
           /opt/pipx/venvs/ansible-core/bin/python -m pip install hcloud

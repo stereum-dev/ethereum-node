@@ -18,6 +18,7 @@ provisioner:
       ssh_args: -o ServerAliveInterval=30 -o ControlMaster=auto -o ControlPersist=60s
   env:
     ANSIBLE_PIPELINING: "True"
+    ANSIBLE_ROLES_PATH: "${MOLECULE_PROJECT_DIRECTORY}/..:./roles:~/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles"
 lint: |
   set -e
   yamllint .
