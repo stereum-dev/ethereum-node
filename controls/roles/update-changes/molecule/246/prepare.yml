@@ -1,0 +1,99 @@
+---
+- name: Prepare
+  hosts: all
+  tasks:
+    - name: Make sure Stereum's config path exists
+      file:
+        path: "/etc/stereum/services"
+        state: directory
+        owner: "root"
+        group: "root"
+        mode: 0644
+      become: yes
+
+    - name: Create TekuBeaconService config
+      copy:
+        dest: "/etc/stereum/services/353b6184-928a-b686-31b4-f4db2073224a.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: TekuBeaconService
+          id: 353b6184-928a-b686-31b4-f4db2073224a
+          configVersion: 2
+          command:
+            - --network=hoodi
+            - --p2p-enabled=true
+            - --p2p-port=9001
+            - --p2p-advertised-port=9001
+            - --ee-endpoint=http://stereum-bcedd1c7-fe2f-2c78-8e9f-9e7c6851f20e:8551
+            - --ee-jwt-secret-file=/engine.jwt
+            - --metrics-enabled=true
+            - --metrics-port=8008
+            - --metrics-interface=0.0.0.0
+            - --metrics-host-allowlist=*
+            - --metrics-publish-interval=10
+            - --data-path=/opt/app/data
+            - --data-storage-mode=minimal
+            - --rest-api-port=5051
+            - --rest-api-host-allowlist=*
+            - --rest-api-interface=0.0.0.0
+            - --rest-api-docs-enabled=true
+            - --rest-api-enabled=true
+            - --log-destination=CONSOLE
+            - --beacon-liveness-tracking-enabled=true
+            - --initial-state=https://hoodi.beaconstate.ethstaker.cc
+            - --Xp2p-reworked-sidecar-recovery-enabled
+            - --Xdata-storage-create-db-version=6
+          entrypoint:
+            - /opt/teku/bin/teku
+          env:
+            JAVA_OPTS: -Xmx6g
+          image: consensys/teku:25.12.0
+          ports:
+            - 0.0.0.0:9001:9001/tcp
+            - 0.0.0.0:9001:9001/udp
+            - 127.0.0.1:5052:5052/tcp
+            - 127.0.0.1:5051:5051/tcp
+          volumes:
+            - /opt/stereum/teku-353b6184-928a-b686-31b4-f4db2073224a/data:/opt/app/data
+            - /opt/stereum/ethrex-bcedd1c7-fe2f-2c78-8e9f-9e7c6851f20e/engine.jwt:/engine.jwt
+          user: "2000"
+          autoupdate: true
+          network: hoodi
+          dependencies:
+            executionClients:
+              - service: EthrexService
+                id: bcedd1c7-fe2f-2c78-8e9f-9e7c6851f20e
+            consensusClients: []
+            mevboost: []
+            otherServices: []
+      become: yes
+
+    - name: Create db directory for Teku
+      file:
+        path: "/opt/stereum/teku-353b6184-928a-b686-31b4-f4db2073224a/data/beacon/db"
+        state: directory
+        owner: "2000"
+        group: "2000"
+        mode: 0755
+      become: yes
+
+    - name: Create db version file for Teku
+      file:
+        path: "/opt/stereum/teku-353b6184-928a-b686-31b4-f4db2073224a/data/beacon/db.version"
+        state: touch
+        owner: "2000"
+        group: "2000"
+        mode: 0755
+      become: yes
+
+    - name: Write leveldb2 to db version file
+      copy:
+        dest: "/opt/stereum/teku-353b6184-928a-b686-31b4-f4db2073224a/data/beacon/db.version"
+        content: "leveldb2"
+        owner: "2000"
+        group: "2000"
+        mode: 0644
+      become: yes
+# EOF

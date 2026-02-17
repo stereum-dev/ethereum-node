@@ -1,0 +1,28 @@
+---
+#dependency:
+#  name: galaxy
+driver:
+  name: docker
+platforms:
+  - name: "update-changes--2.4.6--ubuntu-24.04"
+    image: ubuntu:noble
+  # - name: "configure-updates--default--centos-8"
+  #   image: geerlingguy/docker-centos8-ansible
+provisioner:
+  name: ansible
+  env:
+    ANSIBLE_PIPELINING: "True"
+    ANSIBLE_ROLES_PATH: "${MOLECULE_PROJECT_DIRECTORY}/..:./roles:~/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles"
+lint: |
+  set -e
+  yamllint .
+  ansible-lint .
+scenario:
+  test_sequence:
+    - destroy
+    - create
+    - prepare
+    - converge
+    - idempotence
+    - verify
+    - destroy

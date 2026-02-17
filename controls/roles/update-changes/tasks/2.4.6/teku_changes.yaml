@@ -1,0 +1,63 @@
+---
+- name: Read service file
+  slurp:
+    src: "{{ config_file.path }}"
+  register: service_configuration_raw
+
+- name: Parse service's configuration
+  set_fact:
+    service_configuration: "{{ service_configuration_raw['content'] | b64decode | from_yaml }}"
+    service_configuration_text: "{{ service_configuration_raw['content'] | b64decode }}"
+
+- name: Teku Changes
+  when: service_configuration.service == "TekuBeaconService"
+  block:
+    - name: get data volume name
+      set_fact:
+        data_volume: "{{ service_configuration.volumes | select('search', service_configuration.id) | select('search', '/data') | first | split(':') | first }}"
+
+    - name: check if db version file exists
+      stat:
+        path: "{{ data_volume }}/beacon/db.version"
+      register: db_version_file
+
+    - name: check if db dir exists
+      stat:
+        path: "{{ data_volume }}/beacon/db"
+      register: db_dir
+
+    - name: read db version file
+      when: db_version_file.stat.exists
+      slurp:
+        src: "{{ data_volume }}/beacon/db.version"
+      register: db_version_file_content
+
+    - name: delete db directory if db version is leveldb2
+      when: db_dir.stat.isdir is defined and db_dir.stat.isdir and db_version_file.stat.exists and (db_version_file_content.content | b64decode | trim) == "leveldb2"
+      file:
+        path: "{{ data_volume }}/beacon/db"
+        state: absent
+
+    - name: delete db version file
+      when: db_version_file.stat.exists and (db_version_file_content.content | b64decode | trim) == "leveldb2"
+      file:
+        path: "{{ data_volume }}/beacon/db.version"
+        state: absent
+
+    - name: remove --Xp2p-reworked-sidecar-recovery-enabled
+      lineinfile:
+        path: "{{ config_file.path }}"
+        regex: "--Xp2p-reworked-sidecar-recovery-enabled"
+        state: absent
+
+    - name: remove --Xdata-storage-create-db-version=6
+      lineinfile:
+        path: "{{ config_file.path }}"
+        regex: "--Xdata-storage-create-db-version=6"
+        state: absent
+
+    - name: touch service config file to trigger service restart
+      file:
+        path: "{{ config_file.path }}"
+        state: touch
+      changed_when: false # to pass idempotence test
