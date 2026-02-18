@@ -9,3 +9,9 @@
   loop: "{{ service_config_files.files }}"
   loop_control:
     loop_var: config_file
+
+- name: Include Geth Changes
+  include_tasks: geth_changes.yaml
+  loop: "{{ service_config_files.files }}"
+  loop_control:
+    loop_var: config_file

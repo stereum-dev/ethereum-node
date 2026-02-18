@@ -9,20 +9,33 @@
         src: "/etc/stereum/services/353b6184-928a-b686-31b4-f4db2073224a.yaml"
       register: Teku_service_configuration_raw
 
+    # GethService
+    - name: Read GethService file
+      slurp:
+        src: "/etc/stereum/services/ea7db2eb-98d3-dd11-efad-e34df35350d8.yaml"
+      register: Geth_service_configuration_raw
+
     - name: Parse Service configurations
       set_fact:
         Teku_service_configuration: "{{ Teku_service_configuration_raw['content'] | b64decode | from_yaml }}"
-        data_volume: "/opt/stereum/teku-353b6184-928a-b686-31b4-f4db2073224a/data"
+        Geth_service_configuration: "{{ Geth_service_configuration_raw['content'] | b64decode | from_yaml }}"
+        teku_data_volume: "/opt/stereum/teku-353b6184-928a-b686-31b4-f4db2073224a/data"
+        geth_data_volume: "/opt/stereum/geth-ea7db2eb-98d3-dd11-efad-e34df35350d8/data"
 
     - name: check if db version file exists
       stat:
-        path: "{{ data_volume }}/beacon/db.version"
+        path: "{{ teku_data_volume }}/beacon/db.version"
       register: db_version_file
 
     - name: check if db dir exists
       stat:
-        path: "{{ data_volume }}/beacon/db"
+        path: "{{ teku_data_volume }}/beacon/db"
       register: db_dir
+
+    - name: check if nodekey file exists
+      stat:
+        path: "{{ geth_data_volume }}/geth/nodekey"
+      register: nodekey_file
 
     - debug:
         msg: "{{ Teku_service_configuration }}"
@@ -31,10 +44,18 @@
     - debug:
         msg: "db version file exists: {{ db_version_file.stat.exists }}, db dir exists: {{ db_dir.stat.exists }}"
 
+    - debug:
+        msg: "{{ Geth_service_configuration }}"
+    - debug:
+        msg: "{{ Geth_service_configuration_raw['content'] | b64decode }}"
+    - debug:
+        msg: "nodekey file exists: {{ nodekey_file.stat.exists }}"
+
     - assert:
         that:
           - Teku_service_configuration.command | select('match', '--Xp2p-reworked-sidecar-recovery-enabled') | length == 0
           - Teku_service_configuration.command | select('match', '--Xdata-storage-create-db-version=6') | length == 0
           - db_version_file.stat.exists == false
           - db_dir.stat.exists == false
+          - nodekey_file.stat.exists == false
 # EOF

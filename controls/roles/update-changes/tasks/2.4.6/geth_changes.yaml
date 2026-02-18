@@ -1,0 +1,41 @@
+---
+- name: Read service file
+  slurp:
+    src: "{{ config_file.path }}"
+  register: service_configuration_raw
+
+- name: Parse service's configuration
+  set_fact:
+    service_configuration: "{{ service_configuration_raw['content'] | b64decode | from_yaml }}"
+    service_configuration_text: "{{ service_configuration_raw['content'] | b64decode }}"
+
+- name: Geth Changes
+  when: service_configuration.service == "GethService"
+  block:
+    - name: get data volume name
+      set_fact:
+        data_volume: "{{ service_configuration.volumes | select('search', service_configuration.id) | select('search', '/data') | first | split(':') | first }}"
+
+    - name: get geth version
+      set_fact:
+        geth_version: "{{ service_configuration.image | split(':') | last }}"
+
+    - debug:
+        msg: "Geth version: {{ geth_version }}"
+
+    - name: decide if nodekey needs to be removed
+      set_fact:
+        remove_nodekey: "{{ geth_version is version('v1.16.0', '>=') and geth_version is version('v1.17.0', '<=') }}"
+
+    - name: delete nodekey file
+      when: remove_nodekey
+      file:
+        path: "{{ data_volume }}/geth/nodekey"
+        state: absent
+
+    - name: touch service config file to trigger service restart
+      when: remove_nodekey
+      file:
+        path: "{{ config_file.path }}"
+        state: touch
+      changed_when: false # to pass idempotence test

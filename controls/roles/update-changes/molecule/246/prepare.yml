@@ -96,4 +96,77 @@
         group: "2000"
         mode: 0644
       become: yes
+
+    - name: Create GethService config
+      copy:
+        dest: "/etc/stereum/services/ea7db2eb-98d3-dd11-efad-e34df35350d8.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: GethService
+          id: ea7db2eb-98d3-dd11-efad-e34df35350d8
+          configVersion: 1
+          command:
+            - --hoodi
+            - --state.scheme=path
+            - --http
+            - --http.api=eth,web3,net
+            - --http.port=8545
+            - --http.addr=0.0.0.0
+            - --http.corsdomain=*
+            - --http.vhosts=*
+            - --ws
+            - --ws.api=eth,net,web3
+            - --ws.port=8546
+            - --ws.addr=0.0.0.0
+            - --ws.origins=*
+            - --authrpc.port=8551
+            - --authrpc.vhosts=*
+            - --authrpc.addr=0.0.0.0
+            - --authrpc.jwtsecret=/engine.jwt
+            - --datadir=/opt/data/geth
+            - --metrics
+            - --metrics.expensive
+            - --metrics.port=6060
+            - --metrics.addr=0.0.0.0
+          entrypoint:
+            - geth
+          env: {}
+          image: ethereum/client-go:v1.17.0
+          ports:
+            - 127.0.0.1:8545:8545/tcp
+            - 127.0.0.1:8546:8546/tcp
+            - 0.0.0.0:30303:30303/tcp
+            - 0.0.0.0:30303:30303/udp
+          volumes:
+            - /opt/stereum/geth-ea7db2eb-98d3-dd11-efad-e34df35350d8/data:/opt/data/geth
+            - /opt/stereum/geth-ea7db2eb-98d3-dd11-efad-e34df35350d8/engine.jwt:/engine.jwt
+          user: root
+          autoupdate: true
+          network: hoodi
+          dependencies:
+            executionClients: []
+            consensusClients: []
+            mevboost: []
+            otherServices: []
+      become: yes
+
+    - name: ensure geth data directory exists
+      file:
+        path: "/opt/stereum/geth-ea7db2eb-98d3-dd11-efad-e34df35350d8/data/geth"
+        state: directory
+        owner: "2000"
+        group: "2000"
+        mode: 0755
+      become: yes
+
+    - name: create nodekey file for geth
+      file:
+        path: "/opt/stereum/geth-ea7db2eb-98d3-dd11-efad-e34df35350d8/data/geth/nodekey"
+        state: touch
+        owner: "2000"
+        group: "2000"
+        mode: 0755
+      become: yes
 # EOF
