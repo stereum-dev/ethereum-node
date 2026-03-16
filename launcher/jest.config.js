@@ -10,7 +10,6 @@ module.exports = {
   testEnvironment: "jsdom",
   transformIgnorePatterns: ["node_modules/(?!(sucrase)/)"],
   transform: {
-    ".*\\.(vue)$": "@vue/vue3-jest",
     "^.+\\.(js|jsx|ts|tsx|mjs)$": "babel-jest",
     // ".*\\.(ts)$": "ts-jest"
   },
