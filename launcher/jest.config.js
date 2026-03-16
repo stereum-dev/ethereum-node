@@ -1,6 +1,6 @@
 module.exports = {
   moduleFileExtensions: ["js", "json", "vue"],
-  roots: ["<rootDir>/src/", "<rootDir>/tests/"],
+  roots: ["<rootDir>/src/"],
   // testEnvironment: "jest-environment-jsdom",
   testMatch: ["**/?(*.)+(spec|test|int).[tj]s?(x)"],
   moduleNameMapper: {
