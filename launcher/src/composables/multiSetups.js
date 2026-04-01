@@ -47,7 +47,7 @@ export const useMultiSetups = () => {
   };
 
   const getAllSetups = () => {
-    let setups = [];
+    let setups;
     setups = setupStore.serverSetups.map((config) => ({
       setupId: config.configId,
       setupName: config.name,

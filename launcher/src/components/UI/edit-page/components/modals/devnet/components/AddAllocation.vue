@@ -174,7 +174,7 @@ const addAccount = () => {
       try {
         newAccount = new Function(`return ${accountDetails.value}`)();
         if (typeof newAccount !== "object" || newAccount === null) {
-          throw new Error("Invalid object");
+          throw new Error("Invalid object", { cause: jsonError });
         }
       } catch (evalError) {
         errorMsg.value = "Invalid JSON or JavaScript object format";

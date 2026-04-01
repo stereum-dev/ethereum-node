@@ -438,7 +438,7 @@ export class ServiceManager {
   addDependencies(service, dependencies, ssvConfig, ssvDkgConfig) {
     let command = "";
     let filter;
-    let keyValuePairs = [];
+    let keyValuePairs;
     switch (service.service.replace(/(Beacon|Validator|Service)/gm, "")) {
       case "Lighthouse":
         if (service.service.includes("Beacon")) {
@@ -864,7 +864,7 @@ export class ServiceManager {
     return command + newValue;
   }
 
-  async deleteService(task, tasks, services, ssvConfigs) {
+  async deleteService(task, _tasks, services, ssvConfigs) {
     let serviceToDelete = services.find((service) => service.id === task.service.config.serviceID);
     let dependents = [];
     services.forEach((service) => {
@@ -1212,13 +1212,10 @@ export class ServiceManager {
         return CharonService.buildByUserInput(args.network, ports, args.installDir + "/charon", args.consensusClients);
 
       case "ExternalExecutionService":
-        ports = [];
         return ExternalExecutionService.buildByUserInput(args.network, args.installDir + "/externalExecution", args.source, args.jwtToken);
       case "ExternalConsensusService":
-        ports = [];
         return ExternalConsensusService.buildByUserInput(args.network, args.installDir + "/externalConsensus", args.source);
       case "CustomService":
-        ports = [];
         return CustomService.buildByUserInput(
           args.network,
           args.installDir + "/custom",
@@ -1416,7 +1413,7 @@ export class ServiceManager {
           service.dependencies.executionClients,
           service.dependencies.consensusClients
         );
-        let replacementString = "";
+        let replacementString;
         if (config.ssv_sk) {
           replacementString = "OperatorPrivateKey: " + config.ssv_sk;
         } else {
@@ -1947,7 +1944,7 @@ export class ServiceManager {
           await this.configManager.deleteServiceFromSetup(task.id, task.setupId);
         }
         await Promise.all(
-          tasks.filter(ServiceManager.uniqueByID("DELETE")).map((task, index, tasks) => {
+          tasks.filter(ServiceManager.uniqueByID("DELETE")).map((task, _index, tasks) => {
             return this.deleteService(task, tasks, services, ssvConfigs);
           })
         );
@@ -2002,7 +1999,7 @@ export class ServiceManager {
         }
         let services = await this.readServiceConfigurations();
         await Promise.all(
-          tasks.filter(ServiceManager.uniqueByID("SWITCH CLIENT")).map((task, index, tasks) => {
+          tasks.filter(ServiceManager.uniqueByID("SWITCH CLIENT")).map((task, _index, tasks) => {
             return this.deleteService(task, tasks, services);
           })
         );
@@ -2145,7 +2142,7 @@ export class ServiceManager {
             return port;
           };
 
-          file.content = file.content.replace(/(\d+\.\d+\.\d+\.\d+:\d+):(\d+\/(tcp|udp))/g, (match, p1, p2, p3) => {
+          file.content = file.content.replace(/(\d+\.\d+\.\d+\.\d+:\d+):(\d+\/(tcp|udp))/g, (_match, p1, _p2, p3) => {
             const [ip, originalPort] = p1.split(":");
             const newPort = findUniquePort(parseInt(originalPort), p3, allPorts);
             return `${ip}:${newPort}:${originalPort}/${p3}`;
@@ -2541,7 +2538,7 @@ export class ServiceManager {
   }
 
   async copyExecutionJWT(volume) {
-    let jwtContent = "";
+    let jwtContent;
     jwtContent = await this.nodeConnection.sshService.exec(`cat ${volume}`);
     return jwtContent.stdout;
   }

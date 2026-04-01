@@ -57,7 +57,7 @@ export class ValidatorAccountManager {
   async checkActiveValidators(files, passwordFiles, password, serviceID, slashingDB, isRemote = false) {
     let services = await this.serviceManager.readServiceConfigurations();
     let client = services.find((service) => service.id === serviceID);
-    let pubkeys = [];
+    let pubkeys;
     if (isRemote) {
       pubkeys = files;
     } else {
@@ -480,7 +480,7 @@ export class ValidatorAccountManager {
       const graffitiVolume = client.volumes.find((vol) => vol.servicePath === "/opt/app/graffitis");
       let graffitiDir = "";
       if (graffitiVolume) graffitiDir = graffitiVolume.destinationPath + "/graffitis.yaml";
-      let config = "";
+      let config;
       switch (service) {
         case "lighthouse":
           config = `default: ${graffiti}`;
@@ -561,7 +561,7 @@ export class ValidatorAccountManager {
     let result = { rc: 1, stderr: "default" };
     switch (service.service) {
       case "PrysmValidatorService": {
-        let walletPath = "";
+        let walletPath;
         if (typeof service.volumes[0] == "string") {
           walletPath = ServiceVolume.buildByConfig(service.volumes.find((v) => v.includes("/opt/app/data/wallets"))).destinationPath;
         } else {

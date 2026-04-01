@@ -37,7 +37,7 @@ const properties = ref({
 const emit = defineEmits(["closeWindow", "confirmModify"]);
 
 const mainTitleHandler = computed(() => {
-  let title = "";
+  let title;
   if (props.client.service !== "FlashbotsMevBoostService") {
     title = `${props.client.name} - ${props.client.category}`;
   } else {

@@ -69,7 +69,7 @@ test("op-geth installation", async () => {
   //get logs
   let condition = false;
   let counter = 0;
-  let status = "";
+  let status;
   let completeStatus = "";
   while (!condition && counter < 10) {
     await testServer.Sleep(30000);

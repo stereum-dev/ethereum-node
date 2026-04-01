@@ -12,7 +12,7 @@
 const props = defineProps({
   btnName: {
     type: String,
-    required: true,
+    required: false,
     default: "",
   },
 });

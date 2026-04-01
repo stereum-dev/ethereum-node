@@ -36,11 +36,11 @@ const totalBalance = computed(() => {
   if (validatorID) {
     const keysForValidator = stakingStore.keys.filter((key) => key.validatorID === validatorID);
     return keysForValidator.reduce((sum, key) => {
-      return !isNaN(key.balance) ? (sum += key.balance) : sum;
+      return !isNaN(key.balance) ? sum + key.balance : sum;
     }, 0);
   }
   return stakingStore.keys.reduce((sum, key) => {
-    return !isNaN(key.balance) ? (sum += key?.balance) : sum;
+    return !isNaN(key.balance) ? sum + key?.balance : sum;
   }, 0);
 });
 </script>

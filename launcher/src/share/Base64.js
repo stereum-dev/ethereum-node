@@ -10,7 +10,7 @@ export class Base64 {
     } catch (error) {
       // If an error occurs during decoding, the string is not Base64 or Buffer is missing
       if (typeof Buffer === "undefined") {
-        throw new Error(error);
+        throw new Error(error, { cause: error });
       }
       return false;
     }

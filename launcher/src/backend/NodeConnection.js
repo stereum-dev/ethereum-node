@@ -44,7 +44,7 @@ export class NodeConnection {
       await this.findStereumSettings();
       this.taskManager = taskManager;
     } catch (error) {
-      throw new Error(error);
+      throw new Error(error, { cause: error });
     }
   }
 
@@ -268,7 +268,7 @@ export class NodeConnection {
         status: false,
       });
       this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
-      throw new Error("Can't install ansible roles: " + err);
+      throw new Error("Can't install ansible roles: " + err, { cause: err });
     }
 
     if (SSHService.checkExecError(installResult)) {
@@ -305,7 +305,7 @@ export class NodeConnection {
       );
     } catch (err) {
       log.error("Can't run setup playbook: ", err);
-      throw new Error("Can't run setup playbook: " + err);
+      throw new Error("Can't run setup playbook: " + err, { cause: err });
     }
 
     /*
@@ -320,7 +320,7 @@ export class NodeConnection {
       );
     } catch (err) {
       log.error("Can't run configure-firewall playbook: ", err);
-      throw new Error("Can't run configure-firewall playbook: " + err);
+      throw new Error("Can't run configure-firewall playbook: " + err, { cause: err });
     }
 
     return playbookRuns;
@@ -366,7 +366,7 @@ export class NodeConnection {
       );
     } catch (err) {
       log.error("Can't run playbook '" + playbook + "'", err);
-      throw new Error("Can't run playbook: " + err);
+      throw new Error("Can't run playbook: " + err, { cause: err });
     }
 
     if (SSHService.checkExecError(ansibleResult)) {
@@ -390,7 +390,7 @@ export class NodeConnection {
       statusResult = await this.sshService.exec("cat /tmp/" + playbookRunRef + "/localhost");
     } catch (err) {
       log.error("Can't read playbook status '" + playbookRunRef + "'", err);
-      throw new Error("Can't read playbook status '" + playbookRunRef + "': " + err);
+      throw new Error("Can't read playbook status '" + playbookRunRef + "': " + err, { cause: err });
     }
 
     if (SSHService.checkExecError(statusResult)) {
@@ -409,7 +409,7 @@ export class NodeConnection {
       services = await this.sshService.exec("ls -1 /etc/stereum/services 2>/dev/null");
     } catch (err) {
       log.error("Can't read services configurations", err);
-      throw new Error("Can't read services configurations: " + err);
+      throw new Error("Can't read services configurations: " + err, { cause: err });
     }
 
     if (SSHService.checkExecError(services)) {
@@ -429,7 +429,7 @@ export class NodeConnection {
       serviceConfig = await this.sshService.exec("cat /etc/stereum/services/" + serviceId + suffix);
     } catch (err) {
       log.error("Can't read service configuration of " + serviceId, err);
-      throw new Error("Can't read service configuration of " + serviceId + ": " + err);
+      throw new Error("Can't read service configuration of " + serviceId + ": " + err, { cause: err });
     }
 
     if (SSHService.checkExecError(serviceConfig)) {
@@ -449,7 +449,7 @@ export class NodeConnection {
       serviceYAML = await this.sshService.exec("cat /etc/stereum/services/" + serviceId + suffix);
     } catch (err) {
       log.error("Can't read service yaml of " + serviceId, err);
-      throw new Error("Can't read service yaml of " + serviceId + ": " + err);
+      throw new Error("Can't read service yaml of " + serviceId + ": " + err, { cause: err });
     }
 
     if (SSHService.checkExecError(serviceYAML)) {
@@ -470,7 +470,7 @@ export class NodeConnection {
       }
     } catch (err) {
       log.error("Can't forward SSV command ", err);
-      throw new Error("Can't forward SSV command: " + err);
+      throw new Error("Can't forward SSV command: " + err, { cause: err });
     }
   }
 
@@ -506,7 +506,7 @@ export class NodeConnection {
         opidresp = await axios.get(`https://api.ssv.network/api/v4/${network}/operators/public_key/` + pubkey);
       } catch (e) {
         let info = `API endpoint to get operator ID is unavailable`;
-        if (throwErr) throw new Error(`${info} (${e.message})`);
+        if (throwErr) throw new Error(`${info} (${e.message})`, { cause: e });
         return {
           code: 4,
           info: `ERROR: Could not request operator data from SSV-API (${info})`,
@@ -532,7 +532,7 @@ export class NodeConnection {
         opmdresp = await axios.get(`https://api.ssv.network/api/v4/${network}/operators/` + operator_id);
       } catch (e) {
         let info = `API endpoint to get metadata for operator ${operator_id} is unavailable`;
-        if (throwErr) throw new Error(info);
+        if (throwErr) throw new Error(info, { cause: e });
         return {
           code: 5,
           info: `ERROR: Could not request operator data from SSV-API (${info})`,
@@ -569,7 +569,7 @@ export class NodeConnection {
       };
     } catch (e) {
       let info = `ERROR: Could not request operator data from SSV-API (${e.message})`;
-      if (throwErr) throw new Error(`${info} (${e.message})`);
+      if (throwErr) throw new Error(`${info} (${e.message})`, { cause: e });
       // This response would only happens on an uncaught error
       return {
         code: 1,
@@ -586,7 +586,7 @@ export class NodeConnection {
       return ssvNetworkConfigDir + "/last_known_operator_id";
     } catch (err) {
       log.error("Can't get SSV last known operator id file path from service " + serviceID, err);
-      throw new Error("Can't get SSV last known operator id file path from service " + serviceID + ": " + err);
+      throw new Error("Can't get SSV last known operator id file path from service " + serviceID + ": " + err, { cause: err });
     }
   }
 
@@ -622,7 +622,7 @@ export class NodeConnection {
       };
     } catch (err) {
       log.error("Can't write SSV last known operator id for service " + serviceID, err);
-      throw new Error("Can't write SSV last known operator id for for service " + serviceID + ": " + err);
+      throw new Error("Can't write SSV last known operator id for for service " + serviceID + ": " + err, { cause: err });
     }
   }
 
@@ -647,7 +647,7 @@ export class NodeConnection {
       };
     } catch (err) {
       log.error("Can't read SSV last known operator id from service " + serviceID, err);
-      throw new Error("Can't read SSV last known operator id from service " + serviceID + ": " + err);
+      throw new Error("Can't read SSV last known operator id from service " + serviceID + ": " + err, { cause: err });
     }
   }
 
@@ -658,7 +658,7 @@ export class NodeConnection {
       return ssvNetworkConfigDir + "/last_backed_public_key";
     } catch (err) {
       log.error("Can't get SSV last backed public key file path from service " + serviceID, err);
-      throw new Error("Can't get SSV last backed public key file path from service " + serviceID + ": " + err);
+      throw new Error("Can't get SSV last backed public key file path from service " + serviceID + ": " + err, { cause: err });
     }
   }
 
@@ -677,7 +677,7 @@ export class NodeConnection {
       };
     } catch (err) {
       log.error("Can't write SSV last backed public key for service " + serviceID, err);
-      throw new Error("Can't write SSV last backed public key for for service " + serviceID + ": " + err);
+      throw new Error("Can't write SSV last backed public key for for service " + serviceID + ": " + err, { cause: err });
     }
   }
 
@@ -702,7 +702,7 @@ export class NodeConnection {
       };
     } catch (err) {
       log.error("Can't read SSV last backed public key from service " + serviceID, err);
-      throw new Error("Can't read SSV last backed public key from service " + serviceID + ": " + err);
+      throw new Error("Can't read SSV last backed public key from service " + serviceID + ": " + err, { cause: err });
     }
   }
 
@@ -730,7 +730,7 @@ export class NodeConnection {
       try {
         private_key_data = this.normalizeSSVKeystoreData(JSON.parse(private_key));
       } catch (e) {
-        throw new Error("Given encrypted SSV private_key (keystore) is invalid (not JSON format)");
+        throw new Error("Given encrypted SSV private_key (keystore) is invalid (not JSON format)", { cause: e });
       }
       if (!private_key_data?.publicKey) {
         throw new Error("Given encrypted SSV private_key (keystore) is invalid (no public key available)");
@@ -811,7 +811,7 @@ export class NodeConnection {
       );
     } catch (err) {
       log.error("Can't import encrypted SSV keys for service " + serviceID, err);
-      throw new Error("Can't import encrypted SSV keys for service " + serviceID + ": " + err);
+      throw new Error("Can't import encrypted SSV keys for service " + serviceID + ": " + err, { cause: err });
     }
   }
 
@@ -920,7 +920,7 @@ export class NodeConnection {
       );
     } catch (err) {
       log.error("Can't import unencrypted SSV keys for service " + serviceID, err);
-      throw new Error("Can't import unencrypted SSV keys for service " + serviceID + ": " + err);
+      throw new Error("Can't import unencrypted SSV keys for service " + serviceID + ": " + err, { cause: err });
     }
   }
 
@@ -1049,7 +1049,7 @@ export class NodeConnection {
       );
     } catch (err) {
       log.error("Can't migrate unencrypted keys to SSV encrypted keys for service " + serviceID, err);
-      throw new Error("Can't migrate unencrypted keys to SSV encrypted keys for service " + serviceID + ": " + err);
+      throw new Error("Can't migrate unencrypted keys to SSV encrypted keys for service " + serviceID + ": " + err, { cause: err });
     }
   }
 
@@ -1159,7 +1159,7 @@ export class NodeConnection {
       );
     } catch (err) {
       log.error("Can't create SSV encrypted keys for service " + serviceID, err);
-      throw new Error("Can't create SSV encrypted keys for service " + serviceID + ": " + err);
+      throw new Error("Can't create SSV encrypted keys for service " + serviceID + ": " + err, { cause: err });
     }
   }
 
@@ -1174,7 +1174,7 @@ export class NodeConnection {
       };
     } catch (err) {
       log.error("Can't read SSV service config from service " + serviceID, err);
-      throw new Error("Can't read SSV service config from service " + serviceID + ": " + err);
+      throw new Error("Can't read SSV service config from service " + serviceID + ": " + err, { cause: err });
     }
   }
 
@@ -1204,7 +1204,7 @@ export class NodeConnection {
       };
     } catch (err) {
       log.error("Can't read SSV network config from service " + serviceID, err);
-      throw new Error("Can't read SSV network config from service " + serviceID + ": " + err);
+      throw new Error("Can't read SSV network config from service " + serviceID + ": " + err, { cause: err });
     }
   }
 
@@ -1215,7 +1215,7 @@ export class NodeConnection {
       return ssvNetworkConfigDir + "/last_known_public_key";
     } catch (err) {
       log.error("Can't get SSV last known public key file path from service " + serviceID, err);
-      throw new Error("Can't get SSV last known public key file path from service " + serviceID + ": " + err);
+      throw new Error("Can't get SSV last known public key file path from service " + serviceID + ": " + err, { cause: err });
     }
   }
 
@@ -1233,7 +1233,7 @@ export class NodeConnection {
       };
     } catch (err) {
       log.error("Can't write SSV last known public key file for service " + serviceID, err);
-      throw new Error("Can't write SSV last known public key for for service " + serviceID + ": " + err);
+      throw new Error("Can't write SSV last known public key for for service " + serviceID + ": " + err, { cause: err });
     }
   }
 
@@ -1257,7 +1257,7 @@ export class NodeConnection {
       };
     } catch (err) {
       log.error("Can't read SSV last known public key file from service " + serviceID, err);
-      throw new Error("Can't read SSV last known public key file from service " + serviceID + ": " + err);
+      throw new Error("Can't read SSV last known public key file from service " + serviceID + ": " + err, { cause: err });
     }
   }
 
@@ -1369,7 +1369,7 @@ export class NodeConnection {
       };
     } catch (err) {
       log.error("Can't read SSV total config from service " + serviceID, err);
-      throw new Error("Can't read SSV total config from service " + serviceID + ": " + err);
+      throw new Error("Can't read SSV total config from service " + serviceID + ": " + err, { cause: err });
     }
   }
 
@@ -1385,7 +1385,7 @@ export class NodeConnection {
       SSVNetworkConfig = await this.sshService.exec(`cat ${configPath}/config.yaml`);
     } catch (err) {
       log.error("Can't read SSV config " + serviceID, err);
-      throw new Error("Can't read SSV config " + serviceID + ": " + err);
+      throw new Error("Can't read SSV config " + serviceID + ": " + err, { cause: err });
     }
 
     if (SSHService.checkExecError(SSVNetworkConfig)) {
@@ -1414,7 +1414,7 @@ export class NodeConnection {
       });
       this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
       log.error("Can't write SSV config", err);
-      throw new Error("Can't write SSV config: " + err);
+      throw new Error("Can't write SSV config: " + err, { cause: err });
     }
 
     if (SSHService.checkExecError(configStatus)) {
@@ -1446,7 +1446,7 @@ export class NodeConnection {
       };
     } catch (err) {
       log.error("Can't read SSVDKG service config from service " + serviceID, err);
-      throw new Error("Can't read SSVDKG service config from service " + serviceID + ": " + err);
+      throw new Error("Can't read SSVDKG service config from service " + serviceID + ": " + err, { cause: err });
     }
   }
 
@@ -1476,7 +1476,7 @@ export class NodeConnection {
       };
     } catch (err) {
       log.error("Can't read SSVDKG config from service " + serviceID, err);
-      throw new Error("Can't read SSVDKG config from service " + serviceID + ": " + err);
+      throw new Error("Can't read SSVDKG config from service " + serviceID + ": " + err, { cause: err });
     }
   }
 
@@ -1557,7 +1557,7 @@ export class NodeConnection {
       };
     } catch (err) {
       log.error("Can't read SSVDKG total config from service " + serviceID, err);
-      throw new Error("Can't read SSVDKG total config from service " + serviceID + ": " + err);
+      throw new Error("Can't read SSVDKG total config from service " + serviceID + ": " + err, { cause: err });
     }
   }
 
@@ -1571,7 +1571,7 @@ export class NodeConnection {
       SSVDKGConfig = await this.sshService.exec(`cat ${configPath}/config.yaml`);
     } catch (err) {
       log.error("Can't read SSVDKG config " + serviceID, err);
-      throw new Error("Can't read SSVDKG config " + serviceID + ": " + err);
+      throw new Error("Can't read SSVDKG config " + serviceID + ": " + err, { cause: err });
     }
 
     if (SSHService.checkExecError(SSVDKGConfig)) {
@@ -1600,7 +1600,7 @@ export class NodeConnection {
       });
       this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
       log.error("Can't write SSVDKG config", err);
-      throw new Error("Can't write SSVDKG config: " + err);
+      throw new Error("Can't write SSVDKG config: " + err, { cause: err });
     }
 
     if (SSHService.checkExecError(configStatus)) {
@@ -1654,7 +1654,7 @@ export class NodeConnection {
       prometheusConfig = await this.sshService.exec(`cat ${configPath}/prometheus.yml`);
     } catch (err) {
       log.error("Can't read Prometheus config " + serviceID, err);
-      throw new Error("Can't read Prometheus config " + serviceID + ": " + err);
+      throw new Error("Can't read Prometheus config " + serviceID + ": " + err, { cause: err });
     }
 
     if (SSHService.checkExecError(prometheusConfig)) {
@@ -1685,7 +1685,7 @@ export class NodeConnection {
       });
       this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
       log.error("Can't write Prometheus config", err);
-      throw new Error("Can't write Prometheus config: " + err);
+      throw new Error("Can't write Prometheus config: " + err, { cause: err });
     }
 
     if (SSHService.checkExecError(configStatus)) {
@@ -1731,7 +1731,7 @@ export class NodeConnection {
       });
       this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
       log.error("Can't write service yaml of " + service.id, err);
-      throw new Error("Can't write service configuration of " + service.id + ": " + err);
+      throw new Error("Can't write service configuration of " + service.id + ": " + err, { cause: err });
     }
 
     if (SSHService.checkExecError(configStatus)) {
@@ -1779,7 +1779,7 @@ export class NodeConnection {
       });
       this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
       log.error("Can't write service configuration of " + serviceConfiguration.id, err);
-      throw new Error("Can't write service configuration of " + serviceConfiguration.id + ": " + err);
+      throw new Error("Can't write service configuration of " + serviceConfiguration.id + ": " + err, { cause: err });
     }
 
     if (SSHService.checkExecError(configStatus)) {
@@ -1809,7 +1809,7 @@ export class NodeConnection {
       serviceJsons = await this.sshService.exec("docker ps --format '{{json .}}' --no-trunc");
     } catch (err) {
       log.error("Can't list services: ", err);
-      throw new Error("Can't list services: " + err);
+      throw new Error("Can't list services: " + err, { cause: err });
     }
 
     if (SSHService.checkExecError(serviceJsons)) {
@@ -1835,7 +1835,7 @@ export class NodeConnection {
       serviceJson = await this.sshService.exec("docker inspect " + serviceId);
     } catch (err) {
       log.error("Can't get service details of '" + serviceId + "': ", err);
-      throw new Error("Can't get service details of '" + serviceId + "': " + err);
+      throw new Error("Can't get service details of '" + serviceId + "': " + err, { cause: err });
     }
 
     if (SSHService.checkExecError(serviceJson)) {
@@ -1851,7 +1851,7 @@ export class NodeConnection {
       logs = await this.sshService.exec("docker logs --tail=100 stereum-" + serviceID);
     } catch (err) {
       log.error("Can't get service logs of '" + serviceID + "': ", err);
-      throw new Error("Can't get service logs of '" + serviceID + "': " + err);
+      throw new Error("Can't get service logs of '" + serviceID + "': " + err, { cause: err });
     }
 
     if (logs.stdout.length > 0) {
@@ -2026,7 +2026,7 @@ export class NodeConnection {
       response = await this.sshService.exec(`cd ${this.settings.stereum.settings.controls_install_path}/ansible && git rev-parse HEAD`);
     } catch (err) {
       log.error("Couldn't get Stereum Version:", err);
-      throw new Error("Couldn't get Stereum Version:\n" + err);
+      throw new Error("Couldn't get Stereum Version:\n" + err, { cause: err });
     }
 
     if (SSHService.checkExecError(response)) {
@@ -2053,7 +2053,7 @@ export class NodeConnection {
       return path;
     } catch (err) {
       log.error("Can't read df", err);
-      throw new Error("Can't read df: " + err);
+      throw new Error("Can't read df: " + err, { cause: err });
     }
   }
 
@@ -2074,7 +2074,7 @@ export class NodeConnection {
       });
       this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
       log.error("Can't write stereum config", err);
-      throw new Error("Can't write stereum config: " + err);
+      throw new Error("Can't write stereum config: " + err, { cause: err });
     }
 
     if (SSHService.checkExecError(result)) {
@@ -2099,7 +2099,7 @@ export class NodeConnection {
       });
     } catch (err) {
       log.error("foo", err);
-      throw new Error("Can't run setup playbook: " + err);
+      throw new Error("Can't run setup playbook: " + err, { cause: err });
     }
 
     return settings;
@@ -2297,7 +2297,7 @@ export class NodeConnection {
         // get all installed curl images
         const fetchedImages = await this.sshService.exec("docker images curlimages/curl --format json");
         if (SSHService.checkExecError(fetchedImages)) {
-          throw new Error(SSHService.extractExecError(fetchedImages));
+          throw new Error(SSHService.extractExecError(fetchedImages), { cause: error });
         }
 
         const images = fetchedImages.stdout
@@ -2332,7 +2332,7 @@ export class NodeConnection {
     const lines = args.lines ?? 100000;
     const until = args.until ?? 0;
     const dateOrLines = args.dateOrLines ?? "lines";
-    let logResult = null;
+    let logResult;
 
     // Calculate the timestamp for the 'since' days ago
     const sinceDate = new Date(Date.now() - 1000 * 60 * 60 * 24 * since).toISOString();

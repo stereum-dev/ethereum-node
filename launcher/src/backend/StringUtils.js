@@ -88,7 +88,7 @@ export class StringUtils {
       return publicKey;
     } catch (err) {
       log.error("Can't create RSA public key from RSA private key ", err);
-      throw new Error("Can't create RSA public key from RSA private key : " + err);
+      throw new Error("Can't create RSA public key from RSA private key : " + err, { cause: err });
     }
   }
 

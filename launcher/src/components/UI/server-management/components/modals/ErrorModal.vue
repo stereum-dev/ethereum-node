@@ -30,7 +30,7 @@ const props = defineProps({
   description: {
     type: String,
     default: "Error",
-    required: true,
+    required: false,
   },
 });
 

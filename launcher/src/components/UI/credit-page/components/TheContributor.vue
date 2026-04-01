@@ -15,27 +15,27 @@
 const props = defineProps({
   name: {
     type: String,
-    required: true,
+    required: false,
     default: "",
   },
   avatar: {
     type: String,
-    required: true,
+    required: false,
     default: "",
   },
   crown: {
     type: Boolean,
-    required: true,
+    required: false,
     default: false,
   },
   rank: {
     type: Number,
-    required: true,
+    required: false,
     default: null,
   },
   score: {
     type: Number,
-    required: true,
+    required: false,
     default: null,
   },
 });

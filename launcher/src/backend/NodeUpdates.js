@@ -53,8 +53,8 @@ export class NodeUpdates {
    */
   async runAllUpdates(commit) {
     //stereum and service updates
-    let before = 0;
-    let after = 0;
+    let before;
+    let after;
     try {
       before = this.getTimeStamp();
       await this.updateStereum(commit);

@@ -23,7 +23,7 @@ export default {
   props: {
     client: {
       type: Object,
-      required: true,
+      required: false,
       default: () => ({}),
     },
   },

@@ -177,7 +177,7 @@ export class Monitoring {
   // Returns last known head block or false if unknown
   async getLastKnownHeadBlock(ntwk) {
     const file = this.lastKnownHeadBlockFile;
-    var cont = {};
+    var cont;
     try {
       cont = fs.readFileSync(file);
       cont = JSON.parse(cont);
@@ -367,7 +367,7 @@ export class Monitoring {
     `.trim();
 
     // Execute the CURL command on the node and return the result
-    let result = null;
+    let result;
     try {
       result = await this.nodeConnection.sshService.exec(cmd);
     } catch (err) {
@@ -495,7 +495,7 @@ export class Monitoring {
     `.trim();
 
     // Execute the CURL command on the node and return the result
-    let result = null;
+    let result;
     try {
       result = await this.nodeConnection.sshService.exec(cmd);
     } catch (err) {
@@ -654,7 +654,7 @@ export class Monitoring {
     const cmd = `curl -s --location --request ${method} -w "\\n%{http_code}" '${url}' ${requestheaders} ${requestdata}`.trim();
 
     // Execute the CURL command on the node and return the result
-    let result = null;
+    let result;
     try {
       result = await this.nodeConnection.sshService.exec(cmd);
     } catch (err) {
@@ -794,7 +794,7 @@ export class Monitoring {
     const cmd = `curl -s --location --request ${method} -w "\\n%{http_code}" '${url}' ${requestheaders} ${requestdata}`.trim();
 
     // Execute the CURL command on the node and return the result
-    let result = null;
+    let result;
     try {
       result = await this.nodeConnection.sshService.exec(cmd);
     } catch (err) {
@@ -1418,7 +1418,7 @@ export class Monitoring {
       // Do not disable consensuc/execution vars on lint warning because they are used with eval!
       let consensus = cc; // eslint-disable-line no-unused-vars
       let execution = ec; // eslint-disable-line no-unused-vars
-      var data = {},
+      var data,
         opttyp = null,
         optnam = null,
         defval = null,
@@ -1698,7 +1698,7 @@ export class Monitoring {
     }
 
     // Execute the command on the node
-    let result = null;
+    let result;
     try {
       result = await this.nodeConnectionProm.sshService.exec(sshcmd);
     } catch (err) {
@@ -3086,7 +3086,7 @@ export class Monitoring {
     const logsTail = this.is_numeric(logs_tail) ? parseInt(logs_tail) : 0;
     const logsTs = typeof logs_ts == "boolean" && logs_ts ? true : false;
     var sshcommand = [];
-    var logArgs = "";
+    var logArgs;
     for (let i = 0; i < serviceInfos.length; i++) {
       var containerName = serviceInfos[i].config.instanceID;
       if (logsTail > 0) {
