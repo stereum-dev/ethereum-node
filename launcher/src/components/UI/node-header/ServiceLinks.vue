@@ -2,7 +2,7 @@
   <div class="links-box">
     <div ref="service" class="services">
       <div v-for="(service, idx) in runningServices" :key="idx" class="service-icon">
-        <div class="icon-box" onmousedown="return false">
+        <div class="icon-box" onmousedown="return false;">
           <img
             :src="service.hIcon"
             alt="service-icon"

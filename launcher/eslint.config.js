@@ -14,7 +14,6 @@ module.exports = [
         ...globals.node,
         ...globals.jest,
         ...globals.browser,
-        AudioWorkletGlobalScope: globals.browser["AudioWorkletGlobalScope"],
       },
       parser: require("vue-eslint-parser"),
       parserOptions: {

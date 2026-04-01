@@ -14,7 +14,7 @@
         class="col-start-1 col-span-1 text-[8px] text-amber-300 font-semibold self-center text-center overflow-hidden"
         @mouseenter="footerStore.cursorLocation = `slot index`"
         @mouseleave="footerStore.cursorLocation = ''"
-        >{{ (stakingStore.currentSlot % stakingStore.slotsPerEpoch | 0) + 1 + " / " + stakingStore.slotsPerEpoch }} #</span
+        >{{ ((stakingStore.currentSlot % stakingStore.slotsPerEpoch) | 0) + 1 + " / " + stakingStore.slotsPerEpoch }} #</span
       >
 
       <div
