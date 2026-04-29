@@ -8,7 +8,7 @@ module.exports = {
   },
   moduleDirectories: ["node_modules", "src"],
   testEnvironment: "jsdom",
-  transformIgnorePatterns: ["node_modules/(?!(sucrase)/)"],
+  transformIgnorePatterns: ["node_modules/(?!(sucrase|uuid)/)"],
   transform: {
     "^.+\\.(js|jsx|ts|tsx|mjs)$": "babel-jest",
     // ".*\\.(ts)$": "ts-jest"
