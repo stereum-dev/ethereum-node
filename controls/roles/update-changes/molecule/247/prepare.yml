@@ -1,0 +1,200 @@
+---
+- name: Prepare
+  hosts: all
+  tasks:
+    - name: Make sure Stereum's config path exists
+      file:
+        path: "/etc/stereum/services"
+        state: directory
+        owner: "root"
+        group: "root"
+        mode: 0644
+      become: yes
+
+    - name: Create LighthouseBeaconService config
+      copy:
+        dest: "/etc/stereum/services/9f07622f-08cf-157d-ccb8-dbad6acfed5f.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: LighthouseBeaconService
+          id: 9f07622f-08cf-157d-ccb8-dbad6acfed5f
+          configVersion: 1
+          command:
+            - lighthouse
+            - bn
+            - --debug-level=info
+            - --network=hoodi
+            - --execution-endpoint=http://stereum-fc63454f-c622-2f7e-c810-6c6adec3b6aa:8551
+            - --execution-jwt=/engine.jwt
+            - --datadir=/opt/app/beacon
+            - --http
+            - --http-address=0.0.0.0
+            - --metrics
+            - --metrics-address=0.0.0.0
+            - --disable-upnp
+            - --validator-monitor-auto
+            - --slasher
+            - --slasher-dir=/opt/app/slasher
+            - --port=9000
+            - --enr-tcp-port=9000
+            - --enr-udp-port=9000
+            - --checkpoint-sync-url=https://hoodi.beaconstate.ethstaker.cc
+          entrypoint: []
+          env: {}
+          image: sigp/lighthouse:v8.1.3
+          ports:
+            - 0.0.0.0:9000:9000/tcp
+            - 0.0.0.0:9000:9000/udp
+            - 0.0.0.0:9001:9001/udp
+            - 127.0.0.1:5052:5052/tcp
+          volumes:
+            - /opt/stereum/lighthouse-9f07622f-08cf-157d-ccb8-dbad6acfed5f/beacon:/opt/app/beacon
+            - /opt/stereum/lighthouse-9f07622f-08cf-157d-ccb8-dbad6acfed5f/slasher:/opt/app/slasher
+            - /opt/stereum/geth-fc63454f-c622-2f7e-c810-6c6adec3b6aa/engine.jwt:/engine.jwt
+          user: "2000"
+          autoupdate: true
+          network: hoodi
+          dependencies:
+            executionClients:
+              - service: GethService
+                id: fc63454f-c622-2f7e-c810-6c6adec3b6aa
+            consensusClients: []
+            mevboost: []
+            otherServices: []
+      become: yes
+
+    - name: Create LodestarBeaconService config
+      copy:
+        dest: "/etc/stereum/services/f30befcc-f1e5-a428-b2b4-1883d38bc3ee.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: LodestarBeaconService
+          id: f30befcc-f1e5-a428-b2b4-1883d38bc3ee
+          configVersion: 1
+          command:
+            - beacon
+            - --network=hoodi
+            - --dataDir=/opt/app/beacon
+            - --rest.port=9596
+            - --rest.namespace=*
+            - --rest.address=0.0.0.0
+            - --jwt-secret=/engine.jwt
+            - --execution.urls=http://stereum-fc63454f-c622-2f7e-c810-6c6adec3b6aa:8551
+            - --metrics=true
+            - --metrics.port=8008
+            - --metrics.address=0.0.0.0
+            - --builder
+            - --port=9000
+            - --nat=false
+            - --enr.tcp=9000
+            - --enr.udp=9000
+            - --checkpointSyncUrl=https://hoodi.beaconstate.ethstaker.cc
+          entrypoint:
+            - node
+            - ./packages/cli/bin/lodestar
+          env:
+            NODE_OPTIONS: --max-old-space-size=8192
+          image: chainsafe/lodestar:v1.41.1
+          ports:
+            - 0.0.0.0:9001:9000/tcp
+            - 0.0.0.0:9002:9000/udp
+            - 127.0.0.1:9596:9596/tcp
+          volumes:
+            - /opt/stereum/lodestar-f30befcc-f1e5-a428-b2b4-1883d38bc3ee/beacon:/opt/app/beacon
+            - /opt/stereum/geth-fc63454f-c622-2f7e-c810-6c6adec3b6aa/engine.jwt:/engine.jwt
+          user: "2000"
+          autoupdate: true
+          network: hoodi
+          dependencies:
+            executionClients:
+              - service: GethService
+                id: fc63454f-c622-2f7e-c810-6c6adec3b6aa
+            consensusClients: []
+            mevboost: []
+            otherServices: []
+      become: yes
+
+    - name: Create ValidatorEjectorService config (mainnet)
+      copy:
+        dest: "/etc/stereum/services/ef55ab69-7cc7-560b-65e8-8e6624b36859.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: ValidatorEjectorService
+          id: ef55ab69-7cc7-560b-65e8-8e6624b36859
+          configVersion: 1
+          command: []
+          entrypoint: []
+          env:
+            EXECUTION_NODE: ""
+            CONSENSUS_NODE: ""
+            LOCATOR_ADDRESS: "0xC1d0b3DE6792Bf6b4b37EccdcC24e45978Cfd2Eb"
+            STAKING_MODULE_ID: "1"
+            OPERATOR_ID: "123456789"
+            MESSAGES_LOCATION: /app/messages
+            ORACLE_ADDRESSES_ALLOWLIST: '["0x73181107c8D9ED4ce0bbeF7A0b4ccf3320C41d12","0x285f8537e1dAeEdaf617e96C742F2Cf36d63CcfB","0x404335BcE530400a5814375E7Ec1FB55fAff3eA2","0x946D3b081ed19173dC83Cd974fC69e1e760B7d78","0x007DE4a5F7bc37E2F26c0cb2E8A95006EE9B89b5","0xc79F702202E3A6B0B6310B537E786B9ACAA19BAf","0x61c91ECd902EB56e314bB2D5c5C07785444Ea1c8","0xe57B3792aDCc5da47EF4fF588883F0ee0c9835C9","0x4118DAD7f348A4063bD15786c299De2f3B1333F3"]'
+            HTTP_PORT: "8989"
+            RUN_METRICS: "true"
+            RUN_HEALTH_CHECK: "true"
+            DRY_RUN: "false"
+          image: lidofinance/validator-ejector:1.9.0
+          ports: []
+          volumes:
+            - /opt/stereum/validatorejector-ef55ab69-7cc7-560b-65e8-8e6624b36859/messages:/app/messages
+          user: "2000"
+          autoupdate: true
+          network: mainnet
+          dependencies:
+            executionClients: []
+            consensusClients: []
+            mevboost: []
+            otherServices: []
+      become: yes
+
+    - name: Create ValidatorEjectorService config (hoodi)
+      copy:
+        dest: "/etc/stereum/services/10aabb02-abac-77f5-7775-38a50e12b070.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: ValidatorEjectorService
+          id: 10aabb02-abac-77f5-7775-38a50e12b070
+          configVersion: 1
+          command: []
+          entrypoint: []
+          env:
+            EXECUTION_NODE: http://stereum-fc63454f-c622-2f7e-c810-6c6adec3b6aa:8545
+            CONSENSUS_NODE: http://stereum-9f07622f-08cf-157d-ccb8-dbad6acfed5f:5052
+            LOCATOR_ADDRESS: "0xe2EF9536DAAAEBFf5b1c130957AB3E80056b06D8"
+            STAKING_MODULE_ID: "1"
+            OPERATOR_ID: "123456789"
+            MESSAGES_LOCATION: /app/messages
+            ORACLE_ADDRESSES_ALLOWLIST: '["0xcA80ee7313A315879f326105134F938676Cfd7a9","0xf03B8DC8762B97F13Ac82e6F94bE3Ed002FF7459","0x1932f53B1457a5987791a40Ba91f71c5Efd5788F","0xf7aE520e99ed3C41180B5E12681d31Aa7302E4e5","0x99B2B75F490fFC9A29E4E1f5987BE8e30E690aDF","0x219743f1911d84B32599BdC2Df21fC8Dba6F81a2","0xD3b1e36A372Ca250eefF61f90E833Ca070559970","0x4c75FA734a39f3a21C57e583c1c29942F021C6B7","0x948A62cc0414979dc7aa9364BA5b96ECb29f8736","0xfe43A8B0b481Ae9fB1862d31826532047d2d538c","0x43C45C2455C49eed320F463fF4f1Ece3D2BF5aE2"]'
+            HTTP_PORT: "8989"
+            RUN_METRICS: "true"
+            RUN_HEALTH_CHECK: "true"
+            DRY_RUN: "false"
+          image: lidofinance/validator-ejector:1.9.0
+          ports: []
+          volumes:
+            - /opt/stereum/validatorejector-10aabb02-abac-77f5-7775-38a50e12b070/messages:/app/messages
+          user: "2000"
+          autoupdate: true
+          network: hoodi
+          dependencies:
+            executionClients:
+              - service: GethService
+                id: fc63454f-c622-2f7e-c810-6c6adec3b6aa
+            consensusClients:
+              - service: LighthouseBeaconService
+                id: 9f07622f-08cf-157d-ccb8-dbad6acfed5f
+            mevboost: []
+            otherServices: []
+      become: yes
+# EOF

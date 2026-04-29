@@ -1089,8 +1089,9 @@ export class ServiceManager {
       case "LodestarBeaconService":
         //LodestarBeaconService
         ports = [
-          new ServicePort(null, 9000, 9000, servicePortProtocol.tcp),
-          new ServicePort(null, 9000, 9000, servicePortProtocol.udp),
+          new ServicePort(null, 9000, 9000, servicePortProtocol.tcp), // 	TCP transport for libp2p
+          new ServicePort(null, 9000, 9000, servicePortProtocol.udp), //	discv5 peer discovery
+          new ServicePort(null, 9001, 9001, servicePortProtocol.udp), // 	QUIC transport for libp2p
           new ServicePort("127.0.0.1", args.port ? args.port : 9596, 9596, servicePortProtocol.tcp),
         ];
         return LodestarBeaconService.buildByUserInput(

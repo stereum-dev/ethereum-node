@@ -55,6 +55,7 @@ export class LodestarBeaconService extends NodeService {
         `--metrics.address=0.0.0.0`,
         `--builder`,
         `--port=9000`,
+        `--quicPort=9001`,
         `--nat=false`,
         `--enr.tcp=9000`,
         `--enr.udp=9000`,

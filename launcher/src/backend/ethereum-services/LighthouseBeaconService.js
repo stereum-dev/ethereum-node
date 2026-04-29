@@ -58,6 +58,7 @@ export class LighthouseBeaconService extends NodeService {
         "--slasher",
         `--slasher-dir=${slasherDir}`,
         "--port=9000",
+        "--quic-port=9001",
         "--enr-tcp-port=9000",
         "--enr-udp-port=9000",
       ], //command

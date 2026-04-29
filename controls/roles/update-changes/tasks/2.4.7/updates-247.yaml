@@ -1,0 +1,23 @@
+---
+- name: Find service configs
+  find:
+    paths: "/etc/stereum/services"
+  register: service_config_files
+
+- name: Include Lighthouse Changes
+  include_tasks: lighthouse_changes.yaml
+  loop: "{{ service_config_files.files }}"
+  loop_control:
+    loop_var: config_file
+
+- name: Include Lodestar Changes
+  include_tasks: lodestar_changes.yaml
+  loop: "{{ service_config_files.files }}"
+  loop_control:
+    loop_var: config_file
+
+- name: Include Ejector Changes
+  include_tasks: ejector_changes.yaml
+  loop: "{{ service_config_files.files }}"
+  loop_control:
+    loop_var: config_file

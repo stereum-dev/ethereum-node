@@ -1,0 +1,91 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+    # LighthouseBeaconService
+    - name: Read LighthouseBeaconService file
+      slurp:
+        src: "/etc/stereum/services/9f07622f-08cf-157d-ccb8-dbad6acfed5f.yaml"
+      register: Lighthouse_service_configuration_raw
+
+    # LodestarBeaconService
+    - name: Read LodestarBeaconService file
+      slurp:
+        src: "/etc/stereum/services/f30befcc-f1e5-a428-b2b4-1883d38bc3ee.yaml"
+      register: Lodestar_service_configuration_raw
+
+    # ValidatorEjectorService mainnet
+    - name: Read ValidatorEjectorService file (mainnet)
+      slurp:
+        src: "/etc/stereum/services/ef55ab69-7cc7-560b-65e8-8e6624b36859.yaml"
+      register: Ejector_mainnet_configuration_raw
+
+    # ValidatorEjectorService hoodi
+    - name: Read ValidatorEjectorService file (hoodi)
+      slurp:
+        src: "/etc/stereum/services/10aabb02-abac-77f5-7775-38a50e12b070.yaml"
+      register: Ejector_hoodi_configuration_raw
+
+    - name: Parse service configurations
+      set_fact:
+        Lighthouse_service_configuration: "{{ Lighthouse_service_configuration_raw['content'] | b64decode | from_yaml }}"
+        Lodestar_service_configuration: "{{ Lodestar_service_configuration_raw['content'] | b64decode | from_yaml }}"
+        Ejector_mainnet_configuration: "{{ Ejector_mainnet_configuration_raw['content'] | b64decode | from_yaml }}"
+        Ejector_hoodi_configuration: "{{ Ejector_hoodi_configuration_raw['content'] | b64decode | from_yaml }}"
+        mainnet_oracle_allowlist: '["0x73181107c8D9ED4ce0bbeF7A0b4ccf3320C41d12","0x4118DAD7f348A4063bD15786c299De2f3B1333F3","0x404335BcE530400a5814375E7Ec1FB55fAff3eA2","0x8dB977C13CAA938BC58464bFD622DF0570564b78","0x007DE4a5F7bc37E2F26c0cb2E8A95006EE9B89b5","0xc79F702202E3A6B0B6310B537E786B9ACAA19BAf","0x61c91ECd902EB56e314bB2D5c5C07785444Ea1c8","0xe57B3792aDCc5da47EF4fF588883F0ee0c9835C9","0x042a9e5acCfa17e28300F1b5967f20891E973922"]'
+        hoodi_oracle_allowlist: '["0xcA80ee7313A315879f326105134F938676Cfd7a9","0x948A62cc0414979dc7aa9364BA5b96ECb29f8736","0x1932f53B1457a5987791a40Ba91f71c5Efd5788F","0xf7aE520e99ed3C41180B5E12681d31Aa7302E4e5","0x99B2B75F490fFC9A29E4E1f5987BE8e30E690aDF","0x219743f1911d84B32599BdC2Df21fC8Dba6F81a2","0xD3b1e36A372Ca250eefF61f90E833Ca070559970","0x4c75FA734a39f3a21C57e583c1c29942F021C6B7","0xfe43A8B0b481Ae9fB1862d31826532047d2d538c","0x43C45C2455C49eed320F463fF4f1Ece3D2BF5aE2","0x44e3996629a9026BF95C4Be3c1a38242D1E64a01","0x0f30c4ceBE7F3057e81949B0Ab1591FC256226b5"]'
+
+    - debug:
+        msg: "{{ Lighthouse_service_configuration }}"
+    - debug:
+        msg: "{{ Lighthouse_service_configuration_raw['content'] | b64decode }}"
+
+    - debug:
+        msg: "{{ Lodestar_service_configuration }}"
+    - debug:
+        msg: "{{ Lodestar_service_configuration_raw['content'] | b64decode }}"
+
+    - debug:
+        msg: "{{ Ejector_mainnet_configuration }}"
+    - debug:
+        msg: "{{ Ejector_mainnet_configuration_raw['content'] | b64decode }}"
+
+    - debug:
+        msg: "{{ Ejector_hoodi_configuration }}"
+    - debug:
+        msg: "{{ Ejector_hoodi_configuration_raw['content'] | b64decode }}"
+
+    - assert:
+        that:
+          # Lighthouse: --quic-port=9001 added to command
+          - Lighthouse_service_configuration.command | select('match', '--quic-port=9001') | length == 1
+          # Lighthouse: existing flags untouched
+          - Lighthouse_service_configuration.command | select('match', '--port=9000') | length == 1
+          - Lighthouse_service_configuration.command | select('match', '--enr-tcp-port=9000') | length == 1
+          - Lighthouse_service_configuration.command | select('match', '--enr-udp-port=9000') | length == 1
+          # Lighthouse: quic udp port mapping present
+          - Lighthouse_service_configuration.ports | select('search', '9001:9001/udp') | length == 1
+          # Lighthouse: existing ports untouched (match on service port only)
+          - Lighthouse_service_configuration.ports | select('search', '9000/tcp') | length == 1
+          - Lighthouse_service_configuration.ports | select('search', '9000/udp') | length == 1
+
+          # Lodestar: --quicPort=9001 added to command
+          - Lodestar_service_configuration.command | select('match', '--quicPort=9001') | length == 1
+          # Lodestar: existing flags untouched
+          - Lodestar_service_configuration.command | select('match', '--port=9000') | length == 1
+          - Lodestar_service_configuration.command | select('match', '--enr.tcp=9000') | length == 1
+          - Lodestar_service_configuration.command | select('match', '--enr.udp=9000') | length == 1
+          # Lodestar: 9001/udp port mapping added
+          - Lodestar_service_configuration.ports | select('search', '9001:9001/udp') | length == 1
+          # Lodestar: existing ports untouched (match on service port only)
+          - Lodestar_service_configuration.ports | select('search', '9000/tcp') | length == 1
+          - Lodestar_service_configuration.ports | select('search', '9000/udp') | length == 1
+          - Lodestar_service_configuration.ports | select('search', '9596/tcp') | length == 1
+
+          # Ejector mainnet: allowlist updated to 2.4.7 members
+          - Ejector_mainnet_configuration.env.ORACLE_ADDRESSES_ALLOWLIST | from_yaml == mainnet_oracle_allowlist | from_yaml
+
+          # Ejector hoodi: allowlist updated to 2.4.7 members
+          - Ejector_hoodi_configuration.env.ORACLE_ADDRESSES_ALLOWLIST | from_yaml == hoodi_oracle_allowlist | from_yaml
+# EOF

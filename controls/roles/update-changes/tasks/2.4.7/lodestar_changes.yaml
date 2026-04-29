@@ -1,0 +1,27 @@
+---
+- name: Read service file
+  slurp:
+    src: "{{ config_file.path }}"
+  register: service_configuration_raw
+
+- name: Parse service's configuration
+  set_fact:
+    service_configuration: "{{ service_configuration_raw['content'] | b64decode | from_yaml }}"
+    service_configuration_text: "{{ service_configuration_raw['content'] | b64decode }}"
+
+- name: Lodestar Changes
+  when: service_configuration.service == "LodestarBeaconService"
+  block:
+    - name: add --quicPort=9001
+      lineinfile:
+        path: "{{ config_file.path }}"
+        insertafter: "--dataDir"
+        line: "{{ service_configuration_text | split('\n') | select('match', '^\\s*-\\s.*--dataDir') | first | split('-') | first }}- --quicPort=9001"
+      when: service_configuration.command | select('match', '--quicPort=9001') | length == 0
+
+    - name: add 9001:9001/udp port mapping
+      lineinfile:
+        path: "{{ config_file.path }}"
+        insertafter: "9000/udp"
+        line: "{{ service_configuration_text | split('\n') | select('match', '^\\s*-\\s.*9000/udp') | first | split('-') | first }}- 0.0.0.0:9001:9001/udp"
+      when: service_configuration.ports | select('search', '9001:9001/udp') | length == 0
