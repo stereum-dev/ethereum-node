@@ -12,8 +12,11 @@ module.exports = {
         },
         appId: "com.stereum.launcher",
         productName: "Stereum-Launcher",
-        ...(shouldNotarize ? { afterSign: "@sapien99/vue-cli-plugin-electron-builder-notarize" } : {}),
-        ...(!isSigned ? { afterPack: "./afterPackMac.js" } : {}),
+        ...(shouldNotarize
+          ? { afterSign: "@sapien99/vue-cli-plugin-electron-builder-notarize" }
+          : !isSigned
+            ? { afterSign: "./afterSignMac.js" }
+            : {}),
         buildDependenciesFromSource: false,
         nodeGypRebuild: false,
         npmRebuild: false,
