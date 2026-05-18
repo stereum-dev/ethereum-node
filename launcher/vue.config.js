@@ -1,4 +1,5 @@
 const shouldNotarize = process.env.NOTARIZE === "true";
+const isSigned = process.env.CSC_IDENTITY_AUTO_DISCOVERY !== "false";
 module.exports = {
   parallel: false,
   pluginOptions: {
@@ -12,6 +13,7 @@ module.exports = {
         appId: "com.stereum.launcher",
         productName: "Stereum-Launcher",
         ...(shouldNotarize ? { afterSign: "@sapien99/vue-cli-plugin-electron-builder-notarize" } : {}),
+        ...(!isSigned ? { afterPack: "./afterPackMac.js" } : {}),
         buildDependenciesFromSource: false,
         nodeGypRebuild: false,
         npmRebuild: false,
@@ -27,8 +29,18 @@ module.exports = {
           artifactName: "Stereum-Launcher-${version}.${ext}",
         },
         mac: {
-          hardenedRuntime: true,
-          entitlements: "./node_modules/@sapien99/vue-cli-plugin-electron-builder-notarize/entitlements.mac.inherit.plist",
+          // hardenedRuntime requires consistent Team IDs across all binaries; only enable
+          // when actually signing, otherwise the Electron Framework's pre-signed Team ID
+          // differs from the unsigned main binary and dyld refuses to load it (macOS 14.4+)
+          hardenedRuntime: isSigned,
+          ...(isSigned
+            ? {
+                entitlements:
+                  "./node_modules/@sapien99/vue-cli-plugin-electron-builder-notarize/entitlements.mac.inherit.plist",
+                entitlementsInherit:
+                  "./node_modules/@sapien99/vue-cli-plugin-electron-builder-notarize/entitlements.mac.inherit.plist",
+              }
+            : {}),
           gatekeeperAssess: false,
           artifactName: "Stereum-Launcher-${version}.${ext}",
           x64ArchFiles: "**/*.node",
