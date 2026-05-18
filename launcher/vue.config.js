@@ -35,10 +35,8 @@ module.exports = {
           hardenedRuntime: isSigned,
           ...(isSigned
             ? {
-                entitlements:
-                  "./node_modules/@sapien99/vue-cli-plugin-electron-builder-notarize/entitlements.mac.inherit.plist",
-                entitlementsInherit:
-                  "./node_modules/@sapien99/vue-cli-plugin-electron-builder-notarize/entitlements.mac.inherit.plist",
+                entitlements: "./node_modules/@sapien99/vue-cli-plugin-electron-builder-notarize/entitlements.mac.inherit.plist",
+                entitlementsInherit: "./node_modules/@sapien99/vue-cli-plugin-electron-builder-notarize/entitlements.mac.inherit.plist",
               }
             : {}),
           gatekeeperAssess: false,
