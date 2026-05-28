@@ -3,9 +3,13 @@
   include_tasks: docker-centos.yaml
   when: ansible_facts['distribution'] == "CentOS"
 
-- name: Docker on Ubuntu
+- name: Docker on Ubuntu (< 26.04)
   include_tasks: docker-ubuntu.yaml
-  when: ansible_facts['distribution'] == 'Debian' or ansible_facts['distribution'] == 'Ubuntu'
+  when: (ansible_facts['distribution'] == 'Debian' or ansible_facts['distribution'] == 'Ubuntu') and ansible_facts['distribution_major_version'] | int < 26
+
+- name: Docker on Ubuntu (>= 26.04)
+  include_tasks: docker-ubuntu-2604.yaml
+  when: ansible_facts['distribution'] == 'Ubuntu' and ansible_facts['distribution_major_version'] | int >= 26
 
 - name: Enable service docker
   systemd:

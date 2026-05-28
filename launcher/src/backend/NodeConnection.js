@@ -166,14 +166,17 @@ export class NodeConnection {
         status: true,
       });
       let installPkgResult;
-      try {
-        installPkgResult = await this.sshService.exec(
-          "sudo -u root apt update &&\
+      const ubuntuMajorVersion = parseFloat(this.osv);
+      const needsAnsiblePpa = ubuntuMajorVersion < 26;
+      const installCmd = needsAnsiblePpa
+        ? "sudo -u root apt update &&\
           sudo -u root apt install -y software-properties-common &&\
           sudo -u root add-apt-repository --yes --update ppa:ansible/ansible &&\
-          sudo -u root apt install -y pip ansible tar gzip wget git",
-          false
-        );
+          sudo -u root apt install -y pip ansible tar gzip wget git"
+        : "sudo -u root apt update &&\
+          sudo -u root apt install -y pip ansible tar gzip wget git";
+      try {
+        installPkgResult = await this.sshService.exec(installCmd, false);
       } catch (err) {
         log.error(err);
         installPkgResult = { rc: 1, stderr: err };
@@ -350,6 +353,7 @@ export class NodeConnection {
       ansibleResult = await this.sshService.exec(
         "             ANSIBLE_LOAD_CALLBACK_PLUGINS=1\
                         ANSIBLE_STDOUT_CALLBACK=stereumjson\
+                        ANSIBLE_DEPRECATION_WARNINGS=false\
                         ANSIBLE_LOG_FOLDER=/tmp/" +
           playbookRunRef +
           "\
