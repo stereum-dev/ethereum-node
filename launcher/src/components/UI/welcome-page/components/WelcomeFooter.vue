@@ -42,7 +42,7 @@ const display = async (osResponse, suResponse) => {
   const suData = await suResponse;
   const osName = osData && osData.hasOwnProperty("name") && osData.name ? osData.name : "";
   const osVers = osData && osData.hasOwnProperty("version") && osData.version ? osData.version : "";
-  if (osName === "Ubuntu" && (osVers === "22.04" || osVers === "24.04")) {
+  if (osName === "Ubuntu" && (osVers === "22.04" || osVers === "24.04" || osVers === "26.04")) {
     message.value = osName.toUpperCase() + " " + osVers + " " + supportMessage;
     if (suData.rc) {
       // Description of return codes (suData.rc):
@@ -71,7 +71,7 @@ const display = async (osResponse, suResponse) => {
       isSupported.value = true;
     }
   } else {
-    message.value = "UNSUPPORTED OS. USE UBUNTU VERSION 22.04 OR 24.04.";
+    message.value = "UNSUPPORTED OS. USE UBUNTU VERSION 22.04, 24.04 OR 26.04.";
   }
   active.value = false;
 };
