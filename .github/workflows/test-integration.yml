@@ -8,7 +8,7 @@ on:
 
 jobs:
   setup:
-    runs-on: ubuntu-26.04
+    runs-on: ubuntu-latest
     outputs:
       importTests: ${{ steps.get-import-tests.outputs.tests }}
       ELTests: ${{ steps.get-EL-tests.outputs.tests }}
@@ -34,7 +34,7 @@ jobs:
         working-directory: ./launcher
 
   Validator-Import-test:
-    runs-on: ubuntu-26.04
+    runs-on: ubuntu-latest
     name: test ${{ matrix.test.name }}
     needs:
       - setup
@@ -57,7 +57,7 @@ jobs:
           IS_DEV: "true"
 
   Execution-Client-test:
-    runs-on: ubuntu-26.04
+    runs-on: ubuntu-latest
     name: test ${{ matrix.test.name }}
     needs:
       - setup
@@ -79,7 +79,7 @@ jobs:
           IS_DEV: "true"
 
   Other-Integration-test:
-    runs-on: ubuntu-26.04
+    runs-on: ubuntu-latest
     name: test ${{ matrix.test.name }}
     needs:
       - setup
@@ -100,7 +100,7 @@ jobs:
           IS_DEV: "true"
 
   Cleanup:
-    runs-on: ubuntu-26.04
+    runs-on: ubuntu-latest
     name: Cleanup
     needs:
       - Validator-Import-test

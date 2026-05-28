@@ -5,7 +5,7 @@ on:
 
 jobs:
   Validator-Import-test:
-    runs-on: ubuntu-26.04
+    runs-on: ubuntu-latest
     name: Validator Import Tests
     needs:
       - Other-Integration-test
@@ -24,7 +24,7 @@ jobs:
           IS_DEV: "true"
 
   Execution-Client-test:
-    runs-on: ubuntu-26.04
+    runs-on: ubuntu-latest
     name: Execution Client Tests
     needs:
       - Other-Integration-test
@@ -42,7 +42,7 @@ jobs:
           IS_DEV: "true"
 
   Other-Integration-test:
-    runs-on: ubuntu-26.04
+    runs-on: ubuntu-latest
     name: Other Integration Tests
     steps:
       - uses: actions/checkout@v5
