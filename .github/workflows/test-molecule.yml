@@ -16,7 +16,7 @@ jobs:
           ]
       fail-fast: false
     concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@v5
       - name: Set up Python
@@ -75,7 +75,7 @@ jobs:
           ]
       fail-fast: false
     concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@v5
       - name: Set up Python
@@ -130,7 +130,7 @@ jobs:
   #       tests: [{ role: "switch-repos", test: "default" }]
   #     fail-fast: false
   #   concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
-  #   runs-on: ubuntu-24.04
+  #   runs-on: ubuntu-26.04
   #   steps:
   #     - uses: actions/checkout@v5
   #     - name: Set up Python
@@ -185,7 +185,7 @@ jobs:
   #       tests: [{ role: "update-package", test: "default" }]
   #     fail-fast: false
   #   concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
-  #   runs-on: ubuntu-24.04
+  #   runs-on: ubuntu-26.04
   #   steps:
   #     - uses: actions/checkout@v5
   #     - name: Set up Python
@@ -240,7 +240,7 @@ jobs:
         tests: [{ role: "restart-services", test: "default" }]
       fail-fast: false
     concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@v5
       - name: Set up Python
@@ -298,7 +298,7 @@ jobs:
   #       ]
   #     fail-fast: false
   #   concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
-  #   runs-on: ubuntu-24.04
+  #   runs-on: ubuntu-26.04
   #   steps:
   #     - uses: actions/checkout@v5
   #     - name: Set up Python
@@ -353,7 +353,7 @@ jobs:
         tests: [{ role: "setup", test: "default" }]
       fail-fast: false
     concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@v5
       - name: Set up Python
@@ -460,7 +460,7 @@ jobs:
           ]
       fail-fast: false
     concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@v5
       - name: Set up Python
@@ -517,7 +517,7 @@ jobs:
         tests: [{ role: "ssv-key-generator", test: "default" }]
       fail-fast: false
     concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@v5
       - name: Set up Python
@@ -578,7 +578,7 @@ jobs:
           ]
       fail-fast: false
     concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@v5
       - name: Set up Python
@@ -640,7 +640,7 @@ jobs:
           ]
       fail-fast: false
     concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@v5
       - name: Set up Python

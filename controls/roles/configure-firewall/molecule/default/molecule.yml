@@ -11,7 +11,7 @@ platforms:
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
       - /lib/modules:/lib/modules:ro
-  - name: "role-configure-updates-ubuntu-22.04"
+  - name: "role-configure-updates-ubuntu-26.04"
     image: geerlingguy/docker-ubuntu2204-ansible
     privileged: true
     pre_build_image: true
