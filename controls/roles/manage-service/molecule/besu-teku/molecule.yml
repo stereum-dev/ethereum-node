@@ -4,10 +4,10 @@ dependency:
 driver:
   name: molecule_hetznercloud
 platforms:
-  - name: "manage-service--besu-teku--ubuntu-24.04"
+  - name: "manage-service--besu-teku--ubuntu-26.04"
     hostname: ubuntu
     server_type: cpx31
-    image: ubuntu-24.04
+    image: ubuntu-26.04
     location: hil
 #  - name: "manage-service--besu-teku--centos-stream-8"
 #    hostname: "centos"

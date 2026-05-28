@@ -4,9 +4,9 @@ dependency:
 driver:
   name: molecule_hetznercloud
 platforms:
-  - name: "update-stereum--default--ubuntu-24.04"
+  - name: "update-stereum--default--ubuntu-26.04"
     server_type: cpx11
-    image: ubuntu-24.04
+    image: ubuntu-26.04
     location: hil
 #  - name: "update-stereum--default--centos-stream-8"
 #    server_type: cpx11

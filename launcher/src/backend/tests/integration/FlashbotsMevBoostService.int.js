@@ -11,11 +11,11 @@ jest.setTimeout(600000);
 
 test("mevboost installation", async () => {
   const testServer = new HetznerServer();
-  const keyResponse = await testServer.createSSHKey("Mevboost--integration-test--ubuntu-2204");
+  const keyResponse = await testServer.createSSHKey("Mevboost--integration-test--ubuntu-2604");
 
   const serverSettings = {
-    name: "Mevboost--integration-test--ubuntu-2204",
-    image: "ubuntu-22.04",
+    name: "Mevboost--integration-test--ubuntu-2604",
+    image: "ubuntu-26.04",
     server_type: "cpx21",
     start_after_create: true,
     ssh_keys: [keyResponse.ssh_key.id],

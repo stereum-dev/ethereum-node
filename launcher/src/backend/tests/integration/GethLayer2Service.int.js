@@ -11,11 +11,11 @@ jest.setTimeout(500000);
 
 test("l2geth installation", async () => {
   const testServer = new HetznerServer();
-  const keyResponse = await testServer.createSSHKey("Layer2-Geth--integration-test--ubuntu-2204");
+  const keyResponse = await testServer.createSSHKey("Layer2-Geth--integration-test--ubuntu-2604");
 
   const serverSettings = {
-    name: "Layer2-Geth--integration-test--ubuntu-2204",
-    image: "ubuntu-22.04",
+    name: "Layer2-Geth--integration-test--ubuntu-2604",
+    image: "ubuntu-26.04",
     server_type: "cpx21",
     start_after_create: true,
     ssh_keys: [keyResponse.ssh_key.id],
