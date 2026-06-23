@@ -54,7 +54,6 @@
                 - --goerli
                 - --datadir=/opt/app/geth
                 - --metrics
-                - --metrics.expensive
                 - --metrics.port=6060
                 - --metrics.addr=0.0.0.0
               user: "2000"

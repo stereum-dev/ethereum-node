@@ -63,7 +63,6 @@
                 - --http.api=engine,net,eth
                 - --metrics
                 - --metrics.addr=0.0.0.0
-                - --metrics.expensive
               user: "2000"
               volumes:
                 - "/opt/app/services/{{ erigon_service }}/data:/opt/app/data"

@@ -1,0 +1,24 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+    # GethService
+    - name: Read GethService file
+      slurp:
+        src: "/etc/stereum/services/12ac7669-1874-426a-aae7-65c381ed1ec8.yaml"
+      register: Geth_service_configuration_raw
+
+    - name: Parse Service configurations
+      set_fact:
+        Geth_service_configuration: "{{ Geth_service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+    - debug:
+        msg: "{{ Geth_service_configuration }}"
+    - debug:
+        msg: "{{ Geth_service_configuration_raw['content'] | b64decode }}"
+
+    - assert:
+        that:
+          - Geth_service_configuration.command | select('match', '--metrics.expensive') | length == 0
+# EOF

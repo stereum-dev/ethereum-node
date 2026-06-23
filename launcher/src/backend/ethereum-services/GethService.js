@@ -57,7 +57,6 @@ export class GethService extends NodeService {
       `--authrpc.jwtsecret=${JWTDir}`,
       `--datadir=${dataDir}`,
       "--metrics",
-      "--metrics.expensive",
       "--metrics.port=6060",
       "--metrics.addr=0.0.0.0",
     ];

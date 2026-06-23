@@ -1,0 +1,59 @@
+---
+- name: Prepare
+  hosts: all
+  tasks:
+    - name: Make sure Stereum's config path exists
+      file:
+        path: "/etc/stereum/services"
+        state: directory
+        owner: "root"
+        group: "root"
+        mode: 0644
+      become: yes
+
+    - name: Create GethService config
+      copy:
+        dest: "/etc/stereum/services/12ac7669-1874-426a-aae7-65c381ed1ec8.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: GethService
+          id: 12ac7669-1874-426a-aae7-65c381ed1ec8
+          configVersion: 1
+          command:
+            - --hoodi
+            - --datadir=/opt/app/geth
+            - --authrpc.addr=0.0.0.0
+            - --authrpc.port=8551
+            - --authrpc.vhosts=*
+            - --authrpc.jwtsecret=/engine.jwt
+            - --http
+            - --http.addr=0.0.0.0
+            - --http.port=8545
+            - --http.vhosts=*
+            - --http.api=engine,net,eth,web3
+            - --metrics
+            - --metrics.expensive
+            - --metrics.port=6060
+            - --metrics.addr=0.0.0.0
+            - --port=30303
+          entrypoint:
+            - geth
+          env: {}
+          image: ethereum/client-go:v1.16.0
+          ports:
+            - 0.0.0.0:30303:30303/tcp
+            - 0.0.0.0:30303:30303/udp
+          volumes:
+            - /opt/stereum/geth-12ac7669-1874-426a-aae7-65c381ed1ec8/data:/opt/app/geth
+          user: "2000"
+          autoupdate: true
+          network: hoodi
+          dependencies:
+            executionClients: []
+            consensusClients: []
+            mevboost: []
+            otherServices: []
+      become: yes
+# EOF

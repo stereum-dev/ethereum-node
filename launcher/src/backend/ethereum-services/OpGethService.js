@@ -71,7 +71,6 @@ export class OpGethService extends NodeService {
       `--db.engine=pebble`,
       `--op-network=${network}`,
       `--metrics`,
-      `--metrics.expensive`,
       `--metrics.port=6060`,
       `--metrics.addr=0.0.0.0`,
     ];
