@@ -95,7 +95,7 @@ onBeforeUnmount(() => {
 
 const getSlotIndex = () => {
   const slot = controlStore?.currentResult?.currentSlot;
-  return slot % controlStore.currentResult.slotsPerEpoch;
+  return slot % controlStore?.currentResult?.slotsPerEpoch;
 };
 
 const isConsensusMissing = computed(() => footerStore?.missingServices?.includes("consensus"));
