@@ -1,6 +1,6 @@
 "use strict";
 
-import { app, protocol, net, BrowserWindow, shell, dialog, ipcMain, Menu } from "electron";
+import { app, protocol, net, session, BrowserWindow, shell, dialog, ipcMain, Menu } from "electron";
 import { StorageService } from "./storageservice.js";
 import { NodeConnection } from "./backend/NodeConnection.js";
 import { OneClickInstall } from "./backend/OneClickInstall.js";
@@ -880,6 +880,30 @@ function registerAppProtocol() {
   });
 }
 
+// Content-Security-Policy: no 'unsafe-eval' (all runtime eval was removed; i18n uses JIT
+// compilation). connect-src stays permissive because the renderer talks to arbitrary
+// nodes/RPC endpoints/APIs; style 'unsafe-inline' covers Vite's dev style injection and
+// scoped styles. Applied in dev + prod (also silences Electron's insecure-CSP warning).
+function registerContentSecurityPolicy() {
+  const csp = [
+    "default-src 'self'",
+    "script-src 'self'",
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+    "font-src 'self' https://fonts.gstatic.com data:",
+    "img-src 'self' data: blob: https:",
+    "connect-src 'self' http: https: ws: wss: data:",
+    "worker-src 'self' blob:",
+  ].join("; ");
+  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+    callback({
+      responseHeaders: {
+        ...details.responseHeaders,
+        "Content-Security-Policy": [csp],
+      },
+    });
+  });
+}
+
 async function createWindow(type = "main") {
   // Ensure only one instance of the window exists
   if (mainWindow) {
@@ -1015,6 +1039,7 @@ app.on("window-all-closed", async () => {
 
 app.on("ready", async () => {
   if (app.isReady()) {
+    registerContentSecurityPolicy();
     if (process.env.ELECTRON_RENDERER_URL) {
       app.setAsDefaultProtocolClient("stereumlauncher", process.execPath, [path.resolve(process.argv[1])]);
       createWindow();

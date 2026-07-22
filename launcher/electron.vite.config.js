@@ -55,6 +55,8 @@ export default defineConfig({
       __VUE_I18N_FULL_INSTALL__: "true",
       __VUE_I18N_LEGACY_API__: "false",
       __INTLIFY_PROD_DEVTOOLS__: "false",
+      // compile i18n messages without new Function() so a CSP without 'unsafe-eval' works
+      __INTLIFY_JIT_COMPILATION__: "true",
     },
     server: {
       port: 8081,

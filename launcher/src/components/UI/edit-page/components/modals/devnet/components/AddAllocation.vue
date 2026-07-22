@@ -109,6 +109,7 @@
 <script setup>
 import { useGenesis } from "@/store/genesis";
 import { computed, ref } from "vue";
+import JSON5 from "json5";
 
 const genesisStore = useGenesis();
 
@@ -172,7 +173,9 @@ const addAccount = () => {
       newAccount = JSON.parse(accountDetails.value);
     } catch (jsonError) {
       try {
-        newAccount = new Function(`return ${accountDetails.value}`)();
+        // JSON5 parses loose JS-object syntax (unquoted keys, single quotes, trailing
+        // commas) without executing code, so it works under a CSP without 'unsafe-eval'.
+        newAccount = JSON5.parse(accountDetails.value);
         if (typeof newAccount !== "object" || newAccount === null) {
           throw new Error("Invalid object", { cause: jsonError });
         }
