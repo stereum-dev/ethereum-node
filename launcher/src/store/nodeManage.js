@@ -162,27 +162,27 @@ export const useNodeManage = defineStore("nodeManage", {
         {
           id: 1,
           content: "INSTALL",
-          contentIcon: require("../../public/img/icon/edit-node-icons/add-service.png"),
+          contentIcon: "/img/icon/edit-node-icons/add-service.png",
         },
         {
           id: 2,
           content: "DELETE",
-          contentIcon: require("../../public/img/icon/edit-node-icons/remove-service.png"),
+          contentIcon: "/img/icon/edit-node-icons/remove-service.png",
         },
         {
           id: 3,
           content: "MODIFY",
-          contentIcon: require("../../public/img/icon/edit-node-icons/modify-service.png"),
+          contentIcon: "/img/icon/edit-node-icons/modify-service.png",
         },
         {
           id: 5,
           content: "SWITCH CLIENT",
-          contentIcon: require("../../public/img/icon/edit-node-icons/switch-client.png"),
+          contentIcon: "/img/icon/edit-node-icons/switch-client.png",
         },
         {
           id: 6,
           content: "CHANGE NETWORK",
-          contentIcon: require("../../public/img/icon/edit-node-icons/change-network.png"),
+          contentIcon: "/img/icon/edit-node-icons/change-network.png",
         },
       ],
       confirmChanges: [],

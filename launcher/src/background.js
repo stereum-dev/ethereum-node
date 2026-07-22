@@ -1,7 +1,6 @@
 "use strict";
 
-import { app, protocol, BrowserWindow, shell, dialog, ipcMain, Menu } from "electron";
-import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
+import { app, protocol, net, BrowserWindow, shell, dialog, ipcMain, Menu } from "electron";
 import { StorageService } from "./storageservice.js";
 import { NodeConnection } from "./backend/NodeConnection.js";
 import { OneClickInstall } from "./backend/OneClickInstall.js";
@@ -865,8 +864,21 @@ ipcMain.handle("fetchSsvnomsMetrics", async () => {
 });
 
 let mainWindow = null;
-// Scheme must be registered before the app is ready
-protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { secure: true, standard: true } }]);
+
+// Serve the packaged renderer over a custom "app://" scheme so absolute asset
+// paths (/img/...) and Vite's relative chunks both resolve against the bundle,
+// mirroring what the old vue-cli app:// protocol provided.
+protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { standard: true, secure: true, supportFetchAPI: true } }]);
+
+function registerAppProtocol() {
+  const rendererDir = path.join(__dirname, "../renderer");
+  protocol.handle("app", (request) => {
+    const requestedPath = decodeURIComponent(new URL(request.url).pathname);
+    const relPath = requestedPath === "/" ? "index.html" : requestedPath.replace(/^\/+/, "");
+    const filePath = path.join(rendererDir, relPath);
+    return net.fetch(url.pathToFileURL(filePath).toString());
+  });
+}
 
 async function createWindow(type = "main") {
   // Ensure only one instance of the window exists
@@ -883,7 +895,7 @@ async function createWindow(type = "main") {
     minWidth: 1044,
     webPreferences: {
       nodeIntegration: false,
-      preload: path.join(__dirname, "preload.js"),
+      preload: path.join(__dirname, "../preload/index.js"),
     },
   };
 
@@ -905,15 +917,14 @@ async function createWindow(type = "main") {
   win.setMenuBarVisibility(false);
 
   // Load correct URL based on environment
-  if (process.env.WEBPACK_DEV_SERVER_URL) {
-    const url = type === "update" ? `${process.env.WEBPACK_DEV_SERVER_URL}#/update` : process.env.WEBPACK_DEV_SERVER_URL;
+  if (process.env.ELECTRON_RENDERER_URL) {
+    const url = type === "update" ? `${process.env.ELECTRON_RENDERER_URL}#/update` : process.env.ELECTRON_RENDERER_URL;
 
     await win.loadURL(url);
 
     if (!process.env.IS_TEST) win.webContents.openDevTools();
   } else {
-    createProtocol("app");
-    win.loadURL(type === "update" ? "app://./index.html#/update" : "app://./index.html");
+    win.loadURL(type === "update" ? "app://bundle/index.html#/update" : "app://bundle/index.html");
   }
 
   mainWindow = win;
@@ -1004,11 +1015,12 @@ app.on("window-all-closed", async () => {
 
 app.on("ready", async () => {
   if (app.isReady()) {
-    if (process.env.WEBPACK_DEV_SERVER_URL) {
+    if (process.env.ELECTRON_RENDERER_URL) {
       app.setAsDefaultProtocolClient("stereumlauncher", process.execPath, [path.resolve(process.argv[1])]);
       createWindow();
       //stereumUpdater.runDebug();
     } else {
+      registerAppProtocol();
       app.setAsDefaultProtocolClient("stereumlauncher");
       const hideMenuItems = ["viewmenu", "windowmenu"];
       const menu = Menu.getApplicationMenu();

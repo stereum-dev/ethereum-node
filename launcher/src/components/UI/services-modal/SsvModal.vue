@@ -171,9 +171,9 @@ import ImportBox from "./plugin/ImportBox.vue";
 import PasswordBox from "./plugin/PasswordBox";
 import { useRestartService } from "@/composables/services";
 import { useNodeManage } from "@/store/nodeManage";
-const JSZip = require("jszip");
-const saveAs = require("file-saver");
-const semver = require("semver");
+import JSZip from "jszip";
+import { saveAs } from "file-saver";
+import semver from "semver";
 
 const openFilePicker = async (read_content = false) => {
   try {

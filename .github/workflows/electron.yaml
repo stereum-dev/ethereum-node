@@ -62,38 +62,24 @@ jobs:
         shell: cmd
         if: matrix.os == 'windows-latest'
 
-      - name: macOS build args
-        if: matrix.os == 'macos-latest'
-        run: echo "BUILD_ARGS=--universal" >> $GITHUB_ENV
-
       - name: Install Dependencies
         run: |
           cd launcher && npm i
 
       - name: Build Electron app (windows and linux)
-        uses: samuelmeuli/action-electron-builder@v1
-        with:
-          github_token: ${{ secrets.github_token }}
-          package_root: launcher
-          use_vue_cli: true
-          release: never
-          build_script_name: dist
-          args: ${{ env.BUILD_ARGS }}
+        run: npm run dist
+        working-directory: launcher
         env:
+          GH_TOKEN: ${{ secrets.github_token }}
           NOTARIZE: "true"
           KEYPAIR_ALIAS: ${{ secrets.KEYPAIR_ALIAS }}
         if: ${{ !contains(github.event.head_commit.message, '[NOCI]') && matrix.os != 'macos-latest' }}
 
-      - name: Build Electron app (macOS, unsigned)
-        uses: samuelmeuli/action-electron-builder@v1
-        with:
-          github_token: ${{ secrets.github_token }}
-          package_root: launcher
-          use_vue_cli: true
-          release: never
-          build_script_name: dist
-          args: ${{ env.BUILD_ARGS }}
+      - name: Build Electron app (macOS, unsigned, universal)
+        run: npm run dist -- --universal
+        working-directory: launcher
         env:
+          GH_TOKEN: ${{ secrets.github_token }}
           NOTARIZE: "false"
           CSC_IDENTITY_AUTO_DISCOVERY: "false"
         if: ${{ !contains(github.event.head_commit.message, '[NOCI]') && matrix.os == 'macos-latest'}}

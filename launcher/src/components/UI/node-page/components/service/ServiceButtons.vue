@@ -41,7 +41,7 @@
       @mouseenter="footerStore.cursorLocation = `${restart}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <img src="/img/icon//node-page-icons/service-command-restart.png" alt="icon" class="w-4 active:scale-95" />
+      <img src="/img/icon/node-page-icons/service-command-restart.png" alt="icon" class="w-4 active:scale-95" />
     </button>
     <button
       class="col-span-1 w-full h-full p-1 transition-colors duration-200 bg-[#131313] hover:bg-gray-600 rounded-md"
