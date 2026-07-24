@@ -570,18 +570,19 @@ export class SSHService {
    */
   async readDirectorySSH(remotePath) {
     try {
-      const result = await this.exec(`find ${remotePath} -maxdepth 1 -exec stat --format '%n\n%f\n' {} +`);
+      const result = await this.exec(`find ${remotePath} -maxdepth 1 -exec stat --format '%n\n%f' {} +`);
       if (SSHService.checkExecError(result)) {
         throw new Error("Failed reading directory: " + SSHService.extractExecError(result));
       }
-      let files = result.stdout.split("\n\n").filter((e) => e);
+      const lines = result.stdout.split("\n").filter((e) => e);
+      const files = [];
+      for (let i = 0; i + 1 < lines.length; i += 2) {
+        let filename = path.posix.basename(path.posix.normalize(lines[i])); // normalize path
+        const mode = parseInt(lines[i + 1], 16); // convert mode from hex to integer
+        files.push({ filename, mode });
+      }
       files.shift(); //remove the first element which is the directory itself
-      return files.map((file) => {
-        let [filename, mode] = file.split("\n");
-        filename = path.posix.basename(path.posix.normalize(filename)); // normalize path
-        mode = parseInt(mode, 16); // convert mode from hex to integer
-        return { filename, mode };
-      });
+      return files;
     } catch (error) {
       log.error("Failed reading directory via SSH: ", error);
       return [];
