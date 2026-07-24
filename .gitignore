@@ -22,6 +22,7 @@ yarn-error.log*
 #Electron-builder output
 /launcher/dist_electron
 /launcher/coverage
+/launcher/out
 
 # Molecule temp files
 stereum-pwd
