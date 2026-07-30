@@ -1,0 +1,39 @@
+---
+- name: Read service file
+  slurp:
+    src: "{{ config_file.path }}"
+  register: service_configuration_raw
+
+- name: Parse service's configuration
+  set_fact:
+    service_configuration: "{{ service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+- name: Fix LidoObolExitService user
+  when:
+    - service_configuration.service == "LidoObolExitService"
+    - service_configuration.user == "root"
+  block:
+    # LidoObolExitService shares its volumes (charon's .charon dir and the
+    # validator ejector's messages dir) with services that run as user 2000.
+    # Running it as root made manage-service recursively chown those shared
+    # volumes to root on every start/stop, breaking charon and the ejector.
+    - name: Set user to 2000 in configuration
+      lineinfile:
+        path: "{{ config_file.path }}"
+        regexp: '^user:'
+        line: 'user: "2000"'
+      become: yes
+
+    - name: Repair ownership of shared volumes broken by the root user
+      file:
+        path: "{{ item.split(':') | first }}"
+        state: directory
+        owner: "2000"
+        group: "2000"
+        recurse: yes
+      become: yes
+      when:
+        - item.split(':') | first != '/'
+        - item.split(':') | first != '/sys'
+        - item.split(':') | first != '/proc'
+      with_items: "{{ service_configuration.volumes }}"

@@ -1,0 +1,160 @@
+---
+- name: Prepare
+  hosts: all
+  tasks:
+    - name: Make sure Stereum's config path exists
+      file:
+        path: "/etc/stereum/services"
+        state: directory
+        owner: "root"
+        group: "root"
+        mode: 0644
+      become: yes
+
+    - name: Create LidoObolExitService config (running as root - the bug)
+      copy:
+        dest: "/etc/stereum/services/39b887e5-a4a0-2322-4bc9-43d42d9f5bd6.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: LidoObolExitService
+          id: 39b887e5-a4a0-2322-4bc9-43d42d9f5bd6
+          configVersion: 1
+          command:
+            - run
+            - --beacon-node-url=http://stereum-6c2c02b0-7918-a378-0c6a-91c41214f93f:5051
+            - --charon-runtime-dir=/charon
+            - --ejector-exit-path=/exitmessages
+            - --exit-epoch=256
+            - --log-color=auto
+            - --log-format=console
+            - --log-level=info
+            - --obol-api-url=https://api.obol.tech
+            - --validator-query-chunk-size=50
+          entrypoint:
+            - /usr/local/bin/lido-dv-exit
+          env: {}
+          image: obolnetwork/lido-dv-exit:v0.5.2
+          ports: []
+          volumes:
+            - /opt/stereum/validatorejector-8dbf517f-1b92-ad18-b9c4-1b4f43ef8dbe/messages:/exitmessages
+            - /opt/stereum/charon-d1f91f40-2b3b-20a6-d381-65ac39db9af3/.charon:/charon
+          user: root
+          autoupdate: true
+          network: hoodi
+          dependencies:
+            executionClients: []
+            consensusClients:
+              - service: TekuBeaconService
+                id: 6c2c02b0-7918-a378-0c6a-91c41214f93f
+            mevboost: []
+            otherServices:
+              - service: ValidatorEjectorService
+                id: 8dbf517f-1b92-ad18-b9c4-1b4f43ef8dbe
+              - service: CharonService
+                id: d1f91f40-2b3b-20a6-d381-65ac39db9af3
+      become: yes
+
+    - name: Create ValidatorEjectorService config
+      copy:
+        dest: "/etc/stereum/services/8dbf517f-1b92-ad18-b9c4-1b4f43ef8dbe.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: ValidatorEjectorService
+          id: 8dbf517f-1b92-ad18-b9c4-1b4f43ef8dbe
+          configVersion: 1
+          command: []
+          entrypoint: []
+          env:
+            EXECUTION_NODE: http://stereum-57277de9-a1e8-b4bb-6b8f-f4417905d9b4:8545
+            CONSENSUS_NODE: http://stereum-6c2c02b0-7918-a378-0c6a-91c41214f93f:5051
+            LOCATOR_ADDRESS: "0xe2EF9536DAAAEBFf5b1c130957AB3E80056b06D8"
+            STAKING_MODULE_ID: "1"
+            OPERATOR_ID: "123456789"
+            MESSAGES_LOCATION: /app/messages
+            ORACLE_ADDRESSES_ALLOWLIST: '["0xcA80ee7313A315879f326105134F938676Cfd7a9","0xf03B8DC8762B97F13Ac82e6F94bE3Ed002FF7459","0x1932f53B1457a5987791a40Ba91f71c5Efd5788F","0xf7aE520e99ed3C41180B5E12681d31Aa7302E4e5","0x99B2B75F490fFC9A29E4E1f5987BE8e30E690aDF","0x219743f1911d84B32599BdC2Df21fC8Dba6F81a2","0xD3b1e36A372Ca250eefF61f90E833Ca070559970","0x4c75FA734a39f3a21C57e583c1c29942F021C6B7","0x948A62cc0414979dc7aa9364BA5b96ECb29f8736","0xfe43A8B0b481Ae9fB1862d31826532047d2d538c","0x43C45C2455C49eed320F463fF4f1Ece3D2BF5aE2"]'
+            HTTP_PORT: "8989"
+            RUN_METRICS: "true"
+            RUN_HEALTH_CHECK: "true"
+            DRY_RUN: "false"
+          image: lidofinance/validator-ejector:2.1.0
+          ports: []
+          volumes:
+            - /opt/stereum/validatorejector-8dbf517f-1b92-ad18-b9c4-1b4f43ef8dbe/messages:/app/messages
+          user: "2000"
+          autoupdate: true
+          network: hoodi
+          dependencies:
+            executionClients:
+              - service: NethermindService
+                id: 57277de9-a1e8-b4bb-6b8f-f4417905d9b4
+            consensusClients:
+              - service: TekuBeaconService
+                id: 6c2c02b0-7918-a378-0c6a-91c41214f93f
+            mevboost: []
+            otherServices: []
+      become: yes
+
+    - name: Create CharonService config
+      copy:
+        dest: "/etc/stereum/services/d1f91f40-2b3b-20a6-d381-65ac39db9af3.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: CharonService
+          id: d1f91f40-2b3b-20a6-d381-65ac39db9af3
+          configVersion: 1
+          command:
+            - run
+            - --beacon-node-endpoints=http://stereum-6c2c02b0-7918-a378-0c6a-91c41214f93f:5051
+            - --log-level=info
+            - --log-format=console
+            - --p2p-relays=https://0.relay.obol.tech
+            - --p2p-tcp-address=0.0.0.0:3610
+            - --validator-api-address=0.0.0.0:3600
+            - --monitoring-address=0.0.0.0:3620
+            - --builder-api
+          entrypoint:
+            - /usr/local/bin/charon
+          env: {}
+          image: obolnetwork/charon:v1.10.3
+          ports:
+            - 0.0.0.0:3610:3610/tcp
+          volumes:
+            - /opt/stereum/charon-d1f91f40-2b3b-20a6-d381-65ac39db9af3:/opt/charon
+          user: "2000"
+          autoupdate: true
+          network: hoodi
+          dependencies:
+            executionClients: []
+            consensusClients:
+              - service: TekuBeaconService
+                id: 6c2c02b0-7918-a378-0c6a-91c41214f93f
+            mevboost: []
+            otherServices: []
+      become: yes
+
+    # Simulate the damage: the root LidoObolExitService has recursively
+    # chowned the shared charon + ejector volumes to root:root.
+    - name: Simulate broken ownership on shared ejector volume
+      file:
+        path: "/opt/stereum/validatorejector-8dbf517f-1b92-ad18-b9c4-1b4f43ef8dbe/messages"
+        state: directory
+        owner: "root"
+        group: "root"
+        recurse: yes
+      become: yes
+
+    - name: Simulate broken ownership on shared charon volume
+      file:
+        path: "/opt/stereum/charon-d1f91f40-2b3b-20a6-d381-65ac39db9af3/.charon"
+        state: directory
+        owner: "root"
+        group: "root"
+        recurse: yes
+      become: yes
+# EOF

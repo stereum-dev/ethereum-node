@@ -1,0 +1,66 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+    # LidoObolExitService: user must have been changed from root to 2000
+    - name: Read LidoObolExitService file
+      slurp:
+        src: "/etc/stereum/services/39b887e5-a4a0-2322-4bc9-43d42d9f5bd6.yaml"
+      register: obol_service_configuration_raw
+
+    - name: Parse LidoObolExitService configuration
+      set_fact:
+        obol_service_configuration: "{{ obol_service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+    - debug:
+        msg: "{{ obol_service_configuration }}"
+
+    - name: Assert LidoObolExitService now runs as user 2000
+      assert:
+        that:
+          - obol_service_configuration.user == "2000"
+        fail_msg: "LidoObolExitService user was not changed to 2000 (got: {{ obol_service_configuration.user }})"
+
+    # Shared volume ownership must be repaired back to uid 2000
+    - name: Stat shared ejector messages volume
+      stat:
+        path: "/opt/stereum/validatorejector-8dbf517f-1b92-ad18-b9c4-1b4f43ef8dbe/messages"
+      register: ejector_messages_dir
+      become: yes
+
+    - name: Stat shared charon .charon volume
+      stat:
+        path: "/opt/stereum/charon-d1f91f40-2b3b-20a6-d381-65ac39db9af3/.charon"
+      register: charon_data_dir
+      become: yes
+
+    - name: Assert shared volumes are owned by uid 2000 again
+      assert:
+        that:
+          - ejector_messages_dir.stat.uid == 2000
+          - charon_data_dir.stat.uid == 2000
+        fail_msg: "Shared volume ownership was not repaired to uid 2000 (ejector: {{ ejector_messages_dir.stat.uid }}, charon: {{ charon_data_dir.stat.uid }})"
+
+    # The other two services must be left untouched (still 2000)
+    - name: Read ValidatorEjectorService file
+      slurp:
+        src: "/etc/stereum/services/8dbf517f-1b92-ad18-b9c4-1b4f43ef8dbe.yaml"
+      register: ejector_service_configuration_raw
+
+    - name: Read CharonService file
+      slurp:
+        src: "/etc/stereum/services/d1f91f40-2b3b-20a6-d381-65ac39db9af3.yaml"
+      register: charon_service_configuration_raw
+
+    - name: Parse ValidatorEjectorService and CharonService configurations
+      set_fact:
+        ejector_service_configuration: "{{ ejector_service_configuration_raw['content'] | b64decode | from_yaml }}"
+        charon_service_configuration: "{{ charon_service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+    - name: Assert ValidatorEjectorService and CharonService still run as 2000
+      assert:
+        that:
+          - ejector_service_configuration.user == "2000"
+          - charon_service_configuration.user == "2000"
+# EOF
