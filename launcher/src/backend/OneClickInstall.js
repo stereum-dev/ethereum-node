@@ -587,7 +587,7 @@ export class OneClickInstall {
         lidoobol: "2",
       };
       let ejector = this.extraServices.find((s) => s.service === "ValidatorEjectorService");
-      ejector.env.STAKING_MODULE_ID = moduleIDs[selectedPreset];
+      ejector.env.EJECTOR_SCOPE = `{"${moduleIDs[selectedPreset]}":[123456789]}`;
     }
   }
 

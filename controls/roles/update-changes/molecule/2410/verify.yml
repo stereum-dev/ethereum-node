@@ -64,6 +64,38 @@
           - ejector_service_configuration.user == "2000"
           - charon_service_configuration.user == "2000"
 
+    # ValidatorEjector (v2 image): env migrated to EJECTOR_SCOPE, image left as-is
+    - name: Assert v2 ejector migrated to EJECTOR_SCOPE without version bump
+      assert:
+        that:
+          - ejector_service_configuration.env.EJECTOR_SCOPE == '{"1":[123456789]}'
+          - ejector_service_configuration.env.STAKING_MODULE_ID is not defined
+          - ejector_service_configuration.env.OPERATOR_ID is not defined
+          - ejector_service_configuration.image == "lidofinance/validator-ejector:2.1.0"
+        fail_msg: "v2 ejector was not migrated correctly: {{ ejector_service_configuration.env }} / {{ ejector_service_configuration.image }}"
+
+    # ValidatorEjector (legacy sub-v2 image): env migrated AND image bumped to 2.1.0
+    - name: Read legacy ValidatorEjectorService file
+      slurp:
+        src: "/etc/stereum/services/1a2b3c4d-0000-0000-0000-000000000001.yaml"
+      register: legacy_ejector_configuration_raw
+
+    - name: Parse legacy ValidatorEjectorService configuration
+      set_fact:
+        legacy_ejector_configuration: "{{ legacy_ejector_configuration_raw['content'] | b64decode | from_yaml }}"
+
+    - debug:
+        msg: "{{ legacy_ejector_configuration }}"
+
+    - name: Assert legacy ejector migrated to EJECTOR_SCOPE and bumped to 2.1.0
+      assert:
+        that:
+          - legacy_ejector_configuration.env.EJECTOR_SCOPE == '{"2":[42]}'
+          - legacy_ejector_configuration.env.STAKING_MODULE_ID is not defined
+          - legacy_ejector_configuration.env.OPERATOR_ID is not defined
+          - legacy_ejector_configuration.image == "lidofinance/validator-ejector:2.1.0"
+        fail_msg: "legacy ejector was not migrated correctly: {{ legacy_ejector_configuration.env }} / {{ legacy_ejector_configuration.image }}"
+
     # TekuBeaconService: P2P must move to 9000, QUIC exposed on 9001/udp
     - name: Read TekuBeaconService file
       slurp:

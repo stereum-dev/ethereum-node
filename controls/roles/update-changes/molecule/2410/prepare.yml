@@ -98,6 +98,43 @@
             otherServices: []
       become: yes
 
+    - name: Create legacy ValidatorEjectorService config (image under major v2)
+      copy:
+        dest: "/etc/stereum/services/1a2b3c4d-0000-0000-0000-000000000001.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: ValidatorEjectorService
+          id: 1a2b3c4d-0000-0000-0000-000000000001
+          configVersion: 1
+          command: []
+          entrypoint: []
+          env:
+            EXECUTION_NODE: http://stereum-57277de9-a1e8-b4bb-6b8f-f4417905d9b4:8545
+            CONSENSUS_NODE: http://stereum-6c2c02b0-7918-a378-0c6a-91c41214f93f:5051
+            LOCATOR_ADDRESS: "0x28FAB2059C713A7F9D8c86Db49f9bb0e96Af1ef8"
+            STAKING_MODULE_ID: "2"
+            OPERATOR_ID: "42"
+            MESSAGES_LOCATION: /app/messages
+            HTTP_PORT: "8989"
+            RUN_METRICS: "true"
+            RUN_HEALTH_CHECK: "true"
+            DRY_RUN: "false"
+          image: lidofinance/validator-ejector:1.5.0
+          ports: []
+          volumes:
+            - /opt/stereum/validatorejector-1a2b3c4d-0000-0000-0000-000000000001/messages:/app/messages
+          user: "2000"
+          autoupdate: true
+          network: holesky
+          dependencies:
+            executionClients: []
+            consensusClients: []
+            mevboost: []
+            otherServices: []
+      become: yes
+
     - name: Create CharonService config
       copy:
         dest: "/etc/stereum/services/d1f91f40-2b3b-20a6-d381-65ac39db9af3.yaml"
