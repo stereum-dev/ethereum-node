@@ -22,9 +22,9 @@
         @open-doc="openDoc"
         @open-resync="openResync(item)"
       />
-      <TransitionGroup name="fadeModal">
+      <Transition name="fadeModal">
         <ResyncModal v-if="item.isResyncModalOpen" icon-size="w-14" :item="item" @close-window="closeResyncModal(item)" />
-      </TransitionGroup>
+      </Transition>
     </div>
   </div>
 </template>

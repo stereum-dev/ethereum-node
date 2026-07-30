@@ -11,9 +11,7 @@ async function requestQueued() {
     return;
   }
   controlStore.request[meth] = true;
-  const csvc = ControlService; // eslint-disable-line no-unused-vars
-  const func = eval("async () => {return await csvc." + meth + "()}");
-  const resp = await func();
+  const resp = await ControlService[meth]();
   controlStore.request[meth] = false;
   return resp;
 }
@@ -41,12 +39,12 @@ export async function useRefreshNodeStats() {
         // console.log("@FRONTEND: data for wiring controls", nodeStats);
         try {
           controlStore.code = nodeStats.code;
-          controlStore.syncstatus = nodeStats.data.syncstatus;
+          controlStore.syncstatus = nodeStats.data.syncstatus ?? [];
           controlStore.p2pstatus = nodeStats.data.p2pstatus;
           controlStore.rpcstatus = nodeStats.data.rpcstatus;
           controlStore.wsstatus = nodeStats.data.wsstatus;
           controlStore.beaconstatus = nodeStats.data.beaconstatus;
-          controlStore.portstatus = nodeStats.data.portstatus;
+          controlStore.portstatus = nodeStats.data.portstatus ?? [];
           controlStore.rpcReceivedData = nodeStats.data.rpcReceivedData;
           controlStore.subnetSubs = nodeStats.data.subnetSubs;
         } catch (e) {}
@@ -80,12 +78,12 @@ export async function useRefreshMetrics() {
         // console.log("@FRONTEND: data for wiring controls", nodeStats);
         try {
           controlStore.code = nodeStats.code;
-          controlStore.syncstatus = nodeStats.data.syncstatus;
+          controlStore.syncstatus = nodeStats.data.syncstatus ?? [];
           controlStore.p2pstatus = nodeStats.data.p2pstatus;
           controlStore.rpcstatus = nodeStats.data.rpcstatus;
           controlStore.wsstatus = nodeStats.data.wsstatus;
           controlStore.beaconstatus = nodeStats.data.beaconstatus;
-          controlStore.portstatus = nodeStats.data.portstatus;
+          controlStore.portstatus = nodeStats.data.portstatus ?? [];
           controlStore.rpcReceivedData = nodeStats.data.rpcReceivedData;
           controlStore.subnetSubs = nodeStats.data.subnetSubs;
         } catch (e) {}

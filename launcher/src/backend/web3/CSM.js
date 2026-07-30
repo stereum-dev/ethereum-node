@@ -1,5 +1,5 @@
 const Web3 = require("web3").default;
-const csm_abi = require("./CSModuleABI.json");
+import csm_abi from "./CSModuleABI.json";
 const log = require("electron-log");
 
 const w3 = new Web3("http://127.0.0.1:8545");

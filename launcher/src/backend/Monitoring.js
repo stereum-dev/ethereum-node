@@ -1205,7 +1205,7 @@ export class Monitoring {
         // Attention: frstVal needs to be the lower value in frontend, which is in key 1 + added new state key!
         let data = [];
         let consensus = cc;
-        let execution = ec; // eslint-disable-line no-unused-vars
+        let execution = ec;
         let network = consensus.config.network;
         let last_known_head_block_number = 0;
         let head_block_number = 0;
@@ -1220,7 +1220,7 @@ export class Monitoring {
         }
         clientTypes.forEach(function (clientType, index) {
           let clt = "";
-          eval("clt = " + clientType + ";"); // eval clt object from consensus/execution objects
+          clt = { consensus, execution }[clientType]; // resolve clt from consensus/execution locals (eval broke under bundler variable renaming)
           let results = [];
           let labels = services[clientType][clt.service];
           let xx = prometheus_result.data.result.filter(
@@ -1415,9 +1415,9 @@ export class Monitoring {
       };
 
       // Get max peers for consensus and execution clients by configuration or their default values
-      // Do not disable consensuc/execution vars on lint warning because they are used with eval!
-      let consensus = cc; // eslint-disable-line no-unused-vars
-      let execution = ec; // eslint-disable-line no-unused-vars
+      // consensus/execution are looked up by name via the { consensus, execution }[clientType] map below
+      let consensus = cc;
+      let execution = ec;
       var data,
         opttyp = null,
         optnam = null,
@@ -1426,7 +1426,7 @@ export class Monitoring {
         regexp = null;
       clientTypes.forEach(function (clientType, index /* eslint-disable-line no-unused-vars */) {
         let clt = "";
-        eval("clt = " + clientType + ";"); // eval clt object from consensus/execution objects
+        clt = { consensus, execution }[clientType]; // resolve clt from consensus/execution locals (eval broke under bundler variable renaming)
         details[clientType] = JSON.parse(JSON.stringify(detailsbase)); // clone detailsbase!
         details[clientType]["service"] = clt.service;
         details[clientType]["client"] = clt.service.replace(/Beacon|Service/gi, "").toUpperCase();
@@ -1558,7 +1558,7 @@ export class Monitoring {
           valPeer = 0;
         clientTypes.forEach(function (clientType, index /* eslint-disable-line no-unused-vars*/) {
           let clt = "";
-          eval("clt = " + clientType + ";"); // eval clt object from consensus/execution objects
+          clt = { consensus, execution }[clientType]; // resolve clt from consensus/execution locals (eval broke under bundler variable renaming)
           let xx = prometheus_result.data.result.filter(
             (s) =>
               services[clientType][clt.service].includes(s.metric.__name__) &&

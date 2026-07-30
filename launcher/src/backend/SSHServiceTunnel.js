@@ -36,7 +36,7 @@ async function createClient(config) {
   });
 }
 
-async function createTunnel(tunnelOptions, serverOptions, sshOptions, forwardOptions) {
+export async function createTunnel(tunnelOptions, serverOptions, sshOptions, forwardOptions) {
   let server, conn;
   try {
     server = await createServer(serverOptions);
@@ -69,5 +69,3 @@ async function createTunnel(tunnelOptions, serverOptions, sshOptions, forwardOpt
   server.on("close", () => conn.end());
   return [server, conn];
 }
-
-exports.createTunnel = createTunnel;

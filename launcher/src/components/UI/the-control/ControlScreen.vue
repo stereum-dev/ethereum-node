@@ -65,7 +65,7 @@
                         />
                         <img
                           v-else-if="item.state == 'restarting'"
-                          src="/img/icon//node-page-icons/service-command-restart.png"
+                          src="/img/icon/node-page-icons/service-command-restart.png"
                           alt="icon"
                           @click.stop="stateHandler(item)"
                           @mouseenter="

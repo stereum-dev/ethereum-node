@@ -3,7 +3,7 @@
     <no-data
       v-if="
         !setupsStore?.selectedServicePairs ||
-        !controlStore.syncstatus.data ||
+        !controlStore.syncstatus?.data ||
         isConsensusMissing ||
         footerStore.prometheusIsOff ||
         setupsStore?.selectedServicePairs?.network === 'devnet'

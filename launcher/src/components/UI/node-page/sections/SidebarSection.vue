@@ -99,8 +99,8 @@ import { useServices } from "@/store/services";
 import { useNodeStore } from "@/store/theNode";
 import { computed, ref } from "vue";
 import { useFooter } from "@/store/theFooter";
-const JSZip = require("jszip");
-const saveAs = require("file-saver");
+import JSZip from "jszip";
+import { saveAs } from "file-saver";
 
 let routerHovered = ref(false);
 let powerHovered = ref(false);
