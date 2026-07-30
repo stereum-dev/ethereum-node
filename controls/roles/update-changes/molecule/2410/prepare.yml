@@ -251,4 +251,87 @@
         group: "root"
         recurse: yes
       become: yes
+
+    - name: Create LCOMService config (legacy main.py entrypoint + address env vars)
+      copy:
+        dest: "/etc/stereum/services/b17e0000-0000-0000-0000-00000000abcd.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: LCOMService
+          id: b17e0000-0000-0000-0000-00000000abcd
+          configVersion: 1
+          command: []
+          entrypoint:
+            - python
+            - main.py
+          env:
+            RPC_API: http://stereum-57277de9-a1e8-b4bb-6b8f-f4417905d9b4:8545
+            BEACON_API: http://stereum-6c2c02b0-7918-a378-0c6a-91c41214f93f:5051
+            IPFS_API: http://IPFS-api
+            NO_ID: "123456"
+            LOG_LEVEL: INFO
+            MAINNET_VALIDATORSEXITBUSORACLE_ADDRESS: "0x0De4Ea0184c2ad0BacA7183356Aea5B8d5Bf5c6e"
+            MAINNET_CSMODULE_ADDRESS: "0xdA7dE2ECdDfccC6c3AF10108Db212ACBBf9EA83F"
+            MAINNET_CSACCOUNTING_ADDRESS: "0x4d72BFF1BeaC69925F8Bd12526a39BAAb069e5Da"
+            MAINNET_CSFEEDISTRIBUTOR_ADDRESS: "0xD99CC66fEC647E68294C6477B40fC7E0F6F618D0"
+            HOLESKY_VALIDATORSEXITBUSORACLE_ADDRESS: "0xffDDF7025410412deaa05E3E1cE68FE53208afcb"
+            HOLESKY_CSMODULE_ADDRESS: "0x4562c3e63c2e586cD1651B958C22F88135aCAd4f"
+            HOLESKY_CSACCOUNTING_ADDRESS: "0xc093e53e8F4b55A223c18A2Da6fA00e60DD5EFE1"
+            HOLESKY_CSFEEDISTRIBUTOR_ADDRESS: "0xD7ba648C8F72669C6aE649648B516ec03D07c8ED"
+            HOODI_VALIDATORSEXITBUSORACLE_ADDRESS: "0x8664d394C2B3278F26A1B44B967aEf99707eeAB2"
+            HOODI_CSMODULE_ADDRESS: "0x79CEf36D84743222f37765204Bec41E92a93E59d"
+            HOODI_CSACCOUNTING_ADDRESS: "0xA54b90BA34C5f326BC1485054080994e38FB4C60"
+            HOODI_CSFEEDISTRIBUTOR_ADDRESS: "0xaCd9820b0A2229a82dc1A0770307ce5522FF3582"
+          image: stereum/lcoms:latest
+          ports: []
+          volumes:
+            - /opt/stereum/lcom-b17e0000-0000-0000-0000-00000000abcd/logs:/app/logs
+          user: "2000"
+          autoupdate: true
+          network: mainnet
+          dependencies:
+            executionClients: []
+            consensusClients: []
+            mevboost: []
+            otherServices: []
+      become: yes
+
+    - name: Create mainnet ValidatorEjectorService config (stale oracle allowlist)
+      copy:
+        dest: "/etc/stereum/services/ec70a110-0000-0000-0000-0000000000aa.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: ValidatorEjectorService
+          id: ec70a110-0000-0000-0000-0000000000aa
+          configVersion: 1
+          command: []
+          entrypoint: []
+          env:
+            EXECUTION_NODE: http://stereum-57277de9-a1e8-b4bb-6b8f-f4417905d9b4:8545
+            CONSENSUS_NODE: http://stereum-6c2c02b0-7918-a378-0c6a-91c41214f93f:5051
+            LOCATOR_ADDRESS: "0x17DDe19a2C09d0743Da8F24c8B0dA8fb436C31b6"
+            EJECTOR_SCOPE: '{"1":[42]}'
+            MESSAGES_LOCATION: /app/messages
+            ORACLE_ADDRESSES_ALLOWLIST: '["0x0000000000000000000000000000000000000001","0x0000000000000000000000000000000000000002"]'
+            HTTP_PORT: "8989"
+            RUN_METRICS: "true"
+            RUN_HEALTH_CHECK: "true"
+            DRY_RUN: "false"
+          image: lidofinance/validator-ejector:2.1.0
+          ports: []
+          volumes:
+            - /opt/stereum/validatorejector-ec70a110-0000-0000-0000-0000000000aa/messages:/app/messages
+          user: "2000"
+          autoupdate: true
+          network: mainnet
+          dependencies:
+            executionClients: []
+            consensusClients: []
+            mevboost: []
+            otherServices: []
+      become: yes
 # EOF

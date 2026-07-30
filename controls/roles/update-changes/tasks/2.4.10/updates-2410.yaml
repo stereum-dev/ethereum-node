@@ -21,3 +21,15 @@
   loop: "{{ service_config_files.files }}"
   loop_control:
     loop_var: config_file
+
+- name: Include LCOM Changes
+  include_tasks: lcom_changes.yaml
+  loop: "{{ service_config_files.files }}"
+  loop_control:
+    loop_var: config_file
+
+- name: Include Oracle Allowlist Changes
+  include_tasks: oracle_allowlist_changes.yaml
+  loop: "{{ service_config_files.files }}"
+  loop_control:
+    loop_var: config_file

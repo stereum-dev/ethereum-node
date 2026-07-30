@@ -120,4 +120,55 @@
           - '"0.0.0.0:9001:9001/udp" in teku_service_configuration.ports'
           - '"0.0.0.0:9001:9001/tcp" not in teku_service_configuration.ports'
         fail_msg: "Teku P2P/QUIC ports were not migrated correctly: {{ teku_service_configuration.ports }} / {{ teku_service_configuration.command }}"
+
+    # LCOMService: entrypoint migrated to the app.main module and the obsolete
+    # per-network *_ADDRESS env vars removed (kept env vars left intact)
+    - name: Read LCOMService file
+      slurp:
+        src: "/etc/stereum/services/b17e0000-0000-0000-0000-00000000abcd.yaml"
+      register: lcom_service_configuration_raw
+
+    - name: Parse LCOMService configuration
+      set_fact:
+        lcom_service_configuration: "{{ lcom_service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+    - debug:
+        msg: "{{ lcom_service_configuration }}"
+
+    - name: Assert LCOM entrypoint migrated and address env vars removed
+      assert:
+        that:
+          - lcom_service_configuration.entrypoint == ["python", "-m", "app.main"]
+          - (lcom_service_configuration.env | dict2items | selectattr('key', 'search', '_ADDRESS$') | list | length) == 0
+          - lcom_service_configuration.env.RPC_API is defined
+          - lcom_service_configuration.env.LOG_LEVEL == "INFO"
+        fail_msg: "LCOM was not migrated correctly: {{ lcom_service_configuration.entrypoint }} / {{ lcom_service_configuration.env }}"
+
+    # Oracle allowlist: hoodi ejector refreshed to the current on-chain member set
+    # (dropped 0xf03B..., 11 -> 10 addresses)
+    - name: Assert hoodi ejector oracle allowlist refreshed
+      assert:
+        that:
+          - (ejector_service_configuration.env.ORACLE_ADDRESSES_ALLOWLIST | from_yaml | length) == 10
+          - '"0xf03B8DC8762B97F13Ac82e6F94bE3Ed002FF7459" not in (ejector_service_configuration.env.ORACLE_ADDRESSES_ALLOWLIST | from_yaml)'
+          - '"0x948A62cc0414979dc7aa9364BA5b96ECb29f8736" in (ejector_service_configuration.env.ORACLE_ADDRESSES_ALLOWLIST | from_yaml)'
+        fail_msg: "hoodi ejector oracle allowlist not refreshed: {{ ejector_service_configuration.env.ORACLE_ADDRESSES_ALLOWLIST }}"
+
+    # Oracle allowlist: mainnet ejector refreshed from a stale list to the 9-member set
+    - name: Read mainnet ValidatorEjectorService file
+      slurp:
+        src: "/etc/stereum/services/ec70a110-0000-0000-0000-0000000000aa.yaml"
+      register: mainnet_ejector_configuration_raw
+
+    - name: Parse mainnet ValidatorEjectorService configuration
+      set_fact:
+        mainnet_ejector_configuration: "{{ mainnet_ejector_configuration_raw['content'] | b64decode | from_yaml }}"
+
+    - name: Assert mainnet ejector oracle allowlist refreshed
+      assert:
+        that:
+          - (mainnet_ejector_configuration.env.ORACLE_ADDRESSES_ALLOWLIST | from_yaml | length) == 9
+          - '"0x73181107c8D9ED4ce0bbeF7A0b4ccf3320C41d12" in (mainnet_ejector_configuration.env.ORACLE_ADDRESSES_ALLOWLIST | from_yaml)'
+          - '"0x0000000000000000000000000000000000000001" not in (mainnet_ejector_configuration.env.ORACLE_ADDRESSES_ALLOWLIST | from_yaml)'
+        fail_msg: "mainnet ejector oracle allowlist not refreshed: {{ mainnet_ejector_configuration.env.ORACLE_ADDRESSES_ALLOWLIST }}"
 # EOF
