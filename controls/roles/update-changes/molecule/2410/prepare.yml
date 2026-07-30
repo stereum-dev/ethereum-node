@@ -138,6 +138,63 @@
             otherServices: []
       become: yes
 
+    - name: Create TekuBeaconService config (P2P on 9001 - conflicts with QUIC)
+      copy:
+        dest: "/etc/stereum/services/6c2c02b0-7918-a378-0c6a-91c41214f93f.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: TekuBeaconService
+          id: 6c2c02b0-7918-a378-0c6a-91c41214f93f
+          configVersion: 2
+          command:
+            - --network=hoodi
+            - --p2p-enabled=true
+            - --p2p-port=9001
+            - --p2p-advertised-port=9001
+            - --ee-endpoint=http://stereum-57277de9-a1e8-b4bb-6b8f-f4417905d9b4:8551
+            - --ee-jwt-secret-file=/engine.jwt
+            - --metrics-enabled=true
+            - --metrics-port=8008
+            - --metrics-interface=0.0.0.0
+            - --metrics-host-allowlist=*
+            - --metrics-publish-interval=10
+            - --data-path=/opt/app/data
+            - --data-storage-mode=minimal
+            - --rest-api-port=5051
+            - --rest-api-host-allowlist=*
+            - --rest-api-interface=0.0.0.0
+            - --rest-api-docs-enabled=true
+            - --rest-api-enabled=true
+            - --log-destination=CONSOLE
+            - --beacon-liveness-tracking-enabled=true
+            - --ignore-weak-subjectivity-period-enabled
+          entrypoint:
+            - /opt/teku/bin/teku
+          env:
+            JAVA_OPTS: -Xmx6g
+          image: consensys/teku:24.10.3
+          ports:
+            - 0.0.0.0:9001:9001/tcp
+            - 0.0.0.0:9001:9001/udp
+            - 127.0.0.1:5052:5052/tcp
+            - 127.0.0.1:5051:5051/tcp
+          volumes:
+            - /opt/stereum/teku-6c2c02b0-7918-a378-0c6a-91c41214f93f/data:/opt/app/data
+            - /opt/stereum/nethermind-57277de9-a1e8-b4bb-6b8f-f4417905d9b4/engine.jwt:/engine.jwt
+          user: "2000"
+          autoupdate: true
+          network: hoodi
+          dependencies:
+            executionClients:
+              - service: NethermindService
+                id: 57277de9-a1e8-b4bb-6b8f-f4417905d9b4
+            consensusClients: []
+            mevboost: []
+            otherServices: []
+      become: yes
+
     # Simulate the damage: the root LidoObolExitService has recursively
     # chowned the shared charon + ejector volumes to root:root.
     - name: Simulate broken ownership on shared ejector volume

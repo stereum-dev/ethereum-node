@@ -63,4 +63,29 @@
         that:
           - ejector_service_configuration.user == "2000"
           - charon_service_configuration.user == "2000"
+
+    # TekuBeaconService: P2P must move to 9000, QUIC exposed on 9001/udp
+    - name: Read TekuBeaconService file
+      slurp:
+        src: "/etc/stereum/services/6c2c02b0-7918-a378-0c6a-91c41214f93f.yaml"
+      register: teku_service_configuration_raw
+
+    - name: Parse TekuBeaconService configuration
+      set_fact:
+        teku_service_configuration: "{{ teku_service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+    - debug:
+        msg: "{{ teku_service_configuration }}"
+
+    - name: Assert Teku P2P moved to 9000 and QUIC exposed on 9001/udp
+      assert:
+        that:
+          - '"--p2p-port=9000" in teku_service_configuration.command'
+          - '"--p2p-advertised-port=9000" in teku_service_configuration.command'
+          - '"--p2p-port=9001" not in teku_service_configuration.command'
+          - '"0.0.0.0:9000:9000/tcp" in teku_service_configuration.ports'
+          - '"0.0.0.0:9000:9000/udp" in teku_service_configuration.ports'
+          - '"0.0.0.0:9001:9001/udp" in teku_service_configuration.ports'
+          - '"0.0.0.0:9001:9001/tcp" not in teku_service_configuration.ports'
+        fail_msg: "Teku P2P/QUIC ports were not migrated correctly: {{ teku_service_configuration.ports }} / {{ teku_service_configuration.command }}"
 # EOF

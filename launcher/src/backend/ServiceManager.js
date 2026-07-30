@@ -1129,8 +1129,9 @@ export class ServiceManager {
 
       case "TekuBeaconService":
         ports = [
-          new ServicePort(null, 9001, 9001, servicePortProtocol.tcp),
-          new ServicePort(null, 9001, 9001, servicePortProtocol.udp),
+          new ServicePort(null, 9000, 9000, servicePortProtocol.tcp), // 	TCP transport for libp2p
+          new ServicePort(null, 9000, 9000, servicePortProtocol.udp), //	discv5 peer discovery
+          new ServicePort(null, 9001, 9001, servicePortProtocol.udp), // 	QUIC transport for libp2p
           new ServicePort("127.0.0.1", 5052, 5052, servicePortProtocol.tcp),
           new ServicePort("127.0.0.1", args.port ? args.port : 5051, 5051, servicePortProtocol.tcp),
         ];

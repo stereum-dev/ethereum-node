@@ -1,0 +1,55 @@
+---
+- name: Read service file
+  slurp:
+    src: "{{ config_file.path }}"
+  register: service_configuration_raw
+
+- name: Parse service's configuration
+  set_fact:
+    service_configuration: "{{ service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+# New Teku versions run a QUIC transport that defaults to UDP 9001. Stereum used
+# to put the P2P port on 9001 as well, so the P2P UDP port and QUIC collided.
+# Move P2P back to Teku's default 9000 (tcp + udp) and expose QUIC on 9001/udp.
+# Guarded on the old "--p2p-port=9001" flag so the block is a no-op once applied.
+- name: Teku Beacon Port Changes
+  when:
+    - service_configuration.service == "TekuBeaconService"
+    - service_configuration.command is defined
+    - '"--p2p-port=9001" in service_configuration.command'
+  block:
+    - name: Move Teku --p2p-port to 9000
+      ansible.builtin.replace:
+        path: "{{ config_file.path }}"
+        regexp: '--p2p-port=9001'
+        replace: '--p2p-port=9000'
+
+    - name: Move Teku --p2p-advertised-port to 9000
+      ansible.builtin.replace:
+        path: "{{ config_file.path }}"
+        regexp: '--p2p-advertised-port=9001'
+        replace: '--p2p-advertised-port=9000'
+
+    - name: Move Teku P2P TCP port mapping to 9000
+      ansible.builtin.replace:
+        path: "{{ config_file.path }}"
+        regexp: ':9001:9001/tcp'
+        replace: ':9000:9000/tcp'
+
+    - name: Move Teku P2P UDP port mapping to 9000
+      ansible.builtin.replace:
+        path: "{{ config_file.path }}"
+        regexp: ':9001:9001/udp'
+        replace: ':9000:9000/udp'
+
+    - name: Add Teku QUIC UDP port mapping on 9001
+      ansible.builtin.lineinfile:
+        path: "{{ config_file.path }}"
+        line: "  - 0.0.0.0:9001:9001/udp"
+        insertafter: '^\s*-\s*.*:9000:9000/udp\s*$'
+
+    - name: Touch service config file to trigger service restart
+      file:
+        path: "{{ config_file.path }}"
+        state: touch
+      changed_when: false # to pass idempotence test
