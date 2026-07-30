@@ -124,7 +124,7 @@ test("lighthouse validator import", async () => {
       /Successfully loaded graffiti file/.test(VCstatus.stdout) &&
       /Starting validator client/.test(VCstatus.stdout) &&
       /Metrics HTTP server started/.test(VCstatus.stdout) &&
-      /Initialized beacon node connections/.test(VCstatus.stdout) &&
+      /Connected to beacon node\(s\)/.test(VCstatus.stdout) &&
       /HTTP API started/.test(VCstatus.stdout) &&
       /Imported keystores via standard HTTP API.*count: 3/.test(VCstatus.stdout)
     ) {
@@ -170,7 +170,7 @@ test("lighthouse validator import", async () => {
   expect(VCstatus.stdout).toMatch(/Successfully loaded graffiti file/);
   expect(VCstatus.stdout).toMatch(/Starting validator client/);
   expect(VCstatus.stdout).toMatch(/Metrics HTTP server started/);
-  expect(VCstatus.stdout).toMatch(/Initialized beacon node connections/);
+  expect(VCstatus.stdout).toMatch(/Connected to beacon node\(s\)/);
   expect(VCstatus.stdout).toMatch(/HTTP API started/);
   expect(VCstatus.stdout).toMatch(/Imported keystores via standard HTTP API.*count: 3/);
 });

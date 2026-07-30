@@ -75,13 +75,12 @@ test("op-geth installation", async () => {
     await testServer.Sleep(30000);
     status = await nodeConnection.sshService.exec(`docker logs stereum-${executionClient.id}`);
     completeStatus = status.stdout + status.stderr;
-
     if (
       /Starting geth on an OP network/.test(completeStatus) &&
       /Started P2P networking/.test(completeStatus) &&
       /HTTP server started/.test(completeStatus) &&
       /WebSocket enabled/.test(completeStatus) &&
-      /Engine API enabled/.test(completeStatus) &&
+      /auth=true/.test(completeStatus) &&
       /Looking for peers/.test(completeStatus) &&
       /Starting metrics server/.test(completeStatus)
     ) {
@@ -110,7 +109,7 @@ test("op-geth installation", async () => {
   expect(completeStatus).toMatch(/Started P2P networking/);
   expect(completeStatus).toMatch(/HTTP server started/);
   expect(completeStatus).toMatch(/WebSocket enabled/);
-  expect(completeStatus).toMatch(/Engine API enabled/);
+  expect(completeStatus).toMatch(/auth=true/);
   expect(completeStatus).toMatch(/Looking for peers/);
   expect(completeStatus).toMatch(/Starting metrics server/);
 });

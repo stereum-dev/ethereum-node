@@ -21,15 +21,11 @@
       changed_when: false
       when: ansible_facts['distribution'] == "Ubuntu"
 
-    - name: Add source repository into sources list
-      apt_repository:
-        repo: "ppa:ansible/ansible"
-
     - name: Install ansible (Ubuntu)
       apt:
         update_cache: yes
         name:
-          - pip
+          - python3-pip
           - ansible
         state: present
       become: true

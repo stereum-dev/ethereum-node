@@ -9,29 +9,31 @@
   set_fact:
     service_configuration: "{{ service_configuration_raw['content'] | b64decode | from_yaml }}"
 
+- name: Determine whether this service participates in image auto-updates
+  set_fact:
+    service_is_autoupdatable: "{{ (service_configuration.autoupdate | default(false)) and service_configuration.service != 'CustomService' }}"
+
 - name: Extract docker image and version
   set_fact:
     service_docker_image: "{{ service_configuration.image.split(':') | first }}"
     service_docker_image_tag: "{{ service_configuration.image.split(':') | last }}"
-  when: service_configuration.autoupdate
+  when: service_is_autoupdatable
 
 - name: Get latest version for this service
   set_fact:
     new_service_docker_image_tag: "{{ (update_data.json.get(service_configuration.network, {}).get(service_configuration.service, update_data.json.get('mainnet', {}).get(service_configuration.service, []))) | last | default(None, true) }}" # Returns empty string if nothing is found. (don't ask me why default is not picking up and returning None)
-  when:
-    - service_configuration.autoupdate
-    - service_configuration.service != 'CustomService'
+  when: service_is_autoupdatable
 
 - name: Build new image tag
   set_fact:
     new_service_configuration_fraction:
       image: "{{ service_docker_image }}:{{ new_service_docker_image_tag | default(service_docker_image_tag, true) }}" # If new_service_docker_image_tag is falsy, use the current tag (will cause a restart if the tag is an empty string)
-  when: service_configuration.autoupdate
+  when: service_is_autoupdatable
 
 - name: Update configuration
   set_fact:
     new_service_configuration: "{{ service_configuration | combine(new_service_configuration_fraction) }}"
-  when: service_configuration.autoupdate and new_service_docker_image_tag != service_docker_image_tag
+  when: service_is_autoupdatable and new_service_docker_image_tag != service_docker_image_tag
 
 - name: Write configuration
   copy:
@@ -40,6 +42,6 @@
     owner: "root"
     group: "root"
     mode: 0644
-  when: service_configuration.autoupdate and new_service_docker_image_tag != service_docker_image_tag
+  when: service_is_autoupdatable and new_service_docker_image_tag != service_docker_image_tag
   become: yes
 # EOF
