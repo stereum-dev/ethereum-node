@@ -1,0 +1,40 @@
+---
+- name: Read service file
+  slurp:
+    src: "{{ config_file.path }}"
+  register: service_configuration_raw
+
+- name: Parse service's configuration
+  set_fact:
+    service_configuration: "{{ service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+# LCOM moved its entrypoint from the top-level "main.py" script to the "app.main"
+# module ("python -m app.main"), and the per-network smart-contract addresses are
+# now resolved inside the image instead of being injected as *_ADDRESS env vars.
+# Update legacy configs to the module entrypoint and drop the obsolete env vars.
+# Guarded on the old state so the block is a no-op once applied.
+- name: LCOMService Changes
+  when:
+    - service_configuration.service == "LCOMService"
+    - >-
+      (service_configuration.entrypoint | default([])) == ["python", "main.py"]
+      or ((service_configuration.env | default({}) | dict2items | selectattr('key', 'search', '_ADDRESS$') | list | length) > 0)
+  block:
+    - name: Update LCOM entrypoint from main.py to the app.main module
+      ansible.builtin.replace:
+        path: "{{ config_file.path }}"
+        regexp: '^([ \t]*)-[ \t]*main\.py[ \t]*$'
+        replace: '\1- -m\n\1- app.main'
+
+    - name: Remove obsolete LCOM smart-contract address env vars
+      ansible.builtin.lineinfile:
+        path: "{{ config_file.path }}"
+        regexp: '^\s*[A-Z0-9_]+_ADDRESS:'
+        state: absent
+
+    - name: Touch service config file to trigger service restart
+      file:
+        path: "{{ config_file.path }}"
+        state: touch
+      changed_when: false # to pass idempotence test
+# EOF

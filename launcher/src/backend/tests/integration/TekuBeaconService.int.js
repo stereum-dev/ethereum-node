@@ -142,8 +142,9 @@ test("teku validator import", async () => {
   await testServer.finishTestGracefully(nodeConnection);
 
   //check ufw
-  expect(ufw.stdout).toMatch(/9001\/tcp/);
-  expect(ufw.stdout).toMatch(/9001\/udp/);
+  expect(ufw.stdout).toMatch(/9000\/tcp/); // P2P TCP
+  expect(ufw.stdout).toMatch(/9000\/udp/); // P2P discovery
+  expect(ufw.stdout).toMatch(/9001\/udp/); // QUIC
   expect(ufw.stdout).toMatch(/5052\/tcp/);
   expect(ufw.stdout).toMatch(/5051\/tcp/);
 
@@ -169,7 +170,8 @@ test("teku validator import", async () => {
   expect(docker.stdout).toMatch(/consensys\/teku/);
   expect(docker.stdout).toMatch(/5051-5052->5051-5052/);
   expect(docker.stdout).toMatch(/8008\/tcp/);
-  expect(docker.stdout).toMatch(/9001->9001/);
+  expect(docker.stdout).toMatch(/9000->9000/); // P2P TCP
+  expect(docker.stdout).toMatch(/9000-9001->9000-9001/); // P2P UDP + QUIC UDP
   if (!tekuBC.id.includes("Up") && !tekuVC.id.includes("Up") && !geth.id.includes("Up")) {
     expect((docker.stdout.match(new RegExp("Up", "g")) || []).length).toBe(3);
   }

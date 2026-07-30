@@ -1,0 +1,59 @@
+---
+- name: Read service file
+  slurp:
+    src: "{{ config_file.path }}"
+  register: service_configuration_raw
+
+- name: Parse service's configuration
+  set_fact:
+    service_configuration: "{{ service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+# validator-ejector v2 replaced the single STAKING_MODULE_ID + OPERATOR_ID pair
+# with a combined EJECTOR_SCOPE map ({"<stakingModuleId>":[<operatorIds>]}).
+# Convert the legacy env vars and, when the image is still under major version 2,
+# bump it to a release that understands EJECTOR_SCOPE.
+# Guarded on the legacy vars still being present so the block is a no-op once applied.
+- name: Migrate ValidatorEjector to EJECTOR_SCOPE
+  when:
+    - service_configuration.service == "ValidatorEjectorService"
+    - service_configuration.env is defined
+    - service_configuration.env.STAKING_MODULE_ID is defined
+    - service_configuration.env.OPERATOR_ID is defined
+  block:
+    - name: Build EJECTOR_SCOPE and read current image tag
+      set_fact:
+        ejector_scope: '{"{{ service_configuration.env.STAKING_MODULE_ID }}":[{{ service_configuration.env.OPERATOR_ID }}]}'
+        ejector_image_tag: "{{ service_configuration.image.split(':')[-1] }}"
+
+    - name: Bump validator-ejector image to 2.1.0 when under major version 2
+      ansible.builtin.replace:
+        path: "{{ config_file.path }}"
+        regexp: 'lidofinance/validator-ejector:\S+'
+        replace: 'lidofinance/validator-ejector:2.1.0'
+      when:
+        - ejector_image_tag | regex_search('^v?[0-9]+') is not none
+        - (ejector_image_tag | regex_replace('^v', '') | regex_replace('\..*$', '') | int) < 2
+
+    - name: Add EJECTOR_SCOPE env entry
+      ansible.builtin.lineinfile:
+        path: "{{ config_file.path }}"
+        line: "  EJECTOR_SCOPE: '{{ ejector_scope }}'"
+        insertafter: '^\s*LOCATOR_ADDRESS:'
+
+    - name: Remove legacy STAKING_MODULE_ID env entry
+      ansible.builtin.lineinfile:
+        path: "{{ config_file.path }}"
+        regexp: '^\s*STAKING_MODULE_ID:'
+        state: absent
+
+    - name: Remove legacy OPERATOR_ID env entry
+      ansible.builtin.lineinfile:
+        path: "{{ config_file.path }}"
+        regexp: '^\s*OPERATOR_ID:'
+        state: absent
+
+    - name: Touch service config file to trigger service restart
+      file:
+        path: "{{ config_file.path }}"
+        state: touch
+      changed_when: false # to pass idempotence test

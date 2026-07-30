@@ -42,8 +42,8 @@ export class TekuBeaconService extends NodeService {
       [
         `--network=${network}`,
         "--p2p-enabled=true",
-        "--p2p-port=9001",
-        "--p2p-advertised-port=9001",
+        "--p2p-port=9000",
+        "--p2p-advertised-port=9000",
         //`--eth1-endpoints=${executionLayer}`,
         `--ee-endpoint=${executionLayer}`,
         `--ee-jwt-secret-file=${JWTDir}`,
@@ -111,8 +111,8 @@ export class TekuBeaconService extends NodeService {
 
   getAvailablePorts() {
     return [
-      new ServicePortDefinition(9001, "tcp", "P2P connections"),
-      new ServicePortDefinition(9001, "udp", "P2P connections"),
+      new ServicePortDefinition(9000, "tcp", "P2P connections"),
+      new ServicePortDefinition(9000, "udp", "P2P connections"),
       new ServicePortDefinition(5052, "tcp", "Validator API Port"),
       new ServicePortDefinition(5051, "tcp", "REST API Port"),
       new ServicePortDefinition(8008, "tcp", "METRICS Port"),

@@ -119,12 +119,12 @@ test("prysm validator import", async () => {
     BCstatus = await nodeConnection.sshService.exec(`docker logs stereum-${prysmBC.id}`);
     if (
       /Finished reading JWT secret/.test(BCstatus.stderr) &&
-      /Starting beacon node/.test(BCstatus.stderr) &&
+      /Prysm Beacon Chain started/.test(BCstatus.stderr) &&
       /Starting initial chain sync/.test(BCstatus.stderr) &&
-      /Connected peers/.test(BCstatus.stderr) &&
+      /Node started p2p server/.test(BCstatus.stderr) &&
       /Connected to new endpoint/.test(BCstatus.stderr) &&
-      /Starting validator node/.test(VCstatus.stderr) &&
-      /Waiting for beacon node to sync to latest chain head/.test(VCstatus.stderr)
+      /Prysm Validator started/.test(VCstatus.stderr) &&
+      /Opened validator wallet/.test(VCstatus.stderr)
     ) {
       condition = true;
     }
@@ -180,13 +180,13 @@ test("prysm validator import", async () => {
 
   //check prysm BC logs
   expect(BCstatus.stderr).toMatch(/Finished reading JWT secret/);
-  expect(BCstatus.stderr).toMatch(/Starting beacon node/);
+  expect(BCstatus.stderr).toMatch(/Prysm Beacon Chain started/);
   expect(BCstatus.stderr).toMatch(/Starting initial chain sync/);
-  expect(BCstatus.stderr).toMatch(/Connected peers/);
+  expect(BCstatus.stderr).toMatch(/Node started p2p server/);
   expect(BCstatus.stderr).toMatch(/Connected to new endpoint/);
 
   //check prysm VC logs
-  expect(VCstatus.stderr).toMatch(/Starting validator node/);
-  expect(VCstatus.stderr).toMatch(/Waiting for beacon node to sync to latest chain head/);
+  expect(VCstatus.stderr).toMatch(/Prysm Validator started/);
+  expect(VCstatus.stderr).toMatch(/Opened validator wallet/);
   expect(runningValidator).toMatch(/Showing .{1} validator accounts/);
 });

@@ -22,31 +22,13 @@ export class LCOMService extends NodeService {
       image, // image
       "latest", // imageVersion
       [], // command
-      ["python", "main.py"], // entrypoint
+      ["python", "-m", "app.main"], // entrypoint
       {
         RPC_API: executionClients[0] ? executionClients[0].buildExecutionClientHttpEndpointUrl() : "http://RPC-api",
         BEACON_API: consensusClients[0] ? consensusClients[0].buildConsensusClientHttpEndpointUrl() : "http://beacon-api",
         IPFS_API: ipfs ? ipfs.buildIPFSHttpEndpointUrl() : "http://IPFS-api",
         NO_ID: "123456",
         LOG_LEVEL: "INFO",
-
-        // Mainnet smart-contract addresses:
-        MAINNET_VALIDATORSEXITBUSORACLE_ADDRESS: "0x0De4Ea0184c2ad0BacA7183356Aea5B8d5Bf5c6e",
-        MAINNET_CSMODULE_ADDRESS: "0xdA7dE2ECdDfccC6c3AF10108Db212ACBBf9EA83F",
-        MAINNET_CSACCOUNTING_ADDRESS: "0x4d72BFF1BeaC69925F8Bd12526a39BAAb069e5Da",
-        MAINNET_CSFEEDISTRIBUTOR_ADDRESS: "0xD99CC66fEC647E68294C6477B40fC7E0F6F618D0",
-
-        // Holesky Testnet smart-contract addresses:
-        HOLESKY_VALIDATORSEXITBUSORACLE_ADDRESS: "0xffDDF7025410412deaa05E3E1cE68FE53208afcb",
-        HOLESKY_CSMODULE_ADDRESS: "0x4562c3e63c2e586cD1651B958C22F88135aCAd4f",
-        HOLESKY_CSACCOUNTING_ADDRESS: "0xc093e53e8F4b55A223c18A2Da6fA00e60DD5EFE1",
-        HOLESKY_CSFEEDISTRIBUTOR_ADDRESS: "0xD7ba648C8F72669C6aE649648B516ec03D07c8ED",
-
-        // Hoodini Testnet smart-contract addresses:
-        HOODI_VALIDATORSEXITBUSORACLE_ADDRESS: "0x8664d394C2B3278F26A1B44B967aEf99707eeAB2",
-        HOODI_CSMODULE_ADDRESS: "0x79CEf36D84743222f37765204Bec41E92a93E59d",
-        HOODI_CSACCOUNTING_ADDRESS: "0xA54b90BA34C5f326BC1485054080994e38FB4C60",
-        HOODI_CSFEEDISTRIBUTOR_ADDRESS: "0xaCd9820b0A2229a82dc1A0770307ce5522FF3582",
       }, // env
       ports, // ports
       volumes, // volumes

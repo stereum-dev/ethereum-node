@@ -76,12 +76,11 @@ test("besu installation", async () => {
       /Starting Besu/.test(status.stdout) &&
       /Starting Ethereum main loop/.test(status.stdout) &&
       /Websocket service started/.test(status.stdout) &&
-      /EngineJsonRpcService \| JSON-RPC service started/.test(status.stdout) &&
-      /JsonRpcHttpService \| JSON-RPC service started/.test(status.stdout) &&
-      /MetricsHttpService \| Starting metrics/.test(status.stdout) &&
+      /JSON-RPC service started/.test(status.stdout) &&
+      /Starting metrics/.test(status.stdout) &&
       /P2P RLPx agent started/.test(status.stdout) &&
       /Starting peer discovery agent/.test(status.stdout) &&
-      /Starting sync/.test(status.stdout)
+      /Starting synchronizer/.test(status.stdout)
     ) {
       condition = true;
     }
@@ -107,10 +106,9 @@ test("besu installation", async () => {
   expect(status.stdout).toMatch(/Starting Besu/);
   expect(status.stdout).toMatch(/Starting Ethereum main loop/);
   expect(status.stdout).toMatch(/Websocket service started/);
-  expect(status.stdout).toMatch(/EngineJsonRpcService \| JSON-RPC service started/);
-  expect(status.stdout).toMatch(/JsonRpcHttpService \| JSON-RPC service started/);
-  expect(status.stdout).toMatch(/MetricsHttpService \| Starting metrics/);
+  expect(status.stdout).toMatch(/JSON-RPC service started/);
+  expect(status.stdout).toMatch(/Starting metrics/);
   expect(status.stdout).toMatch(/P2P RLPx agent started/);
   expect(status.stdout).toMatch(/Starting peer discovery agent/);
-  expect(status.stdout).toMatch(/Starting sync/);
+  expect(status.stdout).toMatch(/Starting synchronizer/);
 });

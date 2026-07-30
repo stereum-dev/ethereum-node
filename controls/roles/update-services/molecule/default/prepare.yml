@@ -97,6 +97,26 @@
           network: prater
       become: yes
 
+    - name: Write service configuration custom (must be ignored by auto-update)
+      copy:
+        dest: "/etc/stereum/services/c0574000-0000-4000-8000-000000000000.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: CustomService
+          command: []
+          entrypoint: []
+          env: {}
+          id: c0574000-0000-4000-8000-000000000000
+          image: nginx:1.27.0
+          ports: []
+          volumes: []
+          user: 2000
+          autoupdate: true
+          network: mainnet
+      become: yes
+
     - block:
         - set_fact:
             stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"

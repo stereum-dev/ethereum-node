@@ -153,6 +153,15 @@
         (stereum_service_configuration.service is match("OpRethService") and stereum_service_configuration.network is match("op-mainnet")) and
         (stereum.manage_service.state == "started" or stereum.manage_service.state == "restarted")
 
+    - name: Refresh image for services pinned to the "latest" tag
+      community.docker.docker_image_pull:
+        name: "{{ stereum_service_configuration.image }}"
+      become: yes
+      failed_when: false
+      when:
+        - stereum.manage_service.state == "started" or stereum.manage_service.state == "restarted"
+        - (stereum_service_configuration.image | split('/') | last | split(':') | last) == "latest"
+
     - name: Start service
       community.docker.docker_container:
         command_handling: correct

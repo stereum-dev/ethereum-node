@@ -3780,7 +3780,7 @@ export class Monitoring {
     }
     if (key === "lcoms_fee_to_distribute" && value > 0) {
       return {
-        name: "none-claimed rewards",
+        name: "rewards to claim",
         level: "notification",
       };
     }

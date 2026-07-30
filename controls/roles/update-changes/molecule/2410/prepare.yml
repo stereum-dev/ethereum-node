@@ -1,0 +1,337 @@
+---
+- name: Prepare
+  hosts: all
+  tasks:
+    - name: Make sure Stereum's config path exists
+      file:
+        path: "/etc/stereum/services"
+        state: directory
+        owner: "root"
+        group: "root"
+        mode: 0644
+      become: yes
+
+    - name: Create LidoObolExitService config (running as root - the bug)
+      copy:
+        dest: "/etc/stereum/services/39b887e5-a4a0-2322-4bc9-43d42d9f5bd6.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: LidoObolExitService
+          id: 39b887e5-a4a0-2322-4bc9-43d42d9f5bd6
+          configVersion: 1
+          command:
+            - run
+            - --beacon-node-url=http://stereum-6c2c02b0-7918-a378-0c6a-91c41214f93f:5051
+            - --charon-runtime-dir=/charon
+            - --ejector-exit-path=/exitmessages
+            - --exit-epoch=256
+            - --log-color=auto
+            - --log-format=console
+            - --log-level=info
+            - --obol-api-url=https://api.obol.tech
+            - --validator-query-chunk-size=50
+          entrypoint:
+            - /usr/local/bin/lido-dv-exit
+          env: {}
+          image: obolnetwork/lido-dv-exit:v0.5.2
+          ports: []
+          volumes:
+            - /opt/stereum/validatorejector-8dbf517f-1b92-ad18-b9c4-1b4f43ef8dbe/messages:/exitmessages
+            - /opt/stereum/charon-d1f91f40-2b3b-20a6-d381-65ac39db9af3/.charon:/charon
+          user: root
+          autoupdate: true
+          network: hoodi
+          dependencies:
+            executionClients: []
+            consensusClients:
+              - service: TekuBeaconService
+                id: 6c2c02b0-7918-a378-0c6a-91c41214f93f
+            mevboost: []
+            otherServices:
+              - service: ValidatorEjectorService
+                id: 8dbf517f-1b92-ad18-b9c4-1b4f43ef8dbe
+              - service: CharonService
+                id: d1f91f40-2b3b-20a6-d381-65ac39db9af3
+      become: yes
+
+    - name: Create ValidatorEjectorService config
+      copy:
+        dest: "/etc/stereum/services/8dbf517f-1b92-ad18-b9c4-1b4f43ef8dbe.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: ValidatorEjectorService
+          id: 8dbf517f-1b92-ad18-b9c4-1b4f43ef8dbe
+          configVersion: 1
+          command: []
+          entrypoint: []
+          env:
+            EXECUTION_NODE: http://stereum-57277de9-a1e8-b4bb-6b8f-f4417905d9b4:8545
+            CONSENSUS_NODE: http://stereum-6c2c02b0-7918-a378-0c6a-91c41214f93f:5051
+            LOCATOR_ADDRESS: "0xe2EF9536DAAAEBFf5b1c130957AB3E80056b06D8"
+            STAKING_MODULE_ID: "1"
+            OPERATOR_ID: "123456789"
+            MESSAGES_LOCATION: /app/messages
+            ORACLE_ADDRESSES_ALLOWLIST: '["0xcA80ee7313A315879f326105134F938676Cfd7a9","0xf03B8DC8762B97F13Ac82e6F94bE3Ed002FF7459","0x1932f53B1457a5987791a40Ba91f71c5Efd5788F","0xf7aE520e99ed3C41180B5E12681d31Aa7302E4e5","0x99B2B75F490fFC9A29E4E1f5987BE8e30E690aDF","0x219743f1911d84B32599BdC2Df21fC8Dba6F81a2","0xD3b1e36A372Ca250eefF61f90E833Ca070559970","0x4c75FA734a39f3a21C57e583c1c29942F021C6B7","0x948A62cc0414979dc7aa9364BA5b96ECb29f8736","0xfe43A8B0b481Ae9fB1862d31826532047d2d538c","0x43C45C2455C49eed320F463fF4f1Ece3D2BF5aE2"]'
+            HTTP_PORT: "8989"
+            RUN_METRICS: "true"
+            RUN_HEALTH_CHECK: "true"
+            DRY_RUN: "false"
+          image: lidofinance/validator-ejector:2.1.0
+          ports: []
+          volumes:
+            - /opt/stereum/validatorejector-8dbf517f-1b92-ad18-b9c4-1b4f43ef8dbe/messages:/app/messages
+          user: "2000"
+          autoupdate: true
+          network: hoodi
+          dependencies:
+            executionClients:
+              - service: NethermindService
+                id: 57277de9-a1e8-b4bb-6b8f-f4417905d9b4
+            consensusClients:
+              - service: TekuBeaconService
+                id: 6c2c02b0-7918-a378-0c6a-91c41214f93f
+            mevboost: []
+            otherServices: []
+      become: yes
+
+    - name: Create legacy ValidatorEjectorService config (image under major v2)
+      copy:
+        dest: "/etc/stereum/services/1a2b3c4d-0000-0000-0000-000000000001.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: ValidatorEjectorService
+          id: 1a2b3c4d-0000-0000-0000-000000000001
+          configVersion: 1
+          command: []
+          entrypoint: []
+          env:
+            EXECUTION_NODE: http://stereum-57277de9-a1e8-b4bb-6b8f-f4417905d9b4:8545
+            CONSENSUS_NODE: http://stereum-6c2c02b0-7918-a378-0c6a-91c41214f93f:5051
+            LOCATOR_ADDRESS: "0x28FAB2059C713A7F9D8c86Db49f9bb0e96Af1ef8"
+            STAKING_MODULE_ID: "2"
+            OPERATOR_ID: "42"
+            MESSAGES_LOCATION: /app/messages
+            HTTP_PORT: "8989"
+            RUN_METRICS: "true"
+            RUN_HEALTH_CHECK: "true"
+            DRY_RUN: "false"
+          image: lidofinance/validator-ejector:1.5.0
+          ports: []
+          volumes:
+            - /opt/stereum/validatorejector-1a2b3c4d-0000-0000-0000-000000000001/messages:/app/messages
+          user: "2000"
+          autoupdate: true
+          network: holesky
+          dependencies:
+            executionClients: []
+            consensusClients: []
+            mevboost: []
+            otherServices: []
+      become: yes
+
+    - name: Create CharonService config
+      copy:
+        dest: "/etc/stereum/services/d1f91f40-2b3b-20a6-d381-65ac39db9af3.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: CharonService
+          id: d1f91f40-2b3b-20a6-d381-65ac39db9af3
+          configVersion: 1
+          command:
+            - run
+            - --beacon-node-endpoints=http://stereum-6c2c02b0-7918-a378-0c6a-91c41214f93f:5051
+            - --log-level=info
+            - --log-format=console
+            - --p2p-relays=https://0.relay.obol.tech
+            - --p2p-tcp-address=0.0.0.0:3610
+            - --validator-api-address=0.0.0.0:3600
+            - --monitoring-address=0.0.0.0:3620
+            - --builder-api
+          entrypoint:
+            - /usr/local/bin/charon
+          env: {}
+          image: obolnetwork/charon:v1.10.3
+          ports:
+            - 0.0.0.0:3610:3610/tcp
+          volumes:
+            - /opt/stereum/charon-d1f91f40-2b3b-20a6-d381-65ac39db9af3:/opt/charon
+          user: "2000"
+          autoupdate: true
+          network: hoodi
+          dependencies:
+            executionClients: []
+            consensusClients:
+              - service: TekuBeaconService
+                id: 6c2c02b0-7918-a378-0c6a-91c41214f93f
+            mevboost: []
+            otherServices: []
+      become: yes
+
+    - name: Create TekuBeaconService config (P2P on 9001 - conflicts with QUIC)
+      copy:
+        dest: "/etc/stereum/services/6c2c02b0-7918-a378-0c6a-91c41214f93f.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: TekuBeaconService
+          id: 6c2c02b0-7918-a378-0c6a-91c41214f93f
+          configVersion: 2
+          command:
+            - --network=hoodi
+            - --p2p-enabled=true
+            - --p2p-port=9001
+            - --p2p-advertised-port=9001
+            - --ee-endpoint=http://stereum-57277de9-a1e8-b4bb-6b8f-f4417905d9b4:8551
+            - --ee-jwt-secret-file=/engine.jwt
+            - --metrics-enabled=true
+            - --metrics-port=8008
+            - --metrics-interface=0.0.0.0
+            - --metrics-host-allowlist=*
+            - --metrics-publish-interval=10
+            - --data-path=/opt/app/data
+            - --data-storage-mode=minimal
+            - --rest-api-port=5051
+            - --rest-api-host-allowlist=*
+            - --rest-api-interface=0.0.0.0
+            - --rest-api-docs-enabled=true
+            - --rest-api-enabled=true
+            - --log-destination=CONSOLE
+            - --beacon-liveness-tracking-enabled=true
+            - --ignore-weak-subjectivity-period-enabled
+          entrypoint:
+            - /opt/teku/bin/teku
+          env:
+            JAVA_OPTS: -Xmx6g
+          image: consensys/teku:24.10.3
+          ports:
+            - 0.0.0.0:9001:9001/tcp
+            - 0.0.0.0:9001:9001/udp
+            - 127.0.0.1:5052:5052/tcp
+            - 127.0.0.1:5051:5051/tcp
+          volumes:
+            - /opt/stereum/teku-6c2c02b0-7918-a378-0c6a-91c41214f93f/data:/opt/app/data
+            - /opt/stereum/nethermind-57277de9-a1e8-b4bb-6b8f-f4417905d9b4/engine.jwt:/engine.jwt
+          user: "2000"
+          autoupdate: true
+          network: hoodi
+          dependencies:
+            executionClients:
+              - service: NethermindService
+                id: 57277de9-a1e8-b4bb-6b8f-f4417905d9b4
+            consensusClients: []
+            mevboost: []
+            otherServices: []
+      become: yes
+
+    # Simulate the damage: the root LidoObolExitService has recursively
+    # chowned the shared charon + ejector volumes to root:root.
+    - name: Simulate broken ownership on shared ejector volume
+      file:
+        path: "/opt/stereum/validatorejector-8dbf517f-1b92-ad18-b9c4-1b4f43ef8dbe/messages"
+        state: directory
+        owner: "root"
+        group: "root"
+        recurse: yes
+      become: yes
+
+    - name: Simulate broken ownership on shared charon volume
+      file:
+        path: "/opt/stereum/charon-d1f91f40-2b3b-20a6-d381-65ac39db9af3/.charon"
+        state: directory
+        owner: "root"
+        group: "root"
+        recurse: yes
+      become: yes
+
+    - name: Create LCOMService config (legacy main.py entrypoint + address env vars)
+      copy:
+        dest: "/etc/stereum/services/b17e0000-0000-0000-0000-00000000abcd.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: LCOMService
+          id: b17e0000-0000-0000-0000-00000000abcd
+          configVersion: 1
+          command: []
+          entrypoint:
+            - python
+            - main.py
+          env:
+            RPC_API: http://stereum-57277de9-a1e8-b4bb-6b8f-f4417905d9b4:8545
+            BEACON_API: http://stereum-6c2c02b0-7918-a378-0c6a-91c41214f93f:5051
+            IPFS_API: http://IPFS-api
+            NO_ID: "123456"
+            LOG_LEVEL: INFO
+            MAINNET_VALIDATORSEXITBUSORACLE_ADDRESS: "0x0De4Ea0184c2ad0BacA7183356Aea5B8d5Bf5c6e"
+            MAINNET_CSMODULE_ADDRESS: "0xdA7dE2ECdDfccC6c3AF10108Db212ACBBf9EA83F"
+            MAINNET_CSACCOUNTING_ADDRESS: "0x4d72BFF1BeaC69925F8Bd12526a39BAAb069e5Da"
+            MAINNET_CSFEEDISTRIBUTOR_ADDRESS: "0xD99CC66fEC647E68294C6477B40fC7E0F6F618D0"
+            HOLESKY_VALIDATORSEXITBUSORACLE_ADDRESS: "0xffDDF7025410412deaa05E3E1cE68FE53208afcb"
+            HOLESKY_CSMODULE_ADDRESS: "0x4562c3e63c2e586cD1651B958C22F88135aCAd4f"
+            HOLESKY_CSACCOUNTING_ADDRESS: "0xc093e53e8F4b55A223c18A2Da6fA00e60DD5EFE1"
+            HOLESKY_CSFEEDISTRIBUTOR_ADDRESS: "0xD7ba648C8F72669C6aE649648B516ec03D07c8ED"
+            HOODI_VALIDATORSEXITBUSORACLE_ADDRESS: "0x8664d394C2B3278F26A1B44B967aEf99707eeAB2"
+            HOODI_CSMODULE_ADDRESS: "0x79CEf36D84743222f37765204Bec41E92a93E59d"
+            HOODI_CSACCOUNTING_ADDRESS: "0xA54b90BA34C5f326BC1485054080994e38FB4C60"
+            HOODI_CSFEEDISTRIBUTOR_ADDRESS: "0xaCd9820b0A2229a82dc1A0770307ce5522FF3582"
+          image: stereum/lcoms:latest
+          ports: []
+          volumes:
+            - /opt/stereum/lcom-b17e0000-0000-0000-0000-00000000abcd/logs:/app/logs
+          user: "2000"
+          autoupdate: true
+          network: mainnet
+          dependencies:
+            executionClients: []
+            consensusClients: []
+            mevboost: []
+            otherServices: []
+      become: yes
+
+    - name: Create mainnet ValidatorEjectorService config (stale oracle allowlist)
+      copy:
+        dest: "/etc/stereum/services/ec70a110-0000-0000-0000-0000000000aa.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: ValidatorEjectorService
+          id: ec70a110-0000-0000-0000-0000000000aa
+          configVersion: 1
+          command: []
+          entrypoint: []
+          env:
+            EXECUTION_NODE: http://stereum-57277de9-a1e8-b4bb-6b8f-f4417905d9b4:8545
+            CONSENSUS_NODE: http://stereum-6c2c02b0-7918-a378-0c6a-91c41214f93f:5051
+            LOCATOR_ADDRESS: "0x17DDe19a2C09d0743Da8F24c8B0dA8fb436C31b6"
+            EJECTOR_SCOPE: '{"1":[42]}'
+            MESSAGES_LOCATION: /app/messages
+            ORACLE_ADDRESSES_ALLOWLIST: '["0x0000000000000000000000000000000000000001","0x0000000000000000000000000000000000000002"]'
+            HTTP_PORT: "8989"
+            RUN_METRICS: "true"
+            RUN_HEALTH_CHECK: "true"
+            DRY_RUN: "false"
+          image: lidofinance/validator-ejector:2.1.0
+          ports: []
+          volumes:
+            - /opt/stereum/validatorejector-ec70a110-0000-0000-0000-0000000000aa/messages:/app/messages
+          user: "2000"
+          autoupdate: true
+          network: mainnet
+          dependencies:
+            executionClients: []
+            consensusClients: []
+            mevboost: []
+            otherServices: []
+      become: yes
+# EOF

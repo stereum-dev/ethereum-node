@@ -88,6 +88,7 @@ export class PrysmValidatorService extends NodeService {
         '--http-cors-domain="*"',
         `--enable-beacon-rest-api`,
         `--beacon-rest-api-provider=${provider}`,
+        `--beacon-rpc-provider=${provider}`,
         "--suggested-fee-recipient=0x0000000000000000000000000000000000000000",
         `--graffiti-file=${graffitiDir}/graffitis.yaml`,
         "--enable-builder=true",

@@ -1,0 +1,174 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+    # LidoObolExitService: user must have been changed from root to 2000
+    - name: Read LidoObolExitService file
+      slurp:
+        src: "/etc/stereum/services/39b887e5-a4a0-2322-4bc9-43d42d9f5bd6.yaml"
+      register: obol_service_configuration_raw
+
+    - name: Parse LidoObolExitService configuration
+      set_fact:
+        obol_service_configuration: "{{ obol_service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+    - debug:
+        msg: "{{ obol_service_configuration }}"
+
+    - name: Assert LidoObolExitService now runs as user 2000
+      assert:
+        that:
+          - obol_service_configuration.user == "2000"
+        fail_msg: "LidoObolExitService user was not changed to 2000 (got: {{ obol_service_configuration.user }})"
+
+    # Shared volume ownership must be repaired back to uid 2000
+    - name: Stat shared ejector messages volume
+      stat:
+        path: "/opt/stereum/validatorejector-8dbf517f-1b92-ad18-b9c4-1b4f43ef8dbe/messages"
+      register: ejector_messages_dir
+      become: yes
+
+    - name: Stat shared charon .charon volume
+      stat:
+        path: "/opt/stereum/charon-d1f91f40-2b3b-20a6-d381-65ac39db9af3/.charon"
+      register: charon_data_dir
+      become: yes
+
+    - name: Assert shared volumes are owned by uid 2000 again
+      assert:
+        that:
+          - ejector_messages_dir.stat.uid == 2000
+          - charon_data_dir.stat.uid == 2000
+        fail_msg: "Shared volume ownership was not repaired to uid 2000 (ejector: {{ ejector_messages_dir.stat.uid }}, charon: {{ charon_data_dir.stat.uid }})"
+
+    # The other two services must be left untouched (still 2000)
+    - name: Read ValidatorEjectorService file
+      slurp:
+        src: "/etc/stereum/services/8dbf517f-1b92-ad18-b9c4-1b4f43ef8dbe.yaml"
+      register: ejector_service_configuration_raw
+
+    - name: Read CharonService file
+      slurp:
+        src: "/etc/stereum/services/d1f91f40-2b3b-20a6-d381-65ac39db9af3.yaml"
+      register: charon_service_configuration_raw
+
+    - name: Parse ValidatorEjectorService and CharonService configurations
+      set_fact:
+        ejector_service_configuration: "{{ ejector_service_configuration_raw['content'] | b64decode | from_yaml }}"
+        charon_service_configuration: "{{ charon_service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+    - name: Assert ValidatorEjectorService and CharonService still run as 2000
+      assert:
+        that:
+          - ejector_service_configuration.user == "2000"
+          - charon_service_configuration.user == "2000"
+
+    # ValidatorEjector (v2 image): env migrated to EJECTOR_SCOPE, image left as-is
+    - name: Assert v2 ejector migrated to EJECTOR_SCOPE without version bump
+      assert:
+        that:
+          - ejector_service_configuration.env.EJECTOR_SCOPE == '{"1":[123456789]}'
+          - ejector_service_configuration.env.STAKING_MODULE_ID is not defined
+          - ejector_service_configuration.env.OPERATOR_ID is not defined
+          - ejector_service_configuration.image == "lidofinance/validator-ejector:2.1.0"
+        fail_msg: "v2 ejector was not migrated correctly: {{ ejector_service_configuration.env }} / {{ ejector_service_configuration.image }}"
+
+    # ValidatorEjector (legacy sub-v2 image): env migrated AND image bumped to 2.1.0
+    - name: Read legacy ValidatorEjectorService file
+      slurp:
+        src: "/etc/stereum/services/1a2b3c4d-0000-0000-0000-000000000001.yaml"
+      register: legacy_ejector_configuration_raw
+
+    - name: Parse legacy ValidatorEjectorService configuration
+      set_fact:
+        legacy_ejector_configuration: "{{ legacy_ejector_configuration_raw['content'] | b64decode | from_yaml }}"
+
+    - debug:
+        msg: "{{ legacy_ejector_configuration }}"
+
+    - name: Assert legacy ejector migrated to EJECTOR_SCOPE and bumped to 2.1.0
+      assert:
+        that:
+          - legacy_ejector_configuration.env.EJECTOR_SCOPE == '{"2":[42]}'
+          - legacy_ejector_configuration.env.STAKING_MODULE_ID is not defined
+          - legacy_ejector_configuration.env.OPERATOR_ID is not defined
+          - legacy_ejector_configuration.image == "lidofinance/validator-ejector:2.1.0"
+        fail_msg: "legacy ejector was not migrated correctly: {{ legacy_ejector_configuration.env }} / {{ legacy_ejector_configuration.image }}"
+
+    # TekuBeaconService: P2P must move to 9000, QUIC exposed on 9001/udp
+    - name: Read TekuBeaconService file
+      slurp:
+        src: "/etc/stereum/services/6c2c02b0-7918-a378-0c6a-91c41214f93f.yaml"
+      register: teku_service_configuration_raw
+
+    - name: Parse TekuBeaconService configuration
+      set_fact:
+        teku_service_configuration: "{{ teku_service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+    - debug:
+        msg: "{{ teku_service_configuration }}"
+
+    - name: Assert Teku P2P moved to 9000 and QUIC exposed on 9001/udp
+      assert:
+        that:
+          - '"--p2p-port=9000" in teku_service_configuration.command'
+          - '"--p2p-advertised-port=9000" in teku_service_configuration.command'
+          - '"--p2p-port=9001" not in teku_service_configuration.command'
+          - '"0.0.0.0:9000:9000/tcp" in teku_service_configuration.ports'
+          - '"0.0.0.0:9000:9000/udp" in teku_service_configuration.ports'
+          - '"0.0.0.0:9001:9001/udp" in teku_service_configuration.ports'
+          - '"0.0.0.0:9001:9001/tcp" not in teku_service_configuration.ports'
+        fail_msg: "Teku P2P/QUIC ports were not migrated correctly: {{ teku_service_configuration.ports }} / {{ teku_service_configuration.command }}"
+
+    # LCOMService: entrypoint migrated to the app.main module and the obsolete
+    # per-network *_ADDRESS env vars removed (kept env vars left intact)
+    - name: Read LCOMService file
+      slurp:
+        src: "/etc/stereum/services/b17e0000-0000-0000-0000-00000000abcd.yaml"
+      register: lcom_service_configuration_raw
+
+    - name: Parse LCOMService configuration
+      set_fact:
+        lcom_service_configuration: "{{ lcom_service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+    - debug:
+        msg: "{{ lcom_service_configuration }}"
+
+    - name: Assert LCOM entrypoint migrated and address env vars removed
+      assert:
+        that:
+          - lcom_service_configuration.entrypoint == ["python", "-m", "app.main"]
+          - (lcom_service_configuration.env | dict2items | selectattr('key', 'search', '_ADDRESS$') | list | length) == 0
+          - lcom_service_configuration.env.RPC_API is defined
+          - lcom_service_configuration.env.LOG_LEVEL == "INFO"
+        fail_msg: "LCOM was not migrated correctly: {{ lcom_service_configuration.entrypoint }} / {{ lcom_service_configuration.env }}"
+
+    # Oracle allowlist: hoodi ejector refreshed to the current on-chain member set
+    # (dropped 0xf03B..., 11 -> 10 addresses)
+    - name: Assert hoodi ejector oracle allowlist refreshed
+      assert:
+        that:
+          - (ejector_service_configuration.env.ORACLE_ADDRESSES_ALLOWLIST | from_yaml | length) == 10
+          - '"0xf03B8DC8762B97F13Ac82e6F94bE3Ed002FF7459" not in (ejector_service_configuration.env.ORACLE_ADDRESSES_ALLOWLIST | from_yaml)'
+          - '"0x948A62cc0414979dc7aa9364BA5b96ECb29f8736" in (ejector_service_configuration.env.ORACLE_ADDRESSES_ALLOWLIST | from_yaml)'
+        fail_msg: "hoodi ejector oracle allowlist not refreshed: {{ ejector_service_configuration.env.ORACLE_ADDRESSES_ALLOWLIST }}"
+
+    # Oracle allowlist: mainnet ejector refreshed from a stale list to the 9-member set
+    - name: Read mainnet ValidatorEjectorService file
+      slurp:
+        src: "/etc/stereum/services/ec70a110-0000-0000-0000-0000000000aa.yaml"
+      register: mainnet_ejector_configuration_raw
+
+    - name: Parse mainnet ValidatorEjectorService configuration
+      set_fact:
+        mainnet_ejector_configuration: "{{ mainnet_ejector_configuration_raw['content'] | b64decode | from_yaml }}"
+
+    - name: Assert mainnet ejector oracle allowlist refreshed
+      assert:
+        that:
+          - (mainnet_ejector_configuration.env.ORACLE_ADDRESSES_ALLOWLIST | from_yaml | length) == 9
+          - '"0x73181107c8D9ED4ce0bbeF7A0b4ccf3320C41d12" in (mainnet_ejector_configuration.env.ORACLE_ADDRESSES_ALLOWLIST | from_yaml)'
+          - '"0x0000000000000000000000000000000000000001" not in (mainnet_ejector_configuration.env.ORACLE_ADDRESSES_ALLOWLIST | from_yaml)'
+        fail_msg: "mainnet ejector oracle allowlist not refreshed: {{ mainnet_ejector_configuration.env.ORACLE_ADDRESSES_ALLOWLIST }}"
+# EOF

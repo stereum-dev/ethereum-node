@@ -1,0 +1,35 @@
+---
+- name: Find service configs
+  find:
+    paths: "/etc/stereum/services"
+  register: service_config_files
+
+- name: Include Obol Exit Changes
+  include_tasks: obol_exit_changes.yaml
+  loop: "{{ service_config_files.files }}"
+  loop_control:
+    loop_var: config_file
+
+- name: Include Teku Changes
+  include_tasks: teku_changes.yaml
+  loop: "{{ service_config_files.files }}"
+  loop_control:
+    loop_var: config_file
+
+- name: Include Ejector EJECTOR_SCOPE Changes
+  include_tasks: ejector_changes.yaml
+  loop: "{{ service_config_files.files }}"
+  loop_control:
+    loop_var: config_file
+
+- name: Include LCOM Changes
+  include_tasks: lcom_changes.yaml
+  loop: "{{ service_config_files.files }}"
+  loop_control:
+    loop_var: config_file
+
+- name: Include Oracle Allowlist Changes
+  include_tasks: oracle_allowlist_changes.yaml
+  loop: "{{ service_config_files.files }}"
+  loop_control:
+    loop_var: config_file
