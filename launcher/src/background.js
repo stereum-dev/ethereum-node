@@ -923,9 +923,16 @@ async function createWindow(type = "main") {
     },
   };
 
-  // Modify window size based on environment
+  // Modify window size based on environment. The launcher is a fixed-size,
+  // non-resizable window (making it responsive is a future task).
   if (!isDevelopment) {
-    Object.assign(initwin, { maxHeight: 609, maxWidth: 1044 });
+    Object.assign(initwin, {
+      maxHeight: 609,
+      maxWidth: 1044,
+      resizable: false,
+      maximizable: false,
+      fullscreenable: false,
+    });
   }
   if (!isDevelopment && process.platform === "win32") {
     Object.assign(initwin, {
