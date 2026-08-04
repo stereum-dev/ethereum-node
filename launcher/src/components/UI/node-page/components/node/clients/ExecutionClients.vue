@@ -24,10 +24,12 @@
         @open-pruning="openPruning"
         @copy-jwt="copyJwt"
       />
-      <TransitionGroup name="fadeModal">
+      <Transition name="fadeModal">
         <ResyncModal v-if="item.isResyncModalOpen" icon-size="w-14" :item="item" @close-window="closeResyncModal(item)" />
+      </Transition>
+      <Transition name="fadeModal">
         <PrunningModal v-if="showPruningModal" :item="item" @cancel-warning="closePruning" />
-      </TransitionGroup>
+      </Transition>
     </div>
   </div>
 </template>

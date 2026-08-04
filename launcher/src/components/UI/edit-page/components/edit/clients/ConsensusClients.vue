@@ -15,7 +15,7 @@
       @mouseenter="mouseOver(item)"
     >
       <ClientLayout :client="item" />
-      <TransitionGroup name="slide-fade">
+      <Transition name="slide-fade">
         <GeneralMenu
           v-if="item.displayPluginMenu"
           :item="item"
@@ -24,7 +24,7 @@
           @delete-service="deleteService"
           @info-modal="infoModal"
         />
-      </TransitionGroup>
+      </Transition>
     </div>
   </div>
 </template>

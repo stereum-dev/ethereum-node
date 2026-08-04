@@ -43,7 +43,7 @@ const controlStore = useControlStore();
 const setupStore = useSetups();
 const footerStore = useFooter();
 
-const portStatus = ref(controlStore.portstatus.data || []);
+const portStatus = ref(controlStore.portstatus?.data || []);
 
 const matchingPorts = computed(() => {
   if (!Array.isArray(portStatus.value)) return [];

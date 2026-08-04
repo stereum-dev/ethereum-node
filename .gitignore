@@ -19,6 +19,9 @@ yarn-error.log*
 *.sln
 *.sw?
 
+#electron-vite output
+/launcher/out
+
 #Electron-builder output
 /launcher/dist_electron
 /launcher/coverage
