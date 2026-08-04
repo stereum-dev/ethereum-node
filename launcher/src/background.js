@@ -18,7 +18,10 @@ import path from "path";
 import { readFileSync, existsSync, mkdirSync, renameSync, readdir, rmSync } from "fs";
 import url from "url";
 import { checkSigningKeys, getSigningKeysWithQueueInfo } from "./backend/web3/CSM.js";
-const isDevelopment = process.env.NODE_ENV !== "production";
+// Use Electron's runtime packaged flag rather than process.env.NODE_ENV: after the
+// electron-vite migration NODE_ENV is no longer statically inlined into the main
+// bundle, so it is undefined in packaged builds (which wrongly made isDevelopment true).
+const isDevelopment = !app.isPackaged;
 const nodeConnection = new NodeConnection();
 const storageService = new StorageService();
 const taskManager = new TaskManager(nodeConnection);
