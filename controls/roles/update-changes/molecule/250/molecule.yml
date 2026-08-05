@@ -4,7 +4,7 @@
 driver:
   name: docker
 platforms:
-  - name: "update-changes--2.4.10--ubuntu-26.04"
+  - name: "update-changes--2.5.0--ubuntu-26.04"
     image: ubuntu:resolute
   # - name: "configure-updates--default--centos-8"
   #   image: geerlingguy/docker-centos8-ansible

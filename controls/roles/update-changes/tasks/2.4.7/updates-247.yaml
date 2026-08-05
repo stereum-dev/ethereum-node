@@ -16,8 +16,8 @@
   loop_control:
     loop_var: config_file
 
-# The ValidatorEjector oracle allowlist refresh moved to 2.4.10
-# (tasks/2.4.10/oracle_allowlist_changes.yaml) with the current on-chain member
+# The ValidatorEjector oracle allowlist refresh moved to 2.5.0
+# (tasks/2.5.0/oracle_allowlist_changes.yaml) with the current on-chain member
 # set. Only one oracle-allowlist script may be active at a time, otherwise the
 # scripts overwrite each other every run (idempotence failure), so ejector_changes
 # is no longer included here.
