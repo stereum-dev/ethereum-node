@@ -2,7 +2,7 @@
 - name: Upgrade all packages
   yum:
     name: '*'
-    state: latest # noqa 403 package-latest
+    state: latest # noqa package-latest
   changed_when: "'molecule-notest' not in ansible_skip_tags"
 
 - name: Install epel-release

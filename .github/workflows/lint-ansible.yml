@@ -24,9 +24,8 @@ jobs:
       - name: yamllint
         run: poetry run yamllint .
         working-directory: ./controls
-      # Informational only: the tree currently carries a large ansible-lint
-      # backlog (fqcn, name, var-naming), so this must not gate merges yet.
+      # Blocking. The existing backlog is demoted to warnings in controls/.ansible-lint,
+      # so this fails only on rule types that are not already violated.
       - name: ansible-lint
         run: poetry run ansible-lint
         working-directory: ./controls
-        continue-on-error: true
