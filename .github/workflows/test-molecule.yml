@@ -27,7 +27,6 @@ jobs:
         run: |
           pip install ansible==13.3.0
           pip install molecule==25.12.0
-          pip install "molecule[docker.lint]"
           pip install molecule-plugins==25.8.12
           pip install "molecule-plugins[docker]"
           pip install molecule-hetznercloud
@@ -38,14 +37,11 @@ jobs:
         run: |
           /opt/pipx/venvs/ansible-core/bin/python -m pip install ansible==13.3.0
           /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule==25.12.0
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule[docker.lint]"
           /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-plugins==25.8.12
           /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule-plugins[docker]"
           /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-hetznercloud
           /opt/pipx/venvs/ansible-core/bin/python -m pip install docker
           /opt/pipx/venvs/ansible-core/bin/python -m pip install hcloud
-      - name: Install ansible-lint
-        run: sudo apt-get install -y ansible-lint
       - name: Molecule version
         run: molecule --version
         env:
@@ -89,7 +85,6 @@ jobs:
         run: |
           pip install ansible==13.3.0
           pip install molecule==25.12.0
-          pip install "molecule[docker.lint]"
           pip install molecule-plugins==25.8.12
           pip install "molecule-plugins[docker]"
           pip install molecule-hetznercloud
@@ -100,14 +95,11 @@ jobs:
         run: |
           /opt/pipx/venvs/ansible-core/bin/python -m pip install ansible==13.3.0
           /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule==25.12.0
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule[docker.lint]"
           /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-plugins==25.8.12
           /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule-plugins[docker]"
           /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-hetznercloud
           /opt/pipx/venvs/ansible-core/bin/python -m pip install docker
           /opt/pipx/venvs/ansible-core/bin/python -m pip install hcloud
-      - name: Install ansible-lint
-        run: sudo apt-get install -y ansible-lint
       - name: Molecule version
         run: molecule --version
         env:
@@ -254,7 +246,6 @@ jobs:
         run: |
           pip install ansible==13.3.0
           pip install molecule==25.12.0
-          pip install "molecule[docker.lint]"
           pip install molecule-plugins==25.8.12
           pip install "molecule-plugins[docker]"
           pip install molecule-hetznercloud
@@ -265,14 +256,11 @@ jobs:
         run: |
           /opt/pipx/venvs/ansible-core/bin/python -m pip install ansible==13.3.0
           /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule==25.12.0
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule[docker.lint]"
           /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-plugins==25.8.12
           /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule-plugins[docker]"
           /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-hetznercloud
           /opt/pipx/venvs/ansible-core/bin/python -m pip install docker
           /opt/pipx/venvs/ansible-core/bin/python -m pip install hcloud
-      - name: Install ansible-lint
-        run: sudo apt-get install -y ansible-lint
       - name: Molecule version
         run: molecule --version
         env:
@@ -367,7 +355,6 @@ jobs:
         run: |
           pip install ansible==13.3.0
           pip install molecule==25.12.0
-          pip install "molecule[docker.lint]"
           pip install molecule-plugins==25.8.12
           pip install "molecule-plugins[docker]"
           pip install molecule-hetznercloud
@@ -378,14 +365,11 @@ jobs:
         run: |
           /opt/pipx/venvs/ansible-core/bin/python -m pip install ansible==13.3.0
           /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule==25.12.0
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule[docker.lint]"
           /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-plugins==25.8.12
           /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule-plugins[docker]"
           /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-hetznercloud
           /opt/pipx/venvs/ansible-core/bin/python -m pip install docker
           /opt/pipx/venvs/ansible-core/bin/python -m pip install hcloud
-      - name: Install ansible-lint
-        run: sudo apt-get install -y ansible-lint
       - name: Molecule version
         run: molecule --version
         env:
@@ -474,7 +458,6 @@ jobs:
         run: |
           pip install ansible==13.3.0
           pip install molecule==25.12.0
-          pip install "molecule[docker.lint]"
           pip install molecule-plugins==25.8.12
           pip install "molecule-plugins[docker]"
           pip install molecule-hetznercloud
@@ -485,14 +468,11 @@ jobs:
         run: |
           /opt/pipx/venvs/ansible-core/bin/python -m pip install ansible==13.3.0
           /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule==25.12.0
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule[docker.lint]"
           /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-plugins==25.8.12
           /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule-plugins[docker]"
           /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-hetznercloud
           /opt/pipx/venvs/ansible-core/bin/python -m pip install docker
           /opt/pipx/venvs/ansible-core/bin/python -m pip install hcloud
-      - name: Install ansible-lint
-        run: sudo apt-get install -y ansible-lint
       - name: Molecule version
         run: molecule --version
         env:
@@ -531,7 +511,6 @@ jobs:
         run: |
           pip install ansible==13.3.0
           pip install molecule==25.12.0
-          pip install "molecule[docker.lint]"
           pip install molecule-plugins==25.8.12
           pip install "molecule-plugins[docker]"
           pip install molecule-hetznercloud
@@ -542,14 +521,11 @@ jobs:
         run: |
           /opt/pipx/venvs/ansible-core/bin/python -m pip install ansible==13.3.0
           /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule==25.12.0
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule[docker.lint]"
           /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-plugins==25.8.12
           /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule-plugins[docker]"
           /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-hetznercloud
           /opt/pipx/venvs/ansible-core/bin/python -m pip install docker
           /opt/pipx/venvs/ansible-core/bin/python -m pip install hcloud
-      - name: Install ansible-lint
-        run: sudo apt-get install -y ansible-lint
       - name: Molecule version
         run: molecule --version
         env:
@@ -592,7 +568,6 @@ jobs:
         run: |
           pip install ansible==13.3.0
           pip install molecule==25.12.0
-          pip install "molecule[docker.lint]"
           pip install molecule-plugins==25.8.12
           pip install "molecule-plugins[docker]"
           pip install molecule-hetznercloud
@@ -603,14 +578,11 @@ jobs:
         run: |
           /opt/pipx/venvs/ansible-core/bin/python -m pip install ansible==13.3.0
           /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule==25.12.0
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule[docker.lint]"
           /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-plugins==25.8.12
           /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule-plugins[docker]"
           /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-hetznercloud
           /opt/pipx/venvs/ansible-core/bin/python -m pip install docker
           /opt/pipx/venvs/ansible-core/bin/python -m pip install hcloud
-      - name: Install ansible-lint
-        run: sudo apt-get install -y ansible-lint
       - name: Molecule version
         run: molecule --version
         env:
@@ -654,7 +626,6 @@ jobs:
         run: |
           pip install ansible==13.3.0
           pip install molecule==25.12.0
-          pip install "molecule[docker.lint]"
           pip install molecule-plugins==25.8.12
           pip install "molecule-plugins[docker]"
           pip install molecule-hetznercloud
@@ -665,14 +636,11 @@ jobs:
         run: |
           /opt/pipx/venvs/ansible-core/bin/python -m pip install ansible==13.3.0
           /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule==25.12.0
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule[docker.lint]"
           /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-plugins==25.8.12
           /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule-plugins[docker]"
           /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-hetznercloud
           /opt/pipx/venvs/ansible-core/bin/python -m pip install docker
           /opt/pipx/venvs/ansible-core/bin/python -m pip install hcloud
-      - name: Install ansible-lint
-        run: sudo apt-get install -y ansible-lint
       - name: Molecule version
         run: molecule --version
         env:
