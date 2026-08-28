@@ -2,18 +2,18 @@
 
 [[package]]
 name = "ansible"
-version = "13.3.0"
+version = "14.3.1"
 description = "Radically simple IT automation"
 optional = false
 python-versions = ">=3.12"
 groups = ["main"]
 files = [
-    {file = "ansible-13.3.0-py3-none-any.whl", hash = "sha256:59638dc893088353254b2e589ac732012a0a005ad29d8d859ffecf52b5c1dc90"},
-    {file = "ansible-13.3.0.tar.gz", hash = "sha256:7e7ed052c8ee7b1449fb285d0e1dac0029f6440c70ce9f473af6c1a31887bb84"},
+    {file = "ansible-14.3.1-py3-none-any.whl", hash = "sha256:efa64b9aa99549d5ad35fa4dadedc258371138db5dc174f47dc026630eda90c9"},
+    {file = "ansible-14.3.1.tar.gz", hash = "sha256:98d4ad2b355feac8dc04d99e8377d6cb801b1d58bbfadd6d80534e4607fb5c4d"},
 ]
 
 [package.dependencies]
-ansible-core = ">=2.20.2,<2.21.0"
+ansible-core = ">=2.21.3,<2.22.0"
 
 [[package]]
 name = "ansible-compat"
@@ -36,14 +36,14 @@ subprocess-tee = ">=0.4.1"
 
 [[package]]
 name = "ansible-core"
-version = "2.20.7"
+version = "2.21.3"
 description = "Radically simple IT automation"
 optional = false
 python-versions = ">=3.12"
 groups = ["main"]
 files = [
-    {file = "ansible_core-2.20.7-py3-none-any.whl", hash = "sha256:f4be63a9a8b6bb5f4fc68d41f8582f5b289b1ee1db0600caab8b3a660b9d7ddc"},
-    {file = "ansible_core-2.20.7.tar.gz", hash = "sha256:84d4097a28e816e8bf8066307088f833837db9efdc9dc6716b43253de3b14106"},
+    {file = "ansible_core-2.21.3-py3-none-any.whl", hash = "sha256:9e7dd367f7dc5d5e9fc5ae1baf8af9c4edc09e916a73a40108a3f32e3ad93f10"},
+    {file = "ansible_core-2.21.3.tar.gz", hash = "sha256:4194fbd82273cbacfd06d86d74d2d7168c3c4b8426c03e93562cd7217f811ae1"},
 ]
 
 [package.dependencies]
@@ -407,24 +407,6 @@ files = [
 colorama = {version = "*", markers = "platform_system == \"Windows\""}
 
 [[package]]
-name = "click-help-colors"
-version = "0.9.4"
-description = "Colorization of help messages in Click"
-optional = false
-python-versions = "*"
-groups = ["main"]
-files = [
-    {file = "click-help-colors-0.9.4.tar.gz", hash = "sha256:f4cabe52cf550299b8888f4f2ee4c5f359ac27e33bcfe4d61db47785a5cc936c"},
-    {file = "click_help_colors-0.9.4-py3-none-any.whl", hash = "sha256:b33c5803eeaeb084393b1ab5899dc5476c7196b87a18713045afe76f840b42db"},
-]
-
-[package.dependencies]
-click = ">=7.0,<9"
-
-[package.extras]
-dev = ["mypy", "pytest"]
-
-[[package]]
 name = "colorama"
 version = "0.4.6"
 description = "Cross-platform colored terminal text."
@@ -513,14 +495,14 @@ files = [
 
 [[package]]
 name = "docker"
-version = "7.1.0"
+version = "7.2.0"
 description = "A Python library for the Docker Engine API."
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
 files = [
-    {file = "docker-7.1.0-py3-none-any.whl", hash = "sha256:c96b93b7f0a746f9e77d325bcfb87422a3d8bd4f03136ae8a85b37f1898d5fc0"},
-    {file = "docker-7.1.0.tar.gz", hash = "sha256:ad8c70e6e3f8926cb8a92619b832b4ea5299e2831c14284663184e200546fa6c"},
+    {file = "docker-7.2.0-py3-none-any.whl", hash = "sha256:a3f45fdeb9165e2d25d9a1d02ddf3bc70fb572cf5ebbf9b58558c22caf29b71f"},
+    {file = "docker-7.2.0.tar.gz", hash = "sha256:cebb93773d334f778e023a7ee352a8d6e13ab1bd3b863a4d4a59dec897df43ac"},
 ]
 
 [package.dependencies]
@@ -566,14 +548,14 @@ files = [
 
 [[package]]
 name = "hcloud"
-version = "2.16.0"
+version = "2.23.0"
 description = "Official Hetzner Cloud python library"
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "hcloud-2.16.0-py3-none-any.whl", hash = "sha256:37b3ef30be1034299879d1da89b2ed34e907b79796b684e16d8d6f76bd4a3c47"},
-    {file = "hcloud-2.16.0.tar.gz", hash = "sha256:eb1acb3115bc0b356b450ad23256873b58311b357a49625a8fe0cbaba2db509b"},
+    {file = "hcloud-2.23.0-py3-none-any.whl", hash = "sha256:5a3fa1bbd1f87bfc5f0c726caebe041b9e1119b4361aafabc12fad284a2c445a"},
+    {file = "hcloud-2.23.0.tar.gz", hash = "sha256:c12dce3f14404ea342d79236292a15fbc4ceeb7861724a09dd3fe60cef513e0b"},
 ]
 
 [package.dependencies]
@@ -581,8 +563,8 @@ python-dateutil = ">=2.7.5"
 requests = ">=2.20"
 
 [package.extras]
-docs = ["myst-parser (>=5,<5.1)", "sphinx (>=9,<9.2)", "sphinx-rtd-theme (>=3,<3.2)", "watchdog (>=6,<6.1)"]
-test = ["coverage (>=7.13,<7.14)", "mypy (>=1.19,<1.20)", "pylint (>=4,<4.1)", "pytest (>=9,<9.1)", "pytest-cov (>=7,<7.1)", "types-python-dateutil", "types-requests"]
+docs = ["myst-parser (>=5,<5.2)", "sphinx (>=9,<9.2)", "sphinx-rtd-theme (>=3,<3.2)", "watchdog (>=6,<6.1)"]
+test = ["coverage (>=7.15,<7.16)", "mypy (>=2.3,<2.4)", "pylint (>=4,<4.1)", "pytest (>=9,<9.2)", "pytest-cov (>=7,<7.2)", "types-python-dateutil", "types-requests"]
 
 [[package]]
 name = "idna"
@@ -791,21 +773,20 @@ files = [
 
 [[package]]
 name = "molecule"
-version = "25.12.0"
+version = "26.8.0"
 description = "Molecule aids in the development and testing of Ansible roles"
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "molecule-25.12.0-py3-none-any.whl", hash = "sha256:3df4fc034f3204efce7247b5b1087b2a7e411e27374a05fe96c6c676656e82bd"},
-    {file = "molecule-25.12.0.tar.gz", hash = "sha256:b226bf1be67ce0fa30c726aab226063f9443e561d7e3d048f55dfb2ee51adbd6"},
+    {file = "molecule-26.8.0-py3-none-any.whl", hash = "sha256:69a2a07dad27d362b9209024c9d3f0daac29da6637945fec5098deea448e3b52"},
+    {file = "molecule-26.8.0.tar.gz", hash = "sha256:506a0a0416683f4e404a42ce8c56a980cd93b7c802258222c1a9736b0f4ec37c"},
 ]
 
 [package.dependencies]
 ansible-compat = ">=25.1.4"
-ansible-core = ">=2.15.0"
+ansible-core = ">=2.15.0,<2.17.dev0 || >=2.18.dev0"
 click = ">=8.0,<9"
-click-help-colors = ">=0.9.4"
 enrich = ">=1.2.7"
 jinja2 = ">=2.11.3"
 jsonschema = ">=4.9.1"
@@ -817,14 +798,14 @@ wcmatch = ">=8.1.2"
 
 [[package]]
 name = "molecule-hetznercloud"
-version = "2.7.0"
+version = "2.8.0"
 description = "Molecule driver for Hetzner Cloud"
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "molecule_hetznercloud-2.7.0-py3-none-any.whl", hash = "sha256:48f07c2975fb31d2943c2a569f028da34400a2e35a937241023e409cea3f9b42"},
-    {file = "molecule_hetznercloud-2.7.0.tar.gz", hash = "sha256:abc803d0eab4aeeec6e6a4012d6a22a839146f36671da55201bc85427823f1a8"},
+    {file = "molecule_hetznercloud-2.8.0-py3-none-any.whl", hash = "sha256:129f670e6eb4153cd311c43ea565eeea12d094b78a3a09740a35c446579ea932"},
+    {file = "molecule_hetznercloud-2.8.0.tar.gz", hash = "sha256:717c3c8811e5d2ad7afe5fefe6b7f6b7d68245318a62cdedda392b6bc69350bb"},
 ]
 
 [package.dependencies]
@@ -834,18 +815,18 @@ python-dateutil = ">=2.7.5"
 requests = ">=2.20"
 
 [package.extras]
-test = ["pytest (>=9,<9.1)", "pytest-ansible (>=25.12,<25.13)", "pytest-cov (>=7,<7.1)", "pytest-xdist (>=3.3.1,<4.0)", "tox (>=4.11.3,<5.0)"]
+test = ["pytest (>=9,<9.2)", "pytest-ansible (>=26.6,<26.7)", "pytest-cov (>=7,<7.2)", "pytest-xdist (>=3.3.1,<4.0)", "tox (>=4.11.3,<5.0)"]
 
 [[package]]
 name = "molecule-plugins"
-version = "25.8.12"
+version = "26.7.15"
 description = "Molecule Plugins"
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "molecule_plugins-25.8.12-py3-none-any.whl", hash = "sha256:c5b8ceb209a5ff87326631d60408f8d08b9431b2e339dad4c620130b50279ce0"},
-    {file = "molecule_plugins-25.8.12.tar.gz", hash = "sha256:75f32763e90275bfc24bcc0d27b9bb22ac973658bf902b2e3e8af8e2a1c32083"},
+    {file = "molecule_plugins-26.7.15-py3-none-any.whl", hash = "sha256:191dfa7fd965c637e3b61d0929f2fb741f0df1181a250df62eca3657b1182794"},
+    {file = "molecule_plugins-26.7.15.tar.gz", hash = "sha256:df4cab8d9e13ed448fc33d72af1fbae54883e9255a42c021ae7e875dfd3374c1"},
 ]
 
 [package.dependencies]
@@ -859,7 +840,6 @@ docker = ["docker (>=4.3.1)", "requests", "selinux ; sys_platform == \"linux\"",
 gce = ["google-auth (>=2.28.2)", "requests (>=2.31.0)"]
 openstack = ["openstacksdk (>=1.1.0)"]
 selinux = ["selinux ; sys_platform == \"linux\"", "selinux ; sys_platform == \"linux2\""]
-test = ["molecule[test] (>=25.1.0)", "pytest-helpers-namespace (>=2019.1.8)"]
 vagrant = ["python-vagrant"]
 
 [[package]]
@@ -1560,4 +1540,4 @@ dev = ["doc8", "flake8", "flake8-import-order", "rstcheck[sphinx]", "ruff", "sph
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12"
-content-hash = "2aa61867be55335953059eb8cf060ced72f32a834c68c63da5827c245b6ac540"
+content-hash = "c99306adaeaaf36e99847f44dd0f4074958fe2431d004831f9e7ce53e8c75fcd"
