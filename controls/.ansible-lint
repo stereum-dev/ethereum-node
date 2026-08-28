@@ -1,0 +1,28 @@
+---
+# The tree carries a large stylistic backlog. These rules are demoted to warnings
+# so the gate blocks only on rule types that are not already violated - anything
+# new, plus real syntax errors. Remove entries as the backlog gets cleaned up.
+warn_list:
+  - args
+  - command-instead-of-module
+  - command-instead-of-shell
+  - fqcn
+  - ignore-errors
+  - jinja
+  - key-order
+  - latest
+  - name
+  - no-changed-when
+  - no-free-form
+  - no-handler
+  - package-latest
+  - risky-file-permissions
+  - risky-shell-pipe
+  - schema
+  - role-name
+  - var-naming
+
+# Legacy per-role test playbooks: the role is not resolvable from that directory,
+# which ansible-lint reports as a syntax error. Not real syntax problems.
+exclude_paths:
+  - roles/*/tests/

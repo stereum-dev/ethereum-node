@@ -112,7 +112,6 @@ export default {
       mainnet: "mainnet",
       sepolia: "sepolia",
       gnosis: "gnosis",
-      holesky: "holesky",
       hoodi: "hoodi",
     }),
     ...mapWritableState(useNodeManage, {
@@ -177,20 +176,17 @@ export default {
       this.checkPointSync = item.url;
     },
     setSelectedLinks() {
-      switch (this.currentNetwork.id) {
-        case 1:
+      switch (this.currentNetwork.network) {
+        case "mainnet":
           this.selectedLinks = this.mainnet;
           break;
-        case 2:
+        case "sepolia":
           this.selectedLinks = this.sepolia;
           break;
-        case 3:
+        case "gnosis":
           this.selectedLinks = this.gnosis;
           break;
-        case 4:
-          this.selectedLinks = this.holesky;
-          break;
-        case 5:
+        case "hoodi":
           this.selectedLinks = this.hoodi;
           break;
         default:

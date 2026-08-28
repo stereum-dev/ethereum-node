@@ -1,0 +1,31 @@
+name: Lint Ansible
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install Poetry
+        run: pipx install poetry
+      - name: Install dependencies
+        run: poetry install
+        working-directory: ./controls
+      - name: yamllint
+        run: poetry run yamllint .
+        working-directory: ./controls
+      # Blocking. The existing backlog is demoted to warnings in controls/.ansible-lint,
+      # so this fails only on rule types that are not already violated.
+      - name: ansible-lint
+        run: poetry run ansible-lint
+        working-directory: ./controls

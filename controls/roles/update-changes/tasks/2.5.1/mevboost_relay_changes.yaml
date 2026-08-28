@@ -1,0 +1,57 @@
+---
+- name: Read service file
+  slurp:
+    src: "{{ config_file.path }}"
+  register: service_configuration_raw
+
+- name: Parse service's configuration
+  set_fact:
+    service_configuration: "{{ service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+# Drop the retired bloXroute MAX PROFIT and Manifold relays and refresh the rotated
+# Flashbots Sepolia pubkey. Holesky is left alone. No-op once applied.
+- name: MEV-Boost Relay Changes
+  when:
+    - service_configuration.service == "FlashbotsMevBoostService"
+    - service_configuration.entrypoint is defined
+    - '"-relays" in service_configuration.entrypoint'
+    - (service_configuration.entrypoint | length) > (service_configuration.entrypoint.index("-relays") + 1)
+  block:
+    - name: Collect the configured relays
+      set_fact:
+        mevboost_relays_old: "{{ service_configuration.entrypoint[service_configuration.entrypoint.index('-relays') + 1] }}"
+        mevboost_dead_relay_hosts: 'bloxroute\.max-profit\.blxrbdn\.com|mainnet-relay\.securerpc\.com'
+        mevboost_stale_sepolia_pubkey: "0x845bd072b7cd566f02faeb0a4033ce9399e42839ced64e8b2adcfc859ed1e8e1a5a293336a49feac6d9a5edb779be53a"
+        mevboost_current_sepolia_pubkey: "0xafa4c6985aa049fb79dd37010438cfebeb0f2bd42b115b89dd678dab0670c1de38da0c4e9138c9290a398ecd9a0b3110"
+
+    - name: Drop retired relays and refresh the Sepolia pubkey
+      set_fact:
+        mevboost_relays_new: "{{ mevboost_relays_old.split(',') | reject('search', mevboost_dead_relay_hosts) | map('regex_replace', mevboost_stale_sepolia_pubkey, mevboost_current_sepolia_pubkey) | join(',') }}"
+
+    # mev-boost will not start with an empty -relays, so leave such configs as they are.
+    - name: Warn when every configured relay has been retired
+      when:
+        - (mevboost_relays_old | length) > 0
+        - (mevboost_relays_new | length) == 0
+      debug:
+        msg: >-
+          Every relay configured for MEV-Boost service {{ service_configuration.id }} has been
+          retired. Leaving the configuration untouched so mev-boost keeps starting - select a
+          relay in Stereum (Edit Node -> MEV-Boost) to restore MEV rewards.
+
+    - name: Apply the corrected relay list
+      when:
+        - mevboost_relays_new != mevboost_relays_old
+        - (mevboost_relays_new | length) > 0
+      block:
+        - name: Update the configured relays
+          replace:
+            path: "{{ config_file.path }}"
+            regexp: "{{ mevboost_relays_old | regex_escape }}"
+            replace: "{{ mevboost_relays_new }}"
+
+        - name: Touch service config file to trigger service restart
+          file:
+            path: "{{ config_file.path }}"
+            state: touch
+          changed_when: false # to pass idempotence test
