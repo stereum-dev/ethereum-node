@@ -120,7 +120,7 @@ test("lodestar validator import", async () => {
       /Searching peers/.test(BCstatus.stdout) &&
       /Syncing/.test(BCstatus.stdout) &&
       /Genesis fetched from the beacon node/.test(VCstatus.stdout) &&
-      /Verified connected beacon node and validator have same the config/.test(VCstatus.stdout) &&
+      /Verified connected beacon node and validator have the same config/.test(VCstatus.stdout) &&
       /REST api server keymanager bearer access token located at/.test(VCstatus.stdout)
     ) {
       condition = true;
@@ -161,6 +161,6 @@ test("lodestar validator import", async () => {
 
   //check lighthouse VC logs
   expect(VCstatus.stdout).toMatch(/Genesis fetched from the beacon node/);
-  expect(VCstatus.stdout).toMatch(/Verified connected beacon node and validator have same the config/);
+  expect(VCstatus.stdout).toMatch(/Verified connected beacon node and validator have the same config/);
   expect(VCstatus.stdout).toMatch(/REST api server keymanager bearer access token located at/);
 });
