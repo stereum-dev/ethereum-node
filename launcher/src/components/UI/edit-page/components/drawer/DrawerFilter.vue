@@ -78,7 +78,6 @@ const networkFilter = (service) => {
   switch (currentNetwork.value) {
     case "mainnet":
     case "hoodi":
-    case "holesky":
       return true;
     case "sepolia":
       return service.service !== "SSVNetworkService" && service.service !== "SSVDKGService";

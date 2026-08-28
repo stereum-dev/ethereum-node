@@ -194,15 +194,6 @@ export const useNodeManage = defineStore("nodeManage", {
           support: ["staking", "stereum on arm", "archive"],
         },
         {
-          id: 4,
-          name: "Holesky Testnet",
-          network: "holesky",
-          icon: "/img/icon/network-icons/ethereum-testnet-icon.png",
-          currencyIcon: "/img/icon/control-page-icons/network-currency-icons/network-currency-icons-goerli-testnet.png",
-          dataEndpoint: "https://holesky.beaconcha.in/api/v1",
-          support: ["staking", "ssv.network", "stereum on arm", "archive", "obol", "lidoobol", "lidossv", "lidocsm"],
-        },
-        {
           id: 5,
 
           name: "OP Sepolia",

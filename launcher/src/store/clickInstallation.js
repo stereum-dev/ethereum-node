@@ -342,32 +342,6 @@ export const useClickInstall = defineStore("clickInstallation", {
           url: "https://checkpoint.gnosischain.com/",
         },
       ],
-      holesky: [
-        {
-          id: 1,
-          name: "Lodestar",
-          icon: "/img/icon/checkpoint-sync-icons/lodestar-checkpoint-icon.png",
-          url: "https://beaconstate-holesky.chainsafe.io",
-        },
-        {
-          id: 2,
-          name: "BeaconState.info",
-          icon: "",
-          url: "https://holesky.beaconstate.info",
-        },
-        {
-          id: 3,
-          name: "EthStaker",
-          icon: "/img/icon/checkpoint-sync-icons/ethstaker-checkpoint-icon.png",
-          url: "https://holesky.beaconstate.ethstaker.cc",
-        },
-        {
-          id: 4,
-          name: "EF DevOps",
-          icon: "/img/icon/checkpoint-sync-icons/ef-devops-checkpoint-icon.png",
-          url: "https://checkpoint-sync.holesky.ethpandaops.io",
-        },
-      ],
       hoodi: [
         {
           id: 1,
