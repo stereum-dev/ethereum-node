@@ -1,0 +1,73 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Read FlashbotsMevBoostService files
+      slurp:
+        src: "/etc/stereum/services/{{ item }}.yaml"
+      loop:
+        - mev00001-0000-0000-0000-000000000001
+        - mev00002-0000-0000-0000-000000000002
+        - mev00003-0000-0000-0000-000000000003
+        - mev00004-0000-0000-0000-000000000004
+        - mev00005-0000-0000-0000-000000000005
+      register: mevboost_configuration_raw
+
+    - name: Parse FlashbotsMevBoostService configurations
+      set_fact:
+        mevboost_relays: >-
+          {{ mevboost_relays | default({}) | combine({
+               item.item: (item['content'] | b64decode | from_yaml).entrypoint[
+                 (item['content'] | b64decode | from_yaml).entrypoint.index('-relays') + 1
+               ].split(',')
+             }) }}
+      loop: "{{ mevboost_configuration_raw.results }}"
+      loop_control:
+        label: "{{ item.item }}"
+
+    - debug:
+        msg: "{{ mevboost_relays }}"
+
+    - name: Assert retired relays were dropped and live relays kept in order
+      assert:
+        that:
+          - (mevboost_relays['mev00001-0000-0000-0000-000000000001'] | length) == 2
+          - mevboost_relays['mev00001-0000-0000-0000-000000000001'][0] is search('boost-relay\.flashbots\.net')
+          - mevboost_relays['mev00001-0000-0000-0000-000000000001'][1] is search('global\.titanrelay\.xyz')
+          - not (mevboost_relays['mev00001-0000-0000-0000-000000000001'] | join(',') is search('mainnet-relay\.securerpc\.com'))
+          - not (mevboost_relays['mev00001-0000-0000-0000-000000000001'] | join(',') is search('bloxroute\.max-profit\.blxrbdn\.com'))
+        fail_msg: "retired relays not dropped: {{ mevboost_relays['mev00001-0000-0000-0000-000000000001'] }}"
+
+    - name: Assert Sepolia relay pubkey was refreshed
+      assert:
+        that:
+          - (mevboost_relays['mev00002-0000-0000-0000-000000000002'] | length) == 1
+          - mevboost_relays['mev00002-0000-0000-0000-000000000002'][0] is search('0xafa4c6985aa049fb79dd37010438cfebeb0f2bd42b115b89dd678dab0670c1de38da0c4e9138c9290a398ecd9a0b3110')
+          - not (mevboost_relays['mev00002-0000-0000-0000-000000000002'][0] is search('0x845bd072'))
+          - mevboost_relays['mev00002-0000-0000-0000-000000000002'][0] is search('boost-relay-sepolia\.flashbots\.net')
+        fail_msg: "sepolia relay pubkey not refreshed: {{ mevboost_relays['mev00002-0000-0000-0000-000000000002'] }}"
+
+    - name: Assert a config with only retired relays was left untouched
+      assert:
+        that:
+          - (mevboost_relays['mev00003-0000-0000-0000-000000000003'] | length) == 2
+          - mevboost_relays['mev00003-0000-0000-0000-000000000003'] | join(',') is search('mainnet-relay\.securerpc\.com')
+          - mevboost_relays['mev00003-0000-0000-0000-000000000003'] | join(',') is search('bloxroute\.max-profit\.blxrbdn\.com')
+        fail_msg: "all-retired config should have been left alone: {{ mevboost_relays['mev00003-0000-0000-0000-000000000003'] }}"
+
+    - name: Assert an already healthy config was left untouched
+      assert:
+        that:
+          - (mevboost_relays['mev00004-0000-0000-0000-000000000004'] | length) == 2
+          - mevboost_relays['mev00004-0000-0000-0000-000000000004'][0] is search('boost-relay\.flashbots\.net')
+          - mevboost_relays['mev00004-0000-0000-0000-000000000004'][1] is search('global\.titanrelay\.xyz')
+        fail_msg: "healthy config was modified: {{ mevboost_relays['mev00004-0000-0000-0000-000000000004'] }}"
+
+    - name: Assert the holesky relay was left untouched
+      assert:
+        that:
+          - (mevboost_relays['mev00005-0000-0000-0000-000000000005'] | length) == 1
+          - mevboost_relays['mev00005-0000-0000-0000-000000000005'][0] is search('relay-stag\.ultrasound\.money')
+        fail_msg: "holesky relay should have been left alone: {{ mevboost_relays['mev00005-0000-0000-0000-000000000005'] }}"
+# EOF
