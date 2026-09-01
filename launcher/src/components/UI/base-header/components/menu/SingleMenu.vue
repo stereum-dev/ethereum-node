@@ -10,7 +10,7 @@ import { useRouter } from 'vue-router'; import { useNodeHeader } from '@/store/n
 
 <script setup>
 import { useNodeHeader } from "@/store/nodeHeader";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { computed } from "vue";
 
 const props = defineProps({
@@ -22,9 +22,12 @@ const props = defineProps({
 
 const headerStore = useNodeHeader();
 const router = useRouter();
+const route = useRoute();
 
 const handleClick = () => {
   if (props.item.name === "Settings") {
+    // opened from the login screen means there is no node connection to render the node layout for
+    headerStore.settingsStandalone = route.path === "/login";
     router.push("/setting");
   } else {
     headerStore.setMenuModal(props.item.name);

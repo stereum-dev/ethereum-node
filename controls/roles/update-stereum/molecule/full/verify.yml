@@ -5,53 +5,57 @@
   hosts: all
   gather_facts: false
   tasks:
+    - name: Waiting for the server to come back after the update reboot
+      ansible.builtin.wait_for_connection:
+        delay: 15
+        timeout: 600
 
-  - name: Waiting for updates to finish (reboot, script after reboot "stereum-services-update.sh")
-    pause:
-      seconds: 60
+    - name: Waiting for updates to finish (reboot, script after reboot "stereum-services-update.sh")
+      raw: docker inspect --format={% raw %}'{{ .Config.Image }}'{% endraw %} stereum-9024aec6-12a8-456a-8096-ee7ef6f67167
+      register: beacon_container_tag
+      until: 'beacon_container_tag.rc == 0 and beacon_container_tag.stdout.startswith("sigp/lighthouse:") and "v2.0.0" not in beacon_container_tag.stdout'
+      retries: 60
+      delay: 10
+      changed_when: false
 
-  # Stereum config files
-  - stat: path=/etc/stereum/stereum.yaml
-    register: stereum_config_file
-  - stat: path=/opt/stereum/ansible
-    register: stereum_ansible_dir
-  - debug:
-      msg: "{{ stereum_ansible_dir }}"
-  - name: Check for config
-    assert:
-      that:
-        - stereum_config_file.stat.exists
-        - stereum_ansible_dir.stat.isdir is defined
-        - stereum_ansible_dir.stat.isdir
+    # Stereum config files
+    - stat: path=/etc/stereum/stereum.yaml
+      register: stereum_config_file
+    - stat: path=/opt/stereum/ansible
+      register: stereum_ansible_dir
+    - debug:
+        msg: "{{ stereum_ansible_dir }}"
+    - name: Check for config
+      assert:
+        that:
+          - stereum_config_file.stat.exists
+          - stereum_ansible_dir.stat.isdir is defined
+          - stereum_ansible_dir.stat.isdir
 
-  # check for correct version of repository
-  - name: Get git hash
-    ansible.builtin.command: git show --format="%H" --no-patch
-    args:
-      chdir: "/opt/stereum/ansible"
-    register: git_hash
-  - debug:
-      msg: "{{ git_hash }}"
-  - name: Check for correct git hash
-    assert:
-      that:
-        - git_hash.stdout != "8544bf99fb62b44d0efe4cd8f981c31663335c21"
+    # check for correct version of repository
+    - name: Get git hash
+      ansible.builtin.command: git show --format="%H" --no-patch
+      args:
+        chdir: "/opt/stereum/ansible"
+      register: git_hash
+    - debug:
+        msg: "{{ git_hash }}"
+    - name: Check for correct git hash
+      assert:
+        that:
+          - git_hash.stdout != "c531dc2e89ec30c289e886fb3ff2a763e92b21d5"
 
-  # check for new version of docker container beacon
-  - raw: docker inspect --format={% raw %}'{{ .Config.Image }}'{% endraw %} stereum-f3a6cbe4-5e4b-4ba4-a0f2-2504b6750379
-    register: docker_container_tag
-  - name: check container tag version
-    assert:
-      that:
-        - docker_container_tag.stdout.startswith("sigp/lighthouse:")
+    # check for new version of docker container beacon
+    - raw: docker inspect --format={% raw %}'{{ .Config.Image }}'{% endraw %} stereum-f3a6cbe4-5e4b-4ba4-a0f2-2504b6750379
+      register: docker_container_tag
+    - name: check container tag version
+      assert:
+        that:
+          - docker_container_tag.stdout.startswith("sigp/lighthouse:")
 
-  - raw: docker inspect --format={% raw %}'{{ .Config.Image }}'{% endraw %} stereum-9024aec6-12a8-456a-8096-ee7ef6f67167
-    register: docker_container_tag
-  - name: check container tag version
-    assert:
-      that:
-        - docker_container_tag.stdout.startswith("sigp/lighthouse:")
-        - '"v2.0.0" not in docker_container_tag.stdout'
-
-
+    - name: check container tag version
+      assert:
+        that:
+          - beacon_container_tag.stdout.startswith("sigp/lighthouse:")
+          - '"v2.0.0" not in beacon_container_tag.stdout'
 # EOF
