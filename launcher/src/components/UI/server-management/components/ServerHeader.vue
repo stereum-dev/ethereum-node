@@ -6,6 +6,16 @@ import { ref, watchEffect, onMounted } from 'vue';
       <span class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-md text-sm font-semibold bg-neutral-900 text-white"
         >V {{ currentVersion ? currentVersion : "2.0" }}</span
       >
+      <!-- the node header is not mounted while logged out, so help & launcher settings are offered here -->
+      <div v-if="isLoginRoute" class="flex items-center gap-x-2">
+        <SingleMenu
+          v-for="item in launcherMenuItems"
+          :key="item.name"
+          :item="item"
+          @mouseenter="footerStore.cursorLocation = `${item.name}`"
+          @mouseleave="footerStore.cursorLocation = ''"
+        />
+      </div>
     </div>
 
     <div class="col-start-14 col-span-full w-full h-full grid grid-cols-12 grid-rows-5 items-center pr-2 pl-1">
@@ -45,6 +55,7 @@ import { useFooter } from "@/store/theFooter";
 import i18n from "@/includes/i18n";
 
 import ControlService from "@/store/ControlService";
+import SingleMenu from "@/components/UI/base-header/components/menu/SingleMenu.vue";
 
 const t = i18n.global.t;
 
@@ -65,6 +76,11 @@ const emit = defineEmits(["tabPicker"]);
 
 // Computed property to check if current route is '/login'
 const isLoginRoute = computed(() => route.path === "/login");
+
+const launcherMenuItems = [
+  { name: "Help", icon: "/img/icon/base-header-icons/header-help-button.png" },
+  { name: "Settings", icon: "/img/icon/base-header-icons/header-stereum-settings-button.png", path: "/setting" },
+];
 
 const tabTooltip = (tab) => {
   if (tab.name === "login") {

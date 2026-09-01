@@ -28,12 +28,15 @@
         "
       />
     </Transition>
+    <SupportModal v-if="headerStore.supportModalIsActive" @close-window="headerStore.setMenuModal(null)" />
   </div>
 </template>
 <script setup>
 import LogoButton from "../UI/server-management/components/LogoButton.vue";
 import TaskManager from "../UI/task-manager/TaskManager.vue";
 import MultiServerScreen from "../UI/server-management/MultiServerScreen.vue";
+import SupportModal from "../UI/base-header/components/modals/SupportModal.vue";
+import { useNodeHeader } from "@/store/nodeHeader";
 import { useServers } from "@/store/servers";
 import { useFooter } from "@/store/theFooter";
 import { useRouter } from "vue-router";
@@ -45,6 +48,7 @@ const t = i18n.global.t;
 
 const footerStore = useFooter();
 const serverStore = useServers();
+const headerStore = useNodeHeader();
 
 const router = useRouter();
 const langStore = useLangStore();

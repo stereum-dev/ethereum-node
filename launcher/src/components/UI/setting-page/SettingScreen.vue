@@ -1,5 +1,5 @@
 <template>
-  <base-layout>
+  <component :is="layoutComponent">
     <div class="setting-parent w-full h-full flex justify-center items-center">
       <div class="flex justify-start items-start w-56 h-full">
         <SideBar>
@@ -23,7 +23,7 @@
         </MainBox>
       </div>
     </div>
-  </base-layout>
+  </component>
 </template>
 <script setup>
 import SideBar from "./section/SideBar.vue";
@@ -43,11 +43,17 @@ import { useRouter } from "vue-router";
 import { useLangStore } from "@/store/languages";
 import { useNodeHeader } from "@/store/nodeHeader";
 import ControlService from "@/store/ControlService";
+import BaseLayout from "@/components/base/BaseLayout.vue";
+import StandaloneLayout from "@/components/base/StandaloneLayout.vue";
 
 const mainBox = ref("general");
 const router = useRouter();
 const langStore = useLangStore();
 const headerStore = useNodeHeader();
+
+// without a node connection the node layout would poll for services and pop the reconnect modal
+// over the settings, so the launcher settings render in a standalone shell instead
+const layoutComponent = computed(() => (headerStore.settingsStandalone ? StandaloneLayout : BaseLayout));
 
 const sidebarButtons = ref([
   { name: "general", label: "General" },

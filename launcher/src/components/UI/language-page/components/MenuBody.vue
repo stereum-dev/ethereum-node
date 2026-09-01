@@ -1,49 +1,36 @@
 <template>
-  <div
-    ref="scrollContainer"
-    class="w-full h-full col-start-8 col-span-full row-start-3 row-end-11 py-4 px-2 space-y-8 flex flex-col justify-center items-center overflow-y-auto scrollbar-thin scrollbar-thumb-rounded-full scrollbar-thumb-gray-300 scrollbar-track-gray-100 snap-y snap-mandatory"
-    @scroll="handleScroll"
-  >
-    <swiper
-      direction="vertical"
-      slides-per-view="auto"
-      space-between="30"
-      :effect="'coverflow'"
-      :grab-cursor="true"
-      :centered-slides="true"
-      :coverflow-effect="coverflowEffect"
-      :mousewheel="true"
-      :keyboard="true"
-      :scrollbar="true"
-      :modules="swiperModules"
-      class="w-full h-full space-y-2 overflow-y-auto scrollbar-thin scrollbar-thumb-rounded-full scrollbar-thumb-gray-300 scrollbar-track-gray-100 snap-y snap-mandatory"
-      @swiper="setThumbsSwiper"
-      @slideChange="playSoundBase(soundStore.change)"
-    >
-      <swiper-slide
-        v-for="(lang, index) in sortedLanguages"
-        :key="index"
-        class="swiper-slide shadow-sm shadow-black"
-        :class="{
-          selectedLanguage: lang.isSelected,
-        }"
-        @click="handleClick(lang, index)"
-      >
-        <img :src="lang.flag" :alt="`${lang.name} Flag`" class="col-start-1 col-span-3 w-10 h-10 rounded-full" />
-        <span class="col-start-4 col-span-full text-lg font-bold uppercase" :class="{ 'text-gray-700': selectedLanguage }">{{
-          lang.name
-        }}</span>
-      </swiper-slide>
-    </swiper>
+  <div class="w-full h-full col-start-8 col-span-full row-start-2 row-end-11 flex flex-col gap-3 py-4 px-2">
+    <input
+      v-model="searchTerm"
+      type="text"
+      placeholder="Search language..."
+      class="w-full shrink-0 bg-[#1E2429] text-gray-200 placeholder-gray-400 text-base rounded-md border border-[#33393E] px-4 py-2 focus:outline-none focus:border-[#4d7575]"
+    />
+
+    <div class="grow min-h-0 overflow-y-auto bg-[#1E2429] border border-[#4d7575] rounded-md p-2">
+      <ul class="grid grid-cols-2 gap-2">
+        <li
+          v-for="lang in filteredLanguages"
+          :key="lang.label"
+          class="h-16 px-2 flex items-center gap-2 bg-[#33393E] border border-[#33393E] rounded-md cursor-pointer hover:border-[#4d7575]"
+          :class="{ 'selected-language': lang.isSelected }"
+          @click="selectItem(lang)"
+        >
+          <img :src="lang.flag" :alt="`${lang.englishName} Flag`" class="w-9 h-9 rounded-full shrink-0" />
+          <span class="flex flex-col min-w-0">
+            <span class="text-base font-bold uppercase truncate text-gray-200">{{ lang.name }}</span>
+            <span class="text-xs truncate text-gray-400">{{ lang.englishName }}</span>
+          </span>
+        </li>
+      </ul>
+
+      <p v-if="!filteredLanguages.length" class="text-center text-gray-200 text-base mt-6">No language matches "{{ searchTerm }}"</p>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onBeforeMount, onMounted } from "vue";
-import { Swiper, SwiperSlide } from "swiper/vue";
-import "swiper/css";
-import "swiper/css/pagination";
-import { EffectCoverflow, Mousewheel, Keyboard, Scrollbar, Thumbs } from "swiper/modules";
 import { useLangStore } from "@/store/languages";
 import { useSoundStore } from "@/store/sound";
 import ControlService from "@/store/ControlService";
@@ -53,13 +40,18 @@ import i18n from "@/includes/i18n";
 const langStore = useLangStore();
 const router = useRouter();
 const soundStore = useSoundStore();
-const selectedLanguage = ref(null);
-const thumbsSwiper = ref(null);
-const swiperModules = [Mousewheel, Keyboard, Scrollbar, EffectCoverflow, Thumbs];
-const coverflowEffect = { rotate: 5, stretch: 0, depth: 100, modifier: 3 };
+const searchTerm = ref("");
 
 const sortedLanguages = computed(() => {
-  return [...langStore.langOptions].sort((a, b) => a.name.localeCompare(b.name));
+  return [...langStore.langOptions].sort((a, b) => a.englishName.localeCompare(b.englishName));
+});
+
+const filteredLanguages = computed(() => {
+  const term = searchTerm.value.trim().toLowerCase();
+  if (!term) return sortedLanguages.value;
+  return sortedLanguages.value.filter((lang) =>
+    [lang.name, lang.englishName, lang.label].some((value) => value.toLowerCase().includes(term))
+  );
 });
 
 onBeforeMount(async () => {
@@ -72,6 +64,7 @@ onBeforeMount(async () => {
 
 onMounted(async () => {
   await checkVolume();
+  await preselectSavedLanguage();
 });
 
 // langStore.settingPageIsVisible ? "/setting" :
@@ -105,13 +98,19 @@ const checkVolume = async () => {
   }
 };
 
-const setThumbsSwiper = (swiper) => {
-  thumbsSwiper.value = swiper;
-};
-
-const handleClick = (lang) => {
-  playSoundBase(soundStore.click);
-  selectItem(lang);
+// Highlight the language that is already stored, so the user sees the current choice
+// and can continue without having to pick again
+const preselectSavedLanguage = async () => {
+  try {
+    const { savedLanguage } = (await ControlService.readConfig()) || {};
+    const saved = langStore.langOptions.find((option) => option.label === savedLanguage?.label);
+    if (!saved) return;
+    langStore.langOptions.forEach((option) => (option.isSelected = false));
+    saved.isSelected = true;
+    langStore.setSelectedLang(saved.label);
+  } catch (error) {
+    console.error("Failed to load saved settings:", error);
+  }
 };
 
 const selectItem = async (lang, playSound = true) => {
@@ -120,7 +119,6 @@ const selectItem = async (lang, playSound = true) => {
   }
   langStore.langOptions.forEach((option) => (option.isSelected = false));
   lang.isSelected = true;
-  selectedLanguage.value = lang;
   langStore.setSelectedLang(lang.label);
   i18n.global.locale.value = lang.label;
   await updateSettings(lang);
@@ -147,79 +145,8 @@ const updateSettings = async (lang) => {
 </script>
 
 <style scoped>
-.swiper-container {
-  width: 100% !important;
-  height: 50% !important;
-}
-.swiper-wrapper {
-  width: 100% !important;
-  height: 50% !important;
-  margin: 0 auto !important;
-  overflow-x: hidden !important;
-  overflow-y: auto !important ;
-  display: flex !important;
-  box-shadow: none !important;
-}
-
-.swiper-slide {
-  width: 90% !important;
-  height: 80px !important;
-  text-align: center;
-  font-size: 18px;
-  background: #24282d !important;
-  border: 1px solid #77bfbf !important;
-  border-radius: 10px;
-  display: grid !important;
-  grid-template-columns: repeat(12, 1fr) !important;
-  box-shadow: none !important;
-  cursor: pointer;
-  box-shadow: 0 0 10px 0 #272b2b !important;
-}
-
-.swiper-slide img {
-  margin: auto !important;
-  width: 50px !important;
-  height: 50px !important;
-  border-radius: 50% !important;
-  grid-column: 1 / span 3 !important;
-}
-
-.swiper-slide span {
-  margin: auto !important;
-  grid-column: 4 / span 10 !important;
-  font-size: 20px !important;
-  font-weight: bold !important;
-  text-transform: uppercase !important;
-  color: #fff;
-}
-
-.selectedLanguage {
-  background: #77bfbf !important;
-  color: #272424 !important;
-  border-radius: 15px !important;
-  box-shadow: 0 0 10px 0 #272b2b !important;
-}
-swiper-slide > div {
-  display: none !important;
-  border-radius: 10px !important;
-  background-color: transparent !important;
-}
-
-::-webkit-scrollbar-track {
-  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-  border-radius: 10px;
-  background-color: transparent !important;
-}
-
-::-webkit-scrollbar {
-  width: 12px;
-  background-color: #d9dfdf;
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-  border-radius: 10px;
-  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-  background-color: #39d7d5;
+.selected-language {
+  background-color: #447a75;
+  border-color: #77bfbf;
 }
 </style>
