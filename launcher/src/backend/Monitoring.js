@@ -3423,11 +3423,18 @@ export class Monitoring {
           if (metric.result.status != "success") {
             return;
           }
+          // a labelled counter has no series until first incremented, so a
+          // healthy cluster legitimately returns nothing for some of these
+          const series = metric.result.data?.result ?? [];
+          if (!series.length) {
+            log.debug(`No data for Obol alert metric "${metric.key}", skipping it`);
+            return;
+          }
           if (metric.key === "peer_ping_latency") {
-            let value = Math.max(...metric.result.data.result.map((r) => r.value[1]));
+            let value = Math.max(...series.map((r) => r.value[1]));
             return this.parseObolCharonAlerts(metric.key, value);
           }
-          let value = metric.result.data.result[0].value[1];
+          let value = series[0].value[1];
           return this.parseObolCharonAlerts(metric.key, value);
         })
         .filter((alert) => alert);
@@ -3828,15 +3835,20 @@ export class Monitoring {
   }
 
   async getObolClusterInformation(serviceID) {
-    const serviceInfos = await this.getServiceInfos("CharonService");
+    const serviceInfos = await this.getServiceInfos(...OBOL_DVT_SERVICES);
     const charon = serviceInfos.find((service) => service.config?.serviceID === serviceID);
     if (!charon) {
       log.info("No such Charon found!");
       return {};
     }
 
+    // charon deleted this check in v1.10.0 (ObolNetwork/charon#4359) as a false
+    // positive; pluto still ports it and reports 6 while doing its duties fine
+    const readyzCodes = charon.service === "PlutoService" ? ["1", "6"] : ["1"];
+
     const queries = {
       app_monitoring_readyz: `app_monitoring_readyz{instance=~".*${serviceID}.*"}`, // for Cluster Peer
+      app_peer_name: `app_peer_name{instance=~".*${serviceID}.*"}`,
       cluster_attestation_performance: `(sum(increase(core_tracker_success_duties_total{instance=~".*${serviceID}.*",duty="attester"}[1h])) / sum(increase(core_tracker_expect_duties_total{instance=~".*${serviceID}.*",duty="attester"}[1h])) > 0) * 100`,
       cluster_attestation_participation: `core_tracker_participation{instance=~".*${serviceID}.*",duty="attester"}`,
       cluster_operators: `cluster_operators{instance=~".*${serviceID}.*"}`,
@@ -3856,25 +3868,34 @@ export class Monitoring {
       if (metric.result.status != "success") {
         return;
       }
+      const series = metric.result.data?.result ?? [];
+      if (!series.length) {
+        log.debug(`No data for Obol cluster metric "${metric.key}", skipping it`);
+        return;
+      }
       switch (metric.key) {
         case "app_monitoring_readyz":
-          stats.nodeStatus = metric.result.data.result[0].value[1] === "1" ? "ACTIVE" : "INACTIVE";
-          stats.peerName = metric.result.data.result[0].metric.cluster_peer;
+          stats.nodeStatus = readyzCodes.includes(series[0].value[1]) ? "ACTIVE" : "INACTIVE";
+          stats.peerName = series[0].metric.cluster_peer;
+          break;
+        case "app_peer_name":
+          // charon carries the name on readyz, pluto only here
+          if (!stats.peerName) stats.peerName = series[0].metric.peer_name;
           break;
         case "cluster_attestation_performance":
-          stats.attestationPerformance = metric.result.data.result[0].value[1];
+          stats.attestationPerformance = series[0].value[1];
           break;
         case "cluster_attestation_participation":
-          stats.attestationParticipation = metric.result.data.result.reduce((acc, curr) => acc + parseInt(curr.value[1]), 0);
+          stats.attestationParticipation = series.reduce((acc, curr) => acc + parseInt(curr.value[1]), 0);
           break;
         case "cluster_operators":
-          stats.operators = parseInt(metric.result.data.result[0].value[1]);
+          stats.operators = parseInt(series[0].value[1]);
           break;
         case "cluster_threshold":
-          stats.threshold = parseInt(metric.result.data.result[0].value[1]);
+          stats.threshold = parseInt(series[0].value[1]);
           break;
         case "cluster_validators":
-          stats.validators = parseInt(metric.result.data.result[0].value[1]);
+          stats.validators = parseInt(series[0].value[1]);
           break;
       }
     });
