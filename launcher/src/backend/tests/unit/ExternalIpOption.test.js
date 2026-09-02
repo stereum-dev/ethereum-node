@@ -105,3 +105,18 @@ test("flags containing dots are escaped in the pattern", () => {
   expect("  - --nat.extip=80.249.121.1\n").toMatch(pattern);
   expect("  - --natXextip=80.249.121.1\n").not.toMatch(pattern);
 });
+
+test("lodestar can be given node runtime flags", () => {
+  for (const service of ["LodestarBeaconService", "LodestarValidatorService"]) {
+    const option = optionsFor(service).find((o) => o.commands?.[0] === "NODE_OPTIONS: ");
+
+    expect(option).toBeDefined();
+    // an environment variable, not a command flag: ExpertWindow needs isENV to
+    // put it in the env block instead of appending it to the command list
+    expect(option.isENV).toBe(true);
+    expect(option.type).toMatch("text");
+    // the command carries its own ": " separator
+    expect(option.commands[0].endsWith(": ")).toBe(true);
+    expect(option.placeholder).toMatch("--max-old-space-size=8192");
+  }
+});

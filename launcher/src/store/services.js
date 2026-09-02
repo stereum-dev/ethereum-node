@@ -18,6 +18,22 @@ const externalIpOption = (command, valuePrefix = "") => ({
   commands: [command],
 });
 
+/**
+ * Lodestar's Node.js runtime flags. The beacon ships
+ * "--max-old-space-size=8192" already; the validator ships with an empty env.
+ * An env var rather than a flag, hence "isENV" and the ": " in the command.
+ */
+const nodeOptionsOption = () => ({
+  title: "Node Options",
+  type: "text",
+  changeValue: null,
+  placeholder: "--max-old-space-size=8192",
+  icon: "/img/icon/service-setting-icons/ram.png",
+  pattern: ["(NODE_OPTIONS: )(.*)(\\n)"],
+  commands: ["NODE_OPTIONS: "],
+  isENV: true,
+});
+
 export const useServices = defineStore("services", {
   state: () => {
     return {
@@ -1443,6 +1459,7 @@ export const useServices = defineStore("services", {
           headerOption: false,
           expertOptionsModal: false,
           expertOptions: [
+            nodeOptionsOption(),
             {
               title: "External IP Address",
               type: "text",
@@ -1542,6 +1559,7 @@ export const useServices = defineStore("services", {
           headerOption: false,
           expertOptionsModal: false,
           expertOptions: [
+            nodeOptionsOption(),
             {
               title: "Default Fee Recipient",
               type: "text",

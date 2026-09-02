@@ -430,6 +430,10 @@ export default {
                 if (option.valuePrefix && option.changeValue.startsWith(option.valuePrefix)) {
                   option.changeValue = option.changeValue.slice(option.valuePrefix.length);
                 }
+                // write re-adds the yaml quotes
+                if (option.isENV) {
+                  option.changeValue = option.changeValue.replace(/^["'`]|["'`]$/g, "");
+                }
               } else {
                 option.changeValue = "";
               }
@@ -601,6 +605,17 @@ export default {
                     new RegExp(`${command}([=]?)([\\S*]*)`),
                     `${command}$1${valuePrefix}${option.changeValue}`
                   );
+                } else if (option.changeValue && option.isENV) {
+                  // an env var belongs in the env block, never the command list;
+                  // "env: {}" has to become a block mapping to take an entry
+                  const entry = `  ${command}"${option.changeValue}"`;
+                  if (/^env:[ \t]*\{[ \t]*\}[ \t]*$/m.test(this.item.yaml)) {
+                    this.item.yaml = this.item.yaml.replace(/^env:[ \t]*\{[ \t]*\}[ \t]*$/m, `env:\n${entry}`);
+                  } else if (/^env:[ \t]*$/m.test(this.item.yaml)) {
+                    this.item.yaml = this.item.yaml.replace(/^env:[ \t]*$/m, `env:\n${entry}`);
+                  } else {
+                    console.error(`No env block in the configuration to add ${command}to`);
+                  }
                 } else if (option.changeValue && !this.item.yaml.includes(command)) {
                   let matchAllCommands = this.item.yaml.match(new RegExp(/--[\S]+/gm));
                   if (matchAllCommands) {
@@ -624,6 +639,13 @@ export default {
                   }
                 } else if (!option.changeValue && this.item.yaml.includes(command)) {
                   this.item.yaml = this.item.yaml.replace(new RegExp(`\n.*${command}.*`), "");
+                  // an env block with no entries left would serialise as null
+                  if (option.isENV) {
+                    const envBlock = /^env:[ \t]*\n((?: {2}\S[^\n]*\n?)*)/m.exec(this.item.yaml);
+                    if (envBlock && !envBlock[1].trim()) {
+                      this.item.yaml = this.item.yaml.replace(envBlock[0], "env: {}\n");
+                    }
+                  }
                 }
               });
               break;
