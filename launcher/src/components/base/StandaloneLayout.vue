@@ -38,8 +38,9 @@ const helpItem = {
   icon: "/img/icon/base-header-icons/header-help-button.png",
 };
 
-const backToLogin = () => {
+const backToLogin = async () => {
+  // clearing this first swaps in BaseLayout, which queries the node on mount
+  await router.push("/login");
   headerStore.settingsStandalone = false;
-  router.push("/login");
 };
 </script>

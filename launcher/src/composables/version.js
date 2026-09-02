@@ -34,7 +34,15 @@ export async function useUpdateCheck() {
   if (!nodeHeaderStore.updating) {
     nodeHeaderStore.searchingForUpdates = true;
 
-    let services = await useBackendServices();
+    let services;
+    try {
+      services = await useBackendServices();
+    } catch (error) {
+      // reachable with no node connected, e.g. settings opened from the login screen
+      console.log("Couldn't read services, skipping the update check:", error.message);
+      nodeHeaderStore.searchingForUpdates = false;
+      return;
+    }
 
     let versions = {};
     try {

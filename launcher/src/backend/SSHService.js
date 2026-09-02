@@ -243,9 +243,10 @@ export class SSHService {
 
   async execCommand(command) {
     if (this.loggingOut) return { rc: -1, stdout: "", stderr: "Logging Out!" };
+    const conn = this.getConnectionFromPool();
+    // an empty pool would otherwise surface as a TypeError on conn.exec
+    if (!conn) return { rc: -1, stdout: "", stderr: "Not connected!" };
     return new Promise((resolve, reject) => {
-      let conn = this.getConnectionFromPool();
-
       const data = {
         rc: -1,
         stdout: "",
