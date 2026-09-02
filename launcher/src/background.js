@@ -810,6 +810,10 @@ ipcMain.handle("handleOTPChange", async (event, args) => {
   );
 });
 
+ipcMain.handle("getExternalIp", async () => {
+  return await serviceManager.resolveExternalIp();
+});
+
 ipcMain.handle("fetchObolCharonAlerts", async () => {
   return await monitoring.fetchObolCharonAlerts();
 });

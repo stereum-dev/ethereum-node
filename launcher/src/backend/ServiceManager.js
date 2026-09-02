@@ -969,6 +969,23 @@ export class ServiceManager {
     }
   }
 
+  /**
+   * @returns {string|null} the node's publicly reachable IPv4 address
+   */
+  async resolveExternalIp() {
+    const services = ["https://api.ipify.org", "https://ifconfig.me/ip", "https://icanhazip.com"];
+    for (const url of services) {
+      try {
+        const result = await this.nodeConnection.sshService.exec(`curl -4 -fsS --max-time 5 ${url}`);
+        const ip = result.stdout?.trim();
+        if (/^(\d{1,3}\.){3}\d{1,3}$/.test(ip)) return ip;
+      } catch (err) {
+        log.warn(`Couldn't resolve the external IP via ${url}:`, err);
+      }
+    }
+    return null;
+  }
+
   //args: network, installDir, port, executionClients, checkpointURL, consensusClients, mevboost, relays // for external -> source, jwtToken // chainId -> for devnet
   getService(name, args) {
     let ports;
