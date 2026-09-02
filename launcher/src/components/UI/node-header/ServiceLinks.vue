@@ -39,6 +39,7 @@ import PrometheusModal from "../services-modal/PrometheusModal.vue";
 import MevboostModal from "../services-modal//MevboostModal.vue";
 import ObolModal from "../services-modal/ObolModal.vue";
 import { useNodeStore } from "@/store/theNode";
+import { isObolDVTService } from "@/share/ObolDVTServices";
 export default {
   components: { GrafanaModal, SsvModal, PrometheusModal, MevboostModal, ObolModal },
   data() {
@@ -87,7 +88,7 @@ export default {
         this.showPrometheusWindow = true;
       } else if (serviceName == "FlashbotsMevBoostService") {
         this.showMevboostWindow = true;
-      } else if (serviceName == "CharonService") {
+      } else if (isObolDVTService(serviceName)) {
         return;
         // this.showObolCharonWindow = true;
         // console.log("ObolCharonService");

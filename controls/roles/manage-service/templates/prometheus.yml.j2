@@ -336,13 +336,13 @@ scrape_configs:
 {% endif %}
         ]
 
-# Charon
+# Charon / Pluto - same metric names on the same port, so one job
   - job_name: charon
     static_configs:
       - targets: [
 {% set targets = [] %}
 {%- for service_config in service_configs.results %}
-  {%- if (service_config.content | b64decode | from_yaml).service == "CharonService" %}
+  {%- if (service_config.content | b64decode | from_yaml).service in ["CharonService", "PlutoService"] %}
     {%- set _ = targets.append("stereum-" ~ (service_config.content | b64decode | from_yaml).id ~ ":3620") %}
   {%- endif %}
 {% endfor %}

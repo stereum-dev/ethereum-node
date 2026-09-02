@@ -3,6 +3,7 @@ import { useServices } from "@/store/services";
 import { useNodeManage } from "@/store/nodeManage";
 import { useStakingStore } from "@/store/theStaking";
 import axios from "axios";
+import { isObolDVTService } from "@/share/ObolDVTServices";
 
 export async function useListKeys(forceRefresh) {
   const serviceStore = useServices();
@@ -18,7 +19,7 @@ export async function useListKeys(forceRefresh) {
       if ((client.config.keys === undefined || client.config.keys.length === 0 || forceRefresh) && client.state === "running") {
         //refresh validator list
         let result = await ControlService.listValidators(client.config.serviceID);
-        if (!/Web3Signer|CharonService|SSVNetwork/.test(client.service)) {
+        if (!/Web3Signer|SSVNetwork/.test(client.service) && !isObolDVTService(client.service)) {
           let resultRemote = await ControlService.listRemoteKeys(client.config.serviceID);
           let remoteKeys = resultRemote.data
             ? resultRemote.data.map((e) => {
@@ -222,7 +223,7 @@ export async function useUpdateValidatorStats() {
 
 export async function useObolStats() {
   const stakingStore = useStakingStore();
-  if (stakingStore.selectedServiceToFilter?.service === "CharonService") {
+  if (isObolDVTService(stakingStore.selectedServiceToFilter?.service)) {
     ControlService.getObolClusterInformation(stakingStore.selectedServiceToFilter?.config?.serviceID).then((data) => {
       stakingStore.obolStats = data;
     });

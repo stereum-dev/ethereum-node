@@ -10,6 +10,7 @@
 </template>
 
 <script setup>
+import { isObolDVTService } from "@/share/ObolDVTServices";
 import { useStakingStore } from "@/store/theStaking";
 import { computed } from "vue";
 
@@ -18,7 +19,7 @@ const stakingStore = useStakingStore();
 const getPerformance = computed(() => {
   if (stakingStore.selectedServiceToFilter?.service === "SSVNetworkService") {
     return stakingStore.ssvStats?.performance ? Math.floor(stakingStore.ssvStats?.performance) + "%" : "N/A";
-  } else if (stakingStore.selectedServiceToFilter?.service === "CharonService") {
+  } else if (isObolDVTService(stakingStore.selectedServiceToFilter?.service)) {
     return stakingStore.obolStats?.attestationPerformance ? Math.floor(stakingStore.obolStats?.attestationPerformance) + "%" : "N/A";
   }
   return "N/A";

@@ -158,6 +158,7 @@ import { onMounted, computed } from 'vue';
   </div>
 </template>
 <script setup>
+import { isObolDVTService } from "@/share/ObolDVTServices";
 import { useNodeManage } from "@/store/nodeManage";
 import { onMounted, ref } from "vue";
 import { useSetups } from "../../../../../store/setups";
@@ -200,7 +201,7 @@ const toggleConnection = (option) => {
   }
   props.properties.executionClients = list.value.filter((e) => e.category === "execution" && e.isConnected);
   props.properties.consensusClients = list.value.filter(
-    (e) => (e.category === "consensus" || e.service === "CharonService") && e.isConnected
+    (e) => (e.category === "consensus" || isObolDVTService(e.service)) && e.isConnected
   );
   props.properties.otherServices = list.value.filter((e) => e.category === "service" && e.isConnected);
 };
@@ -224,16 +225,18 @@ const getConnectionOptions = () => {
       if (props.client.service === "Web3SignerService") {
         return [];
       }
-      if (props.client.service === "CharonService") {
+      if (isObolDVTService(props.client.service)) {
         return manageStore.newConfiguration.filter((e) => e.category === "consensus");
       }
-      return manageStore.newConfiguration.filter((e) => e.category === "consensus" || e.service === "CharonService");
+      return manageStore.newConfiguration.filter((e) => e.category === "consensus" || isObolDVTService(e.service));
     case "service":
       if (props.client.service === "FlashbotsMevBoostService") {
         return manageStore.newConfiguration.filter((e) => e.category === "consensus");
       }
       if (props.client.service === "LidoObolExitService") {
-        return manageStore.newConfiguration.filter((e) => /ValidatorEjector|Charon/.test(e.service) || e.category === "consensus");
+        return manageStore.newConfiguration.filter(
+          (e) => /ValidatorEjector/.test(e.service) || isObolDVTService(e.service) || e.category === "consensus"
+        );
       }
       if (props.client.service === "ValidatorEjectorService") {
         return manageStore.newConfiguration.filter((e) => /consensus|execution/.test(e.category));

@@ -1,12 +1,13 @@
 import { NodeService } from "./NodeService";
+import { isObolDVTService } from "@/share/ObolDVTServices";
 import { ServiceVolume } from "./ServiceVolume";
 
 export class LidoObolExitService extends NodeService {
   static buildByUserInput(network, ports, dir, consensusClients = [], otherServices = []) {
     let ejector = otherServices.find((service) => service.service === "ValidatorEjectorService");
-    let charon = consensusClients.find((service) => service.service === "CharonService");
+    let charon = consensusClients.find((service) => isObolDVTService(service.service));
     if (charon) otherServices.push(charon);
-    consensusClients = consensusClients.filter((service) => !(service.service === "CharonService"));
+    consensusClients = consensusClients.filter((service) => !isObolDVTService(service.service));
 
     const service = new LidoObolExitService();
     service.setId();

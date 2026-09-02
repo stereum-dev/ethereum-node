@@ -9,6 +9,7 @@ import { BesuService } from "./ethereum-services/BesuService";
 import { SSVNetworkService } from "./ethereum-services/SSVNetworkService";
 import { SSVDKGService } from "./ethereum-services/SSVDKGService";
 import { CharonService } from "./ethereum-services/CharonService";
+import { PlutoService } from "./ethereum-services/PlutoService";
 import { NimbusBeaconService } from "./ethereum-services/NimbusBeaconService";
 import { NimbusValidatorService } from "./ethereum-services/NimbusValidatorService";
 import { PrometheusService } from "./ethereum-services/PrometheusService";
@@ -42,6 +43,7 @@ import { OpNodeBeaconService } from "./ethereum-services/OpNodeBeaconService";
 import { L2GethService } from "./ethereum-services/L2GethService";
 import { SSVNOMService } from "./ethereum-services/SSVNOMService";
 import { EthrexService } from "./ethereum-services/EthrexService";
+import { isObolDVTService } from "@/share/ObolDVTServices";
 
 import YAML from "yaml";
 // import { file } from "jszip";
@@ -172,6 +174,8 @@ export class ServiceManager {
               services.push(KeysAPIService.buildByConfiguration(config));
             } else if (config.service == "CharonService") {
               services.push(CharonService.buildByConfiguration(config));
+            } else if (config.service == "PlutoService") {
+              services.push(PlutoService.buildByConfiguration(config));
             } else if (config.service == "ExternalConsensusService") {
               services.push(ExternalConsensusService.buildByConfiguration(config));
             } else if (config.service == "ExternalExecutionService") {
@@ -477,7 +481,7 @@ export class ServiceManager {
           filter = (e) => e.buildConsensusClientHttpEndpointUrl();
           command = "--beaconNodes=";
         }
-        if (dependencies.some((d) => d.service === "CharonService")) {
+        if (dependencies.some((d) => isObolDVTService(d.service))) {
           service.command.push("--distributed");
         }
         break;
@@ -572,6 +576,7 @@ export class ServiceManager {
         }
         break;
       case "Charon":
+      case "Pluto":
         filter = (e) => e.buildConsensusClientHttpEndpointUrl();
         command = "--beacon-node-endpoints=";
         break;
@@ -657,7 +662,7 @@ export class ServiceManager {
       if (service.service === "OpNodeBeaconService") {
         service.volumes = service.volumes.filter((vol) => vol.servicePath !== "/engine.jwt");
       }
-    } else if (service.service.includes("Validator") || service.service.includes("Charon")) {
+    } else if (service.service.includes("Validator") || isObolDVTService(service.service)) {
       service.dependencies.consensusClients = dependencies;
     } else if (service.service.includes("OpErigon") || service.service.includes("OpGeth")) {
       service.dependencies.executionClients = dependencies.filter((d) => d.service === "L2GethService");
@@ -748,14 +753,14 @@ export class ServiceManager {
   addLidoObolExitConnection(service, dependencies) {
     // handle beacon node command dependency
     const consensusClient = dependencies.filter(
-      (d) => typeof d.buildConsensusClientHttpEndpointUrl === "function" && d.service != "CharonService"
+      (d) => typeof d.buildConsensusClientHttpEndpointUrl === "function" && !isObolDVTService(d.service)
     )[0];
     let filter = (e) => e.buildConsensusClientHttpEndpointUrl();
     let command = "--beacon-node-url=";
     service.command = this.addCommandConnection(service, command, consensusClient ? [consensusClient] : [], filter);
 
     // handle charon volume dependency
-    const charon = dependencies.find((d) => d.service === "CharonService");
+    const charon = dependencies.find((d) => isObolDVTService(d.service));
     service.volumes = service.volumes.filter((v) => !v.servicePath.includes("charon"));
     if (charon) {
       service.volumes.push(new ServiceVolume(`${charon.getDataDir()}/.charon`, "/charon"));
@@ -1230,6 +1235,10 @@ export class ServiceManager {
         ports = [new ServicePort(null, 3610, 3610, servicePortProtocol.tcp)];
         return CharonService.buildByUserInput(args.network, ports, args.installDir + "/charon", args.consensusClients);
 
+      case "PlutoService":
+        ports = [new ServicePort(null, 3610, 3610, servicePortProtocol.tcp)];
+        return PlutoService.buildByUserInput(args.network, ports, args.installDir + "/pluto", args.consensusClients);
+
       case "ExternalExecutionService":
         return ExternalExecutionService.buildByUserInput(args.network, args.installDir + "/externalExecution", args.source, args.jwtToken);
       case "ExternalConsensusService":
@@ -1511,7 +1520,7 @@ export class ServiceManager {
       setupAndServiceIds[service.id] = t.data.setupId;
       newServices.push(service);
     });
-    let DVTInstalls = tasks.filter((t) => /SSVNetwork|Charon/.test(t.service.service));
+    let DVTInstalls = tasks.filter((t) => /SSVNetwork/.test(t.service.service) || isObolDVTService(t.service.service));
     DVTInstalls.forEach((t) => {
       if (t.service.service == "SSVNetworkService" && services.filter((s) => s.service === "SSVNetworkService").length) {
         // TODO: Make SSVNetworkService multiservice (which depends also on SSVDKGService)
@@ -1524,7 +1533,9 @@ export class ServiceManager {
       setupAndServiceIds[service.id] = t.data.setupId;
       newServices.push(service);
     });
-    let VLInstalls = tasks.filter((t) => t.service.category === "validator" && !/SSVNetwork|Charon/.test(t.service.service));
+    let VLInstalls = tasks.filter(
+      (t) => t.service.category === "validator" && !/SSVNetwork/.test(t.service.service) && !isObolDVTService(t.service.service)
+    );
     VLInstalls.forEach((t) => {
       this.updateInfoForDependencies(t, services, newServices, ELInstalls, CLInstalls, undefined, DVTInstalls);
       let service = this.getService(t.service.service, t.data);

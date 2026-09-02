@@ -12,6 +12,7 @@
 </template>
 
 <script setup>
+import { isObolDVTService } from "@/share/ObolDVTServices";
 import ButtonRow from "./ButtonRow.vue";
 import { computed, ref } from "vue";
 import { useStakingStore } from "@/store/theStaking";
@@ -87,7 +88,7 @@ const filteredButtonState = computed(() => {
   const selectedService = stakingStore.selectedServiceToFilter?.service;
 
   return buttonState.value.map((button) => {
-    if (selectedService === "CharonService" || selectedService === "SSVNetworkService" || stakingStore.displayAllKeysActive) {
+    if (isObolDVTService(selectedService) || selectedService === "SSVNetworkService" || stakingStore.displayAllKeysActive) {
       return { ...button, isHidden: true };
     }
 

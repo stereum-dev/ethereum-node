@@ -1,5 +1,6 @@
 import { useServices } from "@/store/services";
 import { ref } from "vue";
+import { isObolDVTService } from "@/share/ObolDVTServices";
 
 export function useConnectionLines() {
   const serviceStore = useServices();
@@ -68,7 +69,7 @@ export function useConnectionLines() {
     validator: (item, dependencies) => {
       return dependencies.flatMap((d) => {
         if (d.category === "validator") {
-          if (item.service === "CharonService") {
+          if (isObolDVTService(item.service)) {
             return [createConnection(item.ref, d.ref, "left", "left")];
           }
           return [createConnection(d.ref, item.ref, "left", "left")];

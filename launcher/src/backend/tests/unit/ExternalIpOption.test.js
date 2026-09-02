@@ -25,6 +25,7 @@ const EXPECTED = {
   NethermindService: ["--Network.ExternalIp", ""],
   EthrexService: ["--nat.extip", ""],
   OpNodeBeaconService: ["--p2p.advertise.ip", ""],
+  PlutoService: ["--p2p-external-ip", ""],
 };
 
 // External EC/CC only point at a node someone else runs, and L2Geth replicates

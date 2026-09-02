@@ -1,6 +1,7 @@
 import { ServiceManager } from "./ServiceManager";
 import { ValidatorAccountManager } from "./ValidatorAccountManager";
 import { StringUtils } from "./StringUtils.js";
+import { isObolDVTService, OBOL_DVT_SERVICES } from "@/share/ObolDVTServices";
 import { SSHService } from "./SSHService.js";
 import * as log from "electron-log";
 import * as crypto from "crypto";
@@ -3268,9 +3269,9 @@ export class Monitoring {
     }
 
     try {
-      //Check if connected to CharonService
+      //Check if connected to an Obol DV middleware service
       const vc = await this.nodeConnection.readServiceConfiguration(serviceID);
-      const connectedCharon = vc?.dependencies.consensusClients.find((client) => client.service === "CharonService");
+      const connectedCharon = vc?.dependencies.consensusClients.find((client) => isObolDVTService(client.service));
 
       const beaconAPIPort = connectedCharon ? 3600 : beaconStatus.data[0].beacon.servicePort;
       const serviceId = connectedCharon ? connectedCharon.id : beaconStatus.data[0].sid;
@@ -3396,7 +3397,7 @@ export class Monitoring {
    */
   async fetchObolCharonAlerts() {
     try {
-      const serviceInfos = await this.getServiceInfos("CharonService");
+      const serviceInfos = await this.getServiceInfos(...OBOL_DVT_SERVICES);
       if (serviceInfos.length < 1) {
         return [];
       }

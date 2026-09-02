@@ -130,7 +130,9 @@ export default {
         });
       }
 
-      return test.filter((obj) => obj.category === "validator" && obj.name !== "ssv.network" && obj.name !== "Obol Charon");
+      return test.filter(
+        (obj) => obj.category === "validator" && obj.name !== "ssv.network" && obj.name !== "Obol Charon" && obj.name !== "Pluto"
+      );
     },
     installedMetricsExporter() {
       const copyOfInstalledServices = [...this.installedServices];

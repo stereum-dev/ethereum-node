@@ -1,6 +1,7 @@
 import { NodeService } from "./NodeService.js";
 import { ServicePortDefinition } from "./SerivcePortDefinition.js";
 import { ServiceVolume } from "./ServiceVolume.js";
+import { isObolDVTService } from "@/share/ObolDVTServices";
 
 export class LodestarValidatorService extends NodeService {
   static buildByUserInput(network, ports, dir, consensusClients = []) {
@@ -53,7 +54,7 @@ export class LodestarValidatorService extends NodeService {
       consensusClients //consensusClients
     );
 
-    if (consensusClients.some((c) => c.service === "CharonService")) {
+    if (consensusClients.some((c) => isObolDVTService(c.service))) {
       service.command.push("--distributed");
       service.command[service.command.findIndex((c) => c === "--doppelgangerProtection=true")] = "--doppelgangerProtection=false";
       service.command.push("--builder.selection=builderalways");

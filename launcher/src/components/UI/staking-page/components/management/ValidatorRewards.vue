@@ -15,47 +15,49 @@
     <TotalBalance />
     <StatusInfoRow
       v-if="
-        stakingStore.selectedServiceToFilter?.service === 'CharonService' ||
+        isObolDVTService(stakingStore.selectedServiceToFilter?.service) ||
         stakingStore.selectedServiceToFilter?.service === 'SSVNetworkService'
       "
     />
     <PerformanceRow
       v-if="
-        stakingStore.selectedServiceToFilter?.service === 'CharonService' ||
+        isObolDVTService(stakingStore.selectedServiceToFilter?.service) ||
         stakingStore.selectedServiceToFilter?.service === 'SSVNetworkService'
       "
     />
+    <!-- charon only: pluto has no core_tracker_participation -->
     <ParticipationRow v-if="stakingStore.selectedServiceToFilter?.service === 'CharonService'" />
     <IsPrivate v-if="stakingStore.selectedServiceToFilter?.service === 'SSVNetworkService'" />
 
     <NodeStatus
       v-if="
-        stakingStore.selectedServiceToFilter?.service === 'CharonService' ||
+        isObolDVTService(stakingStore.selectedServiceToFilter?.service) ||
         stakingStore.selectedServiceToFilter?.service === 'SSVNetworkService'
       "
     />
 
     <AttestationReward
       v-if="
-        stakingStore.selectedServiceToFilter?.service !== 'CharonService' &&
+        !isObolDVTService(stakingStore.selectedServiceToFilter?.service) &&
         stakingStore.selectedServiceToFilter?.service !== 'SSVNetworkService'
       "
     />
     <CommitteeReward
       v-if="
-        stakingStore.selectedServiceToFilter?.service !== 'CharonService' &&
+        !isObolDVTService(stakingStore.selectedServiceToFilter?.service) &&
         stakingStore.selectedServiceToFilter?.service !== 'SSVNetworkService'
       "
     />
     <BlockReward
       v-if="
-        stakingStore.selectedServiceToFilter?.service !== 'CharonService' &&
+        !isObolDVTService(stakingStore.selectedServiceToFilter?.service) &&
         stakingStore.selectedServiceToFilter?.service !== 'SSVNetworkService'
       "
     />
   </div>
 </template>
 <script setup>
+import { isObolDVTService } from "@/share/ObolDVTServices";
 import { onMounted, onUnmounted, ref } from "vue";
 import { useStakingStore } from "../../../../../store/theStaking";
 import AttestationReward from "./components/val-rewards/AttestationReward.vue";

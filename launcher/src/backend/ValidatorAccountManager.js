@@ -5,6 +5,7 @@ import { SSHService } from "./SSHService.js";
 import { validatorPorts } from "./ethereum-services/ServicePort.js";
 import { ServiceVolume } from "./ethereum-services/ServiceVolume.js";
 import { networks } from "./ethereum-services/NodeService.js";
+import { isObolDVTService } from "@/share/ObolDVTServices";
 
 import * as path from "path";
 import axios from "axios";
@@ -230,11 +231,11 @@ export class ValidatorAccountManager {
     try {
       let client = await this.nodeConnection.readServiceConfiguration(serviceID);
       let data = {};
-      if (client.service === "CharonService" || client.service === "SSVNetworkService") {
+      if (isObolDVTService(client.service) || client.service === "SSVNetworkService") {
         const keys = await this.getDVTKeys(serviceID);
         data.data = keys.map((dv) => {
           return {
-            validating_pubkey: client.service === "CharonService" ? dv.distributed_public_key : "0x" + dv.public_key,
+            validating_pubkey: isObolDVTService(client.service) ? dv.distributed_public_key : "0x" + dv.public_key,
             derivation_path: "",
             readonly: false,
             dvt: true,
@@ -911,8 +912,8 @@ export class ValidatorAccountManager {
   async createObolENR(privateKey = "") {
     try {
       let services = await this.serviceManager.readServiceConfigurations();
-      let charonClient = services.find((service) => service.service === "CharonService");
-      if (!charonClient) throw "Couldn't find CharonService";
+      let charonClient = services.find((service) => isObolDVTService(service.service));
+      if (!charonClient) throw "Couldn't find an Obol DV middleware service";
       if (privateKey) {
         let result = await this.nodeConnection.sshService.exec(charonClient.getCreateCharonFolderCommand());
         if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
@@ -938,8 +939,8 @@ export class ValidatorAccountManager {
   async checkObolContent() {
     try {
       let services = await this.serviceManager.readServiceConfigurations();
-      let charonClient = services.find((service) => service.service === "CharonService");
-      if (!charonClient) throw "Couldn't find CharonService";
+      let charonClient = services.find((service) => isObolDVTService(service.service));
+      if (!charonClient) throw "Couldn't find an Obol DV middleware service";
 
       let result = await this.nodeConnection.sshService.exec(charonClient.getListCharonFolderContentsCommand());
       if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
@@ -967,8 +968,8 @@ export class ValidatorAccountManager {
   async getObolENRPrivateKey() {
     try {
       let services = await this.serviceManager.readServiceConfigurations();
-      let charonClient = services.find((service) => service.service === "CharonService");
-      if (!charonClient) throw "Couldn't find CharonService";
+      let charonClient = services.find((service) => isObolDVTService(service.service));
+      if (!charonClient) throw "Couldn't find an Obol DV middleware service";
 
       let result = await this.nodeConnection.sshService.exec(charonClient.getReadENRPrivateKeyCommand());
       if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
@@ -982,8 +983,8 @@ export class ValidatorAccountManager {
   async getObolENRPublicKey() {
     try {
       let services = await this.serviceManager.readServiceConfigurations();
-      let charonClient = services.find((service) => service.service === "CharonService");
-      if (!charonClient) throw "Couldn't find CharonService";
+      let charonClient = services.find((service) => isObolDVTService(service.service));
+      if (!charonClient) throw "Couldn't find an Obol DV middleware service";
 
       let result = await this.nodeConnection.sshService.exec(charonClient.getReadEnrCommand());
       if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
@@ -998,8 +999,8 @@ export class ValidatorAccountManager {
   async removeObolENR() {
     try {
       let services = await this.serviceManager.readServiceConfigurations();
-      let charonClient = services.find((service) => service.service === "CharonService");
-      if (!charonClient) throw "Couldn't find CharonService";
+      let charonClient = services.find((service) => isObolDVTService(service.service));
+      if (!charonClient) throw "Couldn't find an Obol DV middleware service";
 
       let result = await this.nodeConnection.sshService.exec(charonClient.getRemoveEnrCommand());
       if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
@@ -1013,8 +1014,8 @@ export class ValidatorAccountManager {
   async removeObolCluster() {
     try {
       let services = await this.serviceManager.readServiceConfigurations();
-      let charonClient = services.find((service) => service.service === "CharonService");
-      if (!charonClient) throw "Couldn't find CharonService";
+      let charonClient = services.find((service) => isObolDVTService(service.service));
+      if (!charonClient) throw "Couldn't find an Obol DV middleware service";
 
       let result = await this.nodeConnection.sshService.exec(charonClient.getNukeObolCommand());
       if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
@@ -1032,8 +1033,8 @@ export class ValidatorAccountManager {
 
     try {
       let services = await this.serviceManager.readServiceConfigurations();
-      let charonClient = services.find((service) => service.service === "CharonService");
-      if (!charonClient) throw "Couldn't find CharonService";
+      let charonClient = services.find((service) => isObolDVTService(service.service));
+      if (!charonClient) throw "Couldn't find an Obol DV middleware service";
 
       let contentResult = await this.nodeConnection.sshService.exec(charonClient.getListCharonFolderContentsCommand());
       if (SSHService.checkExecError(contentResult) && contentResult.stderr) throw SSHService.extractExecError(contentResult);
@@ -1077,8 +1078,8 @@ export class ValidatorAccountManager {
   async downloadObolBackup(localPath) {
     try {
       let services = await this.serviceManager.readServiceConfigurations();
-      let charonClient = services.find((service) => service.service === "CharonService");
-      if (!charonClient) throw "Couldn't find CharonService";
+      let charonClient = services.find((service) => isObolDVTService(service.service));
+      if (!charonClient) throw "Couldn't find an Obol DV middleware service";
       const dataDir = path.posix.join(charonClient.getDataDir(), ".charon");
       const result = await this.nodeConnection.sshService.downloadDirectorySSH(dataDir, localPath);
       if (result) {
@@ -1092,8 +1093,8 @@ export class ValidatorAccountManager {
   async importObolBackup(localPath) {
     try {
       let services = await this.serviceManager.readServiceConfigurations();
-      let charonClient = services.find((service) => service.service === "CharonService");
-      if (!charonClient) throw "Couldn't find CharonService";
+      let charonClient = services.find((service) => isObolDVTService(service.service));
+      if (!charonClient) throw "Couldn't find an Obol DV middleware service";
       const dataDir = path.posix.join(charonClient.getDataDir(), ".charon");
       await this.nodeConnection.sshService.exec(`rm -rf ${charonClient.getDataDir()}`);
       const result = await this.nodeConnection.sshService.uploadDirectorySSH(path.normalize(localPath), dataDir);
@@ -1109,7 +1110,8 @@ export class ValidatorAccountManager {
     const service = (await this.serviceManager.readServiceConfigurations()).find((s) => s.id === serviceID);
     if (!service) throw new Error(`Service with id ${serviceID} not found`);
     switch (service.service) {
-      case "CharonService": {
+      case "CharonService":
+      case "PlutoService": {
         const result = await this.nodeConnection.sshService.exec(service.getReadClusterLockCommand());
         const clusterLock = JSON.parse(result.stdout);
         return clusterLock.distributed_validators;

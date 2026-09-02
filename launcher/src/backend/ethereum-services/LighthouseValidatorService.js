@@ -1,6 +1,7 @@
 import { NodeService } from "./NodeService.js";
 import { ServicePortDefinition } from "./SerivcePortDefinition.js";
 import { ServiceVolume } from "./ServiceVolume.js";
+import { isObolDVTService } from "@/share/ObolDVTServices";
 
 export class LighthouseValidatorService extends NodeService {
   static buildByUserInput(network, ports, dir, consensusClients = []) {
@@ -58,7 +59,7 @@ export class LighthouseValidatorService extends NodeService {
       consensusClients //consensusClients
     );
 
-    if (consensusClients.some((c) => c.service === "CharonService")) {
+    if (consensusClients.some((c) => isObolDVTService(c.service))) {
       service.command = service.command.filter((c) => c !== "--enable-doppelganger-protection");
     }
 
