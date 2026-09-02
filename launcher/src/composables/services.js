@@ -64,55 +64,64 @@ export async function useFrontendServices() {
       if (services && services.length != 0 && nodeHeaderStore.refresh) {
         let otherServices = [];
         let needForTunnel = [];
-        const newServices = services.map((service) => {
-          let oldService;
-          if (
-            serviceStore.installedServices &&
-            serviceStore.installedServices.map((s) => s?.config?.serviceID).includes(service?.config?.serviceID)
-          ) {
-            oldService = serviceStore.installedServices.find(
-              (s) => s.service === service.service && s?.config?.serviceID && s?.config?.serviceID === service?.config?.serviceID
-            );
-          } else {
-            oldService = allServices.find((s) => s.service === service.service);
-            if (oldService?.tunnelLink) needForTunnel.push(oldService);
-          }
-          if (oldService?.config?.keys) {
-            oldService.config = {
-              ...service?.config,
-              keys: oldService?.config?.keys,
-            };
-          } else {
-            oldService.config = service?.config;
-          }
-          oldService.state = service.state;
-          if (
-            (oldService.service === "TekuBeaconService" || oldService.service === "NimbusBeaconService") &&
-            oldService?.config?.configVersion &&
-            oldService?.config?.configVersion < 2
-          ) {
-            let existing = serviceStore.installedServices.find(
-              (s) => s?.config?.serviceID === oldService?.config?.serviceID && s?.service === oldService.name + "ValidatorService"
-            );
-            let vs;
-            if (existing) {
-              vs = existing;
+        const newServices = services
+          .map((service) => {
+            let oldService;
+            if (
+              serviceStore.installedServices &&
+              serviceStore.installedServices.map((s) => s?.config?.serviceID).includes(service?.config?.serviceID)
+            ) {
+              oldService = serviceStore.installedServices.find(
+                (s) => s.service === service.service && s?.config?.serviceID && s?.config?.serviceID === service?.config?.serviceID
+              );
+              // a client swapped in place keeps its id but changes its name, so
+              // the id matches while the name does not
+              if (!oldService) oldService = allServices.find((s) => s.service === service.service);
             } else {
-              vs = allServices.find((element) => element.service === oldService.name + "ValidatorService");
+              oldService = allServices.find((s) => s.service === service.service);
+              if (oldService?.tunnelLink) needForTunnel.push(oldService);
             }
-            if (vs.service === "TekuValidatorService") {
-              vs.icon = "/img/icon/service-icons/validator/Teku-Validator-Linked-Circle.png";
-              vs.sIcon = "/img/icon/service-icons/validator/Teku-Validator-Linked-s.png";
-            } else if (vs.service === "NimbusValidatorService") {
-              vs.icon = "/img/icon/service-icons/validator/Nimbus-Validator-Linked-Circle.png";
-              vs.sIcon = "/img/icon/service-icons/validator/Nimbus-Validator-Linked-s.png";
+            if (!oldService) {
+              console.error(`No catalog entry for ${service.service}, skipping it`);
+              return null;
             }
-            vs.config = oldService?.config;
-            vs.state = oldService.state;
-            otherServices.push(vs);
-          }
-          return oldService;
-        });
+            if (oldService?.config?.keys) {
+              oldService.config = {
+                ...service?.config,
+                keys: oldService?.config?.keys,
+              };
+            } else {
+              oldService.config = service?.config;
+            }
+            oldService.state = service.state;
+            if (
+              (oldService.service === "TekuBeaconService" || oldService.service === "NimbusBeaconService") &&
+              oldService?.config?.configVersion &&
+              oldService?.config?.configVersion < 2
+            ) {
+              let existing = serviceStore.installedServices.find(
+                (s) => s?.config?.serviceID === oldService?.config?.serviceID && s?.service === oldService.name + "ValidatorService"
+              );
+              let vs;
+              if (existing) {
+                vs = existing;
+              } else {
+                vs = allServices.find((element) => element.service === oldService.name + "ValidatorService");
+              }
+              if (vs.service === "TekuValidatorService") {
+                vs.icon = "/img/icon/service-icons/validator/Teku-Validator-Linked-Circle.png";
+                vs.sIcon = "/img/icon/service-icons/validator/Teku-Validator-Linked-s.png";
+              } else if (vs.service === "NimbusValidatorService") {
+                vs.icon = "/img/icon/service-icons/validator/Nimbus-Validator-Linked-Circle.png";
+                vs.sIcon = "/img/icon/service-icons/validator/Nimbus-Validator-Linked-s.png";
+              }
+              vs.config = oldService?.config;
+              vs.state = oldService.state;
+              otherServices.push(vs);
+            }
+            return oldService;
+          })
+          .filter(Boolean);
         serviceStore.installedServices = newServices.concat(otherServices).map((service, i) => {
           service.id = i;
           if (!service.setupId) {

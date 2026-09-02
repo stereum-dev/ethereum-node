@@ -40,7 +40,7 @@ export class LighthouseBeaconService extends NodeService {
       service.id, //id
       1, // configVersion
       image, //image
-      "v3.1.2", //imageVersion
+      "v8.2.2", //imageVersion
       [
         "lighthouse",
         "bn",

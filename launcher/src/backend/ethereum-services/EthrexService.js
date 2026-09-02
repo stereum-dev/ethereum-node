@@ -16,7 +16,7 @@ export class EthrexService extends NodeService {
       service.id, // id
       1, // configVersion
       "ghcr.io/lambdaclass/ethrex", // image
-      "9.0.0", // imageVersion
+      "25.0.0", // imageVersion
       [
         `--network=${network}`,
         `--datadir=${dataDir}`,

@@ -598,7 +598,7 @@ export default {
         const addresses = [];
 
         for (const validator of validators) {
-          if (validator.name === "ssv.network" || validator.name === "Obol Charon") {
+          if (validator.name === "ssv.network" || validator.name === "Obol Charon" || validator.name === "Pluto") {
             continue;
           }
           if (!validator.yaml)

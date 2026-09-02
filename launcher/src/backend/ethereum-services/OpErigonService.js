@@ -30,7 +30,7 @@ export class OpErigonService extends NodeService {
       service.id, // id
       1, // configVersion
       "testinprod/op-erigon", // image
-      "v2.60.10-0.8.2", // imageVersion
+      "latest", // imageVersion
       cmd, // command
       ["/usr/local/bin/erigon"], // entrypoint
       null, // env

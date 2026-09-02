@@ -2,6 +2,7 @@ import { ServiceManager } from "./ServiceManager";
 import YAML from "yaml";
 import { StringUtils } from "./StringUtils";
 import { ConfigManager } from "./ConfigManager";
+import { isObolDVTService } from "@/share/ObolDVTServices";
 
 const log = require("electron-log");
 
@@ -227,9 +228,9 @@ export class OneClickInstall {
     }
 
     let charon = undefined;
-    if (constellation.includes("CharonService")) {
-      //CharonService
-      charon = this.serviceManager.getService("CharonService", {
+    const obolDVTService = constellation.find((service) => isObolDVTService(service));
+    if (obolDVTService) {
+      charon = this.serviceManager.getService(obolDVTService, {
         ...args,
         consensusClients: this.beaconService.filter((service) => service.service !== "OpNodeBeaconService"),
       });
@@ -351,7 +352,7 @@ export class OneClickInstall {
           ...args,
           consensusClients: this.beaconService
             .filter((service) => service.service !== "OpNodeBeaconService")
-            .concat(this.extraServices.filter((s) => s.service === "CharonService")),
+            .concat(this.extraServices.filter((s) => isObolDVTService(s.service))),
           otherServices: this.extraServices.filter((s) => s.service === "ValidatorEjectorService"),
         })
       );

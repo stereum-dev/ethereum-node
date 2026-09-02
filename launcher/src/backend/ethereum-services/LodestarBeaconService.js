@@ -40,7 +40,7 @@ export class LodestarBeaconService extends NodeService {
       service.id, //id
       1, // configVersion
       image, //image
-      "v1.3.0", //imageVersion
+      "v1.46.0", //imageVersion
       [
         `beacon`,
         `--network=${network}`,

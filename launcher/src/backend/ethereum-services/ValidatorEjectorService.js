@@ -41,7 +41,7 @@ export class ValidatorEjectorService extends NodeService {
       service.id, // id
       1, // configVersion
       image, // image
-      "dev", // imageVersion
+      "2.1.0", // imageVersion
       [], // command
       [], // entrypoint
       {

@@ -12,7 +12,7 @@ export class KeysAPIService extends NodeService {
       service.id, // id
       1, // configVersion
       image, // image
-      "dev", // imageVersion
+      "4.0.4", // imageVersion
       [], // command
       [], // entrypoint
       {

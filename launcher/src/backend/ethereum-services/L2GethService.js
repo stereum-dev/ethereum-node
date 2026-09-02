@@ -15,7 +15,7 @@ export class L2GethService extends NodeService {
       service.id, // id
       1, // configVersion
       "ethereumoptimism/l2geth", // image
-      "0.5.31", // imageVersion
+      "latest", // imageVersion
       ["--vmodule=eth/*=5,miner=4,rpc=5,rollup=4,consensus/clique=1", `--datadir=${dataDir}`, "--allow-insecure-unlock", "--gcmode=full"], // command
       ["geth"], // entrypoint
       {

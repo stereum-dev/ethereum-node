@@ -96,6 +96,7 @@ export const useNodeHeader = defineStore("nodeHeader", {
           this.showMevboostWindow = true;
           break;
         case "CharonService":
+        case "PlutoService":
           this.showObolCharonWindow = true;
           break;
         case "SSVDKGService":

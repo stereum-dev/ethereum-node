@@ -1,6 +1,7 @@
 import { NodeService } from "./NodeService.js";
 import { ServicePortDefinition } from "./SerivcePortDefinition.js";
 import { ServiceVolume } from "./ServiceVolume.js";
+import { isObolDVTService } from "@/share/ObolDVTServices";
 
 export class TekuValidatorService extends NodeService {
   static buildByUserInput(network, ports, dir, consensusClients = []) {
@@ -27,7 +28,7 @@ export class TekuValidatorService extends NodeService {
       service.id, // id
       1, // configVersion
       image, // image
-      "23.4.0", // imageVersion
+      "26.8.0", // imageVersion
       [
         "vc",
         `--beacon-node-api-endpoint=${beaconNodes}`,
@@ -62,7 +63,7 @@ export class TekuValidatorService extends NodeService {
       consensusClients //consensusClients
     );
 
-    if (consensusClients.some((c) => c.service === "CharonService")) {
+    if (consensusClients.some((c) => isObolDVTService(c.service))) {
       service.command[service.command.findIndex((c) => c === "--doppelganger-detection-enabled=true")] =
         "--doppelganger-detection-enabled=false";
     }

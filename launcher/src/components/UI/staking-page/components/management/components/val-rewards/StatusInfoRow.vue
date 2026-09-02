@@ -2,7 +2,7 @@ import { useStakingStore } from '@/store/theStaking';
 <template>
   <div class="h-full max-h-5 col-start-1 col-span-full row-span-1 grid grid-cols-12 justify-center items-center gap-x-1">
     <span
-      v-if="stakingStore.selectedServiceToFilter?.service === 'CharonService'"
+      v-if="isObolDVTService(stakingStore.selectedServiceToFilter?.service)"
       class="col-start-1 col-end-5 text-[8px] text-gray-200 font-normal font-sans text-left pl-2"
       >Peer-Name</span
     >
@@ -25,6 +25,7 @@ import { useStakingStore } from '@/store/theStaking';
 </template>
 
 <script setup>
+import { isObolDVTService } from "@/share/ObolDVTServices";
 import { useStakingStore } from "@/store/theStaking";
 import { computed } from "vue";
 const stakingStore = useStakingStore();

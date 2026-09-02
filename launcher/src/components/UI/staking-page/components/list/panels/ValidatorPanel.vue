@@ -19,6 +19,7 @@
   </div>
 </template>
 <script setup>
+import { isObolDVTService } from "@/share/ObolDVTServices";
 import { computed } from "vue";
 import { useServices } from "@/store/services";
 import { useSetups } from "@/store/setups";
@@ -37,7 +38,7 @@ const runningValidators = computed(() => {
         s.setupId === setupStore.selectedSetup?.setupId &&
         s.service !== "LCOMService" &&
         s.service !== "SSVNetworkService" &&
-        s.service !== "CharonService"
+        !isObolDVTService(s.service)
     );
   } else {
     validatores = serviceStore.installedServices.filter(
@@ -46,7 +47,7 @@ const runningValidators = computed(() => {
         s.state === "running" &&
         s.service !== "LCOMService" &&
         s.service !== "SSVNetworkService" &&
-        s.service !== "CharonService"
+        !isObolDVTService(s.service)
     );
   }
   return validatores;

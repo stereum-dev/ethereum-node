@@ -1,4 +1,39 @@
 import { defineStore } from "pinia";
+
+/**
+ * The address a client advertises to its peers. Every client spells the flag
+ * differently and geth derived ones want the value as "extip:<IP>". Rendered as
+ * a text field with a detect button, see "autoDetect" in ExpertWindow.
+ */
+const externalIpOption = (command, valuePrefix = "") => ({
+  title: "P2P External IP",
+  type: "text",
+  autoDetect: "externalIp",
+  detecting: false,
+  placeholder: "",
+  changeValue: null,
+  valuePrefix: valuePrefix,
+  icon: "/img/icon/service-setting-icons/ip-address.png",
+  pattern: [`(- ${command.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}=)(.*)(\\n)`],
+  commands: [command],
+});
+
+/**
+ * Lodestar's Node.js runtime flags. The beacon ships
+ * "--max-old-space-size=8192" already; the validator ships with an empty env.
+ * An env var rather than a flag, hence "isENV" and the ": " in the command.
+ */
+const nodeOptionsOption = () => ({
+  title: "Node Options",
+  type: "text",
+  changeValue: null,
+  placeholder: "--max-old-space-size=8192",
+  icon: "/img/icon/service-setting-icons/ram.png",
+  pattern: ["(NODE_OPTIONS: )(.*)(\\n)"],
+  commands: ["NODE_OPTIONS: "],
+  isENV: true,
+});
+
 export const useServices = defineStore("services", {
   state: () => {
     return {
@@ -47,6 +82,9 @@ export const useServices = defineStore("services", {
             {
               title: "External IP Address",
               type: "text",
+              autoDetect: "externalIp",
+              detecting: false,
+              placeholder: "",
               changeValue: null,
               icon: "/img/icon/service-setting-icons/ip-address.png",
               pattern: ["(- --enr-address=)(.*)(\\n)"],
@@ -216,6 +254,9 @@ export const useServices = defineStore("services", {
             {
               title: "External IP Address",
               type: "text",
+              autoDetect: "externalIp",
+              detecting: false,
+              placeholder: "",
               changeValue: null,
               icon: "/img/icon/service-setting-icons/ip-address.png",
               pattern: ["( --p2p-host-ip=)(.*)(\\n)"],
@@ -414,6 +455,9 @@ export const useServices = defineStore("services", {
             {
               title: "External IP Address",
               type: "text",
+              autoDetect: "externalIp",
+              detecting: false,
+              placeholder: "",
               changeValue: null,
               icon: "/img/icon/service-setting-icons/ip-address.png",
               pattern: ["(- --nat:extip:)(.*)(\\n)"],
@@ -617,6 +661,9 @@ export const useServices = defineStore("services", {
             {
               title: "External IP Address",
               type: "text",
+              autoDetect: "externalIp",
+              detecting: false,
+              placeholder: "",
               changeValue: null,
               icon: "/img/icon/service-setting-icons/ip-address.png",
               pattern: ["(- --p2p-advertised-ip=)(.*)(\\n)"],
@@ -906,6 +953,7 @@ export const useServices = defineStore("services", {
           headerOption: false,
           expertOptionsModal: false,
           expertOptions: [
+            externalIpOption("--nat", "extip:"),
             {
               title: "Gas Limit",
               type: "text",
@@ -1022,6 +1070,9 @@ export const useServices = defineStore("services", {
             {
               title: "P2P Host Address",
               type: "text",
+              autoDetect: "externalIp",
+              detecting: false,
+              placeholder: "",
               changeValue: null,
               icon: "/img/icon/service-setting-icons/ip-address.png",
               pattern: ["(- --p2p-host=)(.*)(\\n)"],
@@ -1124,6 +1175,7 @@ export const useServices = defineStore("services", {
           headerOption: false,
           expertOptionsModal: false,
           expertOptions: [
+            externalIpOption("--Network.ExternalIp"),
             {
               title: "Pruning Mode",
               type: "select",
@@ -1407,9 +1459,13 @@ export const useServices = defineStore("services", {
           headerOption: false,
           expertOptionsModal: false,
           expertOptions: [
+            nodeOptionsOption(),
             {
               title: "External IP Address",
               type: "text",
+              autoDetect: "externalIp",
+              detecting: false,
+              placeholder: "",
               changeValue: null,
               icon: "/img/icon/service-setting-icons/ip-address.png",
               pattern: ["(- --enr.ip=)(.*)(\\n)"],
@@ -1503,6 +1559,7 @@ export const useServices = defineStore("services", {
           headerOption: false,
           expertOptionsModal: false,
           expertOptions: [
+            nodeOptionsOption(),
             {
               title: "Default Fee Recipient",
               type: "text",
@@ -1560,6 +1617,7 @@ export const useServices = defineStore("services", {
           headerOption: false,
           expertOptionsModal: false,
           expertOptions: [
+            externalIpOption("--nat", "extip:"),
             {
               title: "Gas Limit",
               type: "text",
@@ -1765,6 +1823,39 @@ export const useServices = defineStore("services", {
           },
         },
         {
+          id: 41,
+          name: "Pluto",
+          service: "PlutoService",
+          category: "validator",
+          displayCategory: "vlc",
+          displayTooltip: false,
+          displayPluginMenu: false,
+          serviceIsPending: false,
+          modifierPanel: false,
+          replacePanel: false,
+          addPanel: false,
+          path: "/pluto",
+          icon: "/img/icon/service-icons/validator/Pluto.png",
+          sIcon: "/img/icon/service-icons/validator/Pluto-s.png",
+          hIcon: "/img/icon/service-icons/validator/Pluto-s.png",
+          linkUrl: "",
+          docsUrl: "https://github.com/NethermindEth/pluto",
+          headerOption: true,
+          expertOptionsModal: false,
+          expertOptions: [externalIpOption("--p2p-external-ip")],
+          drag: true,
+          state: "exited",
+          config: {
+            serviceID: "",
+            configVersion: "",
+            image: "",
+            imageVersion: "",
+            ports: [],
+            volumes: [],
+            network: "",
+          },
+        },
+        {
           id: 25,
           name: "Reth",
           service: "RethService",
@@ -1784,6 +1875,7 @@ export const useServices = defineStore("services", {
           headerOption: false,
           expertOptionsModal: false,
           expertOptions: [
+            externalIpOption("--nat", "extip:"),
             {
               title: "Gas Limit",
               type: "text",
@@ -2137,6 +2229,9 @@ export const useServices = defineStore("services", {
             {
               title: "External IP Address",
               type: "text",
+              autoDetect: "externalIp",
+              detecting: false,
+              placeholder: "",
               changeValue: null,
               icon: "/img/icon/service-setting-icons/ip-address.png",
               pattern: ["(- --enr-address=)(.*)(\\n)"],
@@ -2236,6 +2331,7 @@ export const useServices = defineStore("services", {
           headerOption: false,
           expertOptionsModal: false,
           expertOptions: [
+            externalIpOption("--nat", "extip:"),
             {
               title: "Sync Mode",
               type: "text",
@@ -2351,6 +2447,7 @@ export const useServices = defineStore("services", {
           headerOption: false,
           expertOptionsModal: false,
           expertOptions: [
+            externalIpOption("--p2p.advertise.ip"),
             {
               title: "RPC Address",
               type: "text",
@@ -2481,6 +2578,7 @@ export const useServices = defineStore("services", {
           headerOption: false,
           expertOptionsModal: false,
           expertOptions: [
+            externalIpOption("--nat", "extip:"),
             {
               title: "RPC Authentication Host Address",
               type: "text",
@@ -2572,6 +2670,7 @@ export const useServices = defineStore("services", {
           headerOption: false,
           expertOptionsModal: false,
           expertOptions: [
+            externalIpOption("--nat", "extip:"),
             {
               title: "RPC Authentication Host Address",
               type: "text",
@@ -2654,7 +2753,7 @@ export const useServices = defineStore("services", {
           sIcon: "/img/icon/service-icons/execution/Ethrex-s.png",
           headerOption: false,
           expertOptionsModal: false,
-          expertOptions: [],
+          expertOptions: [externalIpOption("--nat.extip")],
           drag: true,
           state: "exited",
           config: {

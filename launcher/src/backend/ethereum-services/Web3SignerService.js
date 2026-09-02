@@ -20,7 +20,7 @@ export class Web3SignerService extends NodeService {
       service.id, // id
       1, // configVersion
       image, // image
-      "23.2.1", // imageVersion
+      "26.7.0", // imageVersion
       [
         `--key-store-path=${keysDir}`,
         `--data-path=${dataDir}`,

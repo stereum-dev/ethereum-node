@@ -16,7 +16,7 @@ export class RethService extends NodeService {
       service.id, // id
       1, // configVersion
       "ghcr.io/paradigmxyz/reth", // image
-      "v0.1.0-alpha.4", // imageVersion
+      "v2.5.1", // imageVersion
       [
         `node`,
         `--chain=${network}`,

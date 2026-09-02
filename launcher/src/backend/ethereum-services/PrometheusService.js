@@ -20,7 +20,7 @@ export class PrometheusService extends NodeService {
       service.id, // id
       1, // configVersion
       image, // image
-      "v2.38.0", // imageVersion
+      "v3.14.0", // imageVersion
       'sh -c "/bin/prometheus --config.file=/etc/prometheus/prometheus.yml --web.enable-lifecycle --storage.tsdb.retention.time=15d"', // command
       null, // entrypoint
       null, // env

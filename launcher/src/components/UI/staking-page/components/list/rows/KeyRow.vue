@@ -140,7 +140,7 @@ import { computed } from 'vue';
       </div>
       <div
         v-if="
-          getValidatorClients?.service !== 'CharonService' &&
+          !isObolDVTService(getValidatorClients?.service) &&
           getValidatorClients?.service !== 'SSVNetworkService' &&
           getValidatorClients?.service !== 'LCOMService'
         "
@@ -159,7 +159,7 @@ import { computed } from 'vue';
       <div
         v-if="
           getValidatorClients?.service !== 'LCOMService' &&
-          getValidatorClients?.service !== 'CharonService' &&
+          !isObolDVTService(getValidatorClients?.service) &&
           getValidatorClients?.service !== 'SSVNetworkService'
         "
         class="col-span-1 w-full h-full rounded-md justify-self-center flex justify-center items-center"
@@ -176,7 +176,7 @@ import { computed } from 'vue';
       </div>
       <div
         v-if="
-          getValidatorClients?.service !== 'CharonService' &&
+          !isObolDVTService(getValidatorClients?.service) &&
           getValidatorClients?.service !== 'SSVNetworkService' &&
           getValidatorClients?.service !== 'LCOMService'
         "
@@ -197,6 +197,7 @@ import { computed } from 'vue';
 </template>
 
 <script setup>
+import { isObolDVTService } from "@/share/ObolDVTServices";
 import i18n from "@/includes/i18n";
 import { useServices } from "@/store/services";
 import { useSetups } from "@/store/setups";
@@ -372,6 +373,7 @@ const checkValidatorKeyType = computed(() => {
     LCOMService: "csm",
     SSVNetworkService: "ssv",
     CharonService: "obol",
+    PlutoService: "obol",
   };
 
   return serviceKeyTypes[service?.service] || null;

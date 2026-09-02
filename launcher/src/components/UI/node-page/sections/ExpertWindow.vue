@@ -146,7 +146,22 @@
               @click="buttonOn(option)"
             />
           </Transition> -->
-            <input v-model="option.changeValue" class="toggleTextInput" type="text" @input="somethingIsChanged(option)" />
+            <img
+              v-if="option.autoDetect === 'externalIp'"
+              class="buttonOn"
+              :class="{ 'animate-spin pointer-events-none': option.detecting }"
+              src="/img/icon/service-setting-icons/external-ip-update.png"
+              :title="option.detecting ? 'detecting...' : 'detect the external IP of this node'"
+              alt="detect"
+              @click="detectExternalIp(option)"
+            />
+            <input
+              v-model="option.changeValue"
+              class="toggleTextInput"
+              type="text"
+              :placeholder="option.placeholder"
+              @input="somethingIsChanged(option)"
+            />
           </div>
 
           <!--
@@ -366,6 +381,25 @@ export default {
       this.nothingsChanged = false;
     },
 
+    async detectExternalIp(option) {
+      if (option.detecting) return;
+      option.detecting = true;
+      option.placeholder = "";
+      try {
+        const externalIp = await ControlService.getExternalIp();
+        if (externalIp) {
+          option.changeValue = externalIp;
+          this.somethingIsChanged(option);
+        } else {
+          option.placeholder = "not detected - enter manually";
+        }
+      } catch (err) {
+        console.error("Detecting the external IP failed:", err);
+        option.placeholder = "not detected - enter manually";
+      }
+      option.detecting = false;
+    },
+
     async readService() {
       this.item.yaml = await ControlService.getServiceYAML(this.item.config.serviceID);
 
@@ -392,6 +426,14 @@ export default {
               if (this.item.yaml.includes(command)) {
                 let match = this.item.yaml.match(new RegExp(`${command}[:=]?([\\S*]*)`));
                 option.changeValue = match ? match[match.length - 1] : "";
+                // keep the scheme ("extip:") out of the field, write puts it back
+                if (option.valuePrefix && option.changeValue.startsWith(option.valuePrefix)) {
+                  option.changeValue = option.changeValue.slice(option.valuePrefix.length);
+                }
+                // write re-adds the yaml quotes
+                if (option.isENV) {
+                  option.changeValue = option.changeValue.replace(/^["'`]|["'`]$/g, "");
+                }
               } else {
                 option.changeValue = "";
               }
@@ -512,6 +554,7 @@ export default {
 
             case "text": {
               option.commands.forEach((command) => {
+                const valuePrefix = option.valuePrefix ?? "";
                 if (option.changeValue && this.item.yaml.includes(command)) {
                   if (option.needsPortForwarding) {
                     const matchCurrentValue = this.item.yaml.match(new RegExp(`${command}([=]?)([\\S*]*)`));
@@ -558,7 +601,21 @@ export default {
                   if (!/^["'`].*["'`]$/.test(option.changeValue) && option.isENV) {
                     option.changeValue = `"${option.changeValue}"`;
                   }
-                  this.item.yaml = this.item.yaml.replace(new RegExp(`${command}([=]?)([\\S*]*)`), `${command}$1${option.changeValue}`);
+                  this.item.yaml = this.item.yaml.replace(
+                    new RegExp(`${command}([=]?)([\\S*]*)`),
+                    `${command}$1${valuePrefix}${option.changeValue}`
+                  );
+                } else if (option.changeValue && option.isENV) {
+                  // an env var belongs in the env block, never the command list;
+                  // "env: {}" has to become a block mapping to take an entry
+                  const entry = `  ${command}"${option.changeValue}"`;
+                  if (/^env:[ \t]*\{[ \t]*\}[ \t]*$/m.test(this.item.yaml)) {
+                    this.item.yaml = this.item.yaml.replace(/^env:[ \t]*\{[ \t]*\}[ \t]*$/m, `env:\n${entry}`);
+                  } else if (/^env:[ \t]*$/m.test(this.item.yaml)) {
+                    this.item.yaml = this.item.yaml.replace(/^env:[ \t]*$/m, `env:\n${entry}`);
+                  } else {
+                    console.error(`No env block in the configuration to add ${command}to`);
+                  }
                 } else if (option.changeValue && !this.item.yaml.includes(command)) {
                   let matchAllCommands = this.item.yaml.match(new RegExp(/--[\S]+/gm));
                   if (matchAllCommands) {
@@ -571,7 +628,7 @@ export default {
 
                     this.item.yaml = this.item.yaml.replace(
                       new RegExp(`${lastCommand}`),
-                      `${lastCommand}${spaces}${command}${option.noEqualSign ? "" : "="}${option.changeValue}`
+                      `${lastCommand}${spaces}${command}${option.noEqualSign ? "" : "="}${valuePrefix}${option.changeValue}`
                     );
                   } else {
                     const matchENV = this.item.yaml.match(/env:([\s]+)/);
@@ -582,6 +639,13 @@ export default {
                   }
                 } else if (!option.changeValue && this.item.yaml.includes(command)) {
                   this.item.yaml = this.item.yaml.replace(new RegExp(`\n.*${command}.*`), "");
+                  // an env block with no entries left would serialise as null
+                  if (option.isENV) {
+                    const envBlock = /^env:[ \t]*\n((?: {2}\S[^\n]*\n?)*)/m.exec(this.item.yaml);
+                    if (envBlock && !envBlock[1].trim()) {
+                      this.item.yaml = this.item.yaml.replace(envBlock[0], "env: {}\n");
+                    }
+                  }
                 }
               });
               break;

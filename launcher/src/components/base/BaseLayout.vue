@@ -185,11 +185,9 @@ const reconnect = async () => {
 const checkSettings = async () => {
   try {
     const savedConfig = await ControlService.readConfig();
-    if (typeof savedConfig.idleTimer?.enabled !== "undefined") {
-      if (savedConfig.idleTimer?.enabled) {
-        await ControlService.setIdleTime(savedConfig.idleTimerTime.value);
-        await ControlService.idleTimerCheck(false);
-      }
+    if (savedConfig?.idleTimer?.enabled && typeof savedConfig?.idleTimerTime?.value !== "undefined") {
+      await ControlService.setIdleTime(savedConfig.idleTimerTime.value);
+      await ControlService.idleTimerCheck(false);
     }
   } catch (error) {
     console.error("Failed to load saved settings:", error);

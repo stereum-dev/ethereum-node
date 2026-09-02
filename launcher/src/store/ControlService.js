@@ -709,6 +709,10 @@ class ControlService extends EventEmitter {
     return this.promiseIpc.send("handleOTPChange", args);
   }
 
+  async getExternalIp() {
+    return this.promiseIpc.send("getExternalIp");
+  }
+
   async fetchObolCharonAlerts() {
     return this.promiseIpc.send("fetchObolCharonAlerts");
   }

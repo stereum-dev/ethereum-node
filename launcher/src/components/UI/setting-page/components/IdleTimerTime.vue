@@ -19,7 +19,7 @@ const footerStore = useFooter();
 const checkSettings = async () => {
   try {
     const savedConfig = await ControlService.readConfig();
-    if (typeof savedConfig.idleTimerTime.value !== "undefined") {
+    if (typeof savedConfig?.idleTimerTime?.value !== "undefined") {
       footerStore.idleTimerTime = savedConfig.idleTimerTime.value;
     } else {
       updateSettings(5);

@@ -23,7 +23,7 @@ export class GethService extends NodeService {
       service.id, // id
       1, // configVersion
       "ethereum/client-go", // image
-      "v1.14.10-amd64", // imageVersion
+      "v1.17.5", // imageVersion
       cmd, // command
       ["geth"], // entrypoint
       null, // env

@@ -39,7 +39,7 @@ export class GrandineBeaconService extends NodeService {
       service.id, //id
       1, // configVersion
       image, //image
-      "1.0.0", //imageVersion
+      "2.0.6", //imageVersion
       [
         "grandine",
         `--network=${network}`,

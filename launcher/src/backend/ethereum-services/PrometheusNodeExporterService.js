@@ -11,7 +11,7 @@ export class PrometheusNodeExporterService extends NodeService {
       null, // id
       1, // configVersion
       image, // image
-      "v1.3.1", // imageVersion
+      "v1.12.1", // imageVersion
       ["--path.rootfs=/host"], // command
       ["/bin/node_exporter"], // entrypoint
       null, // env

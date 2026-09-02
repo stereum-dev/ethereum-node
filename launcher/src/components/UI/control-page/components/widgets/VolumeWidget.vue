@@ -97,6 +97,7 @@ import { computed, ref } from "vue";
 import { useControlStore } from "@/store/theControl";
 import { useServices } from "@/store/services";
 import { useFooter } from "@/store/theFooter";
+import { storageValueToGiB } from "@/composables/utils";
 
 import i18n from "@/includes/i18n";
 
@@ -124,14 +125,7 @@ const storagestatus = computed(() => {
   }
 
   return controlStore.storagestatus.map((item) => {
-    let valueInGB = parseFloat(item.storageValue);
-    if (item.storageValue.includes("MB")) {
-      valueInGB /= 1024;
-    } else if (item.storageValue.includes("KB")) {
-      valueInGB /= 1024 * 1024;
-    }
-
-    const percentage = (valueInGB / totalDisk.value) * 100;
+    const percentage = totalDisk.value ? (storageValueToGiB(item.storageValue) / totalDisk.value) * 100 : 0;
 
     const matchingService = serviceStore.installedServices.find((service) => service.service === item.service);
     const serviceIcon = matchingService ? matchingService.icon : "/path/to/default/icon.png";

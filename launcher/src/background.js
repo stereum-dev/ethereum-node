@@ -810,6 +810,10 @@ ipcMain.handle("handleOTPChange", async (event, args) => {
   );
 });
 
+ipcMain.handle("getExternalIp", async () => {
+  return await serviceManager.resolveExternalIp();
+});
+
 ipcMain.handle("fetchObolCharonAlerts", async () => {
   return await monitoring.fetchObolCharonAlerts();
 });
@@ -886,7 +890,8 @@ function registerAppProtocol() {
 // Content-Security-Policy: no 'unsafe-eval' (all runtime eval was removed; i18n uses JIT
 // compilation). connect-src stays permissive because the renderer talks to arbitrary
 // nodes/RPC endpoints/APIs; style 'unsafe-inline' covers Vite's dev style injection and
-// scoped styles. Applied in dev + prod (also silences Electron's insecure-CSP warning).
+// scoped styles; media-src allows data: for the inlined wav sound effects. Applied
+// in dev + prod (also silences Electron's insecure-CSP warning).
 function registerContentSecurityPolicy() {
   const csp = [
     "default-src 'self'",
@@ -894,6 +899,7 @@ function registerContentSecurityPolicy() {
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com data:",
     "img-src 'self' data: blob: https:",
+    "media-src 'self' data:",
     "connect-src 'self' http: https: ws: wss: data:",
     "worker-src 'self' blob:",
   ].join("; ");

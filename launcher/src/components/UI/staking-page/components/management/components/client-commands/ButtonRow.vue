@@ -11,6 +11,7 @@ import { ref } from 'vue'; import { useStakingStore } from '@/store/theStaking';
 </template>
 
 <script setup>
+import { isObolDVTService } from "@/share/ObolDVTServices";
 import { useStakingStore } from "@/store/theStaking";
 import { computed } from "vue";
 
@@ -28,7 +29,7 @@ const displayButtonByCondition = computed(() => {
 
   //Web3SignerService is selected in filter
   const isSelectedFilterWeb3Signer = stakingStore.selectedServiceToFilter?.service === "Web3SignerService";
-  const isSelectedFilterObol = stakingStore.selectedServiceToFilter?.service === "CharonService";
+  const isSelectedFilterObol = isObolDVTService(stakingStore.selectedServiceToFilter?.service);
   const isSelectedFilterSSV = stakingStore.selectedServiceToFilter?.service === "SSVNetworkService";
 
   // Remote Key btn

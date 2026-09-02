@@ -23,6 +23,7 @@
   </div>
 </template>
 <script setup>
+import { isObolDVTService } from "@/share/ObolDVTServices";
 import PluginRows from "./PluginRows.vue";
 import InstallationPath from "./InstallationPath.vue";
 import { useClickInstall } from "@/store/clickInstallation";
@@ -173,7 +174,8 @@ const checkPluginCategory = (element) => {
     case "mev boost":
     case "staking":
       filter = (item) =>
-        item.category === element.category && !/(SSVNetwork|Web3Signer|Charon|L2Geth|OpGeth|OpNode|OpReth|OpErigon)/.test(item.service);
+        item.category === element.category &&
+        !/(SSVNetwork|Web3Signer|Charon|Pluto|L2Geth|OpGeth|OpNode|OpReth|OpErigon)/.test(item.service);
       if (manageStore.currentNetwork.network == "gnosis") {
         filter = (item) =>
           item.category === element.category &&
@@ -197,12 +199,12 @@ const checkPluginCategory = (element) => {
     case "obol":
     case "lidoobol":
       filter = (item) => {
-        if (element.category === "execution" && element.service !== "CharonService") {
+        if (element.category === "execution" && !isObolDVTService(element.service)) {
           return item.category === element.category && !/(L2Geth|OpGeth|OpNode|OpReth|OpErigon)/.test(item.service);
-        } else if (element.category === "validator" && element.service !== "CharonService") {
-          return item.category === element.category && !/(SSVNetwork|Web3Signer|Charon)/.test(item.service);
-        } else if (element.category === "validator" && element.service === "CharonService") {
-          return item.service === "CharonService";
+        } else if (element.category === "validator" && !isObolDVTService(element.service)) {
+          return item.category === element.category && !/(SSVNetwork|Web3Signer|Charon|Pluto)/.test(item.service);
+        } else if (element.category === "validator" && isObolDVTService(element.service)) {
+          return isObolDVTService(item.service);
         } else {
           return item.category === element.category && !/(OpNode)/.test(item.service);
         }
@@ -214,14 +216,15 @@ const checkPluginCategory = (element) => {
     case "stereum on arm":
       filter = (item) =>
         item.category === element.category &&
-        !/(Prysm|Reth|SSVNetwork|Web3Signer|Charon|L2Geth|OpGeth|OpNode|OpReth|OpErigon)/.test(item.service);
+        !/(Prysm|Reth|SSVNetwork|Web3Signer|Charon|Pluto|L2Geth|OpGeth|OpNode|OpReth|OpErigon)/.test(item.service);
       if (manageStore.currentNetwork.network == "gnosis") {
         filter = (item) => item.category === element.category && /(Lighthouse|Teku|Nethermind)/.test(item.service);
       }
       break;
     case "archive":
       filter = (item) =>
-        item.category === element.category && !/(SSVNetwork|Web3Signer|Charon|L2Geth|OpGeth|OpNode|OpReth|OpErigon)/.test(item.service);
+        item.category === element.category &&
+        !/(SSVNetwork|Web3Signer|Charon|Pluto|L2Geth|OpGeth|OpNode|OpReth|OpErigon)/.test(item.service);
       if (manageStore.currentNetwork.network == "gnosis") {
         filter = (item) =>
           item.category === element.category &&
@@ -263,7 +266,9 @@ const checkPluginCategory = (element) => {
             return item.category === "execution" && item.service === "L2GethService";
           }
 
-          return item.category === "execution" && !/(SSVNetwork|Web3Signer|Charon|L2Geth|OpGeth|OpNode|OpReth|OpErigon)/.test(item.service);
+          return (
+            item.category === "execution" && !/(SSVNetwork|Web3Signer|Charon|Pluto|L2Geth|OpGeth|OpNode|OpReth|OpErigon)/.test(item.service)
+          );
         }
 
         if (element.category === "consensus" && element.service === "OpNodeBeaconService") {
@@ -271,7 +276,8 @@ const checkPluginCategory = (element) => {
         }
 
         return (
-          item.category === element.category && !/(SSVNetwork|Web3Signer|Charon|L2Geth|OpGeth|OpNode|OpReth|OpErigon)/.test(item.service)
+          item.category === element.category &&
+          !/(SSVNetwork|Web3Signer|Charon|Pluto|L2Geth|OpGeth|OpNode|OpReth|OpErigon)/.test(item.service)
         );
       };
       break;
@@ -287,7 +293,9 @@ const checkPluginCategory = (element) => {
             return item.category === "execution" && item.service === "L2GethService";
           }
 
-          return item.category === "execution" && !/(SSVNetwork|Web3Signer|Charon|L2Geth|OpGeth|OpNode|OpReth|OpErigon)/.test(item.service);
+          return (
+            item.category === "execution" && !/(SSVNetwork|Web3Signer|Charon|Pluto|L2Geth|OpGeth|OpNode|OpReth|OpErigon)/.test(item.service)
+          );
         }
         if (element.category === "consensus" && element.service === "OpNodeBeaconService") {
           return item.category === element.category && /(OpNode)/.test(item.service);
@@ -308,7 +316,9 @@ const checkPluginCategory = (element) => {
             return item.category === "execution" && item.service === "L2GethService";
           }
 
-          return item.category === "execution" && !/(SSVNetwork|Web3Signer|Charon|L2Geth|OpGeth|OpNode|OpReth|OpErigon)/.test(item.service);
+          return (
+            item.category === "execution" && !/(SSVNetwork|Web3Signer|Charon|Pluto|L2Geth|OpGeth|OpNode|OpReth|OpErigon)/.test(item.service)
+          );
         }
 
         if (element.category === "consensus" && element.service === "OpNodeBeaconService") {
@@ -316,7 +326,8 @@ const checkPluginCategory = (element) => {
         }
 
         return (
-          item.category === element.category && !/(SSVNetwork|Web3Signer|Charon|L2Geth|OpGeth|OpNode|OpReth|OpErigon)/.test(item.service)
+          item.category === element.category &&
+          !/(SSVNetwork|Web3Signer|Charon|Pluto|L2Geth|OpGeth|OpNode|OpReth|OpErigon)/.test(item.service)
         );
       };
       break;

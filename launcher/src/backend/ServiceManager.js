@@ -9,6 +9,7 @@ import { BesuService } from "./ethereum-services/BesuService";
 import { SSVNetworkService } from "./ethereum-services/SSVNetworkService";
 import { SSVDKGService } from "./ethereum-services/SSVDKGService";
 import { CharonService } from "./ethereum-services/CharonService";
+import { PlutoService } from "./ethereum-services/PlutoService";
 import { NimbusBeaconService } from "./ethereum-services/NimbusBeaconService";
 import { NimbusValidatorService } from "./ethereum-services/NimbusValidatorService";
 import { PrometheusService } from "./ethereum-services/PrometheusService";
@@ -42,6 +43,7 @@ import { OpNodeBeaconService } from "./ethereum-services/OpNodeBeaconService";
 import { L2GethService } from "./ethereum-services/L2GethService";
 import { SSVNOMService } from "./ethereum-services/SSVNOMService";
 import { EthrexService } from "./ethereum-services/EthrexService";
+import { isObolDVTService } from "@/share/ObolDVTServices";
 
 import YAML from "yaml";
 // import { file } from "jszip";
@@ -172,6 +174,8 @@ export class ServiceManager {
               services.push(KeysAPIService.buildByConfiguration(config));
             } else if (config.service == "CharonService") {
               services.push(CharonService.buildByConfiguration(config));
+            } else if (config.service == "PlutoService") {
+              services.push(PlutoService.buildByConfiguration(config));
             } else if (config.service == "ExternalConsensusService") {
               services.push(ExternalConsensusService.buildByConfiguration(config));
             } else if (config.service == "ExternalExecutionService") {
@@ -477,7 +481,7 @@ export class ServiceManager {
           filter = (e) => e.buildConsensusClientHttpEndpointUrl();
           command = "--beaconNodes=";
         }
-        if (dependencies.some((d) => d.service === "CharonService")) {
+        if (dependencies.some((d) => isObolDVTService(d.service))) {
           service.command.push("--distributed");
         }
         break;
@@ -572,6 +576,7 @@ export class ServiceManager {
         }
         break;
       case "Charon":
+      case "Pluto":
         filter = (e) => e.buildConsensusClientHttpEndpointUrl();
         command = "--beacon-node-endpoints=";
         break;
@@ -657,7 +662,7 @@ export class ServiceManager {
       if (service.service === "OpNodeBeaconService") {
         service.volumes = service.volumes.filter((vol) => vol.servicePath !== "/engine.jwt");
       }
-    } else if (service.service.includes("Validator") || service.service.includes("Charon")) {
+    } else if (service.service.includes("Validator") || isObolDVTService(service.service)) {
       service.dependencies.consensusClients = dependencies;
     } else if (service.service.includes("OpErigon") || service.service.includes("OpGeth")) {
       service.dependencies.executionClients = dependencies.filter((d) => d.service === "L2GethService");
@@ -748,14 +753,14 @@ export class ServiceManager {
   addLidoObolExitConnection(service, dependencies) {
     // handle beacon node command dependency
     const consensusClient = dependencies.filter(
-      (d) => typeof d.buildConsensusClientHttpEndpointUrl === "function" && d.service != "CharonService"
+      (d) => typeof d.buildConsensusClientHttpEndpointUrl === "function" && !isObolDVTService(d.service)
     )[0];
     let filter = (e) => e.buildConsensusClientHttpEndpointUrl();
     let command = "--beacon-node-url=";
     service.command = this.addCommandConnection(service, command, consensusClient ? [consensusClient] : [], filter);
 
     // handle charon volume dependency
-    const charon = dependencies.find((d) => d.service === "CharonService");
+    const charon = dependencies.find((d) => isObolDVTService(d.service));
     service.volumes = service.volumes.filter((v) => !v.servicePath.includes("charon"));
     if (charon) {
       service.volumes.push(new ServiceVolume(`${charon.getDataDir()}/.charon`, "/charon"));
@@ -864,6 +869,22 @@ export class ServiceManager {
     return command + newValue;
   }
 
+  /**
+   * buildConfiguration() always reports autoupdate as enabled, so carry over
+   * whatever the service was configured with. Falls back to enabled, which is
+   * what writing the configuration directly would have done anyway.
+   */
+  async writeServiceConfigurationKeepingAutoupdate(service) {
+    const configuration = service.buildConfiguration();
+    try {
+      const stored = await this.nodeConnection.readServiceConfiguration(service.id);
+      configuration.autoupdate = stored?.autoupdate ?? true;
+    } catch (err) {
+      log.warn(`Couldn't read the stored autoupdate flag of ${service.id}, keeping it enabled:`, err?.message ?? err);
+    }
+    await this.nodeConnection.writeServiceConfiguration(configuration);
+  }
+
   async deleteService(task, _tasks, services, ssvConfigs) {
     let serviceToDelete = services.find((service) => service.id === task.service.config.serviceID);
     let dependents = [];
@@ -879,7 +900,7 @@ export class ServiceManager {
       if (service.service === "SSVNetworkService") {
         this.removeSSVNetworkConnection(service, serviceToDelete, ssvConfigs);
       }
-      this.nodeConnection.writeServiceConfiguration(service.buildConfiguration());
+      await this.writeServiceConfigurationKeepingAutoupdate(service);
     }
     if (serviceToDelete.service === "Web3SignerService") {
       await this.nodeConnection.sshService.exec(
@@ -895,7 +916,19 @@ export class ServiceManager {
     });
   }
 
+  /**
+   * @param {Object} switchTask - a "SWITCH CLIENT" task
+   * @returns {boolean} true if swapped in place, so the previous service must not be deleted
+   */
   async switchServices(switchTask) {
+    // Charon and Pluto share one ".charon" directory (ENR key, cluster lock,
+    // key shares); installing a replacement and deleting the old service would
+    // take it with them, so swap in place.
+    if (isObolDVTService(switchTask.service.service) && isObolDVTService(switchTask.data.itemToInstall?.service)) {
+      await this.switchObolDVTClient(switchTask);
+      return true;
+    }
+
     await this.configManager.deleteServiceFromSetup(switchTask.id, switchTask.setupId);
     let services = await this.readServiceConfigurations();
 
@@ -967,6 +1000,83 @@ export class ServiceManager {
         }
       });
     }
+  }
+
+  /**
+   * Swap Charon <-> Pluto in place: only image and entrypoint change, so the
+   * ".charon" data, id, ports, volumes, dependencies and command all survive.
+   *
+   * @param {Object} switchTask - a "SWITCH CLIENT" task between two DV clients
+   */
+  async switchObolDVTClient(switchTask) {
+    const serviceID = switchTask.service.config.serviceID;
+    const target = switchTask.data.itemToInstall.service;
+    const services = await this.readServiceConfigurations();
+    const current = services.find((service) => service.id === serviceID);
+
+    if (!current) throw new Error(`Couldn't find service ${serviceID} to switch`);
+    if (!isObolDVTService(current.service)) throw new Error(`${current.service} is not an Obol DV middleware client`);
+    if (current.service === target) return;
+
+    // both clients take the same flags, so the command carries over verbatim
+    const config = current.buildConfiguration();
+    const swapped = target === "PlutoService" ? PlutoService.buildByConfiguration(config) : CharonService.buildByConfiguration(config);
+    const canonical = this.getService(target, { network: current.network, installDir: "/opt/stereum", consensusClients: [] });
+
+    // buildConfiguration() minimises dependencies and initByConfig() keeps them
+    // as given, so reuse the resolved ones rather than re-minimising plain objects
+    swapped.dependencies = current.dependencies;
+
+    swapped.service = target;
+    swapped.image = canonical.image;
+    swapped.imageVersion = await this.latestImageVersion(target, current.network, canonical.imageVersion);
+    swapped.entrypoint = canonical.entrypoint;
+
+    log.info(`Switching ${current.service} ${serviceID} to ${target} (${swapped.image}:${swapped.imageVersion})`);
+
+    // Dependents persist the client's name alongside its id. They hold a
+    // reference to `current`, so renaming it is what their minimal
+    // configurations will serialise.
+    const dependents = services.filter((service) =>
+      Object.values(service.dependencies).some((deps) => deps.some((d) => d?.id === serviceID))
+    );
+    current.service = target;
+
+    // "restarted" skips the role's firewall task, so stop then start
+    await this.manageServiceState(serviceID, "stopped");
+    await this.writeServiceConfigurationKeepingAutoupdate(swapped);
+    for (const dependent of dependents) {
+      await this.writeServiceConfigurationKeepingAutoupdate(dependent);
+    }
+    await this.manageServiceState(serviceID, "started");
+  }
+
+  async latestImageVersion(serviceName, network, fallback) {
+    try {
+      const versions = await this.nodeConnection.nodeUpdates.checkUpdates();
+      const tags = versions?.[network]?.[serviceName] ?? versions?.mainnet?.[serviceName];
+      if (Array.isArray(tags) && tags.length) return tags.slice(-1).pop();
+    } catch (err) {
+      log.error(`Couldn't fetch versions for ${serviceName}, using ${fallback}:`, err);
+    }
+    return fallback;
+  }
+
+  /**
+   * @returns {string|null} the node's publicly reachable IPv4 address
+   */
+  async resolveExternalIp() {
+    const services = ["https://api.ipify.org", "https://ifconfig.me/ip", "https://icanhazip.com"];
+    for (const url of services) {
+      try {
+        const result = await this.nodeConnection.sshService.exec(`curl -4 -fsS --max-time 5 ${url}`);
+        const ip = result.stdout?.trim();
+        if (/^(\d{1,3}\.){3}\d{1,3}$/.test(ip)) return ip;
+      } catch (err) {
+        log.warn(`Couldn't resolve the external IP via ${url}:`, err);
+      }
+    }
+    return null;
   }
 
   //args: network, installDir, port, executionClients, checkpointURL, consensusClients, mevboost, relays // for external -> source, jwtToken // chainId -> for devnet
@@ -1212,6 +1322,10 @@ export class ServiceManager {
       case "CharonService":
         ports = [new ServicePort(null, 3610, 3610, servicePortProtocol.tcp)];
         return CharonService.buildByUserInput(args.network, ports, args.installDir + "/charon", args.consensusClients);
+
+      case "PlutoService":
+        ports = [new ServicePort(null, 3610, 3610, servicePortProtocol.tcp)];
+        return PlutoService.buildByUserInput(args.network, ports, args.installDir + "/pluto", args.consensusClients);
 
       case "ExternalExecutionService":
         return ExternalExecutionService.buildByUserInput(args.network, args.installDir + "/externalExecution", args.source, args.jwtToken);
@@ -1494,7 +1608,7 @@ export class ServiceManager {
       setupAndServiceIds[service.id] = t.data.setupId;
       newServices.push(service);
     });
-    let DVTInstalls = tasks.filter((t) => /SSVNetwork|Charon/.test(t.service.service));
+    let DVTInstalls = tasks.filter((t) => /SSVNetwork/.test(t.service.service) || isObolDVTService(t.service.service));
     DVTInstalls.forEach((t) => {
       if (t.service.service == "SSVNetworkService" && services.filter((s) => s.service === "SSVNetworkService").length) {
         // TODO: Make SSVNetworkService multiservice (which depends also on SSVDKGService)
@@ -1507,7 +1621,9 @@ export class ServiceManager {
       setupAndServiceIds[service.id] = t.data.setupId;
       newServices.push(service);
     });
-    let VLInstalls = tasks.filter((t) => t.service.category === "validator" && !/SSVNetwork|Charon/.test(t.service.service));
+    let VLInstalls = tasks.filter(
+      (t) => t.service.category === "validator" && !/SSVNetwork/.test(t.service.service) && !isObolDVTService(t.service.service)
+    );
     VLInstalls.forEach((t) => {
       this.updateInfoForDependencies(t, services, newServices, ELInstalls, CLInstalls, undefined, DVTInstalls);
       let service = this.getService(t.service.service, t.data);
@@ -1994,22 +2110,30 @@ export class ServiceManager {
     }
     if (jobs.includes("SWITCH CLIENT")) {
       let before = this.nodeConnection.nodeUpdates.getTimeStamp();
+      let switchTasks = tasks.filter((t) => t.content === "SWITCH CLIENT");
+      let swappedInPlace = [];
       try {
-        let switchTasks = tasks.filter((t) => t.content === "SWITCH CLIENT");
         for (const switchTask of switchTasks) {
-          await this.switchServices(switchTask);
+          if (await this.switchServices(switchTask)) swappedInPlace.push(switchTask.service.config.serviceID);
         }
         let services = await this.readServiceConfigurations();
         await Promise.all(
-          tasks.filter(ServiceManager.uniqueByID("SWITCH CLIENT")).map((task, _index, tasks) => {
-            return this.deleteService(task, tasks, services);
-          })
+          tasks
+            .filter(ServiceManager.uniqueByID("SWITCH CLIENT"))
+            .filter((task) => !swappedInPlace.includes(task.service.config.serviceID))
+            .map((task, _index, tasks) => {
+              return this.deleteService(task, tasks, services);
+            })
         );
       } catch (err) {
         log.error("Switching Services Failed:", err);
       } finally {
-        let after = this.nodeConnection.nodeUpdates.getTimeStamp();
-        await this.nodeConnection.nodeUpdates.restartServices(after - before);
+        // an in place swap restarted the service already; "restart-services"
+        // would cycle it again and prune the previous client's image
+        if (swappedInPlace.length < switchTasks.length) {
+          let after = this.nodeConnection.nodeUpdates.getTimeStamp();
+          await this.nodeConnection.nodeUpdates.restartServices(after - before);
+        }
       }
     }
     let services = await this.readServiceConfigurations();
@@ -2554,7 +2678,8 @@ export class ServiceManager {
       }));
       return translators;
     } catch (error) {
-      console.error("Failed to fetch translators:", error);
+      log.warn("Couldn't fetch translators, the credits list stays empty:", error?.message ?? error);
+      return [];
     }
   }
 
@@ -2568,7 +2693,8 @@ export class ServiceManager {
       }));
       return testers;
     } catch (error) {
-      console.error("Failed to fetch GitHub testers:", error);
+      log.warn("Couldn't fetch GitHub testers, the credits list stays empty:", error?.message ?? error);
+      return [];
     }
   }
 
