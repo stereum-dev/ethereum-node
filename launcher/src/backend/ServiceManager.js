@@ -2656,7 +2656,8 @@ export class ServiceManager {
       }));
       return translators;
     } catch (error) {
-      console.error("Failed to fetch translators:", error);
+      log.warn("Couldn't fetch translators, the credits list stays empty:", error?.message ?? error);
+      return [];
     }
   }
 
@@ -2670,7 +2671,8 @@ export class ServiceManager {
       }));
       return testers;
     } catch (error) {
-      console.error("Failed to fetch GitHub testers:", error);
+      log.warn("Couldn't fetch GitHub testers, the credits list stays empty:", error?.message ?? error);
+      return [];
     }
   }
 

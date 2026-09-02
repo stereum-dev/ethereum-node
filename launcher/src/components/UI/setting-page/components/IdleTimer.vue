@@ -19,7 +19,7 @@ let idleTimer = false;
 const checkSettings = async () => {
   try {
     const savedConfig = await ControlService.readConfig();
-    if (typeof savedConfig.idleTimer.enabled !== "undefined") {
+    if (typeof savedConfig?.idleTimer?.enabled !== "undefined") {
       footerStore.idleTimer = savedConfig.idleTimer.enabled;
     } else {
       updateSettings(false, footerStore.idleTimerTime);

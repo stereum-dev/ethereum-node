@@ -19,7 +19,7 @@ const footerStore = useFooter();
 const checkSettings = async () => {
   try {
     const savedConfig = await ControlService.readConfig();
-    if (typeof savedConfig.logBackups.value !== "undefined") {
+    if (typeof savedConfig?.logBackups?.value !== "undefined") {
       footerStore.logBackups = savedConfig.logBackups.value;
     } else {
       updateSettings(5);
