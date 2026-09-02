@@ -900,7 +900,19 @@ export class ServiceManager {
     });
   }
 
+  /**
+   * @param {Object} switchTask - a "SWITCH CLIENT" task
+   * @returns {boolean} true if swapped in place, so the previous service must not be deleted
+   */
   async switchServices(switchTask) {
+    // Charon and Pluto share one ".charon" directory (ENR key, cluster lock,
+    // key shares); installing a replacement and deleting the old service would
+    // take it with them, so swap in place.
+    if (isObolDVTService(switchTask.service.service) && isObolDVTService(switchTask.data.itemToInstall?.service)) {
+      await this.switchObolDVTClient(switchTask);
+      return true;
+    }
+
     await this.configManager.deleteServiceFromSetup(switchTask.id, switchTask.setupId);
     let services = await this.readServiceConfigurations();
 
@@ -972,6 +984,60 @@ export class ServiceManager {
         }
       });
     }
+  }
+
+  /**
+   * Swap Charon <-> Pluto in place: only image and entrypoint change, so the
+   * ".charon" data, id, ports, volumes, dependencies and command all survive.
+   *
+   * @param {Object} switchTask - a "SWITCH CLIENT" task between two DV clients
+   */
+  async switchObolDVTClient(switchTask) {
+    const serviceID = switchTask.service.config.serviceID;
+    const target = switchTask.data.itemToInstall.service;
+    const services = await this.readServiceConfigurations();
+    const current = services.find((service) => service.id === serviceID);
+
+    if (!current) throw new Error(`Couldn't find service ${serviceID} to switch`);
+    if (!isObolDVTService(current.service)) throw new Error(`${current.service} is not an Obol DV middleware client`);
+    if (current.service === target) return;
+
+    // both clients take the same flags, so the command carries over verbatim
+    const config = current.buildConfiguration();
+    const swapped = target === "PlutoService" ? PlutoService.buildByConfiguration(config) : CharonService.buildByConfiguration(config);
+    const canonical = this.getService(target, { network: current.network, installDir: "/opt/stereum", consensusClients: [] });
+
+    // buildConfiguration() minimises dependencies and initByConfig() keeps them
+    // as given, so reuse the resolved ones rather than re-minimising plain objects
+    swapped.dependencies = current.dependencies;
+
+    swapped.service = target;
+    swapped.image = canonical.image;
+    swapped.imageVersion = await this.latestImageVersion(target, current.network, canonical.imageVersion);
+    swapped.entrypoint = canonical.entrypoint;
+
+    // buildConfiguration() always reports autoupdate as enabled
+    const configuration = swapped.buildConfiguration();
+    const storedConfiguration = await this.nodeConnection.readServiceConfiguration(serviceID);
+    configuration.autoupdate = storedConfiguration?.autoupdate ?? true;
+
+    log.info(`Switching ${current.service} ${serviceID} to ${target} (${configuration.image})`);
+
+    // "restarted" skips the role's firewall task, so stop then start
+    await this.manageServiceState(serviceID, "stopped");
+    await this.nodeConnection.writeServiceConfiguration(configuration);
+    await this.manageServiceState(serviceID, "started");
+  }
+
+  async latestImageVersion(serviceName, network, fallback) {
+    try {
+      const versions = await this.nodeConnection.nodeUpdates.checkUpdates();
+      const tags = versions?.[network]?.[serviceName] ?? versions?.mainnet?.[serviceName];
+      if (Array.isArray(tags) && tags.length) return tags.slice(-1).pop();
+    } catch (err) {
+      log.error(`Couldn't fetch versions for ${serviceName}, using ${fallback}:`, err);
+    }
+    return fallback;
   }
 
   /**
@@ -2022,22 +2088,30 @@ export class ServiceManager {
     }
     if (jobs.includes("SWITCH CLIENT")) {
       let before = this.nodeConnection.nodeUpdates.getTimeStamp();
+      let switchTasks = tasks.filter((t) => t.content === "SWITCH CLIENT");
+      let swappedInPlace = [];
       try {
-        let switchTasks = tasks.filter((t) => t.content === "SWITCH CLIENT");
         for (const switchTask of switchTasks) {
-          await this.switchServices(switchTask);
+          if (await this.switchServices(switchTask)) swappedInPlace.push(switchTask.service.config.serviceID);
         }
         let services = await this.readServiceConfigurations();
         await Promise.all(
-          tasks.filter(ServiceManager.uniqueByID("SWITCH CLIENT")).map((task, _index, tasks) => {
-            return this.deleteService(task, tasks, services);
-          })
+          tasks
+            .filter(ServiceManager.uniqueByID("SWITCH CLIENT"))
+            .filter((task) => !swappedInPlace.includes(task.service.config.serviceID))
+            .map((task, _index, tasks) => {
+              return this.deleteService(task, tasks, services);
+            })
         );
       } catch (err) {
         log.error("Switching Services Failed:", err);
       } finally {
-        let after = this.nodeConnection.nodeUpdates.getTimeStamp();
-        await this.nodeConnection.nodeUpdates.restartServices(after - before);
+        // an in place swap restarted the service already; "restart-services"
+        // would cycle it again and prune the previous client's image
+        if (swappedInPlace.length < switchTasks.length) {
+          let after = this.nodeConnection.nodeUpdates.getTimeStamp();
+          await this.nodeConnection.nodeUpdates.restartServices(after - before);
+        }
       }
     }
     let services = await this.readServiceConfigurations();

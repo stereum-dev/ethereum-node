@@ -351,3 +351,167 @@ test("change network", () => {
   );
   expect(services.find((s) => s.service === "LighthouseBeaconService").command).toContain("--network=mainnet");
 });
+
+const beaconConfig = (id) => {
+  return {
+    service: "LighthouseBeaconService",
+    id: id,
+    configVersion: 1,
+    command: ["lighthouse", "bn", "--network=hoodi"],
+    entrypoint: [],
+    env: {},
+    image: "sigp/lighthouse:v8.2.2",
+    ports: ["0.0.0.0:9000:9000/tcp"],
+    volumes: ["/opt/stereum/lighthouse-" + id + ":/opt/app/beacon"],
+    user: "2000",
+    network: "hoodi",
+    autoupdate: true,
+    dependencies: { executionClients: [], consensusClients: [], mevboost: [], otherServices: [] },
+  };
+};
+
+const charonConfig = (id) => {
+  return {
+    service: "CharonService",
+    id: id,
+    configVersion: 1,
+    command: [
+      "run",
+      "--beacon-node-endpoints=http://stereum-lh-id:5052",
+      "--log-level=info",
+      "--p2p-tcp-address=0.0.0.0:3610",
+      "--validator-api-address=0.0.0.0:3600",
+      "--monitoring-address=0.0.0.0:3620",
+      "--builder-api",
+      "--graffiti=custom",
+    ],
+    entrypoint: ["/usr/local/bin/charon"],
+    env: {},
+    image: "obolnetwork/charon:v1.11.0",
+    ports: ["0.0.0.0:3610:3610/tcp"],
+    volumes: ["/opt/stereum/charon-" + id + ":/opt/charon"],
+    user: "2000",
+    network: "hoodi",
+    autoupdate: false,
+    dependencies: {
+      executionClients: [],
+      consensusClients: [{ id: "lh-id", service: "LighthouseBeaconService" }],
+      mevboost: [],
+      otherServices: [],
+    },
+  };
+};
+
+const switchMocks = (configs) => {
+  jest.mock("../../NodeConnection");
+  const NodeConnection = require("../../NodeConnection");
+  const writeServiceConfiguration = jest.fn(() => Promise.resolve());
+  const runPlaybook = jest.fn(() => Promise.resolve({ playbookRunRef: "ref" }));
+  NodeConnection.NodeConnection.mockImplementation(() => {
+    return {
+      listServicesConfigurations: jest.fn(() => Promise.resolve(configs.map((c) => c.id))),
+      readServiceConfiguration: jest.fn((id) => Promise.resolve(configs.find((c) => c.id === id))),
+      writeServiceConfiguration: writeServiceConfiguration,
+      runPlaybook: runPlaybook,
+      nodeUpdates: { checkUpdates: jest.fn(() => Promise.resolve({ hoodi: { PlutoService: ["v0.1.3", "v0.1.4"] } })) },
+      sshService: { exec: jest.fn(() => Promise.resolve({ stdout: "80.249.121.1\n", stderr: "", rc: 0 })) },
+    };
+  });
+  return { NodeConnection, writeServiceConfiguration, runPlaybook };
+};
+
+test("switchServices swaps charon for pluto in place", async () => {
+  const config = charonConfig("charon-id");
+  const { NodeConnection, writeServiceConfiguration, runPlaybook } = switchMocks([config, beaconConfig("lh-id")]);
+  const sm = new ServiceManager(NodeConnection.NodeConnection());
+
+  const handledInPlace = await sm.switchServices({
+    id: "charon-id",
+    setupId: "setup-id",
+    service: { service: "CharonService", category: "validator", config: { serviceID: "charon-id", network: "hoodi" } },
+    data: { itemToInstall: { service: "PlutoService" }, data: {} },
+  });
+
+  // the previous service must survive: it holds the ENR key and key shares
+  expect(handledInPlace).toBe(true);
+
+  const written = writeServiceConfiguration.mock.calls[0][0];
+  expect(written.service).toMatch("PlutoService");
+  expect(written.image).toMatch("nethermindeth/pluto:v0.1.4");
+  expect(written.entrypoint).toEqual(["/app/bin/pluto"]);
+
+  // identity, ports and data directory are untouched
+  expect(written.id).toMatch("charon-id");
+  expect(written.ports).toEqual(config.ports);
+  expect(written.volumes).toEqual(config.volumes);
+  expect(written.user).toMatch("2000");
+  expect(written.autoupdate).toBe(false);
+
+  // dependencies come back out as minimal configs
+  expect(written.dependencies.consensusClients).toEqual([{ id: "lh-id", service: "LighthouseBeaconService" }]);
+
+  // carried over verbatim; "--p2p-external-ip" is the user's to set
+  expect(written.command).toEqual(config.command);
+
+  // stopped then started, so "manage-service" reconciles the firewall rules
+  expect(runPlaybook.mock.calls.map((c) => c[1].stereum_args.manage_service.state)).toEqual(["stopped", "started"]);
+});
+
+test("switchServices swaps pluto back to charon in place", async () => {
+  const config = charonConfig("pluto-id");
+  config.service = "PlutoService";
+  config.image = "nethermindeth/pluto:v0.1.4";
+  config.entrypoint = ["/app/bin/pluto"];
+  config.command.push("--p2p-external-ip=80.249.121.1");
+
+  const { NodeConnection, writeServiceConfiguration } = switchMocks([config, beaconConfig("lh-id")]);
+  const sm = new ServiceManager(NodeConnection.NodeConnection());
+
+  const handledInPlace = await sm.switchServices({
+    id: "pluto-id",
+    setupId: "setup-id",
+    service: { service: "PlutoService", category: "validator", config: { serviceID: "pluto-id", network: "hoodi" } },
+    data: { itemToInstall: { service: "CharonService" }, data: {} },
+  });
+
+  expect(handledInPlace).toBe(true);
+
+  const written = writeServiceConfiguration.mock.calls[0][0];
+  expect(written.service).toMatch("CharonService");
+  expect(written.image).toMatch(/^obolnetwork\/charon:/);
+  expect(written.entrypoint).toEqual(["/usr/local/bin/charon"]);
+  expect(written.id).toMatch("pluto-id");
+  // charon accepts the same flag, so a hand set external ip survives the swap
+  expect(written.command).toEqual(config.command);
+  expect(written.command).toContain("--graffiti=custom");
+  expect(written.command).toContain("--p2p-external-ip=80.249.121.1");
+});
+
+test("resolveExternalIp falls through to the next service", async () => {
+  jest.mock("../../NodeConnection");
+  const NodeConnection = require("../../NodeConnection");
+  const exec = jest
+    .fn()
+    .mockResolvedValueOnce({ stdout: "", stderr: "curl: (6) Could not resolve host", rc: 6 })
+    .mockResolvedValueOnce({ stdout: "80.249.121.1\n", stderr: "", rc: 0 });
+  NodeConnection.NodeConnection.mockImplementation(() => {
+    return { sshService: { exec: exec } };
+  });
+
+  const sm = new ServiceManager(NodeConnection.NodeConnection());
+
+  await expect(sm.resolveExternalIp()).resolves.toMatch("80.249.121.1");
+  expect(exec).toHaveBeenCalledTimes(2);
+});
+
+test("resolveExternalIp reports failure instead of a bogus address", async () => {
+  jest.mock("../../NodeConnection");
+  const NodeConnection = require("../../NodeConnection");
+  NodeConnection.NodeConnection.mockImplementation(() => {
+    return { sshService: { exec: jest.fn(() => Promise.resolve({ stdout: "<html>nope</html>", stderr: "", rc: 0 })) } };
+  });
+
+  const sm = new ServiceManager(NodeConnection.NodeConnection());
+
+  await expect(sm.resolveExternalIp()).resolves.toBeNull();
+});

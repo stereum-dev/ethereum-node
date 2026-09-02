@@ -56,6 +56,7 @@ import { ref, computed } from "vue";
 import { useServices } from "@/store/services";
 import { useSetups } from "@/store/setups";
 import SyncCarousel from "../edit/SyncCarousel";
+import { isObolDVTService } from "@/share/ObolDVTServices";
 
 const props = defineProps({
   client: {
@@ -92,8 +93,17 @@ const getServices = computed(() => {
     return allServices.filter((e) => ["OpErigon", "OpGeth", "OpReth"].includes(e.name) && e.name !== excludedService);
   }
 
+  // DV middleware is interchangeable only with itself, not with a validator client
+  if (isObolDVTService(props.client.service)) {
+    return allServices.filter((e) => isObolDVTService(e.service) && e.service !== props.client.service);
+  }
+
   return allServices.filter(
-    (e) => e.category === props.client.category && e.name !== excludedService && !excludedOpServices.includes(e.name)
+    (e) =>
+      e.category === props.client.category &&
+      e.name !== excludedService &&
+      !excludedOpServices.includes(e.name) &&
+      !isObolDVTService(e.service)
   );
 });
 
