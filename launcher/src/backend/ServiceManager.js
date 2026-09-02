@@ -869,6 +869,22 @@ export class ServiceManager {
     return command + newValue;
   }
 
+  /**
+   * buildConfiguration() always reports autoupdate as enabled, so carry over
+   * whatever the service was configured with. Falls back to enabled, which is
+   * what writing the configuration directly would have done anyway.
+   */
+  async writeServiceConfigurationKeepingAutoupdate(service) {
+    const configuration = service.buildConfiguration();
+    try {
+      const stored = await this.nodeConnection.readServiceConfiguration(service.id);
+      configuration.autoupdate = stored?.autoupdate ?? true;
+    } catch (err) {
+      log.warn(`Couldn't read the stored autoupdate flag of ${service.id}, keeping it enabled:`, err?.message ?? err);
+    }
+    await this.nodeConnection.writeServiceConfiguration(configuration);
+  }
+
   async deleteService(task, _tasks, services, ssvConfigs) {
     let serviceToDelete = services.find((service) => service.id === task.service.config.serviceID);
     let dependents = [];
@@ -884,7 +900,7 @@ export class ServiceManager {
       if (service.service === "SSVNetworkService") {
         this.removeSSVNetworkConnection(service, serviceToDelete, ssvConfigs);
       }
-      this.nodeConnection.writeServiceConfiguration(service.buildConfiguration());
+      await this.writeServiceConfigurationKeepingAutoupdate(service);
     }
     if (serviceToDelete.service === "Web3SignerService") {
       await this.nodeConnection.sshService.exec(
@@ -1016,16 +1032,22 @@ export class ServiceManager {
     swapped.imageVersion = await this.latestImageVersion(target, current.network, canonical.imageVersion);
     swapped.entrypoint = canonical.entrypoint;
 
-    // buildConfiguration() always reports autoupdate as enabled
-    const configuration = swapped.buildConfiguration();
-    const storedConfiguration = await this.nodeConnection.readServiceConfiguration(serviceID);
-    configuration.autoupdate = storedConfiguration?.autoupdate ?? true;
+    log.info(`Switching ${current.service} ${serviceID} to ${target} (${swapped.image}:${swapped.imageVersion})`);
 
-    log.info(`Switching ${current.service} ${serviceID} to ${target} (${configuration.image})`);
+    // Dependents persist the client's name alongside its id. They hold a
+    // reference to `current`, so renaming it is what their minimal
+    // configurations will serialise.
+    const dependents = services.filter((service) =>
+      Object.values(service.dependencies).some((deps) => deps.some((d) => d?.id === serviceID))
+    );
+    current.service = target;
 
     // "restarted" skips the role's firewall task, so stop then start
     await this.manageServiceState(serviceID, "stopped");
-    await this.nodeConnection.writeServiceConfiguration(configuration);
+    await this.writeServiceConfigurationKeepingAutoupdate(swapped);
+    for (const dependent of dependents) {
+      await this.writeServiceConfigurationKeepingAutoupdate(dependent);
+    }
     await this.manageServiceState(serviceID, "started");
   }
 

@@ -370,6 +370,29 @@ const beaconConfig = (id) => {
   };
 };
 
+const validatorConfig = (id, dvId) => {
+  return {
+    service: "LodestarValidatorService",
+    id: id,
+    configVersion: 1,
+    command: ["validator", `--beaconNodes=http://stereum-${dvId}:3600`, "--distributed"],
+    entrypoint: [],
+    env: {},
+    image: "chainsafe/lodestar:v1.46.0",
+    ports: [],
+    volumes: ["/opt/stereum/lodestar-" + id + ":/opt/app/validator"],
+    user: "2000",
+    network: "hoodi",
+    autoupdate: false,
+    dependencies: {
+      executionClients: [],
+      consensusClients: [{ id: dvId, service: "CharonService" }],
+      mevboost: [],
+      otherServices: [],
+    },
+  };
+};
+
 const charonConfig = (id) => {
   return {
     service: "CharonService",
@@ -422,7 +445,8 @@ const switchMocks = (configs) => {
 
 test("switchServices swaps charon for pluto in place", async () => {
   const config = charonConfig("charon-id");
-  const { NodeConnection, writeServiceConfiguration, runPlaybook } = switchMocks([config, beaconConfig("lh-id")]);
+  const vc = validatorConfig("vc-id", "charon-id");
+  const { NodeConnection, writeServiceConfiguration, runPlaybook } = switchMocks([config, beaconConfig("lh-id"), vc]);
   const sm = new ServiceManager(NodeConnection.NodeConnection());
 
   const handledInPlace = await sm.switchServices({
@@ -455,6 +479,35 @@ test("switchServices swaps charon for pluto in place", async () => {
 
   // stopped then started, so "manage-service" reconciles the firewall rules
   expect(runPlaybook.mock.calls.map((c) => c[1].stereum_args.manage_service.state)).toEqual(["stopped", "started"]);
+});
+
+test("switchServices refreshes what dependents recorded about the client", async () => {
+  const config = charonConfig("charon-id");
+  const vc = validatorConfig("vc-id", "charon-id");
+  const { NodeConnection, writeServiceConfiguration } = switchMocks([config, beaconConfig("lh-id"), vc]);
+  const sm = new ServiceManager(NodeConnection.NodeConnection());
+
+  await sm.switchServices({
+    id: "charon-id",
+    setupId: "setup-id",
+    service: { service: "CharonService", category: "validator", config: { serviceID: "charon-id", network: "hoodi" } },
+    data: { itemToInstall: { service: "PlutoService" }, data: {} },
+  });
+
+  const written = writeServiceConfiguration.mock.calls.map((c) => c[0]);
+  const dependent = written.find((c) => c.id === "vc-id");
+
+  // dependents persist the client's name next to its id, so a stale name would
+  // outlive the swap
+  expect(dependent).toBeDefined();
+  expect(dependent.dependencies.consensusClients).toEqual([{ id: "charon-id", service: "PlutoService" }]);
+
+  // rewriting a dependent must not quietly re-enable its auto updates
+  expect(dependent.autoupdate).toBe(false);
+
+  // and nothing else about it changes
+  expect(dependent.command).toEqual(vc.command);
+  expect(dependent.image).toMatch("chainsafe/lodestar:v1.46.0");
 });
 
 test("switchServices swaps pluto back to charon in place", async () => {
