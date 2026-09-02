@@ -30,7 +30,7 @@ export class OpGethService extends NodeService {
       service.id, // id
       1, // configVersion
       "us-docker.pkg.dev/oplabs-tools-artifacts/images/op-geth", // image
-      "v1.101411.4", // imageVersion
+      "latest", // imageVersion
       cmd, // command
       ["geth"], // entrypoint
       null, // env

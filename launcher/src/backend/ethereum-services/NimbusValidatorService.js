@@ -32,7 +32,7 @@ export class NimbusValidatorService extends NodeService {
       service.id, // id,
       1, // configVersion
       image, // image,
-      "multiarch-v23.4.0", // imageVersion,
+      "multiarch-v26.8.0", // imageVersion,
       [
         "--log-level=INFO",
         `--data-dir=${dataDir}`,

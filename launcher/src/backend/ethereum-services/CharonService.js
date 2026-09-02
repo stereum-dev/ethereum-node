@@ -21,7 +21,7 @@ export class CharonService extends NodeService {
       service.id, // id
       1, // configVersion
       "obolnetwork/charon", // image
-      "v0.19.0", // imageVersion
+      "v1.11.0", // imageVersion
       [
         "run",
         `--beacon-node-endpoints=${beaconNodes}`,

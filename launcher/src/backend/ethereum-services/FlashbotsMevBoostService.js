@@ -10,7 +10,7 @@ export class FlashbotsMevBoostService extends NodeService {
       null, // id
       1, // configVersion
       image, // image
-      "v0.8.2", // imageVersion
+      "1.12", // imageVersion
       null, // command
       ["/app/mev-boost", "-addr", "0.0.0.0:18550", `-${network}`, "-relay-check", "-relays", `${relayLinks}`], // entrypoint
       null, // env

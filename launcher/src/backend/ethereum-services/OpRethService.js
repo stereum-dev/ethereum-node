@@ -21,7 +21,7 @@ export class OpRethService extends NodeService {
       service.id, // id
       1, // configVersion
       "ghcr.io/paradigmxyz/op-reth", // image
-      "v1.2.1", // imageVersion
+      "latest", // imageVersion
       cmd, // command
       ["/usr/local/bin/op-reth"], // entrypoint
       null, // env

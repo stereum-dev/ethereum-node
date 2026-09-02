@@ -46,7 +46,7 @@ export class PrysmValidatorService extends NodeService {
       service.id, //id
       1, // configVersion
       image, //image
-      "v5.0.4", //imageVersion
+      "v7.1.8", //imageVersion
       cmd, //command
       ["/app/cmd/validator/validator"], // entrypoint
       null, // env

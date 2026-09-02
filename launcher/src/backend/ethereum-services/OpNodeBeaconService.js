@@ -64,7 +64,7 @@ export class OpNodeBeaconService extends NodeService {
       service.id, //id
       1, // configVersion
       image, //image
-      "v1.10.3", //imageVersion
+      "v1.19.5", //imageVersion
       [
         "op-node",
         `--l2=${l2Execution}`,

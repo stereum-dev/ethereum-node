@@ -63,7 +63,7 @@ export class PrysmBeaconService extends NodeService {
       service.id, //id
       1, // configVersion
       image, //image
-      "v5.0.4", //imageVersion
+      "v7.1.8", //imageVersion
       cmd, // command
       ["/app/cmd/beacon-chain/beacon-chain"], //entrypoint
       null, //env

@@ -38,7 +38,7 @@ export class NimbusBeaconService extends NodeService {
       service.id, // id,
       2, // configVersion
       image, // image,
-      "multiarch-v22.10.0", // imageVersion,
+      "multiarch-v26.8.0", // imageVersion,
       [
         `--network=${network}`,
         `--data-dir=${dataDir}`,

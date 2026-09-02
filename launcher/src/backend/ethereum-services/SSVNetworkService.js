@@ -62,7 +62,7 @@ SSVAPIPort: 16000`;
       service.id, // id
       1, // configVersion
       image, //image
-      "v0.3.4", //imageVersion
+      "v2.4.3", //imageVersion
       "make BUILD_PATH=/go/bin/ssvnode start-node && docker logs ssv_node", // command
       null, // entrypoint
       {

@@ -41,7 +41,7 @@ ethEndpointURL: ${ethEndpointURL} #HTTP Address of Execution Node`;
       service.id, //id
       1, //configVersion
       image, //image
-      "v2.1.0", //imageVersion
+      "v3.1.1", //imageVersion
       ["start-operator", "--configPath=./data/config.yaml"], //command
       ["/entry-point.sh"], // entrypoint
       null, // env

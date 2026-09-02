@@ -30,7 +30,7 @@ export class LidoObolExitService extends NodeService {
       service.id, // id
       1, // configVersion
       image, // image
-      "latest", // imageVersion
+      "v0.5.2", // imageVersion
       [
         "run",
         `--beacon-node-url=${consensusClients[0] ? consensusClients[0].buildConsensusClientHttpEndpointUrl() : ""}`,
