@@ -12,11 +12,11 @@ test("buildConfiguration", () => {
   jest.mock("../../ethereum-services/GethService");
   const GethService = require("../../ethereum-services/GethService");
   const mMock = jest.fn(() => {
-    return "Ws-endpoint-string";
+    return "Http-endpoint-string";
   });
   GethService.GethService.mockImplementation(() => {
     return {
-      buildExecutionClientEngineRPCWsEndpointUrl: mMock,
+      buildExecutionClientEngineRPCHttpEndpointUrl: mMock,
       buildMinimalConfiguration: jest.fn(() => {
         return {
           id: "geth-id",
@@ -46,7 +46,7 @@ test("buildConfiguration", () => {
     []
   ).buildConfiguration();
 
-  expect(nimbusService.command).toContain("--web3-url=Ws-endpoint-string");
+  expect(nimbusService.command).toContain("--el=Http-endpoint-string");
   expect(nimbusService.command).toContain("--network=prater");
   expect(nimbusService.volumes).toHaveLength(2);
   expect(nimbusService.volumes).toContain("/opt/stereum/nimbus-" + nimbusService.id + "/beacon:/opt/app/beacon");
@@ -68,11 +68,11 @@ test("buildConsensusClientWsEndpointUrl", () => {
   jest.mock("../../ethereum-services/GethService");
   const GethService = require("../../ethereum-services/GethService");
   const mMock = jest.fn(() => {
-    return "Ws-endpoint-string";
+    return "Http-endpoint-string";
   });
   GethService.GethService.mockImplementation(() => {
     return {
-      buildExecutionClientEngineRPCWsEndpointUrl: mMock,
+      buildExecutionClientEngineRPCHttpEndpointUrl: mMock,
       buildMinimalConfiguration: jest.fn(() => {
         return {
           id: "geth-id",
@@ -98,11 +98,11 @@ test("getAvailablePorts", () => {
   jest.mock("../../ethereum-services/GethService");
   const GethService = require("../../ethereum-services/GethService");
   const mMock = jest.fn(() => {
-    return "Ws-endpoint-string";
+    return "Http-endpoint-string";
   });
   GethService.GethService.mockImplementation(() => {
     return {
-      buildExecutionClientEngineRPCWsEndpointUrl: mMock,
+      buildExecutionClientEngineRPCHttpEndpointUrl: mMock,
       buildMinimalConfiguration: jest.fn(() => {
         return {
           id: "geth-id",
@@ -127,11 +127,11 @@ test("network", () => {
   jest.mock("../../ethereum-services/GethService");
   const GethService = require("../../ethereum-services/GethService");
   const mMock = jest.fn(() => {
-    return "Ws-endpoint-string";
+    return "Http-endpoint-string";
   });
   GethService.GethService.mockImplementation(() => {
     return {
-      buildExecutionClientEngineRPCWsEndpointUrl: mMock,
+      buildExecutionClientEngineRPCHttpEndpointUrl: mMock,
       buildMinimalConfiguration: jest.fn(() => {
         return {
           id: "geth-id",

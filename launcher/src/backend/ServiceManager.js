@@ -487,8 +487,8 @@ export class ServiceManager {
         break;
       case "Nimbus":
         if (service.service.includes("Beacon")) {
-          filter = (e) => e.buildExecutionClientEngineRPCWsEndpointUrl();
-          command = "--web3-url=";
+          filter = (e) => e.buildExecutionClientEngineRPCHttpEndpointUrl();
+          command = "--el=";
         }
         if (service.service.includes("Validator")) {
           filter = (e) => e.buildConsensusClientHttpEndpointUrl();

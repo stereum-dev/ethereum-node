@@ -1,0 +1,136 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Read service files
+      slurp:
+        src: "/etc/stereum/services/{{ item }}.yaml"
+      loop:
+        - nim00001-0000-0000-0000-000000000001
+        - nim00002-0000-0000-0000-000000000002
+        - nim00003-0000-0000-0000-000000000003
+        - nim00004-0000-0000-0000-000000000004
+        - pry00001-0000-0000-0000-000000000001
+      register: service_configuration_raw
+
+    - name: Collect each service's command
+      set_fact:
+        commands: >-
+          {{ commands | default({}) | combine({
+               item.item: (item['content'] | b64decode | from_yaml).command
+             }) }}
+      loop: "{{ service_configuration_raw.results }}"
+      loop_control:
+        label: "{{ item.item }}"
+
+    - name: Collect the engine URLs Nimbus was given, under whichever flag names it
+      set_fact:
+        engine_urls: >-
+          {{ engine_urls | default({}) | combine({
+               item.key: (item.value | select('match', '^(--el|--web3-url)=') | first | default('')
+                         | regex_replace('^(--el|--web3-url)=', '')).split(',')
+             }) }}
+      loop: "{{ commands | dict2items }}"
+      loop_control:
+        label: "{{ item.key }}"
+      when: item.key is search('^nim')
+
+    - debug:
+        msg: "{{ engine_urls }}"
+
+    - name: Assert a single ws engine URL was moved to http under --el
+      assert:
+        that:
+          - commands['nim00001-0000-0000-0000-000000000001'] | select('match', '^--el=') | length == 1
+          - (engine_urls['nim00001-0000-0000-0000-000000000001'] | length) == 1
+          - engine_urls['nim00001-0000-0000-0000-000000000001'][0]
+            == 'http://stereum-besu0001-0000-0000-0000-000000000001:8551'
+        fail_msg: "not migrated: {{ commands['nim00001-0000-0000-0000-000000000001'] }}"
+
+    - name: Assert every URL of a multi client list was moved to http under --el
+      assert:
+        that:
+          - commands['nim00002-0000-0000-0000-000000000002'] | select('match', '^--el=') | length == 1
+          - (engine_urls['nim00002-0000-0000-0000-000000000002'] | length) == 2
+          - engine_urls['nim00002-0000-0000-0000-000000000002'][0]
+            == 'http://stereum-besu0002-0000-0000-0000-000000000002:8551'
+          - engine_urls['nim00002-0000-0000-0000-000000000002'][1]
+            == 'http://stereum-neth0001-0000-0000-0000-000000000001:8551'
+        fail_msg: "not all migrated: {{ commands['nim00002-0000-0000-0000-000000000002'] }}"
+
+    - name: Assert an already migrated config was left untouched
+      assert:
+        that:
+          - commands['nim00003-0000-0000-0000-000000000003'] | select('match', '^--el=') | length == 1
+          - engine_urls['nim00003-0000-0000-0000-000000000003'][0]
+            == 'http://stereum-neth0002-0000-0000-0000-000000000002:8551'
+        fail_msg: "migrated config was modified: {{ commands['nim00003-0000-0000-0000-000000000003'] }}"
+
+    - name: Assert an external execution client keeps its own scheme
+      assert:
+        that:
+          - commands['nim00004-0000-0000-0000-000000000004'] | select('match', '^--el=') | length == 1
+          - engine_urls['nim00004-0000-0000-0000-000000000004'][0] == 'ws://el.example.com:8551'
+        fail_msg: "external client was rewritten: {{ commands['nim00004-0000-0000-0000-000000000004'] }}"
+
+    - name: Assert a non Nimbus service was left untouched
+      assert:
+        that:
+          - commands['pry00001-0000-0000-0000-000000000001'] | select('search', 'ws://stereum-') | length == 1
+        fail_msg: "prysm was rewritten: {{ commands['pry00001-0000-0000-0000-000000000001'] }}"
+
+    - name: Assert no Nimbus config still points at a Stereum client over ws
+      assert:
+        that:
+          - commands[item] | select('search', 'ws://stereum-') | length == 0
+        fail_msg: "{{ item }} still has a ws engine URL: {{ commands[item] }}"
+      loop: "{{ engine_urls.keys() | list }}"
+
+    - name: Stat the execution client configs
+      stat:
+        path: "/etc/stereum/services/{{ item }}.yaml"
+      loop:
+        - besu0001-0000-0000-0000-000000000001
+        - besu0002-0000-0000-0000-000000000002
+        - neth0001-0000-0000-0000-000000000001
+        - neth0002-0000-0000-0000-000000000002
+        - ext00001-0000-0000-0000-000000000001
+        - gone0001-0000-0000-0000-000000000001
+      register: execution_client_stats
+
+    - name: Index the execution client mtimes
+      set_fact:
+        el_mtime: >-
+          {{ el_mtime | default({}) | combine({
+               item.item: (item.stat.mtime | default(0))
+             }) }}
+        el_exists: >-
+          {{ el_exists | default({}) | combine({
+               item.item: item.stat.exists
+             }) }}
+      loop: "{{ execution_client_stats.results }}"
+      loop_control:
+        label: "{{ item.item }}"
+
+    # neth0002's Nimbus was already migrated, so it still carries the back date
+    - name: Assert the execution clients of migrated Nimbus nodes were touched
+      assert:
+        that:
+          - el_mtime['besu0001-0000-0000-0000-000000000001'] > el_mtime['neth0002-0000-0000-0000-000000000002']
+          - el_mtime['besu0002-0000-0000-0000-000000000002'] > el_mtime['neth0002-0000-0000-0000-000000000002']
+          - el_mtime['neth0001-0000-0000-0000-000000000001'] > el_mtime['neth0002-0000-0000-0000-000000000002']
+        fail_msg: "execution clients not touched: {{ el_mtime }}"
+
+    - name: Assert an external execution client was left alone
+      assert:
+        that:
+          - el_mtime['ext00001-0000-0000-0000-000000000001'] == el_mtime['neth0002-0000-0000-0000-000000000002']
+        fail_msg: "external execution client was touched: {{ el_mtime }}"
+
+    - name: Assert a dangling dependency id did not get a config file created
+      assert:
+        that:
+          - not el_exists['gone0001-0000-0000-0000-000000000001']
+        fail_msg: "a phantom service config was created for a dangling dependency"
+# EOF

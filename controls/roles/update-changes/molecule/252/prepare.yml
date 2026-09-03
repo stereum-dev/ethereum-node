@@ -1,0 +1,260 @@
+---
+- name: Prepare
+  hosts: all
+  vars:
+    # Besu and Nethermind: no earlier migration touches them, so a moved mtime
+    # can only have come from 2.5.2
+    execution_clients:
+      - { id: "besu0001-0000-0000-0000-000000000001", service: "BesuService", image: "hyperledger/besu:26.8.1" }
+      - { id: "besu0002-0000-0000-0000-000000000002", service: "BesuService", image: "hyperledger/besu:26.8.1" }
+      - { id: "neth0001-0000-0000-0000-000000000001", service: "NethermindService", image: "nethermind/nethermind:1.39.3" }
+      - { id: "neth0002-0000-0000-0000-000000000002", service: "NethermindService", image: "nethermind/nethermind:1.39.3" }
+  tasks:
+    - name: Make sure Stereum's config path exists
+      file:
+        path: "/etc/stereum/services"
+        state: directory
+        owner: "root"
+        group: "root"
+        mode: 0644
+      become: yes
+
+    - name: Create the execution client configs Nimbus points at
+      copy:
+        dest: "/etc/stereum/services/{{ item.id }}.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: {{ item.service }}
+          id: {{ item.id }}
+          configVersion: 1
+          command:
+            - --engine-rpc-port=8551
+          entrypoint: []
+          env: {}
+          image: {{ item.image }}
+          ports: []
+          volumes: []
+          user: "2000"
+          autoupdate: true
+          network: mainnet
+          dependencies:
+            executionClients: []
+            consensusClients: []
+            mevboost: []
+            otherServices: []
+      loop: "{{ execution_clients }}"
+      loop_control:
+        label: "{{ item.id }}"
+      become: yes
+
+    - name: Create the external execution client config
+      copy:
+        dest: "/etc/stereum/services/ext00001-0000-0000-0000-000000000001.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: ExternalExecutionService
+          id: ext00001-0000-0000-0000-000000000001
+          configVersion: 1
+          command: null
+          entrypoint: []
+          env:
+            link: ws://el.example.com:8551
+            jwtToken: ""
+          image: ""
+          ports: []
+          volumes: []
+          user: "2000"
+          autoupdate: false
+          network: mainnet
+          dependencies:
+            executionClients: []
+            consensusClients: []
+            mevboost: []
+            otherServices: []
+      become: yes
+
+    - name: Create NimbusBeaconService config (ws to rewrite, one dependency missing its file)
+      copy:
+        dest: "/etc/stereum/services/nim00001-0000-0000-0000-000000000001.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: NimbusBeaconService
+          id: nim00001-0000-0000-0000-000000000001
+          configVersion: 2
+          command:
+            - --network=mainnet
+            - --data-dir=/opt/app/beacon
+            - --web3-url=ws://stereum-besu0001-0000-0000-0000-000000000001:8551
+            - --metrics
+            - --metrics-port=8008
+            - --jwt-secret=/engine.jwt
+          entrypoint: []
+          env: {}
+          image: statusim/nimbus-eth2:multiarch-v26.8.0
+          ports:
+            - 0.0.0.0:9000:9000/tcp
+          volumes:
+            - /opt/stereum/nimbus-nim00001-0000-0000-0000-000000000001/beacon:/opt/app/beacon
+          user: "2000"
+          autoupdate: true
+          network: mainnet
+          dependencies:
+            executionClients:
+              - id: besu0001-0000-0000-0000-000000000001
+                service: BesuService
+              - id: gone0001-0000-0000-0000-000000000001
+                service: GethService
+            consensusClients: []
+            mevboost: []
+            otherServices: []
+      become: yes
+
+    - name: Create NimbusBeaconService config (two comma joined ws engine URLs)
+      copy:
+        dest: "/etc/stereum/services/nim00002-0000-0000-0000-000000000002.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: NimbusBeaconService
+          id: nim00002-0000-0000-0000-000000000002
+          configVersion: 2
+          command:
+            - --network=hoodi
+            - --data-dir=/opt/app/beacon
+            - --web3-url=ws://stereum-besu0002-0000-0000-0000-000000000002:8551,ws://stereum-neth0001-0000-0000-0000-000000000001:8551
+            - --metrics
+          entrypoint: []
+          env: {}
+          image: statusim/nimbus-eth2:multiarch-v26.8.0
+          ports: []
+          volumes: []
+          user: "2000"
+          autoupdate: true
+          network: hoodi
+          dependencies:
+            executionClients:
+              - id: besu0002-0000-0000-0000-000000000002
+                service: BesuService
+              - id: neth0001-0000-0000-0000-000000000001
+                service: NethermindService
+            consensusClients: []
+            mevboost: []
+            otherServices: []
+      become: yes
+
+    - name: Create NimbusBeaconService config (already migrated, must not change)
+      copy:
+        dest: "/etc/stereum/services/nim00003-0000-0000-0000-000000000003.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: NimbusBeaconService
+          id: nim00003-0000-0000-0000-000000000003
+          configVersion: 2
+          command:
+            - --network=mainnet
+            - --data-dir=/opt/app/beacon
+            - --el=http://stereum-neth0002-0000-0000-0000-000000000002:8551
+          entrypoint: []
+          env: {}
+          image: statusim/nimbus-eth2:multiarch-v26.8.0
+          ports: []
+          volumes: []
+          user: "2000"
+          autoupdate: true
+          network: mainnet
+          dependencies:
+            executionClients:
+              - id: neth0002-0000-0000-0000-000000000002
+                service: NethermindService
+            consensusClients: []
+            mevboost: []
+            otherServices: []
+      become: yes
+
+    - name: Create NimbusBeaconService config (external execution client, left alone)
+      copy:
+        dest: "/etc/stereum/services/nim00004-0000-0000-0000-000000000004.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: NimbusBeaconService
+          id: nim00004-0000-0000-0000-000000000004
+          configVersion: 2
+          command:
+            - --network=mainnet
+            - --data-dir=/opt/app/beacon
+            - --web3-url=ws://el.example.com:8551
+          entrypoint: []
+          env: {}
+          image: statusim/nimbus-eth2:multiarch-v26.8.0
+          ports: []
+          volumes: []
+          user: "2000"
+          autoupdate: true
+          network: mainnet
+          dependencies:
+            executionClients:
+              - id: ext00001-0000-0000-0000-000000000001
+                service: ExternalExecutionService
+            consensusClients: []
+            mevboost: []
+            otherServices: []
+      become: yes
+
+    - name: Create PrysmBeaconService config (not Nimbus, left alone)
+      copy:
+        dest: "/etc/stereum/services/pry00001-0000-0000-0000-000000000001.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: PrysmBeaconService
+          id: pry00001-0000-0000-0000-000000000001
+          configVersion: 1
+          command:
+            - --accept-terms-of-use=true
+            - --mainnet
+            - --datadir=/opt/app/beacon
+            - --execution-endpoint=ws://stereum-besu0001-0000-0000-0000-000000000001:8551
+          entrypoint: []
+          env: {}
+          image: gcr.io/offchainlabs/prysm/beacon-chain:v7.1.8
+          ports: []
+          volumes: []
+          user: "2000"
+          autoupdate: true
+          network: mainnet
+          dependencies:
+            executionClients:
+              - id: besu0001-0000-0000-0000-000000000001
+                service: BesuService
+            consensusClients: []
+            mevboost: []
+            otherServices: []
+      become: yes
+    - name: Find every service config
+      find:
+        paths: "/etc/stereum/services"
+      register: prepared_service_configs
+
+    # so verify can tell a touched file from an untouched one
+    - name: Back date every service config
+      file:
+        path: "{{ item.path }}"
+        state: file
+        modification_time: "202001010000.00"
+      loop: "{{ prepared_service_configs.files }}"
+      loop_control:
+        label: "{{ item.path | basename }}"
+      become: yes
+# EOF

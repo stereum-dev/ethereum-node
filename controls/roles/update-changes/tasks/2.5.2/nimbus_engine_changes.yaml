@@ -1,0 +1,67 @@
+---
+- name: Read service file
+  slurp:
+    src: "{{ config_file.path }}"
+  register: service_configuration_raw
+
+- name: Parse service's configuration
+  set_fact:
+    service_configuration: "{{ service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+# The engine API never subscribes, and Besu leaked every ws session Nimbus
+# reconnected on until its engine connection cap locked the client out.
+- name: Nimbus Engine API Changes
+  when: service_configuration.service == "NimbusBeaconService"
+  block:
+    # "stereum-" only: an ExternalExecution link is the operator's own URL
+    - name: Point Nimbus's engine API at http
+      ansible.builtin.replace:
+        path: "{{ config_file.path }}"
+        regexp: 'ws://(stereum-[^,\s"'']+:8551)'
+        replace: 'http://\1'
+      when: service_configuration.command | default([], true) | select('search', 'ws://stereum-') | length > 0
+      register: nimbus_engine_scheme
+
+    # "--el" landed in v23.3.0, before Dencun, so no version guard is needed
+    - name: Rename Nimbus's legacy --web3-url flag to --el
+      ansible.builtin.replace:
+        path: "{{ config_file.path }}"
+        regexp: '--web3-url='
+        replace: '--el='
+      when: service_configuration.command | default([], true) | select('search', '^--web3-url=') | length > 0
+      register: nimbus_engine_flag
+
+    - name: Note whether the engine configuration changed
+      set_fact:
+        nimbus_engine_migrated: "{{ (nimbus_engine_scheme.changed | default(false)) or (nimbus_engine_flag.changed | default(false)) }}"
+
+    - name: Touch service config file to trigger service restart
+      file:
+        path: "{{ config_file.path }}"
+        state: touch
+      when: nimbus_engine_migrated
+      changed_when: false # to pass idempotence test
+
+    # The leaked sessions are held on the execution client, so its cap stays
+    # consumed until it restarts too.
+    - name: Locate the execution clients Nimbus talks to
+      stat:
+        path: "/etc/stereum/services/{{ item.id }}.yaml"
+      loop: "{{ service_configuration.dependencies.executionClients | default([], true) }}"
+      loop_control:
+        label: "{{ item.id }}"
+      when:
+        - nimbus_engine_migrated
+        - item.service | default("") != "ExternalExecutionService"
+      register: nimbus_execution_clients
+
+    # existing files only, so a dangling id cannot get an empty config created
+    - name: Touch the execution clients to trigger their restart
+      file:
+        path: "{{ item.stat.path }}"
+        state: touch
+      loop: "{{ nimbus_execution_clients.results | default([]) | selectattr('stat', 'defined') | selectattr('stat.exists') | list }}"
+      loop_control:
+        label: "{{ item.stat.path }}"
+      changed_when: false # to pass idempotence test
+# EOF
