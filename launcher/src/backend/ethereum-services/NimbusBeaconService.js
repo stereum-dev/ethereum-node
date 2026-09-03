@@ -22,7 +22,7 @@ export class NimbusBeaconService extends NodeService {
           (vol) => vol.servicePath === "/engine.jwt" || vol.destinationPath.includes("/engine.jwt")
         ).destinationPath;
         volumes.push(new ServiceVolume(elJWTDir, JWTDir));
-        return client.buildExecutionClientEngineRPCWsEndpointUrl();
+        return client.buildExecutionClientEngineRPCHttpEndpointUrl();
       })
       .join();
 
@@ -42,7 +42,7 @@ export class NimbusBeaconService extends NodeService {
       [
         `--network=${network}`,
         `--data-dir=${dataDir}`,
-        `--web3-url=${executionLayer}`,
+        `--el=${executionLayer}`,
         "--metrics",
         "--metrics-port=8008",
         "--metrics-address=0.0.0.0",
