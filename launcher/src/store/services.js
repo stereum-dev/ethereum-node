@@ -18,22 +18,6 @@ const externalIpOption = (command, valuePrefix = "") => ({
   commands: [command],
 });
 
-/**
- * Lodestar's Node.js runtime flags. The beacon ships
- * "--max-old-space-size=8192" already; the validator ships with an empty env.
- * An env var rather than a flag, hence "isENV" and the ": " in the command.
- */
-const nodeOptionsOption = () => ({
-  title: "Node Options",
-  type: "text",
-  changeValue: null,
-  placeholder: "--max-old-space-size=8192",
-  icon: "/img/icon/service-setting-icons/ram.png",
-  pattern: ["(NODE_OPTIONS: )(.*)(\\n)"],
-  commands: ["NODE_OPTIONS: "],
-  isENV: true,
-});
-
 export const useServices = defineStore("services", {
   state: () => {
     return {
@@ -1459,7 +1443,23 @@ export const useServices = defineStore("services", {
           headerOption: false,
           expertOptionsModal: false,
           expertOptions: [
-            nodeOptionsOption(),
+            {
+              // The heap Lodestar's Node.js runtime may use: offered in whole
+              // GB like Teku's "-Xmx" dropdown, written in MB (unitFactor) into
+              // the NODE_OPTIONS env var instead of the command list (isENV).
+              title: "Max Heap Size",
+              type: "select",
+              value: [2, 4, 6, 8, 10, 12, 14, 16, 20, 24, 28, 32, 48, 64],
+              changeValue: null,
+              icon: "/img/icon/service-setting-icons/ram.png",
+              unit: "GB",
+              unitFactor: 1024,
+              // the flag can sit anywhere in NODE_OPTIONS, so only its value is captured
+              pattern: ["(NODE_OPTIONS: [^\\n]*--max-old-space-size=)(\\d+)()"],
+              commands: ["--max-old-space-size="],
+              isENV: true,
+              envName: "NODE_OPTIONS",
+            },
             {
               title: "External IP Address",
               type: "text",
@@ -1559,7 +1559,23 @@ export const useServices = defineStore("services", {
           headerOption: false,
           expertOptionsModal: false,
           expertOptions: [
-            nodeOptionsOption(),
+            {
+              // The heap Lodestar's Node.js runtime may use: offered in whole
+              // GB like Teku's "-Xmx" dropdown, written in MB (unitFactor) into
+              // the NODE_OPTIONS env var instead of the command list (isENV).
+              title: "Max Heap Size",
+              type: "select",
+              value: [2, 4, 6, 8, 10, 12, 14, 16, 20, 24, 28, 32, 48, 64],
+              changeValue: null,
+              icon: "/img/icon/service-setting-icons/ram.png",
+              unit: "GB",
+              unitFactor: 1024,
+              // the flag can sit anywhere in NODE_OPTIONS, so only its value is captured
+              pattern: ["(NODE_OPTIONS: [^\\n]*--max-old-space-size=)(\\d+)()"],
+              commands: ["--max-old-space-size="],
+              isENV: true,
+              envName: "NODE_OPTIONS",
+            },
             {
               title: "Default Fee Recipient",
               type: "text",
