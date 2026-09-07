@@ -20,9 +20,8 @@
     - service_configuration.env.STAKING_MODULE_ID is defined
     - service_configuration.env.OPERATOR_ID is defined
   block:
-    - name: Build EJECTOR_SCOPE and read current image tag
+    - name: Read current image tag
       set_fact:
-        ejector_scope: '{"{{ service_configuration.env.STAKING_MODULE_ID }}":[{{ service_configuration.env.OPERATOR_ID }}]}'
         ejector_image_tag: "{{ service_configuration.image.split(':')[-1] }}"
 
     - name: Bump validator-ejector image to 2.1.0 when under major version 2
@@ -37,7 +36,7 @@
     - name: Add EJECTOR_SCOPE env entry
       ansible.builtin.lineinfile:
         path: "{{ config_file.path }}"
-        line: "  EJECTOR_SCOPE: '{{ ejector_scope }}'"
+        line: "  EJECTOR_SCOPE: '{\"{{ service_configuration.env.STAKING_MODULE_ID }}\":[{{ service_configuration.env.OPERATOR_ID }}]}'"
         insertafter: '^\s*LOCATOR_ADDRESS:'
 
     - name: Remove legacy STAKING_MODULE_ID env entry
