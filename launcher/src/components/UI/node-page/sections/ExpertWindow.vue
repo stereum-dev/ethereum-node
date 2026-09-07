@@ -15,7 +15,8 @@
       <div class="expert-header w-full h-1/6">
         <div class="flex flex-col justify-start items-start w-full border-b pb-1 border-gray-600">
           <span class="text-xl text-gray-200 font-bold uppercase">{{ item.name }}</span>
-          <p class="text-sm text-gray-200 capitalize">
+          <p v-if="item.brokenConfig" class="text-sm text-red-400">{{ item.brokenConfig.error }}</p>
+          <p v-else class="text-sm text-gray-200 capitalize">
             {{ item.category }}
             <span v-if="item.category != 'service'">client</span>
           </p>
@@ -363,6 +364,9 @@ export default {
     }),
   },
   mounted() {
+    // a broken config has no options to offer - the raw YAML is the only thing
+    // that can fix it, so the editor is opened right away
+    if (this.item.brokenConfig) this.isExpertModeActive = true;
     this.readService();
   },
   // watch: {
@@ -794,9 +798,16 @@ export default {
     //   }
     // },
     async confirmExpertChanges(el, restart) {
+      // the backend refuses a config that is not in the right format, so the
+      // window stays open on failure instead of closing over a lost edit
+      try {
+        await this.writeService();
+      } catch (err) {
+        console.error("Writing the configuration failed:", err);
+        return;
+      }
       this.$emit("hideModal");
       this.hideConnectedLines = false;
-      await this.writeService();
       el.expertOptionsModal = false;
       this.actionHandler(el);
       if (restart) await useRestartService(el);

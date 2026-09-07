@@ -527,7 +527,8 @@
     "taskFail": "Task Failed",
     "stats": "STATUS: OPEN",
     "clientService": "CLIENT / SERVICE",
-    "csm": "csm operator monitoring"
+    "csm": "csm operator monitoring",
+    "brokenConfig": "config unreadable"
   },
   "resyncModal": {
     "message": "YOUR CLIENT Stores blockchain data ON YOUR SERVER SO YOUR NODE CAN serve the network. this is necessary for your node TO PICK up its ATTESTATION DUTY in STAKING. BY USING THIS OPTION YOU ARE DELETING YOUR CLIENTS's CURRENT BLOCKCHAIN DATA & USE THE SELECTED OPTION AS A SOURCE TO SYNCHRONIZE YOUR NODE ANEW.",

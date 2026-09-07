@@ -5,6 +5,7 @@ import { PrometheusService } from "../../ethereum-services/PrometheusService";
 import { PrometheusNodeExporterService } from "../../ethereum-services/PrometheusNodeExporterService";
 import { GrafanaService } from "../../ethereum-services/GrafanaService";
 import { ServiceManager, serivceState } from "../../ServiceManager";
+import YAML from "yaml";
 import { LighthouseBeaconService } from "../../ethereum-services/LighthouseBeaconService";
 import { LighthouseValidatorService } from "../../ethereum-services/LighthouseValidatorService";
 import { PrysmBeaconService } from "../../ethereum-services/PrysmBeaconService";
@@ -70,32 +71,18 @@ test("readServiceConfigurations success", async () => {
   const NodeConnection = require("../../NodeConnection");
   const listServicesConfigurationsMock = jest.fn(() => {
     return new Promise((resolve) => {
-      resolve(["first", "second"]);
+      resolve(["first.yaml", "second.yaml"]);
     });
   });
-  const readServiceConfigurationMock = jest
+  const readServiceYAMLMock = jest
     .fn()
-    .mockReturnValueOnce(
-      new Promise((resolve) => {
-        return resolve({
-          service: "LighthouseBeaconService",
-          id: "first",
-        });
-      })
-    )
-    .mockReturnValueOnce(
-      new Promise((resolve) => {
-        return resolve({
-          service: "LighthouseValidatorService",
-          id: "second",
-        });
-      })
-    );
+    .mockResolvedValueOnce("service: LighthouseBeaconService\nid: first\n")
+    .mockResolvedValueOnce("service: LighthouseValidatorService\nid: second\n");
 
   NodeConnection.NodeConnection.mockImplementation(() => {
     return {
       listServicesConfigurations: listServicesConfigurationsMock,
-      readServiceConfiguration: readServiceConfigurationMock,
+      readServiceYAML: readServiceYAMLMock,
     };
   });
 
@@ -432,7 +419,8 @@ const switchMocks = (configs) => {
   const runPlaybook = jest.fn(() => Promise.resolve({ playbookRunRef: "ref" }));
   NodeConnection.NodeConnection.mockImplementation(() => {
     return {
-      listServicesConfigurations: jest.fn(() => Promise.resolve(configs.map((c) => c.id))),
+      listServicesConfigurations: jest.fn(() => Promise.resolve(configs.map((c) => `${c.id}.yaml`))),
+      readServiceYAML: jest.fn((file) => Promise.resolve(YAML.stringify(configs.find((c) => `${c.id}.yaml` === file)))),
       readServiceConfiguration: jest.fn((id) => Promise.resolve(configs.find((c) => c.id === id))),
       writeServiceConfiguration: writeServiceConfiguration,
       runPlaybook: runPlaybook,
@@ -567,4 +555,185 @@ test("resolveExternalIp reports failure instead of a bogus address", async () =>
   const sm = new ServiceManager(NodeConnection.NodeConnection());
 
   await expect(sm.resolveExternalIp()).resolves.toBeNull();
+});
+
+// A config file that cannot be read used to abort the whole read, leaving the
+// launcher with no services at all. Every file is read on its own now, so the
+// readable ones still show up and the broken ones come back as such - they carry
+// the service id the expert mode YAML editor needs to repair the file.
+
+const brokenId = "9d1a4e77-1f3d-4e6b-9d9c-1a7c5b2f0333";
+const unknownId = "4b5c6d7e-8f90-41a2-b3c4-d5e6f7a80444";
+
+// mirrors NodeConnection: the file name carries the id, the content comes back
+// as text, and a file that cannot be read at all throws
+function nodeConnectionWithConfigs(contentByFile) {
+  return {
+    listServicesConfigurations: jest.fn().mockResolvedValue(Object.keys(contentByFile)),
+    readServiceYAML: jest.fn(async (file) => {
+      const content = contentByFile[file];
+      if (content instanceof Error) throw content;
+      return typeof content === "string" ? content : YAML.stringify(content);
+    }),
+  };
+}
+
+test("readServiceConfigurations keeps the readable configs when one is broken", async () => {
+  const sm = new ServiceManager(
+    nodeConnectionWithConfigs({
+      "geth.yaml": { service: "GethService", id: "geth" },
+      [`${brokenId}.yaml`]: "service: GethService\n  id: nested-wrong\n",
+      "teku.yaml": { service: "TekuBeaconService", id: "teku" },
+    })
+  );
+
+  const { services, broken } = await sm.readServiceConfigurationsWithBroken();
+
+  expect(services.map((service) => service.id)).toEqual(["geth", "teku"]);
+  expect(broken).toHaveLength(1);
+  expect(broken[0].id).toEqual(brokenId);
+  expect(broken[0].service).toBeNull();
+  expect(broken[0].error).toMatch(/^Nested mappings are not allowed.*line 1, column 10:$/);
+});
+
+test("readServiceConfigurations returns the built services only", async () => {
+  const sm = new ServiceManager(
+    nodeConnectionWithConfigs({
+      "geth.yaml": { service: "GethService", id: "geth" },
+      [`${brokenId}.yaml`]: "service: GethService\n  id: nested-wrong\n",
+    })
+  );
+
+  const serviceConfigs = await sm.readServiceConfigurations();
+
+  expect(serviceConfigs).toHaveLength(1);
+  expect(serviceConfigs[0].id).toEqual("geth");
+});
+
+test("readServiceConfigurations reports a missing and an unknown service as broken", async () => {
+  const sm = new ServiceManager(
+    nodeConnectionWithConfigs({
+      [`${brokenId}.yaml`]: { id: brokenId, configVersion: 1 },
+      [`${unknownId}.yaml`]: { id: unknownId, service: "SomeFutureClientService" },
+    })
+  );
+
+  const { services, broken } = await sm.readServiceConfigurationsWithBroken();
+
+  expect(services).toHaveLength(0);
+  expect(broken).toHaveLength(2);
+  expect(broken.find((entry) => entry.id === brokenId).error).toMatch(/without service/);
+  expect(broken.find((entry) => entry.id === unknownId).error).toMatch(/SomeFutureClientService/);
+});
+
+test("readServiceConfigurations keeps a dependency whose own config is broken", async () => {
+  const sm = new ServiceManager(
+    nodeConnectionWithConfigs({
+      "geth.yaml": "service: GethService\n  id: nested-wrong\n",
+      "teku.yaml": {
+        service: "TekuBeaconService",
+        id: "teku",
+        dependencies: { executionClients: [{ service: "GethService", id: "geth" }], consensusClients: [] },
+      },
+    })
+  );
+
+  const { services } = await sm.readServiceConfigurationsWithBroken();
+
+  expect(services).toHaveLength(1);
+  // kept, so writing teku's config back does not erase the pairing
+  expect(services[0].dependencies.executionClients).toHaveLength(1);
+  expect(services[0].buildConfiguration().dependencies.executionClients).toEqual([{ service: "GethService", id: "geth" }]);
+});
+
+test("readServiceConfigurations resolves dependencies into the built services", async () => {
+  const sm = new ServiceManager(
+    nodeConnectionWithConfigs({
+      "geth.yaml": { service: "GethService", id: "geth" },
+      "teku.yaml": {
+        service: "TekuBeaconService",
+        id: "teku",
+        dependencies: { executionClients: [{ service: "GethService", id: "geth" }], consensusClients: [] },
+      },
+    })
+  );
+
+  const { services, broken } = await sm.readServiceConfigurationsWithBroken();
+  const teku = services.find((service) => service.id === "teku");
+
+  expect(broken).toEqual([]);
+  expect(teku.dependencies.executionClients).toHaveLength(1);
+  expect(teku.dependencies.executionClients[0].id).toEqual("geth");
+});
+
+test("readServiceConfigurations yields nothing when the server cannot be reached", async () => {
+  const sm = new ServiceManager({
+    listServicesConfigurations: jest.fn().mockRejectedValue(new Error("Not connected")),
+    readServiceYAML: jest.fn(),
+  });
+
+  await expect(sm.readServiceConfigurationsWithBroken()).resolves.toEqual({ services: [], broken: [] });
+});
+
+test("readServiceConfigurations ignores what is not a config file", async () => {
+  const sm = new ServiceManager(
+    nodeConnectionWithConfigs({
+      "geth.yaml": { service: "GethService", id: "geth" },
+      "geth.yaml.bak": new Error("cat: no such file"),
+      backups: new Error("cat: is a directory"),
+    })
+  );
+
+  const { services, broken } = await sm.readServiceConfigurationsWithBroken();
+
+  expect(services.map((service) => service.id)).toEqual(["geth"]);
+  expect(broken).toEqual([]);
+});
+
+test("readServiceConfigurations gives up instead of calling everything broken when a read fails", async () => {
+  const sm = new ServiceManager(
+    nodeConnectionWithConfigs({
+      "geth.yaml": { service: "GethService", id: "geth" },
+      "teku.yaml": new Error("Failed reading service yaml teku: Not connected!"),
+      "prysm.yaml": { service: "PrysmBeaconService", id: "prysm" },
+    })
+  );
+
+  await expect(sm.readServiceConfigurationsWithBroken()).resolves.toEqual({ services: [], broken: [] });
+});
+
+test("readServiceConfigurations treats an empty read as a save in progress", async () => {
+  const sm = new ServiceManager(
+    nodeConnectionWithConfigs({
+      "geth.yaml": { service: "GethService", id: "geth" },
+      "teku.yaml": "",
+    })
+  );
+
+  const { services, broken } = await sm.readServiceConfigurationsWithBroken();
+
+  expect(services.map((service) => service.id)).toEqual(["geth"]);
+  expect(broken).toEqual([]);
+});
+
+test("readServiceConfigurations does not mistake an inherited property for a service", async () => {
+  const sm = new ServiceManager(nodeConnectionWithConfigs({ "odd.yaml": { service: "constructor", id: "odd" } }));
+
+  const { services, broken } = await sm.readServiceConfigurationsWithBroken();
+
+  expect(services).toHaveLength(0);
+  expect(broken[0].error).toEqual("unknown service 'constructor'");
+});
+
+test("readServiceConfigurations survives a dependency entry that is not a service", async () => {
+  const sm = new ServiceManager(
+    nodeConnectionWithConfigs({
+      "teku.yaml": { service: "TekuBeaconService", id: "teku", dependencies: { executionClients: [null] } },
+    })
+  );
+
+  const { services } = await sm.readServiceConfigurationsWithBroken();
+
+  expect(services).toHaveLength(1);
+  expect(services[0].dependencies.executionClients).toEqual([]);
 });

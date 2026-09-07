@@ -150,14 +150,18 @@ const stateButtonHandler = async (state) => {
   loading.value = true;
   closeUpdatePowerStateModal();
   try {
-    let promises = serviceStore.installedServices.map(async (service, index) => {
-      new Promise((resolve) => setTimeout(resolve, index * 1000)).then(() => {
-        ControlService.manageServiceState({
-          id: service.config.serviceID,
-          state: state,
+    // the manage-service role parses a service's config before it touches the
+    // container, so a broken one cannot be started or stopped
+    let promises = serviceStore.installedServices
+      .filter((service) => !service.brokenConfig)
+      .map(async (service, index) => {
+        new Promise((resolve) => setTimeout(resolve, index * 1000)).then(() => {
+          ControlService.manageServiceState({
+            id: service.config.serviceID,
+            state: state,
+          });
         });
       });
-    });
     promises.push(
       new Promise((resolve) =>
         setTimeout(

@@ -57,6 +57,67 @@ async function Sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+// Every service that can be restored from a config file, keyed by the config's
+// "service" value. A config naming something that is not in here belongs to a
+// service this launcher version does not know about.
+const SERVICE_CLASSES = {
+  LighthouseBeaconService,
+  LighthouseValidatorService,
+  LodestarBeaconService,
+  LodestarValidatorService,
+  GethService,
+  RethService,
+  ErigonService,
+  BesuService,
+  NethermindService,
+  SSVNetworkService,
+  SSVDKGService,
+  NimbusBeaconService,
+  NimbusValidatorService,
+  PrometheusService,
+  PrometheusNodeExporterService,
+  GrafanaService,
+  PrysmBeaconService,
+  PrysmValidatorService,
+  TekuBeaconService,
+  TekuValidatorService,
+  FlashbotsMevBoostService,
+  Web3SignerService,
+  MetricsExporterService,
+  ValidatorEjectorService,
+  KeysAPIService,
+  CharonService,
+  PlutoService,
+  ExternalConsensusService,
+  ExternalExecutionService,
+  CustomService,
+  LidoObolExitService,
+  LCOMService,
+  KuboIPFSService,
+  OpGethService,
+  OpNodeBeaconService,
+  L2GethService,
+  OpErigonService,
+  OpRethService,
+  GrandineBeaconService,
+  SSVNOMService,
+  EthrexService,
+};
+
+// A dependency whose own config is broken cannot be built into a service. This
+// stands in for it, carrying what the dependent recorded, so that writing the
+// dependent's config back keeps the pairing instead of silently losing it.
+class UnresolvedDependency {
+  constructor(client) {
+    this.service = client.service ?? null;
+    this.id = client.id;
+  }
+
+  buildMinimalConfiguration() {
+    return { service: this.service, id: this.id };
+  }
+}
+
 /**
  * desired states of a service
  */
@@ -102,144 +163,118 @@ export class ServiceManager {
    * @returns an array of all service configurations
    */
   async readServiceConfigurations() {
-    return this.nodeConnection
-      .listServicesConfigurations()
-      .then(async (services) => {
-        const serviceConfigurations = new Array();
-        for (let i = 0; i < services.length; i++) {
-          const service = services[i];
-          await this.nodeConnection.readServiceConfiguration(service).then((config) => {
-            serviceConfigurations.push(config);
-          });
+    return (await this.readServiceConfigurationsWithBroken()).services;
+  }
+
+  /**
+   * Read the service configurations and report the ones that could not be read.
+   *
+   * A single unusable config file - broken YAML, no service key, a service this
+   * launcher version does not know - must not hide the whole node, so every file
+   * is parsed on its own and the failures are handed back next to the services
+   * that could be built. They carry the id of the file they came from, which is
+   * all the expert mode YAML editor needs to open and repair them.
+   *
+   * Only unusable content counts as broken. A file that cannot be read at all is
+   * a connection problem instead, so the whole read is given up rather than
+   * declaring every remaining service broken.
+   *
+   * @returns an object with the built services and the broken configurations
+   */
+  async readServiceConfigurationsWithBroken() {
+    const services = [];
+    const broken = [];
+
+    try {
+      let configFiles;
+      try {
+        configFiles = await this.nodeConnection.listServicesConfigurations();
+      } catch (err) {
+        log.error("Can't read services configurations", err);
+        return { services: [], broken: [] };
+      }
+
+      for (const configFile of configFiles) {
+        // the directory holds the launcher's own "<id>.yaml" files - backups and
+        // editor leftovers next to them are not configs
+        if (!configFile.endsWith(".yaml")) continue;
+        // the file name is the service id, and unlike the file's content it is
+        // still readable when the config itself is broken
+        const serviceID = configFile.replace(/\.yaml$/, "");
+
+        let configYAML;
+        try {
+          configYAML = await this.nodeConnection.readServiceYAML(configFile);
+        } catch (err) {
+          // nothing was read, so nothing is known about this file or the ones
+          // after it - a lost connection must not mark every service broken
+          log.error("Can't read service configurations, giving up on this read", err);
+          return { services: [], broken: [] };
         }
 
-        return serviceConfigurations;
-      })
-      .then((serviceConfigurations) => {
-        const services = new Array();
+        // a save truncates the file before writing it, so an empty read is a
+        // race with a save rather than a broken config
+        if (!configYAML.trim()) {
+          log.warn("Service configuration " + configFile + " read empty, skipping it");
+          continue;
+        }
 
-        for (let i = 0; i < serviceConfigurations.length; i++) {
-          const config = serviceConfigurations[i];
-
-          if (config.service) {
-            if (config.service == "LighthouseBeaconService") {
-              services.push(LighthouseBeaconService.buildByConfiguration(config));
-            } else if (config.service == "LighthouseValidatorService") {
-              services.push(LighthouseValidatorService.buildByConfiguration(config));
-            } else if (config.service == "LodestarBeaconService") {
-              services.push(LodestarBeaconService.buildByConfiguration(config));
-            } else if (config.service == "LodestarValidatorService") {
-              services.push(LodestarValidatorService.buildByConfiguration(config));
-            } else if (config.service == "GethService") {
-              services.push(GethService.buildByConfiguration(config));
-            } else if (config.service == "RethService") {
-              services.push(RethService.buildByConfiguration(config));
-            } else if (config.service == "ErigonService") {
-              services.push(ErigonService.buildByConfiguration(config));
-            } else if (config.service == "BesuService") {
-              services.push(BesuService.buildByConfiguration(config));
-            } else if (config.service == "NethermindService") {
-              services.push(NethermindService.buildByConfiguration(config));
-            } else if (config.service == "SSVNetworkService") {
-              services.push(SSVNetworkService.buildByConfiguration(config));
-            } else if (config.service == "SSVDKGService") {
-              services.push(SSVDKGService.buildByConfiguration(config));
-            } else if (config.service == "NimbusBeaconService") {
-              services.push(NimbusBeaconService.buildByConfiguration(config));
-            } else if (config.service == "NimbusValidatorService") {
-              services.push(NimbusValidatorService.buildByConfiguration(config));
-            } else if (config.service == "PrometheusService") {
-              services.push(PrometheusService.buildByConfiguration(config));
-            } else if (config.service == "PrometheusNodeExporterService") {
-              services.push(PrometheusNodeExporterService.buildByConfiguration(config));
-            } else if (config.service == "GrafanaService") {
-              services.push(GrafanaService.buildByConfiguration(config));
-            } else if (config.service == "PrysmBeaconService") {
-              services.push(PrysmBeaconService.buildByConfiguration(config));
-            } else if (config.service == "PrysmValidatorService") {
-              services.push(PrysmValidatorService.buildByConfiguration(config));
-            } else if (config.service == "TekuBeaconService") {
-              services.push(TekuBeaconService.buildByConfiguration(config));
-            } else if (config.service == "TekuValidatorService") {
-              services.push(TekuValidatorService.buildByConfiguration(config));
-            } else if (config.service == "FlashbotsMevBoostService") {
-              services.push(FlashbotsMevBoostService.buildByConfiguration(config));
-            } else if (config.service == "Web3SignerService") {
-              services.push(Web3SignerService.buildByConfiguration(config));
-            } else if (config.service == "MetricsExporterService") {
-              services.push(MetricsExporterService.buildByConfiguration(config));
-            } else if (config.service == "ValidatorEjectorService") {
-              services.push(ValidatorEjectorService.buildByConfiguration(config));
-            } else if (config.service == "KeysAPIService") {
-              services.push(KeysAPIService.buildByConfiguration(config));
-            } else if (config.service == "CharonService") {
-              services.push(CharonService.buildByConfiguration(config));
-            } else if (config.service == "PlutoService") {
-              services.push(PlutoService.buildByConfiguration(config));
-            } else if (config.service == "ExternalConsensusService") {
-              services.push(ExternalConsensusService.buildByConfiguration(config));
-            } else if (config.service == "ExternalExecutionService") {
-              services.push(ExternalExecutionService.buildByConfiguration(config));
-            } else if (config.service == "CustomService") {
-              services.push(CustomService.buildByConfiguration(config));
-            } else if (config.service == "LidoObolExitService") {
-              services.push(LidoObolExitService.buildByConfiguration(config));
-            } else if (config.service == "LCOMService") {
-              services.push(LCOMService.buildByConfiguration(config));
-            } else if (config.service == "KuboIPFSService") {
-              services.push(KuboIPFSService.buildByConfiguration(config));
-            } else if (config.service == "OpGethService") {
-              services.push(OpGethService.buildByConfiguration(config));
-            } else if (config.service == "OpNodeBeaconService") {
-              services.push(OpNodeBeaconService.buildByConfiguration(config));
-            } else if (config.service == "L2GethService") {
-              services.push(L2GethService.buildByConfiguration(config));
-            } else if (config.service == "OpErigonService") {
-              services.push(OpErigonService.buildByConfiguration(config));
-            } else if (config.service == "OpRethService") {
-              services.push(OpRethService.buildByConfiguration(config));
-            } else if (config.service == "GrandineBeaconService") {
-              services.push(GrandineBeaconService.buildByConfiguration(config));
-            } else if (config.service == "SSVNOMService") {
-              services.push(SSVNOMService.buildByConfiguration(config));
-            } else if (config.service == "EthrexService") {
-              services.push(EthrexService.buildByConfiguration(config));
-            }
-          } else {
-            log.error("found configuration without service!");
-            log.error(config);
+        let config;
+        try {
+          config = YAML.parse(configYAML);
+          if (!config || !config.service) {
             throw new Error("configuration without service specified");
           }
+        } catch (err) {
+          log.error("Can't parse service configuration " + configFile, err);
+          broken.push({ id: serviceID, service: config?.service ?? null, error: ServiceManager.brokenConfigReason(err) });
+          continue;
         }
-        //retrieve full service out of minimal config
-        services.forEach((service) => {
-          if (service.dependencies.executionClients.length > 0) {
-            service.dependencies.executionClients = service.dependencies.executionClients.map((client) => {
-              return services.find((dependency) => dependency.id === client.id);
+
+        // hasOwn, because a config naming an inherited key ("constructor") would
+        // pass a plain lookup and fail with an internal error instead
+        if (!Object.hasOwn(SERVICE_CLASSES, config.service)) {
+          log.error("Unknown service '" + config.service + "' in configuration " + configFile);
+          broken.push({ id: serviceID, service: config.service, error: "unknown service '" + config.service + "'" });
+          continue;
+        }
+
+        try {
+          services.push(SERVICE_CLASSES[config.service].buildByConfiguration(config));
+        } catch (err) {
+          log.error("Can't build " + config.service + " from configuration " + configFile, err);
+          broken.push({ id: serviceID, service: config.service, error: ServiceManager.brokenConfigReason(err) });
+        }
+      }
+
+      //retrieve full service out of minimal config
+      services.forEach((service) => {
+        for (const group of ["executionClients", "consensusClients", "mevboost", "otherServices"]) {
+          if (!service.dependencies?.[group]?.length) continue;
+          service.dependencies[group] = service.dependencies[group]
+            .filter((client) => client?.id)
+            .map((client) => {
+              const dependency = services.find((candidate) => candidate.id === client.id);
+              if (dependency) return dependency;
+              log.warn("Dependency " + client.id + " of " + service.id + " could not be resolved");
+              return new UnresolvedDependency(client);
             });
-          }
-          if (service.dependencies.consensusClients.length > 0) {
-            service.dependencies.consensusClients = service.dependencies.consensusClients.map((client) => {
-              return services.find((dependency) => dependency.id === client.id);
-            });
-          }
-          if (service.dependencies.mevboost.length > 0) {
-            service.dependencies.mevboost = service.dependencies.mevboost.map((client) => {
-              return services.find((dependency) => dependency.id === client.id);
-            });
-          }
-          if (service.dependencies.otherServices?.length > 0) {
-            service.dependencies.otherServices = service.dependencies.otherServices.map((client) => {
-              return services.find((dependency) => dependency.id === client.id);
-            });
-          }
-        });
-        return services;
-      })
-      .catch((err) => {
-        log.error(err);
-        return [];
+        }
       });
+    } catch (err) {
+      // callers expect a list of services, never a rejection
+      log.error("Reading the service configurations failed", err);
+    }
+
+    return { services, broken };
+  }
+
+  /**
+   * Why a config could not be used, short enough to show next to the service.
+   */
+  static brokenConfigReason(err) {
+    // a YAML parse error carries a code frame under its first line
+    return (err?.message || String(err)).split("\n")[0];
   }
 
   async chooseServiceAction(action, service, data) {
