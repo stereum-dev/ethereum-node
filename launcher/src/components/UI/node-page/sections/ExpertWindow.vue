@@ -150,7 +150,7 @@
             <img
               v-if="option.autoDetect === 'externalIp'"
               class="buttonOn"
-              :class="{ 'animate-spin pointer-events-none': option.detecting }"
+              :class="{ 'animate-pulse animate-duration-1000 pointer-events-none': option.detecting }"
               src="/img/icon/service-setting-icons/external-ip-update.png"
               :title="option.detecting ? 'detecting...' : 'detect the external IP of this node'"
               alt="detect"
@@ -316,6 +316,7 @@ import { mapState, mapWritableState } from "pinia";
 import { useNodeStore } from "@/store/theNode";
 import { useRestartService } from "@/composables/services";
 import { useSetups } from "@/store/setups";
+import { addCommandEntry, setEnvFlag } from "@/share/serviceYaml";
 
 export default {
   props: {
@@ -420,9 +421,10 @@ export default {
       this.item.expertOptions = this.item.expertOptions.map((option) => {
         switch (option.type) {
           case "select": {
-            option.changeValue = this.item.yaml.match(new RegExp(option.pattern[0]))
-              ? [...this.item.yaml.match(new RegExp(option.pattern[0]))][2]
-              : "";
+            const match = this.item.yaml.match(new RegExp(option.pattern[0]));
+            // a dropdown can offer another unit than the configuration stores:
+            // Lodestar's heap is set in MB and offered in GB, see unitFactor
+            option.changeValue = match ? (option.unitFactor ? Number(match[2]) / option.unitFactor : match[2]) : "";
             break;
           }
           case "text": {
@@ -476,30 +478,10 @@ export default {
                 this.somethingIsChanged(option);
               } else if (this.item.service === "NethermindService") {
                 if (!this.item.yaml.includes("Pruning.AvailableSpaceCheckEnabled=")) {
-                  const matchAllCommands = this.item.yaml.match(new RegExp(/--[\S]+/gm));
-                  const lastCommand = matchAllCommands[matchAllCommands.length - 1];
-                  const matchSpaces = this.item.yaml.match(new RegExp(`(\\s*- )${lastCommand}`));
-                  let spaces = " ";
-                  if (matchSpaces) {
-                    spaces = matchSpaces[1];
-                  }
-                  this.item.yaml = this.item.yaml.replace(
-                    new RegExp(`${lastCommand}`),
-                    lastCommand + spaces + "--Pruning.AvailableSpaceCheckEnabled=true"
-                  );
+                  this.item.yaml = addCommandEntry(this.item.yaml, "--Pruning.AvailableSpaceCheckEnabled=true") ?? this.item.yaml;
                 }
                 if (!this.item.yaml.includes("Pruning.FullPruningDisableLowPriorityWrites=")) {
-                  const matchAllCommands = this.item.yaml.match(new RegExp(/--[\S]+/gm));
-                  const lastCommand = matchAllCommands[matchAllCommands.length - 1];
-                  const matchSpaces = this.item.yaml.match(new RegExp(`(\\s*- )${lastCommand}`));
-                  let spaces = " ";
-                  if (matchSpaces) {
-                    spaces = matchSpaces[1];
-                  }
-                  this.item.yaml = this.item.yaml.replace(
-                    new RegExp(`${lastCommand}`),
-                    lastCommand + spaces + "--Pruning.FullPruningDisableLowPriorityWrites=false"
-                  );
+                  this.item.yaml = addCommandEntry(this.item.yaml, "--Pruning.FullPruningDisableLowPriorityWrites=false") ?? this.item.yaml;
                 }
               } else {
                 option.changeValue = false;
@@ -523,9 +505,17 @@ export default {
         if (option.changed) {
           switch (option.type) {
             case "select": {
+              const value = option.unitFactor ? option.changeValue * option.unitFactor : option.changeValue;
               option.commands.forEach((command) => {
-                if (option.changeValue && this.item.yaml.includes(command)) {
-                  this.item.yaml = this.item.yaml.replace(new RegExp(option.pattern[0]), `$1${option.changeValue}$3`);
+                if (!option.changeValue) return;
+                if (new RegExp(option.pattern[0]).test(this.item.yaml)) {
+                  this.item.yaml = this.item.yaml.replace(new RegExp(option.pattern[0]), `$1${value}$3`);
+                } else if (option.isENV && option.envName) {
+                  // a service that does not carry the setting yet, such as a
+                  // Lodestar validator with an empty env block
+                  const withFlag = setEnvFlag(this.item.yaml, option.envName, `${command}${value}`);
+                  if (withFlag) this.item.yaml = withFlag;
+                  else console.error(`No env block in the configuration to add ${option.envName} to`);
                 }
               });
               break;
@@ -543,14 +533,7 @@ export default {
                     }
                   }
                 } else if (option.changeValue == true && !this.item.yaml.includes(command)) {
-                  const matchAllCommands = this.item.yaml.match(new RegExp(/--[\S]+/gm));
-                  const lastCommand = matchAllCommands[matchAllCommands.length - 1];
-                  const matchSpaces = this.item.yaml.match(new RegExp(`(\\s*- )${lastCommand}`));
-                  let spaces = " ";
-                  if (matchSpaces) {
-                    spaces = matchSpaces[1];
-                  }
-                  this.item.yaml = this.item.yaml.replace(new RegExp(`${lastCommand}`), lastCommand + spaces + command);
+                  this.item.yaml = addCommandEntry(this.item.yaml, command) ?? this.item.yaml;
                 }
               });
               break;
@@ -621,19 +604,13 @@ export default {
                     console.error(`No env block in the configuration to add ${command}to`);
                   }
                 } else if (option.changeValue && !this.item.yaml.includes(command)) {
-                  let matchAllCommands = this.item.yaml.match(new RegExp(/--[\S]+/gm));
-                  if (matchAllCommands) {
-                    const lastCommand = matchAllCommands[matchAllCommands.length - 1];
-                    const matchSpaces = this.item.yaml.match(new RegExp(`(\\s*- )${lastCommand}`));
-                    let spaces = " ";
-                    if (matchSpaces) {
-                      spaces = matchSpaces[1];
-                    }
-
-                    this.item.yaml = this.item.yaml.replace(
-                      new RegExp(`${lastCommand}`),
-                      `${lastCommand}${spaces}${command}${option.noEqualSign ? "" : "="}${valuePrefix}${option.changeValue}`
-                    );
+                  // a flag belongs in the command list, and only that list is
+                  // searched for where to put it: an env var can hold flags of
+                  // its own, and Lodestar's NODE_OPTIONS used to catch these
+                  const entry = `${command}${option.noEqualSign ? "" : "="}${valuePrefix}${option.changeValue}`;
+                  const withEntry = addCommandEntry(this.item.yaml, entry);
+                  if (withEntry) {
+                    this.item.yaml = withEntry;
                   } else {
                     const matchENV = this.item.yaml.match(/env:([\s]+)/);
                     this.item.yaml = this.item.yaml.replace(
@@ -1237,6 +1214,7 @@ input:checked + .slider:before {
   height: 20px;
   cursor: pointer;
   justify-self: end;
+  align-self: center;
   margin-right: 10px;
 }
 .toggleTextBox .buttonOff {
@@ -1245,6 +1223,7 @@ input:checked + .slider:before {
   width: 20px;
   height: 20px;
   justify-self: end;
+  align-self: center;
   margin-right: 10px;
   cursor: pointer;
 }

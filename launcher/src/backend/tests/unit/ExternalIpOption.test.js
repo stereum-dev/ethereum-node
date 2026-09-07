@@ -107,17 +107,19 @@ test("flags containing dots are escaped in the pattern", () => {
   expect("  - --natXextip=80.249.121.1\n").not.toMatch(pattern);
 });
 
-test("lodestar can be given node runtime flags", () => {
+test("lodestar offers its heap size as a dropdown", () => {
   for (const service of ["LodestarBeaconService", "LodestarValidatorService"]) {
-    const option = optionsFor(service).find((o) => o.commands?.[0] === "NODE_OPTIONS: ");
+    const option = optionsFor(service).find((o) => o.commands?.[0] === "--max-old-space-size=");
 
     expect(option).toBeDefined();
-    // an environment variable, not a command flag: ExpertWindow needs isENV to
-    // put it in the env block instead of appending it to the command list
+    expect(option.type).toMatch("select");
+    // whole GB like Teku's -Xmx dropdown, while the flag is written in MB
+    expect(option.unit).toMatch("GB");
+    expect(option.unitFactor).toEqual(1024);
+    expect(option.value).toContain(8); // the 8192 MB the beacon ships with
+    // an environment variable, not a command flag: ExpertWindow needs isENV and
+    // envName to put it in the env block instead of the command list
     expect(option.isENV).toBe(true);
-    expect(option.type).toMatch("text");
-    // the command carries its own ": " separator
-    expect(option.commands[0].endsWith(": ")).toBe(true);
-    expect(option.placeholder).toMatch("--max-old-space-size=8192");
+    expect(option.envName).toMatch("NODE_OPTIONS");
   }
 });
