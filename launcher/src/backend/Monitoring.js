@@ -999,7 +999,11 @@ export class Monitoring {
     };
 
     // Extract additional params
-    var { serviceID, instanceID, svcInfos } = Object.assign(
+    var {
+      serviceID,
+      instanceID,
+      serviceInfos: svcInfos,
+    } = Object.assign(
       {
         serviceID: null,
         instanceID: null,
@@ -1057,8 +1061,11 @@ export class Monitoring {
         .filter((p) => p.servicePort == services[execution.service])
         .slice(-1)
         .pop();
-      rpc.destinationIp = "127.0.0.1";
-      let addr = rpc.destinationIp;
+      if (!rpc) continue; // the rpc port is not published, so there is nothing to query
+      // The query below runs as curl on the node, so the api has to be addressed
+      // by the ip its port is published on: a wildcard binding also answers on
+      // localhost, a binding to one of the machine's own addresses does not.
+      let addr = rpc.destinationIp == "0.0.0.0" ? "127.0.0.1" : rpc.destinationIp;
       let port = rpc.destinationPort;
 
       // Ignore the client if serviceID is given and does not match
