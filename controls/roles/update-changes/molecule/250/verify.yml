@@ -64,6 +64,12 @@
           - ejector_service_configuration.user == "2000"
           - charon_service_configuration.user == "2000"
 
+    - debug:
+        msg: "{{ ejector_service_configuration_raw['content'] | b64decode }}"
+
+    - debug:
+        msg: "{{ ejector_service_configuration_raw['content'] | b64decode | from_yaml }}"
+
     # ValidatorEjector (v2 image): env migrated to EJECTOR_SCOPE, image left as-is
     - name: Assert v2 ejector migrated to EJECTOR_SCOPE without version bump
       assert:
