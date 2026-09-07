@@ -8,6 +8,40 @@ import { useMultiSetups } from "@/composables/multiSetups";
 import { useSetups } from "@/store/setups";
 import { usePingQuality } from "@/composables/pingQuality";
 
+// A config the backend could not read has no catalog entry to inherit a name,
+// icon or expert options from, so its entry is built here. It carries exactly
+// what the services column and the expert mode YAML editor need to show it and
+// let the user repair the file.
+//
+// The entry already in the store is reused, the way the healthy branch below
+// reuses its catalog entry: the services column keys its rows by the object
+// itself, so handing it a new one on every refresh remounts the tile.
+function buildBrokenService(serviceStore, service) {
+  const existing = serviceStore.installedServices.find(
+    (installed) => installed.brokenConfig && installed?.config?.serviceID === service?.config?.serviceID
+  );
+  const brokenService = existing ?? {
+    name: "Broken Config",
+    service: "BrokenConfigService",
+    category: "service",
+    icon: "/img/icon/service-icons/Other/BrokenConfig.png",
+    sIcon: "/img/icon/service-icons/Other/BrokenConfig-s.png",
+    path: "",
+    linkUrl: "",
+    docsUrl: "",
+    headerOption: false,
+    displayPluginMenu: false,
+    serviceIsPending: false,
+    expertOptionsModal: false,
+    expertOptions: [],
+    drag: false,
+  };
+  brokenService.state = service.state;
+  brokenService.config = service.config;
+  brokenService.brokenConfig = service.brokenConfig;
+  return brokenService;
+}
+
 export async function useBackendServices(force = false) {
   const serviceStore = useServices();
   const currentTimestamp = Date.now();
@@ -66,6 +100,7 @@ export async function useFrontendServices() {
         let needForTunnel = [];
         const newServices = services
           .map((service) => {
+            if (service.brokenConfig) return buildBrokenService(serviceStore, service);
             let oldService;
             if (
               serviceStore.installedServices &&
@@ -140,7 +175,9 @@ export async function useFrontendServices() {
           }
           return service;
         });
-        let network = serviceStore.installedServices[0]?.config?.network;
+        // a broken config carries no network, so the first service that has
+        // one decides - "goerli" below is not in networkList any more
+        let network = serviceStore.installedServices.find((service) => service?.config?.network)?.config?.network;
         nodeManageStore.currentNetwork = nodeManageStore.networkList.find((item) => item.network === network);
 
         // Mange Tunnels

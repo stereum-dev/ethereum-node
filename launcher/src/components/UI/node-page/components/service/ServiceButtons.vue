@@ -3,7 +3,10 @@
     class="col-start-2 col-span-full row-start-1 row-span-full grid grid-cols-3 grid-rows-2 items-center gap-1 py-2 pl-3 pr-1"
     @pointerdown.prevent.stop
   >
-    <div class="w-full h-full p-1 col-start-1 col-span-1 flex justify-center items-center bg-[#131313] hover:bg-gray-600 rounded-md">
+    <div
+      v-if="!client.brokenConfig"
+      class="w-full h-full p-1 col-start-1 col-span-1 flex justify-center items-center bg-[#131313] hover:bg-gray-600 rounded-md"
+    >
       <button v-if="client.serviceIsPending" type="button" class="w-full h-full flex justify-center items-center rounded-md disabled">
         <img src="/img/icon/loading-icons/loading-circle.png" alt="icon" class="w-4 animate-spin" />
       </button>
@@ -36,6 +39,7 @@
       </button>
     </div>
     <button
+      v-if="!client.brokenConfig"
       class="w-full h-full col-span-1 p-1 transition-colors duration-200 bg-[#131313] hover:bg-gray-600 rounded-md flex justify-center items-center"
       @click="($emit('restartService', props.client), (footerStore.cursorLocation = ''))"
       @mouseenter="footerStore.cursorLocation = `${restart}`"
@@ -52,6 +56,7 @@
       <img src="/img/icon/node-page-icons/service-command-open-settings.png" alt="icon" class="w-8 active:scale-95" />
     </button>
     <button
+      v-if="!client.brokenConfig"
       class="w-full h-full p-1 col-span-1 transition-colors duration-200 bg-[#131313] hover:bg-gray-600 rounded-md flex justify-center items-center"
       @click="($emit('openLogs', props.client), (footerStore.cursorLocation = ''))"
       @mouseenter="footerStore.cursorLocation = `${logs}`"
@@ -60,6 +65,7 @@
       <img src="/img/icon/node-page-icons/service-command-open-logs.png" alt="icon" class="w-4 active:scale-95" />
     </button>
     <button
+      v-if="!client.brokenConfig"
       class="w-full h-full p-1 col-span-1 transition-colors duration-200 bg-[#131313] hover:bg-gray-600 rounded-md flex justify-center items-center"
       @click="($emit('openDocs', props.client), (footerStore.cursorLocation = ''))"
       @mouseenter="footerStore.cursorLocation = `${docs}`"

@@ -267,6 +267,30 @@
           </div>
         </template>
 
+        <!-- a service config the backend could not read - clicking opens expert mode to fix it -->
+        <template v-if="brokenConfigs.length > 0 && !alertShowState.includes('red')">
+          <div
+            v-for="brokenService in brokenConfigs"
+            :key="brokenService.config.serviceID"
+            class="status-message_red h-9 pointer"
+            @mouseenter="cursorLocation = `${brokenService.brokenConfig.error}`"
+            @mouseleave="cursorLocation = ''"
+            @click="expertHandler(brokenService.config.serviceID)"
+          >
+            <div class="message-icon">
+              <img :src="brokenService.sIcon" alt="broken_config" />
+            </div>
+            <div class="message-text_container">
+              <div class="main-message">
+                <span>{{ $t("nodeAlert.brokenConfig") }}</span>
+              </div>
+              <div class="val-message">
+                <span> > {{ brokenService.config.serviceID.split("-")[0] }}</span>
+              </div>
+            </div>
+          </div>
+        </template>
+
         <div
           v-if="stereumUpdate.current !== stereumUpdate.version && !alertShowState.includes('green')"
           class="status-message_green h-9"
@@ -391,6 +415,9 @@ export default {
 
     usedPercInt() {
       return parseInt(this.usedPerc);
+    },
+    brokenConfigs() {
+      return this.installedServices.filter((service) => service.brokenConfig);
     },
     pointStatus() {
       let port = [];

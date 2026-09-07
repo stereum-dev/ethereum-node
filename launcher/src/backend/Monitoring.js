@@ -132,9 +132,9 @@ export class Monitoring {
 
   async refreshServiceInfos() {
     if (await this.checkStereumInstallation()) {
-      const serviceConfigs = await this.serviceManager.readServiceConfigurations();
+      const { services: serviceConfigs, broken: brokenConfigs } = await this.serviceManager.readServiceConfigurationsWithBroken();
       const serviceStates = await this.nodeConnection.listServices();
-      if (serviceConfigs && serviceConfigs.length > 0 && serviceStates && Array.isArray(serviceStates)) {
+      if ((serviceConfigs.length > 0 || brokenConfigs.length > 0) && serviceStates && Array.isArray(serviceStates)) {
         let newInfo = serviceConfigs.map((config) => {
           const newState = serviceStates.find((state) => state.Names.replace("stereum-", "") === config.id);
           return {
@@ -154,7 +154,39 @@ export class Monitoring {
             },
           };
         });
-        return newInfo;
+        // configs that could not be read are appended so that anything reading
+        // the first service (the node's network, for instance) still sees a real
+        // one - they only carry what expert mode needs to open and repair them
+        return newInfo.concat(
+          brokenConfigs.map((brokenConfig) => {
+            // the container keeps running with the config it was started from,
+            // so report what it is actually doing
+            const newState = serviceStates.find((state) => state.Names.replace("stereum-", "") === brokenConfig.id);
+            return {
+              service: "BrokenConfigService",
+              state: newState ? newState.State : "exited",
+              // the same shape a healthy config has, so everything reading a
+              // service can read this one too - just without any content
+              config: {
+                serviceID: brokenConfig.id,
+                configVersion: null,
+                env: {},
+                image: null,
+                imageVersion: null,
+                runningImageVersion: newState?.Image ? newState.Image.split(":").pop() : null,
+                ports: [],
+                volumes: [],
+                network: null,
+                dependencies: { executionClients: [], consensusClients: [], mevboost: [], otherServices: [] },
+              },
+              brokenConfig: {
+                id: brokenConfig.id,
+                service: brokenConfig.service,
+                error: brokenConfig.error,
+              },
+            };
+          })
+        );
       }
     }
     return [];
@@ -967,7 +999,11 @@ export class Monitoring {
     };
 
     // Extract additional params
-    var { serviceID, instanceID, svcInfos } = Object.assign(
+    var {
+      serviceID,
+      instanceID,
+      serviceInfos: svcInfos,
+    } = Object.assign(
       {
         serviceID: null,
         instanceID: null,
@@ -1025,8 +1061,11 @@ export class Monitoring {
         .filter((p) => p.servicePort == services[execution.service])
         .slice(-1)
         .pop();
-      rpc.destinationIp = "127.0.0.1";
-      let addr = rpc.destinationIp;
+      if (!rpc) continue; // the rpc port is not published, so there is nothing to query
+      // The query below runs as curl on the node, so the api has to be addressed
+      // by the ip its port is published on: a wildcard binding also answers on
+      // localhost, a binding to one of the machine's own addresses does not.
+      let addr = rpc.destinationIp == "0.0.0.0" ? "127.0.0.1" : rpc.destinationIp;
       let port = rpc.destinationPort;
 
       // Ignore the client if serviceID is given and does not match

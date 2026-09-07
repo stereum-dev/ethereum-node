@@ -251,7 +251,10 @@ watchEffect(() => {
 // Methods
 
 onMounted(async () => {
-  manageStore.newConfiguration = useDeepClone(serviceStore.installedServices);
+  // a config that could not be read has nothing to edit or connect, and
+  // deleting it would strip it from its setup and then fail on the service it
+  // cannot find - it is repaired in expert mode on the node page instead
+  manageStore.newConfiguration = useDeepClone(serviceStore.installedServices.filter((service) => !service.brokenConfig));
   await fetchSetups();
   if (!manageStore.architecture) setArchitecture();
   editSetupsPrepration();

@@ -59,7 +59,12 @@ const skeletons = [1, 2, 3, 4];
 const loadingClients = ref(false);
 
 const getServices = computed(() => {
-  let services = serviceStore.installedServices.filter((e) => e.category === "service").sort((a, b) => a.name.localeCompare(b.name));
+  // configs that could not be read belong to neither view's filters - they are
+  // shown first in both so they can be repaired in expert mode
+  const brokenServices = serviceStore.installedServices.filter((e) => e.brokenConfig);
+  let services = serviceStore.installedServices
+    .filter((e) => e.category === "service" && !e.brokenConfig)
+    .sort((a, b) => a.name.localeCompare(b.name));
 
   if (!setupStore.isConfigViewActive) {
     const seen = new Set();
@@ -79,7 +84,7 @@ const getServices = computed(() => {
     );
   }
 
-  return services;
+  return brokenServices.concat(services);
 });
 
 watchEffect(() => {
