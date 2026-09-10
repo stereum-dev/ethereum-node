@@ -161,6 +161,25 @@ test("an intentional disconnect emits no state that would pop the reconnect moda
   expect(ssh.lastState).toBeNull(); // ...but a later connect can announce itself again
 });
 
+test("the backoff reports which attempt it is on and how long until the next", async () => {
+  const seen = [];
+  const ssh = new SSHService((state, detail) => seen.push({ state, ...(detail ?? {}) }));
+  await ssh.connect(INFO);
+
+  mockCtl.readyMode = "blackhole";
+  ssh.connectionPool[0].emit("close");
+  await settle(200); // runs the whole stubbed schedule
+
+  const waiting = seen.filter((e) => e.phase === "waiting");
+  expect(waiting).toHaveLength(3);
+  expect(waiting.map((e) => e.attempt)).toEqual([1, 2, 3]);
+  expect(waiting.every((e) => e.total === 3)).toBe(true);
+  expect(waiting.every((e) => e.waitMs === 20)).toBe(true);
+  // each wait is followed by an actual dial the modal can label "Connecting..."
+  expect(seen.filter((e) => e.phase === "connecting")).toHaveLength(3);
+  expect(seen[seen.length - 1].state).toBe("disconnected");
+});
+
 test("logging out mid-reconnect discards a handshake that lands afterwards", async () => {
   const ssh = new SSHService();
   await ssh.connect(INFO);

@@ -32,17 +32,20 @@ export class SSHService {
     // "connected" | "reconnecting" | "disconnected", deduplicated
     this.onStateChange = onStateChange;
     this.lastState = null;
+    this.lastStateKey = null;
     this.reconnecting = false;
     this.reconnectAbort = null;
     this.growing = null; // in-flight pool growth, shared so concurrent execs open one connection
     this.epoch = 0; // bumped on disconnect so a handshake still in flight is discarded, not pooled
   }
 
-  emitState(state) {
-    if (state === this.lastState) return;
+  emitState(state, detail = null) {
+    const key = detail ? `${state}:${JSON.stringify(detail)}` : state;
+    if (key === this.lastStateKey) return;
+    this.lastStateKey = key;
     this.lastState = state;
     try {
-      this.onStateChange?.(state);
+      this.onStateChange?.(state, detail);
     } catch (err) {
       log.error("onStateChange listener threw: ", err);
     }
@@ -86,16 +89,18 @@ export class SSHService {
     const abort = new AbortController();
     this.reconnectAbort = abort;
     this.reconnecting = true;
-    this.emitState("reconnecting");
     const delays = SSHService.RECONNECT_DELAYS_MS;
     try {
       for (let i = 0; i < delays.length; i++) {
+        const progress = { attempt: i + 1, total: delays.length };
+        this.emitState("reconnecting", { ...progress, phase: "waiting", waitMs: delays[i] });
         try {
           await this.sleep(delays[i], abort.signal);
         } catch {
           return false; // aborted
         }
         if (this.loggingOut || !this.connectionInfo) return false;
+        this.emitState("reconnecting", { ...progress, phase: "connecting" });
         try {
           await this.connect(this.connectionInfo);
           return true;
@@ -336,6 +341,7 @@ export class SSHService {
       // Stay silent: an intentional teardown must not pop the reconnect modal on logout.
       // Clearing lastState lets the next connect() emit "connected" again.
       this.lastState = null;
+      this.lastStateKey = null;
     }
   }
 

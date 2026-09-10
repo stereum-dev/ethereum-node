@@ -20,6 +20,8 @@
       >
         <img v-if="reconnecting" class="w-52" src="/animation/reconnect/stereum_connected.gif" />
         <span class="text-md text-gray-200 font-semibold uppercase">{{ $t("reconnectModal.reconnectingMessage") }}</span>
+        <span v-if="attemptLabel" class="text-sm text-gray-300 font-semibold">{{ attemptLabel }}</span>
+        <span v-if="nextTryLabel" class="text-sm text-teal-300 font-semibold">{{ nextTryLabel }}</span>
       </div>
       <div class="w-full h-full col-start-1 col-span-full row-start-7 row-span-full grid grid-cols-5 items-center">
         <div
@@ -41,11 +43,37 @@
 </template>
 <script setup>
 import { storeToRefs } from "pinia";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { useI18n } from "vue-i18n";
 import { useNodeHeader } from "@/store/nodeHeader";
 
 const emit = defineEmits(["closeWindow", "confirmReconnect", "openLogout"]);
 // storeToRefs, else the destructured value is a snapshot and the view never switches
-const { reconnecting } = storeToRefs(useNodeHeader());
+const { reconnecting, reconnectInfo } = storeToRefs(useNodeHeader());
+const { t } = useI18n();
+
+// Ticks the countdown; the deadline itself is absolute, so a missed tick can't drift it
+const now = ref(Date.now());
+let ticker;
+onMounted(() => {
+  ticker = setInterval(() => (now.value = Date.now()), 1000);
+});
+onBeforeUnmount(() => clearInterval(ticker));
+
+const attemptLabel = computed(() => {
+  const info = reconnectInfo.value;
+  if (!info?.attempt) return "";
+  return t("reconnectModal.reconnectAttempt", { attempt: info.attempt, total: info.total });
+});
+
+const nextTryLabel = computed(() => {
+  const info = reconnectInfo.value;
+  if (!info) return "";
+  if (info.phase === "connecting") return t("reconnectModal.reconnectConnecting");
+  if (!info.nextRetryAt) return "";
+  const seconds = Math.max(0, Math.ceil((info.nextRetryAt - now.value) / 1000));
+  return t("reconnectModal.reconnectNextTry", { seconds });
+});
 
 const closeWindow = () => {
   emit("closeWindow");

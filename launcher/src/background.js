@@ -35,8 +35,8 @@ const authenticationService = new AuthenticationService(nodeConnection);
 const tekuGasLimitConfig = new TekuGasLimitConfig(nodeConnection);
 const sshService = new SSHService();
 // Push transport state to the renderer so the UI can show reconnecting and clear itself again
-nodeConnection.sshService.onStateChange = (state) => {
-  mainWindow?.webContents?.send("sshConnectionState", state);
+nodeConnection.sshService.onStateChange = (state, detail) => {
+  mainWindow?.webContents?.send("sshConnectionState", { state, ...(detail ?? {}) });
 };
 const { globalShortcut } = require("electron");
 const log = require("electron-log");

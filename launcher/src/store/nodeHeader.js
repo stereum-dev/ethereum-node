@@ -47,6 +47,7 @@ export const useNodeHeader = defineStore("nodeHeader", {
       validVarificationCode: "",
       refresh: true,
       reconnecting: false,
+      reconnectInfo: null, // { attempt, total, phase, nextRetryAt }
       // true while the settings page is opened without a node connection (e.g. from the login screen),
       // so it renders standalone instead of inside the node layout
       settingsStandalone: false,
