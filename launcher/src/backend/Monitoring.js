@@ -23,6 +23,11 @@ const globalMonitoringCache = {
 };
 
 export class Monitoring {
+  // A transient exec failure used to read as "not installed", which is the dangerous direction:
+  // it offers to install over a working node. Retry before believing an inconclusive answer.
+  static INSTALL_CHECK_ATTEMPTS = 3;
+  static INSTALL_CHECK_RETRY_MS = 500;
+
   constructor(nodeConnection) {
     this.nodeConnection = nodeConnection;
     this.nodeConnectionProm = nodeConnection;
@@ -87,10 +92,12 @@ export class Monitoring {
   // Start global monitoring cache refreshing periodically each X seconds async in background
   // Therefore no "await" is used for implemented calls (otherwise the login is blocked)!
   async startGlobalMonitoringCacheBackgroundWorker() {
-    this.refreshGlobalMonitoringCache();
+    // Deliberately not awaited (it would block login), so it needs its own catch: during a
+    // disconnect these reject with "Logging Out!" and surfaced as UnhandledPromiseRejection.
+    this.refreshGlobalMonitoringCache().catch((err) => log.debug("global monitoring refresh skipped: ", err?.message || err));
     this.globalMonitoringCache.intervalHandler = setInterval(
       function (me) {
-        me.refreshGlobalMonitoringCache();
+        me.refreshGlobalMonitoringCache().catch((err) => log.debug("global monitoring refresh skipped: ", err?.message || err));
       },
       this.globalMonitoringCache.refreshIntervalSeconds * 1000,
       this
@@ -104,29 +111,42 @@ export class Monitoring {
     }
   }
 
+  /**
+   * Whether /etc/stereum/stereum.yaml exists on the node.
+   *
+   * A wrong "false" here sends the user to the install screen for a node that is already set up,
+   * so the check must not conflate "absent" with "could not tell". The probe echoes an explicit
+   * marker instead of parsing `ls` output, which was both locale dependent (it matched the
+   * English "No such file or directory") and unable to distinguish a failed command from a
+   * missing file. Anything other than a marker is retried.
+   */
   async checkStereumInstallation(nodeConnection) {
     if (!nodeConnection) {
       nodeConnection = this.nodeConnection;
     }
-    if (nodeConnection.sshService.connected) {
-      try {
-        const settings = await nodeConnection.sshService.exec("ls /etc/stereum");
+    const ssh = nodeConnection.sshService;
+    const probe = "test -e /etc/stereum/stereum.yaml && echo STEREUM_PRESENT || echo STEREUM_ABSENT";
 
-        // Return true if stdout includes "stereum.yaml"
-        if (settings?.stdout && settings.stdout.includes("stereum.yaml")) {
-          return true;
-        }
-
-        // Return false if stderr includes "No such file or directory"
-        if (settings?.stderr && settings.stderr.includes("No such file or directory")) {
-          return false;
-        }
-      } catch (err) {
-        log.debug("checking stereum installation failed:", err);
+    for (let attempt = 1; attempt <= Monitoring.INSTALL_CHECK_ATTEMPTS; attempt++) {
+      if (attempt > 1) await new Promise((r) => setTimeout(r, Monitoring.INSTALL_CHECK_RETRY_MS));
+      if (!ssh.connected) {
+        log.warn(`Stereum installation check: not connected (attempt ${attempt})`);
+        continue;
       }
+      let result;
+      try {
+        result = await ssh.exec(probe);
+      } catch (err) {
+        log.warn(`Stereum installation check failed (attempt ${attempt}): `, err?.message || err);
+        continue;
+      }
+      // A marker means the command actually ran, so its answer is trustworthy
+      if (result?.stdout?.includes("STEREUM_PRESENT")) return true;
+      if (result?.stdout?.includes("STEREUM_ABSENT")) return false;
+      log.warn(`Stereum installation check inconclusive (attempt ${attempt}): rc=${result?.rc} stderr=${result?.stderr}`);
     }
 
-    // Default return false if none of the above conditions are met
+    log.error("Could not determine whether Stereum is installed; treating the node as not installed");
     return false;
   }
 

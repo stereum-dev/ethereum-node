@@ -40,7 +40,6 @@ export class NodeConnection {
         await this.sshService.disconnect(true);
       }
       await this.sshService.connect(this.nodeConnectionParams, currentWindow);
-      this.sshService.addingConnection = true;
       await this.findStereumSettings();
       this.taskManager = taskManager;
     } catch (error) {

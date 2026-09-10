@@ -11,20 +11,146 @@ const log = require("electron-log");
 const ping = require("ping");
 
 export class SSHService {
-  constructor() {
+  // Connections open lazily, never on a timer: a poll loop can't tell "slow" from "gone" and
+  // buries sshd in half-open handshakes until MaxStartups/fail2ban lock the client out.
+  static MAX_POOL_SIZE = 6;
+  static MAX_SESSIONS_PER_CONNECTION = 5;
+  static RECONNECT_DELAYS_MS = [2000, 5000, 15000, 30000, 60000];
+  // 5s x 2 detects a dead transport in ~10s. Keepalives ride the existing connection, so
+  // shortening them costs a few bytes and cannot trip MaxStartups/fail2ban.
+  static KEEPALIVE_INTERVAL_MS = 5000;
+  static KEEPALIVE_COUNT_MAX = 2;
+  static READY_TIMEOUT_MS = 20000;
+  // The header pings every 2s. ICMP is only a hint - plenty of hosts drop it - so a run of
+  // failures just triggers a real SSH liveness check, which is what actually decides.
+  static PING_FAILURES_BEFORE_VERIFY = 2;
+  static VERIFY_TIMEOUT_MS = 3000;
+
+  constructor(onStateChange = null) {
     this.connectionPool = [];
     this.connectionInfo = null;
     this.connected = false;
     this.tunnels = [];
     this.rpcReceivedDatas = [];
-    this.addingConnection = false;
-    this.removeConnectionCount = 0;
-    this.checkPoolPolling = setInterval(async () => {
-      await this.checkConnectionPool();
-    }, 100);
     this.shellConn = null;
     this.shellStream = null;
     this.loggingOut = false;
+    // "connected" | "reconnecting" | "disconnected", deduplicated
+    this.onStateChange = onStateChange;
+    this.lastState = null;
+    this.lastStateKey = null;
+    this.reconnecting = false;
+    this.reconnectAbort = null;
+    this.growing = null; // in-flight pool growth, shared so concurrent execs open one connection
+    this.epoch = 0; // bumped on disconnect so a handshake still in flight is discarded, not pooled
+    this.pingFailures = 0;
+    this.pingEverSucceeded = false; // never treat "ping was always blocked" as a connection loss
+    this.verifying = false;
+  }
+
+  emitState(state, detail = null) {
+    const key = detail ? `${state}:${JSON.stringify(detail)}` : state;
+    if (key === this.lastStateKey) return;
+    this.lastStateKey = key;
+    this.lastState = state;
+    try {
+      this.onStateChange?.(state, detail);
+    } catch (err) {
+      log.error("onStateChange listener threw: ", err);
+    }
+  }
+
+  sleep(ms, signal) {
+    return new Promise((resolve, reject) => {
+      const timer = setTimeout(resolve, ms);
+      signal.addEventListener(
+        "abort",
+        () => {
+          clearTimeout(timer);
+          reject(new Error("aborted"));
+        },
+        { once: true }
+      );
+    });
+  }
+
+  /** Drop a dead connection. Wired to "error", "end" and "close" so a blackholed transport
+   * (a VPN switch) can't leave a corpse in the pool that makes the service look connected. */
+  dropConnection(conn) {
+    const before = this.connectionPool.length;
+    this.connectionPool = this.connectionPool.filter((c) => c !== conn);
+    if (this.connectionPool.length === before || this.connectionPool.length > 0) return;
+
+    const wasConnected = this.lastState === "connected";
+    this.connected = false;
+    // Tunnels run on their own SSH connections, so nothing else tears them down. Left open,
+    // their servers keep holding 9000+ and the next reconnect allocates 9004, 9005, ...
+    this.closeTunnels().catch(() => {});
+    if (this.loggingOut) return; // intentional teardown
+    if (wasConnected && !this.reconnecting) {
+      this.reconnectWithBackoff();
+    } else if (!this.reconnecting) {
+      this.emitState("disconnected");
+    }
+  }
+
+  /** Reconnect on the RECONNECT_DELAYS_MS schedule, one attempt in flight at a time. */
+  async reconnectWithBackoff() {
+    this.reconnectAbort?.abort();
+    if (this.connectionPool.length > 0) return true;
+    const abort = new AbortController();
+    this.reconnectAbort = abort;
+    this.reconnecting = true;
+    const delays = SSHService.RECONNECT_DELAYS_MS;
+    try {
+      for (let i = 0; i < delays.length; i++) {
+        const progress = { attempt: i + 1, total: delays.length };
+        this.emitState("reconnecting", { ...progress, phase: "waiting", waitMs: delays[i] });
+        try {
+          await this.sleep(delays[i], abort.signal);
+        } catch {
+          return false; // aborted
+        }
+        if (this.loggingOut || !this.connectionInfo) return false;
+        this.emitState("reconnecting", { ...progress, phase: "connecting" });
+        try {
+          await this.connect(this.connectionInfo);
+          return true;
+        } catch (err) {
+          log.warn(`SSH :: reconnect attempt ${i + 1}/${delays.length} failed: ${err?.message || err}`);
+        }
+      }
+      this.emitState("disconnected");
+      return false;
+    } finally {
+      if (this.reconnectAbort === abort) {
+        this.reconnecting = false;
+        this.reconnectAbort = null;
+      }
+    }
+  }
+
+  /** Pooled connection with spare capacity, opening one if needed. Growth is single-flight. */
+  async acquireConnection() {
+    let conn = this.getConnectionFromPool();
+    if (conn) return conn;
+    if (this.loggingOut || !this.connectionInfo) return null;
+    if (this.connectionPool.length >= SSHService.MAX_POOL_SIZE) {
+      // saturated: reuse the least-loaded rather than opening past the cap
+      return this.connectionPool.reduce((a, b) => (a._chanMgr._count <= b._chanMgr._count ? a : b), this.connectionPool[0]);
+    }
+    if (!this.growing) {
+      this.growing = this.connect(this.connectionInfo)
+        .catch((err) => {
+          log.error("Failed opening an SSH connection: ", err);
+          return null;
+        })
+        .finally(() => {
+          this.growing = null;
+        });
+    }
+    await this.growing;
+    return this.getConnectionFromPool() ?? this.connectionPool[0] ?? null;
   }
 
   static checkExecError(err, accept_empty_result = false) {
@@ -68,69 +194,87 @@ export class SSHService {
 
   // Check the connection quality by pinging the host
   async checkConnectionQuality() {
-    const host = this.connectionInfo.host;
+    const host = this.connectionInfo?.host;
     let connectionQuality = { pingTime: null };
+    if (!host) return connectionQuality;
 
+    let alive = false;
     try {
       const res = await ping.promise.probe(host, {
         timeout: 2,
       });
-
+      alive = res?.alive === true;
       if (typeof res.time !== "undefined" && res.time !== null) {
         connectionQuality.pingTime = res.time;
       } else {
-        console.log(`Ping to ${host} failed or timed out`);
+        log.debug(`Ping to ${host} failed or timed out`);
       }
     } catch (err) {
-      console.error("Ping failed:", err);
+      log.error("Ping failed:", err);
+    }
+
+    if (alive) {
+      this.pingEverSucceeded = true;
+      this.pingFailures = 0;
+    } else if (this.pingEverSucceeded && ++this.pingFailures >= SSHService.PING_FAILURES_BEFORE_VERIFY) {
+      this.verifyConnection(); // deliberately not awaited - the caller only wants the ping time
     }
     return connectionQuality;
   }
 
-  async checkConnectionPool() {
-    let lastIndex = this.connectionPool.length - 1;
-    const threshholdIndex = lastIndex - 2;
-
-    if (
-      this.connectionInfo &&
-      this.addingConnection &&
-      (this.connectionPool.length < 6 || this.connectionPool[threshholdIndex]?._chanMgr?._count > 0) &&
-      process.env.NODE_ENV != "test"
-    ) {
-      await this.connect(this.connectionInfo);
-    }
-    if (this.connectionPool.length > 5 && this.connectionPool[threshholdIndex]?._chanMgr?._count === 0) {
-      this.removeConnectionCount++;
-    } else {
-      this.removeConnectionCount = 0;
-    }
-    if (this.removeConnectionCount > 100) {
-      this.removeConnectionCount = 0;
-      this.connectionPool.pop().end();
+  /**
+   * Cheap liveness probe over a connection we already hold, so it cannot add handshakes.
+   * Failing it drops the pool, which flips the state and starts the backoff straight away.
+   */
+  async verifyConnection() {
+    if (this.verifying || this.loggingOut || this.reconnecting) return true;
+    if (this.connectionPool.length === 0) return false;
+    this.verifying = true;
+    try {
+      const timeout = new Promise((resolve) =>
+        setTimeout(() => resolve({ rc: -1, stderr: "verify timeout" }), SSHService.VERIFY_TIMEOUT_MS)
+      );
+      const result = await Promise.race([this.execCommand("true"), timeout]);
+      if (result?.rc === 0) return true;
+      log.warn("SSH liveness check failed, dropping the pool: ", result?.stderr);
+      for (const conn of [...this.connectionPool]) {
+        this.dropConnection(conn);
+        try {
+          conn.end();
+        } catch {
+          /* already gone */
+        }
+      }
+      return false;
+    } finally {
+      this.verifying = false;
     }
   }
 
+  /** Least-loaded connection with spare capacity, or undefined. Never opens one. */
   getConnectionFromPool() {
-    let conn;
-    let maxVal = 5;
-    while (!conn && maxVal < 10) {
-      conn = this.connectionPool.find((c) => c._chanMgr._count < maxVal);
-      maxVal++;
-    }
-    return conn;
+    const candidates = this.connectionPool.filter((c) => c._chanMgr._count < SSHService.MAX_SESSIONS_PER_CONNECTION);
+    if (candidates.length === 0) return undefined;
+    return candidates.reduce((a, b) => (a._chanMgr._count <= b._chanMgr._count ? a : b));
   }
 
   async connect(connectionInfo, currentWindow = null) {
     this.connectionInfo = connectionInfo;
+    const epoch = this.epoch;
     let conn = new Client();
     let passwordBanner = false;
     return new Promise((resolve, reject) => {
       conn.on("error", (error) => {
-        this.addingConnection = false;
         log.error(error);
+        this.dropConnection(conn);
         reject(error);
       });
-      conn.on("close", () => {});
+      conn.on("end", () => {
+        this.dropConnection(conn);
+      });
+      conn.on("close", () => {
+        this.dropConnection(conn);
+      });
       //only works for ubuntu 22.04
       conn.on("banner", (msg) => {
         if (new RegExp(/^(?=.*\bchange\b)(?=.*\bpassword\b).*$/gm).test(msg.toLowerCase())) {
@@ -167,8 +311,15 @@ export class SSHService {
       });
       conn
         .on("ready", async () => {
+          if (epoch !== this.epoch) {
+            // logged out (or torn down) while this handshake was in flight
+            conn.end();
+            return reject(new Error("SSH connection superseded"));
+          }
+          conn.setMaxListeners(0); // one "close" listener per in-flight exec
           this.connectionPool.push(conn);
           this.connected = true;
+          this.emitState("connected");
           if (!passwordBanner) {
             if (this.connectionPool.length === 1) {
               let test = await this.exec("ls");
@@ -189,9 +340,10 @@ export class SSHService {
           password: connectionInfo.password || undefined,
           privateKey: connectionInfo.privateKey || undefined,
           passphrase: connectionInfo.passphrase || undefined,
-          keepaliveInterval: 30000,
+          keepaliveInterval: SSHService.KEEPALIVE_INTERVAL_MS,
+          keepaliveCountMax: SSHService.KEEPALIVE_COUNT_MAX,
           tryKeyboard: true,
-          readyTimeout: 20000,
+          readyTimeout: SSHService.READY_TIMEOUT_MS,
         });
     });
   }
@@ -201,9 +353,13 @@ export class SSHService {
   }
 
   async disconnect(reconnecting = false) {
-    log.info("DISCONNECT: connectionInfo", this.connectionInfo.host);
     this.loggingOut = true;
+    this.epoch++;
+    this.reconnectAbort?.abort(); // else backoff races the teardown and reopens what we're closing
+    this.reconnecting = false;
     try {
+      // connectionInfo is null after cancelVerification(); an unguarded deref here threw
+      log.info("DISCONNECT: connectionInfo", this.connectionInfo?.host ?? "<none>");
       this.connected = false;
       if (!reconnecting) {
         this.connectionInfo = null;
@@ -228,11 +384,16 @@ export class SSHService {
           }, 0)
       );
       this.connectionPool = [];
+      await this.closeTunnels().catch(() => {});
       return true;
     } catch (error) {
       return error;
     } finally {
       this.loggingOut = false;
+      // Stay silent: an intentional teardown must not pop the reconnect modal on logout.
+      // Clearing lastState lets the next connect() emit "connected" again.
+      this.lastState = null;
+      this.lastStateKey = null;
     }
   }
 
@@ -243,7 +404,7 @@ export class SSHService {
 
   async execCommand(command) {
     if (this.loggingOut) return { rc: -1, stdout: "", stderr: "Logging Out!" };
-    const conn = this.getConnectionFromPool();
+    const conn = await this.acquireConnection();
     // an empty pool would otherwise surface as a TypeError on conn.exec
     if (!conn) return { rc: -1, stdout: "", stderr: "Not connected!" };
     return new Promise((resolve, reject) => {
@@ -252,18 +413,35 @@ export class SSHService {
         stdout: "",
         stderr: "",
       };
+      let settled = false;
+      const finish = (fn, arg) => {
+        if (settled) return;
+        settled = true;
+        conn.removeListener("close", onConnectionLost);
+        fn(arg);
+      };
+      // A blackholed transport never closes the channel, so without this the promise hangs
+      // forever and the caller (the 2s service refresh, a playbook) waits on a dead link.
+      const onConnectionLost = () => finish(resolve, { ...data, rc: -1, stderr: "Connection lost!" });
+      conn.once("close", onConnectionLost);
+
       conn.exec(command, (err, stream) => {
         if (err) {
           log.error("ERROR:", err);
-          return reject(err);
+          return finish(reject, err);
         }
         stream
           .on("close", (code) => {
             data.rc = code;
-            resolve(data);
+            finish(resolve, data);
           })
           .on("data", (stdout) => {
             data.stdout += stdout.toString("utf8");
+          })
+          .on("error", (streamErr) => {
+            // unhandled "error" on an EventEmitter would otherwise throw in the main process
+            log.error("SSH stream error: ", streamErr);
+            finish(resolve, { ...data, rc: -1, stderr: String(streamErr?.message || streamErr) });
           })
           .stderr.on("data", (stderr) => {
             log.debug("stderr got data", stderr.toString("utf8"));
@@ -398,7 +576,7 @@ export class SSHService {
   }
 
   async closeTunnels(onlySpecificPorts = []) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       let i = this.tunnels.length;
       if (i > 0) {
         while (i--) {
@@ -413,7 +591,7 @@ export class SSHService {
         }
         resolve("Tunnels Closed!");
       } else {
-        reject("No Tunnels to Close!");
+        resolve("No Tunnels to Close!");
       }
     });
   }
@@ -530,7 +708,8 @@ export class SSHService {
    * @returns sftp session object
    */
   async getSFTPSession(conn = null) {
-    conn = this.getConnectionFromPool();
+    conn = conn ?? (await this.acquireConnection());
+    if (!conn) throw new Error("SSH not connected, can't open an SFTP session");
     return new Promise((resolve, reject) => {
       conn.sftp((err, sftp) => {
         if (err) {
@@ -614,7 +793,8 @@ export class SSHService {
    * @param {Client} [conn]
    * @returns `void`
    */
-  async downloadFileSSH(remotePath, localPath, conn = this.getConnectionFromPool()) {
+  async downloadFileSSH(remotePath, localPath, conn = null) {
+    conn = conn ?? (await this.acquireConnection());
     return new Promise((resolve, reject) => {
       conn.exec(`sudo cat ${StringUtils.escapeStringForShell(remotePath)}`, async (err, stream) => {
         try {
@@ -642,7 +822,8 @@ export class SSHService {
    * @param {Client} [conn]
    * @returns `true` if download was successful, `false` otherwise
    */
-  async downloadDirectorySSH(remotePath, localPath, conn = this.getConnectionFromPool()) {
+  async downloadDirectorySSH(remotePath, localPath, conn = null) {
+    conn = conn ?? (await this.acquireConnection());
     try {
       if (!fs.existsSync(localPath)) {
         fs.mkdirSync(localPath, { recursive: true });
@@ -672,7 +853,8 @@ export class SSHService {
    * @param {Client} [conn]
    * @returns `void`
    */
-  async uploadFileSSH(localPath, remotePath, conn = this.getConnectionFromPool()) {
+  async uploadFileSSH(localPath, remotePath, conn = null) {
+    conn = conn ?? (await this.acquireConnection());
     return new Promise((resolve, reject) => {
       conn.exec(`sudo cat > ${StringUtils.escapeStringForShell(remotePath)}`, async (err, stream) => {
         try {
@@ -698,7 +880,8 @@ export class SSHService {
    * @param {String} remotePath
    * @param {Client} [conn]
    */
-  async ensureRemotePathExists(remotePath, conn = this.getConnectionFromPool()) {
+  async ensureRemotePathExists(remotePath, conn = null) {
+    conn = conn ?? (await this.acquireConnection());
     return new Promise((resolve, reject) => {
       conn.exec(`sudo mkdir -p ${remotePath} && sudo chown ${this.connectionInfo.user} ${remotePath}`, (err) => {
         if (err) reject(err);
@@ -717,7 +900,7 @@ export class SSHService {
   async uploadDirectorySSH(localPath, remotePath, conn = null) {
     try {
       if (!conn) {
-        conn = await this.getConnectionFromPool();
+        conn = await this.acquireConnection();
       }
 
       await this.ensureRemotePathExists(remotePath);
