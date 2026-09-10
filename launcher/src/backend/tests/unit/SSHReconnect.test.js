@@ -26,8 +26,9 @@ jest.mock("ssh2", () => {
       const { EventEmitter: EE } = require("events");
       const stream = new EE();
       stream.stderr = new EE();
+      this.lastStream = stream;
       cb(null, stream);
-      setTimeout(() => stream.emit("close", 0), 0);
+      if (!cmd.includes("HANG") && !global.__sshMock.hangEverything) setTimeout(() => stream.emit("close", 0), 0);
     }
     end() {
       this.ended = true;
@@ -39,6 +40,12 @@ jest.mock("ssh2", () => {
 
 global.__sshMock = mockCtl;
 
+const mockPing = { alive: true };
+jest.mock("ping", () => ({
+  promise: { probe: async () => ({ alive: global.__pingMock.alive, time: global.__pingMock.alive ? 12 : "unknown" }) },
+}));
+global.__pingMock = mockPing;
+
 const { SSHService } = require("../../SSHService.js");
 
 const INFO = { host: "10.0.0.1", port: 22, user: "root", password: "x" };
@@ -49,7 +56,10 @@ const settle = (ms = 20) => new Promise((r) => setTimeout(r, ms));
 beforeEach(() => {
   mockCtl.built = [];
   mockCtl.readyMode = "ready";
+  mockCtl.hangEverything = false;
+  mockPing.alive = true;
   SSHService.RECONNECT_DELAYS_MS = [20, 20, 20];
+  SSHService.VERIFY_TIMEOUT_MS = 30;
 });
 
 afterEach(() => {
@@ -202,6 +212,95 @@ test("logging out mid-reconnect discards a handshake that lands afterwards", asy
   // so a pooled connection here would stay open against a node the user logged out of.
   expect(ssh.connectionPool).toHaveLength(0);
   expect(ssh.connected).toBe(false);
+});
+
+test("an exec in flight settles instead of hanging when the transport dies", async () => {
+  const ssh = new SSHService();
+  await ssh.connect(INFO);
+  const conn = ssh.connectionPool[0];
+
+  let settled = null;
+  const pending = ssh.execCommand("HANG").then((r) => (settled = r));
+  await settle(20);
+  expect(settled).toBeNull(); // still running, as expected
+
+  mockCtl.readyMode = "blackhole";
+  conn.emit("close"); // VPN switch kills the transport
+  await pending;
+
+  // Without this the 2s service refresh would await a dead link forever
+  expect(settled).toEqual({ rc: -1, stdout: "", stderr: "Connection lost!" });
+  ssh.reconnectAbort?.abort();
+});
+
+test("a stream error settles the exec rather than throwing in the main process", async () => {
+  const ssh = new SSHService();
+  await ssh.connect(INFO);
+  const conn = ssh.connectionPool[0];
+
+  const pending = ssh.execCommand("HANG");
+  await settle(20);
+  conn.lastStream.emit("error", new Error("channel blew up"));
+
+  await expect(pending).resolves.toEqual({ rc: -1, stdout: "", stderr: "channel blew up" });
+});
+
+test("a run of failed pings drops a dead link without waiting for keepalive", async () => {
+  const ssh = new SSHService();
+  await ssh.connect(INFO);
+  mockPing.alive = true;
+  await ssh.checkConnectionQuality(); // establishes that ICMP works here
+
+  // transport is dead but keepalive has not noticed yet, so execs hang
+  mockCtl.readyMode = "blackhole";
+  mockCtl.hangEverything = true;
+  mockPing.alive = false;
+  await ssh.checkConnectionQuality();
+  await ssh.checkConnectionQuality(); // second failure crosses the threshold
+  await settle(200); // verify's own 3s race is stubbed short below
+
+  expect(ssh.connectionPool).toHaveLength(0);
+  expect(ssh.connected).toBe(false);
+  ssh.reconnectAbort?.abort();
+  mockCtl.hangEverything = false;
+});
+
+test("pings that never worked are not treated as a connection loss", async () => {
+  const ssh = new SSHService();
+  await ssh.connect(INFO);
+
+  mockPing.alive = false; // ICMP blocked on this host from the start
+  for (let i = 0; i < 5; i++) await ssh.checkConnectionQuality();
+  await settle(50);
+
+  expect(ssh.connectionPool).toHaveLength(1); // left alone
+  expect(ssh.connected).toBe(true);
+});
+
+test("tunnels are torn down when the transport dies, so ports are not leaked", async () => {
+  const ssh = new SSHService();
+  await ssh.connect(INFO);
+
+  // stand-ins for the tunnel servers holding 9000/9001
+  const closed = [];
+  ssh.tunnels = [
+    { server: { close: () => closed.push(9000) }, config: { localPort: 9000 } },
+    { server: { close: () => closed.push(9001) }, config: { localPort: 9001 } },
+  ];
+
+  mockCtl.readyMode = "blackhole";
+  ssh.connectionPool[0].emit("close");
+  await settle(20);
+
+  // otherwise the next reconnect allocates 9002, 9003, ... and creeps up the range
+  expect(closed.sort()).toEqual([9000, 9001]);
+  expect(ssh.tunnels).toHaveLength(0);
+  ssh.reconnectAbort?.abort();
+});
+
+test("closing tunnels when there are none is not an error", async () => {
+  const ssh = new SSHService();
+  await expect(ssh.closeTunnels()).resolves.toBe("No Tunnels to Close!");
 });
 
 test("concurrent execs share a single new connection instead of opening one each", async () => {
