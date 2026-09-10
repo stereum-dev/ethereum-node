@@ -34,6 +34,10 @@ configManager.setServiceManager(serviceManager);
 const authenticationService = new AuthenticationService(nodeConnection);
 const tekuGasLimitConfig = new TekuGasLimitConfig(nodeConnection);
 const sshService = new SSHService();
+// Push transport state to the renderer so the UI can show reconnecting and clear itself again
+nodeConnection.sshService.onStateChange = (state) => {
+  mainWindow?.webContents?.send("sshConnectionState", state);
+};
 const { globalShortcut } = require("electron");
 const log = require("electron-log");
 const stereumUpdater = new StereumUpdater(log, createWindow, isDevelopment);
@@ -102,16 +106,10 @@ ipcMain.handle("reconnect", async () => {
   }
 });
 
+// Polled every 2s by the header. It used to open a throwaway SSH connection each time, which
+// during an outage piled up 18s handshakes until fail2ban banned the client. The pool now keeps
+// `connected` accurate via dropConnection, so this is just a read.
 ipcMain.handle("checkConnection", async () => {
-  await nodeConnection.sshService
-    .checkSSHConnection(nodeConnection.nodeConnectionParams, 18000)
-    .then((isConnected) => {
-      nodeConnection.sshService.connected = isConnected;
-    })
-    .catch((error) => {
-      console.error("Error checking SSH connection:", error);
-      nodeConnection.sshService.connected = false;
-    });
   return nodeConnection.sshService.connected;
 });
 

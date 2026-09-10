@@ -216,7 +216,7 @@ export class HetznerServer {
   }
 
   async finishTestGracefully(nodeConnection) {
-    clearInterval(nodeConnection.sshService.checkPoolPolling);
+    nodeConnection.sshService.reconnectAbort?.abort();
     await this.Sleep(10000);
     await nodeConnection.sshService.disconnect();
     await this.deleteSSHKey();

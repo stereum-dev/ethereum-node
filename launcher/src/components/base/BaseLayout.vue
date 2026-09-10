@@ -94,14 +94,32 @@ onMounted(() => {
   useUpdateCheck();
   checkSettings();
   ControlService.addListener("IdleLogout", idleListener);
+  ControlService.addListener("sshConnectionState", connectionStateListener);
 });
 
 onUnmounted(() => {
   ControlService.removeListener("IdleLogout", idleListener);
+  ControlService.removeListener("sshConnectionState", connectionStateListener);
 });
 
 const idleListener = () => {
   loggingOut();
+};
+
+// The backend reconnects on its own with a backoff; mirror that here so the modal shows progress
+// and clears itself once the transport is back, instead of latching until the user reloads.
+const connectionStateListener = (_event, state) => {
+  if (state === "reconnecting") {
+    headerStore.reconnecting = true;
+    footerStore.stereumStatus = false;
+  } else if (state === "connected") {
+    headerStore.reconnecting = false;
+    headerStore.refresh = true;
+    footerStore.stereumStatus = true;
+  } else if (state === "disconnected") {
+    headerStore.reconnecting = false;
+    footerStore.stereumStatus = false;
+  }
 };
 
 const closeServiceBrowser = () => {

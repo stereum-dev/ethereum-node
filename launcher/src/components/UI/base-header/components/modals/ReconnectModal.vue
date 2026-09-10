@@ -40,10 +40,12 @@
   </div>
 </template>
 <script setup>
+import { storeToRefs } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 
 const emit = defineEmits(["closeWindow", "confirmReconnect", "openLogout"]);
-const { reconnecting } = useNodeHeader();
+// storeToRefs, else the destructured value is a snapshot and the view never switches
+const { reconnecting } = storeToRefs(useNodeHeader());
 
 const closeWindow = () => {
   emit("closeWindow");
