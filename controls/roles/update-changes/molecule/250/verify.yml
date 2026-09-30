@@ -150,17 +150,18 @@
           - lcom_service_configuration.env.LOG_LEVEL == "INFO"
         fail_msg: "LCOM was not migrated correctly: {{ lcom_service_configuration.entrypoint }} / {{ lcom_service_configuration.env }}"
 
-    # Oracle allowlist: hoodi ejector refreshed to the current on-chain member set
-    # (dropped 0xf03B..., 11 -> 10 addresses)
+    # Oracle allowlist: hoodi ejector refreshed (the refresh moved to 2.5.2, which
+    # runs in the same converge)
     - name: Assert hoodi ejector oracle allowlist refreshed
       assert:
         that:
           - (ejector_service_configuration.env.ORACLE_ADDRESSES_ALLOWLIST | from_yaml | length) == 10
           - '"0xf03B8DC8762B97F13Ac82e6F94bE3Ed002FF7459" not in (ejector_service_configuration.env.ORACLE_ADDRESSES_ALLOWLIST | from_yaml)'
-          - '"0x948A62cc0414979dc7aa9364BA5b96ECb29f8736" in (ejector_service_configuration.env.ORACLE_ADDRESSES_ALLOWLIST | from_yaml)'
+          - '"0xcA80ee7313A315879f326105134F938676Cfd7a9" in (ejector_service_configuration.env.ORACLE_ADDRESSES_ALLOWLIST | from_yaml)'
         fail_msg: "hoodi ejector oracle allowlist not refreshed: {{ ejector_service_configuration.env.ORACLE_ADDRESSES_ALLOWLIST }}"
 
-    # Oracle allowlist: mainnet ejector refreshed from a stale list to the 9-member set
+    # Oracle allowlist: mainnet ejector refreshed from a stale list to the 18-member
+    # set (by 2.5.2, which runs in the same converge)
     - name: Read mainnet ValidatorEjectorService file
       slurp:
         src: "/etc/stereum/services/ec70a110-0000-0000-0000-0000000000aa.yaml"
@@ -173,7 +174,7 @@
     - name: Assert mainnet ejector oracle allowlist refreshed
       assert:
         that:
-          - (mainnet_ejector_configuration.env.ORACLE_ADDRESSES_ALLOWLIST | from_yaml | length) == 9
+          - (mainnet_ejector_configuration.env.ORACLE_ADDRESSES_ALLOWLIST | from_yaml | length) == 18
           - '"0x73181107c8D9ED4ce0bbeF7A0b4ccf3320C41d12" in (mainnet_ejector_configuration.env.ORACLE_ADDRESSES_ALLOWLIST | from_yaml)'
           - '"0x0000000000000000000000000000000000000001" not in (mainnet_ejector_configuration.env.ORACLE_ADDRESSES_ALLOWLIST | from_yaml)'
         fail_msg: "mainnet ejector oracle allowlist not refreshed: {{ mainnet_ejector_configuration.env.ORACLE_ADDRESSES_ALLOWLIST }}"
