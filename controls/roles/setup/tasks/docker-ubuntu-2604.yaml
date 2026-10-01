@@ -1,16 +1,43 @@
 ---
+# Follows https://docs.docker.com/engine/install/ubuntu/ (deb822 sources, keyring in /etc/apt/keyrings)
+
+# Pre-existing Docker sources (e.g. legacy docker.list or a manual install using docker.gpg)
+# break apt when their Signed-By differs from ours, so clear them before any apt call.
+- name: Find existing Docker apt sources
+  find:
+    paths: /etc/apt/sources.list.d
+    patterns: "*.list,*.sources"
+    contains: 'download\.docker\.com'
+  register: docker_apt_sources
+
+- name: Remove foreign Docker apt source files
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  loop: "{{ docker_apt_sources.files | rejectattr('path', 'equalto', '/etc/apt/sources.list.d/docker.sources') | list }}"
+
+- name: Remove Docker entries from sources.list
+  lineinfile:
+    path: /etc/apt/sources.list
+    regexp: 'download\.docker\.com'
+    state: absent
+
 - name: Remove conflicting docker packages
   apt:
     name:
-      - docker-engine
       - docker.io
-      - docker-registry
+      - docker-compose
+      - docker-compose-v2
+      - docker-doc
+      - docker-buildx
+      - podman-docker
+      - containerd
+      - runc
     state: absent
 
 - name: Install required system packages
   apt:
     name:
-      - apt-transport-https
       - ca-certificates
       - curl
       - software-properties-common
@@ -27,24 +54,37 @@
   file:
     path: /etc/apt/keyrings
     state: directory
-    mode: '0755'
+    mode: "0755"
 
 - name: Add Docker GPG key
   get_url:
     url: https://download.docker.com/linux/ubuntu/gpg
     dest: /etc/apt/keyrings/docker.asc
-    mode: '0644'
+    mode: "0644"
     force: false
 
+- name: Get dpkg architecture
+  command: dpkg --print-architecture
+  register: docker_dpkg_arch
+  changed_when: false
+
 - name: Add Docker Repository
-  apt_repository:
-    repo: "deb [arch={{ 'amd64' if ansible_architecture == 'x86_64' else ansible_architecture }} signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu {{ ansible_facts['distribution_release'] }} stable"
-    filename: docker
-    state: present
+  copy:
+    dest: /etc/apt/sources.list.d/docker.sources
+    mode: "0644"
+    content: |
+      Types: deb
+      URIs: https://download.docker.com/linux/ubuntu
+      Suites: {{ ansible_facts['distribution_release'] }}
+      Components: stable
+      Architectures: {{ docker_dpkg_arch.stdout | trim }}
+      Signed-By: /etc/apt/keyrings/docker.asc
 
 - name: Update apt and install docker-ce
   apt:
     update_cache: yes
     name:
       - docker-ce
+      - docker-ce-cli
+      - containerd.io
 # EOF
