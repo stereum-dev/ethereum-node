@@ -17,7 +17,6 @@
 </template>
 
 <script setup>
-import { defineProps } from "vue";
 import { useFooter } from "@/store/theFooter";
 import { useSetups } from "@/store/setups";
 import { computed } from "vue";

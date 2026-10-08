@@ -213,7 +213,11 @@ const updateAndExportAllLogs = async (client) => {
   nodeStore.exportLogsType = "";
 };
 
+// A vitals call samples for several seconds, so the 1s timer must not start another one meanwhile
+let vitalsInFlight = false;
 const updateServerVitals = async () => {
+  if (vitalsInFlight) return;
+  vitalsInFlight = true;
   try {
     if (serviceStore.installedServices && serviceStore.installedServices.length > 0 && headerStore.refresh) {
       const data = await ControlService.getServerVitals();
@@ -223,6 +227,8 @@ const updateServerVitals = async () => {
     }
   } catch (e) {
     console.log("couldn't check server vitals");
+  } finally {
+    vitalsInFlight = false;
   }
 };
 

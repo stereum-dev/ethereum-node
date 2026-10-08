@@ -1,7 +1,7 @@
 <template>
   <div class="staking-parent relative">
     <NoData
-      v-if="flagNoData || isValidatorMissing || relatedValidatorPairs?.network === 'devnet'"
+      v-if="isValidatorMissing || relatedValidatorPairs?.network === 'devnet'"
       @mouseenter="cursorLocation = `${nodataMessage}`"
       @mouseleave="cursorLocation = ''"
     />
@@ -47,6 +47,8 @@ import { useFooter } from "@/store/theFooter";
 import { useControlStore } from "@/store/theControl";
 import NoData from "./NoData.vue";
 import { useSetups } from "@/store/setups";
+import { useServices } from "@/store/services";
+import { countOnChainKeys } from "@/composables/validators";
 
 export default {
   components: {
@@ -77,6 +79,9 @@ export default {
       missingServices: "missingServices",
       nodataMessage: "nodataMessage",
     }),
+    ...mapState(useServices, {
+      installedServices: "installedServices",
+    }),
     ...mapState(useSetups, {
       relatedValidatorPairs: "relatedValidatorPairs",
       selectedServicePairs: "selectedServicePairs",
@@ -84,8 +89,11 @@ export default {
     formattedBalance() {
       return this.totalBalance.toFixed(5);
     },
+    validatorCount() {
+      return countOnChainKeys(this.keys, this.installedServices);
+    },
     formattedValidatorNo() {
-      return this.keys.length.toString().padStart(3, "0");
+      return this.validatorCount.toString().padStart(3, "0");
     },
 
     isValidatorMissing() {
@@ -107,12 +115,6 @@ export default {
         default:
           return "";
       }
-    },
-    flagNoData() {
-      if (this.currentResult !== undefined && this.currentResult.beaconStatus === undefined) {
-        return true;
-      }
-      return false;
     },
   },
 };

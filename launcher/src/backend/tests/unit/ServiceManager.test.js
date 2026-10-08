@@ -69,20 +69,14 @@ test("manageServiceState failure", async () => {
 test("readServiceConfigurations success", async () => {
   jest.mock("../../NodeConnection");
   const NodeConnection = require("../../NodeConnection");
-  const listServicesConfigurationsMock = jest.fn(() => {
-    return new Promise((resolve) => {
-      resolve(["first.yaml", "second.yaml"]);
-    });
-  });
-  const readServiceYAMLMock = jest
-    .fn()
-    .mockResolvedValueOnce("service: LighthouseBeaconService\nid: first\n")
-    .mockResolvedValueOnce("service: LighthouseValidatorService\nid: second\n");
+  const readServiceYAMLsMock = jest.fn().mockResolvedValue([
+    { file: "first.yaml", yaml: "service: LighthouseBeaconService\nid: first\n" },
+    { file: "second.yaml", yaml: "service: LighthouseValidatorService\nid: second\n" },
+  ]);
 
   NodeConnection.NodeConnection.mockImplementation(() => {
     return {
-      listServicesConfigurations: listServicesConfigurationsMock,
-      readServiceYAML: readServiceYAMLMock,
+      readServiceYAMLs: readServiceYAMLsMock,
     };
   });
 
@@ -102,15 +96,9 @@ test("readServiceConfigurations success", async () => {
 test("readServiceConfigurations success empty", async () => {
   jest.mock("../../NodeConnection");
   const NodeConnection = require("../../NodeConnection");
-  const listServicesConfigurationsMock = jest.fn(() => {
-    return new Promise((resolve) => {
-      resolve(new Array());
-    });
-  });
-
   NodeConnection.NodeConnection.mockImplementation(() => {
     return {
-      listServicesConfigurations: listServicesConfigurationsMock,
+      readServiceYAMLs: jest.fn().mockResolvedValue([]),
     };
   });
 
@@ -419,8 +407,7 @@ const switchMocks = (configs) => {
   const runPlaybook = jest.fn(() => Promise.resolve({ playbookRunRef: "ref" }));
   NodeConnection.NodeConnection.mockImplementation(() => {
     return {
-      listServicesConfigurations: jest.fn(() => Promise.resolve(configs.map((c) => `${c.id}.yaml`))),
-      readServiceYAML: jest.fn((file) => Promise.resolve(YAML.stringify(configs.find((c) => `${c.id}.yaml` === file)))),
+      readServiceYAMLs: jest.fn(() => Promise.resolve(configs.map((c) => ({ file: `${c.id}.yaml`, yaml: YAML.stringify(c) })))),
       readServiceConfiguration: jest.fn((id) => Promise.resolve(configs.find((c) => c.id === id))),
       writeServiceConfiguration: writeServiceConfiguration,
       runPlaybook: runPlaybook,
@@ -558,23 +545,26 @@ test("resolveExternalIp reports failure instead of a bogus address", async () =>
 });
 
 // A config file that cannot be read used to abort the whole read, leaving the
-// launcher with no services at all. Every file is read on its own now, so the
+// launcher with no services at all. Every file is parsed on its own now, so the
 // readable ones still show up and the broken ones come back as such - they carry
 // the service id the expert mode YAML editor needs to repair the file.
 
 const brokenId = "9d1a4e77-1f3d-4e6b-9d9c-1a7c5b2f0333";
 const unknownId = "4b5c6d7e-8f90-41a2-b3c4-d5e6f7a80444";
 
-// mirrors NodeConnection: the file name carries the id, the content comes back
-// as text, and a file that cannot be read at all throws
+// mirrors NodeConnection.readServiceYAMLs: only "*.yaml" files are read, the file
+// name carries the id, the content comes back as text, and a file that cannot be
+// read fails the whole read
 function nodeConnectionWithConfigs(contentByFile) {
   return {
-    listServicesConfigurations: jest.fn().mockResolvedValue(Object.keys(contentByFile)),
-    readServiceYAML: jest.fn(async (file) => {
-      const content = contentByFile[file];
-      if (content instanceof Error) throw content;
-      return typeof content === "string" ? content : YAML.stringify(content);
-    }),
+    readServiceYAMLs: jest.fn(async () =>
+      Object.entries(contentByFile)
+        .filter(([file]) => file.endsWith(".yaml"))
+        .map(([file, content]) => {
+          if (content instanceof Error) throw content;
+          return { file, yaml: typeof content === "string" ? content : YAML.stringify(content) };
+        })
+    ),
   };
 }
 
@@ -668,8 +658,7 @@ test("readServiceConfigurations resolves dependencies into the built services", 
 
 test("readServiceConfigurations yields nothing when the server cannot be reached", async () => {
   const sm = new ServiceManager({
-    listServicesConfigurations: jest.fn().mockRejectedValue(new Error("Not connected")),
-    readServiceYAML: jest.fn(),
+    readServiceYAMLs: jest.fn().mockRejectedValue(new Error("Not connected")),
   });
 
   await expect(sm.readServiceConfigurationsWithBroken()).resolves.toEqual({ services: [], broken: [] });

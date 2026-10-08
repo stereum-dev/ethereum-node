@@ -44,6 +44,10 @@ export default {
     this.refresh = setInterval(this.getTasks, 5000); //refresh data
   },
   unmounted() {
+    clearInterval(this.polling);
+    clearInterval(this.refresh);
+    clearTimeout(this.animationStart);
+    clearInterval(this.animationTimer);
     this.images = [];
   },
 
@@ -62,7 +66,7 @@ export default {
       };
 
       // Initial animation start
-      setTimeout(() => {
+      this.animationStart = setTimeout(() => {
         addImages();
         setTimeout(() => {
           clearImages();
@@ -70,7 +74,7 @@ export default {
       }, initialDelay);
 
       // Repeating animation cycles
-      setInterval(() => {
+      this.animationTimer = setInterval(() => {
         addImages();
         setTimeout(() => {
           clearImages();

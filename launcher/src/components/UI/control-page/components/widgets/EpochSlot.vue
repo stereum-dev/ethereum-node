@@ -12,32 +12,18 @@
     <template v-else>
       <ServiceLine
         :label="t('controlPage.currentEpoch')"
-        :value="String(flag ? beaconControler : controlStore?.currentResult?.currentEpoch)"
-        :hover-text="
-          t('controlPage.currentEpochIs', {
-            epoch: String(flag ? beaconControler : controlStore?.currentResult?.currentEpoch),
-          })
-        "
+        :value="flag ? beaconControler : String(controlStore.currentResult.currentEpoch)"
+        :hover-text="flag ? '' : t('controlPage.currentEpochIs', { epoch: String(controlStore.currentResult.currentEpoch) })"
       />
       <ServiceLine
         label="INDEX"
-        :value="String(flag ? beaconControler : getSlotIndex())"
-        :hover-text="
-          controlStore.slotIndex < 0
-            ? ''
-            : t('controlPage.currentSlotIs', {
-                slot: String(controlStore.slotIndex + 1),
-              })
-        "
+        :value="flag ? beaconControler : String(getSlotIndex())"
+        :hover-text="flag ? '' : t('controlPage.correntSlotIndexIs', { index: String(getSlotIndex()) })"
       />
       <ServiceLine
         :label="t('controlPage.currentSlot')"
-        :value="String(flag ? beaconControler : controlStore?.currentResult?.currentSlot)"
-        :hover-text="
-          t('controlPage.currentSlotIs', {
-            slot: String(flag ? beaconControler : controlStore?.currentResult?.currentSlot),
-          })
-        "
+        :value="flag ? beaconControler : String(controlStore.currentResult.currentSlot)"
+        :hover-text="flag ? '' : t('controlPage.currentSlotIs', { slot: String(controlStore.currentResult.currentSlot) })"
       />
     </template>
   </div>
@@ -75,6 +61,11 @@ const refreshTimer = () => {
 const currentEpochSlot = async () => {
   try {
     let res = await ControlService?.getCurrentEpochandSlot();
+    // Keep the last result (or "Loading...") instead of rendering an error response
+    if (res?.code) {
+      console.error("Couldn't fetch current epoch and slot:", res.info);
+      return;
+    }
     res.currentEpoch = res.current_epoch;
     res.currentSlot = res.current_slot;
     delete res.current_epoch;

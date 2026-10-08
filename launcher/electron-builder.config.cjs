@@ -64,9 +64,6 @@ module.exports = {
     x64ArchFiles: "**/*.node",
   },
   win: {
-    signtoolOptions: {
-      sign: "./customsign.js",
-    },
     artifactName: "Stereum-Launcher-Setup-${version}.${ext}",
   },
 };

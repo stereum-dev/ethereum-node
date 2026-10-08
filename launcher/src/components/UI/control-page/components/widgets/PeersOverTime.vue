@@ -12,7 +12,7 @@
       </div>
 
       <div v-if="chartOptions && chartSeries" class="peers-over-time_part w-3/4 h-full flex" @mouseleave="footerStore.cursorLocation = ''">
-        <VueApexCharts :options="chartOptions" :series="chartSeries" class="w-3/4 h-full" />
+        <VueApexCharts :options="chartOptions" :series="chartSeries" height="100%" class="w-3/4 h-full" />
       </div>
 
       <div v-if="setupStore.selectedServicePairs !== null" class="iconss w-1/5 h-full flex justify-center items-center flex-col gap-1">

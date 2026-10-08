@@ -2,8 +2,15 @@ import ControlService from "@/store/ControlService";
 import { useServices } from "@/store/services";
 import { useNodeManage } from "@/store/nodeManage";
 import { useStakingStore } from "@/store/theStaking";
-import axios from "axios";
 import { isObolDVTService } from "@/share/ObolDVTServices";
+
+// A VC behind Charon/Pluto holds key shares of the cluster's validators, so count each on-chain key once
+export function countOnChainKeys(keys = [], installedServices = []) {
+  const shareHolders = installedServices
+    .filter((s) => s.config?.dependencies?.consensusClients?.some((d) => isObolDVTService(d.service)))
+    .map((s) => s.config.serviceID);
+  return new Set(keys.filter((k) => !shareHolders.includes(k.validatorID)).map((k) => k.key)).size;
+}
 
 export async function useListKeys(forceRefresh) {
   const serviceStore = useServices();
@@ -84,15 +91,21 @@ export async function useListKeys(forceRefresh) {
     keysToWrite.overwrite = true;
     await ControlService.writeKeys(keysToWrite);
 
+    // Keep the last stats and row state (selection, open panels) of already listed keys across refreshes
+    const previousKeys = new Map(stakingStore.keys.map((k) => [k.validatorID + k.key, k]));
+    const STAT_FIELDS = ["status", "balance", "index", "activeSince", "exitSince", "elgibilitySince", "withdrawableSince"];
+
     stakingStore.keys = keyStats.map((key) => {
+      const previous = previousKeys.get(key.validatorID + key.key);
       return {
         ...key,
+        ...(previous ? Object.fromEntries(STAT_FIELDS.filter((f) => f in previous).map((f) => [f, previous[f]])) : {}),
         displayName: alias[key.key]?.keyName,
-        showGrafitiText: false,
-        showCopyText: false,
-        showRemoveText: false,
-        showExitText: false,
-        selected: false,
+        showGrafitiText: previous?.showGrafitiText ?? false,
+        showCopyText: previous?.showCopyText ?? false,
+        showRemoveText: previous?.showRemoveText ?? false,
+        showExitText: previous?.showExitText ?? false,
+        selected: previous?.selected ?? false,
         groupName: alias[key.key]?.groupName,
         groupID: alias[key.key]?.groupID,
       };
@@ -102,44 +115,27 @@ export async function useListKeys(forceRefresh) {
 }
 
 export async function useUpdateValidatorStats() {
-  const nodeManageStore = useNodeManage();
   const stakingStore = useStakingStore();
   const serviceStore = useServices();
   let totalBalance = 0;
   let data = [];
 
+  // On a failed fetch keep the stats the keys already have, only keys without any become NA
+  const keepPreviousStats = () =>
+    stakingStore.keys.forEach((key) => {
+      if (key.status === "loading") key.status = "NA";
+    });
+
   try {
     data = await ControlService.getValidatorState(stakingStore.keys.map((key) => key.key));
-
-    if (!data || data.length == 0) {
-      data = [];
-      let latestEpochResponse = await axios.get(nodeManageStore.currentNetwork.dataEndpoint + "/epoch/latest", {
-        validateStatus: function (status) {
-          return status < 500;
-        },
-      });
-      var latestEpoch = latestEpochResponse.data.data.epoch;
-      let buffer = stakingStore.keys.map((key) => key.key);
-      if (stakingStore.keys.length <= 100) {
-        const chunkSize = 50;
-        for (let i = 0; i < buffer.length; i += chunkSize) {
-          //split validator accounts into chunks of 50 (api url limit)
-          const chunk = buffer.slice(i, i + chunkSize);
-          let response = await axios.get(nodeManageStore.currentNetwork.dataEndpoint + "/validator/" + encodeURIComponent(chunk.join()), {
-            validateStatus: function (status) {
-              return status < 500;
-            },
-          });
-
-          if (response.data.data) data = data.concat(response.data.data); //merge all gathered stats in one array
-        }
-      }
-    }
   } catch (err) {
     console.log("Couldn't fetch validator stats:\n", err);
-    stakingStore.keys.forEach((key) => {
-      key.status = "NA";
-    });
+    keepPreviousStats();
+    return;
+  }
+  if (!Array.isArray(data)) {
+    console.log("Couldn't fetch validator stats: no beacon node answered");
+    keepPreviousStats();
     return;
   }
   // Get queue keys
@@ -169,7 +165,7 @@ export async function useUpdateValidatorStats() {
       let dateEligibility = new Date();
       let dateWithdrawable = new Date();
       let now = new Date();
-      latestEpoch = latestEpoch ? parseInt(latestEpoch) : parseInt(info.latestEpoch);
+      const latestEpoch = parseInt(info.latestEpoch);
       let activationEpoch = parseInt(info.activationEpoch);
       let exitEpoch = parseInt(info.exitEpoch);
       let elgibilityEpoch = parseInt(info.activationElgibilityEpoch);

@@ -6,7 +6,7 @@
         RPC RECEIVED OVER TIME
       </div>
       <div v-if="chartOptions && chartSeries" class="widget-box w-full h-4/5 justify-center items-center flex flex-col">
-        <VueApexCharts :options="chartOptions" :series="chartSeries" class="fullSizeChart"></VueApexCharts>
+        <VueApexCharts :options="chartOptions" :series="chartSeries" height="100%" class="fullSizeChart"></VueApexCharts>
       </div>
     </template>
   </div>

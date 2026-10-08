@@ -16,7 +16,7 @@
         class="peers-over-time_part w-3/4 h-full flex justify-center items-center relative"
         @mouseleave="footerStore.cursorLocation = ''"
       >
-        <VueApexCharts :options="chartOptions" :series="chartSeries" class="fullSizeChart" />
+        <VueApexCharts :options="chartOptions" :series="chartSeries" height="100%" class="fullSizeChart" />
       </div>
     </template>
   </div>

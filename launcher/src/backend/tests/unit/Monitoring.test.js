@@ -87,7 +87,7 @@ test("service infos that were handed in are not read a second time", async () =>
 // Stereum, so the check must separate "absent" from "could not tell".
 describe("checkStereumInstallation", () => {
   const nodeConnectionWith = (execImpl) => ({
-    sshService: { connected: true, exec: execImpl },
+    sshService: { connected: true, exec: execImpl, execShared: execImpl },
   });
 
   beforeAll(() => {
@@ -143,8 +143,277 @@ describe("checkStereumInstallation", () => {
   test("does not probe a node it is not connected to", async () => {
     const monitoring = new Monitoring();
     const exec = jest.fn();
-    const nc = { sshService: { connected: false, exec } };
+    const nc = { sshService: { connected: false, exec, execShared: exec } };
     await expect(monitoring.checkStereumInstallation(nc)).resolves.toBe(false);
     expect(exec).not.toHaveBeenCalled();
+  });
+});
+
+const tekuInfo = {
+  service: "TekuBeaconService",
+  state: "running",
+  config: {
+    serviceID: "teku-id",
+    instanceID: "stereum-teku-id",
+    command: ["--p2p-peer-upper-bound=100"],
+    dependencies: { executionClients: [{ service: "GethService", id: "geth-id" }] },
+  },
+};
+
+const gethInfo = {
+  service: "GethService",
+  state: "running",
+  config: { serviceID: "geth-id", instanceID: "stereum-geth-id", command: ["--maxpeers=50"], dependencies: { executionClients: [] } },
+};
+
+const sample = (name, job, instance, value, labels = {}) => ({
+  metric: { __name__: name, job, instance: instance + ":8008", ...labels },
+  value: [0, String(value)],
+});
+
+// Teku reports beacon_peer_count per direction, so both series have to be summed
+test("teku peers are summed across inbound and outbound", async () => {
+  const monitoring = new Monitoring({});
+  monitoring.getServiceInfos = jest.fn().mockResolvedValue([tekuInfo, gethInfo]);
+  monitoring.queryPrometheus = jest.fn().mockResolvedValue({
+    status: "success",
+    data: {
+      result: [
+        sample("beacon_peer_count", "teku_beacon", "stereum-teku-id", 30, { direction: "inbound" }),
+        sample("beacon_peer_count", "teku_beacon", "stereum-teku-id", 45, { direction: "outbound" }),
+        sample("p2p_peers", "geth", "stereum-geth-id", 20),
+      ],
+    },
+  });
+
+  const result = await monitoring.getP2PStatus();
+
+  expect(result.code).toEqual(0);
+  expect(result.data[0].details.consensus.numPeer).toEqual(75);
+  expect(result.data[0].details.execution.numPeer).toEqual(20);
+});
+
+// Like the rpc api, the beacon api has to be addressed by the ip its port is published on
+test("the beacon api is queried on the address its port is published on", async () => {
+  const monitoring = new Monitoring({});
+  monitoring.getBeaconStatus = jest.fn().mockResolvedValue({
+    code: 0,
+    data: [{ beacon: { destinationIp: "192.168.178.24", destinationPort: "5051" } }],
+  });
+  monitoring.queryBeaconApi = jest.fn().mockImplementation(async (url, endpoint) => ({
+    code: 0,
+    data: {
+      api_reponse: {
+        data: endpoint.includes("genesis") ? { genesis_time: "0" } : { SLOTS_PER_EPOCH: "32", SECONDS_PER_SLOT: "12" },
+      },
+    },
+  }));
+
+  const result = await monitoring.getCurrentEpochandSlot();
+
+  expect(monitoring.queryBeaconApi).toHaveBeenCalledWith("http://192.168.178.24:5051", "/eth/v1/beacon/genesis", [], "GET");
+  expect(result.current_slot).toBeGreaterThan(0);
+});
+
+// A validator-only node has no local beacon, but its validator client knows where one is
+test("without a local beacon the configured endpoint that answers is used", async () => {
+  const monitoring = new Monitoring({});
+  monitoring.getBeaconStatus = jest.fn().mockResolvedValue({ code: 2, info: "no running consensus client", data: "" });
+  monitoring.getServiceInfos = jest
+    .fn()
+    .mockResolvedValue([
+      { service: "TekuValidatorService", config: { command: ["--beacon-node-api-endpoint=http://down:5051,http://up:5051"] } },
+    ]);
+  monitoring.queryBeaconApi = jest
+    .fn()
+    .mockImplementation(async (url) =>
+      url === "http://up:5051" ? { code: 0, data: { api_reponse: { data: { is_syncing: false } } } } : { code: 5, info: "error" }
+    );
+
+  const result = await monitoring.findBeaconPort();
+
+  expect(result.code).toEqual(0);
+  expect(result.data.url).toEqual("http://up:5051");
+  expect(result.data.source).toEqual("configured");
+});
+
+test("without any reachable beacon the lookup still fails", async () => {
+  const monitoring = new Monitoring({});
+  monitoring.getBeaconStatus = jest.fn().mockResolvedValue({ code: 2, info: "no running consensus client", data: "" });
+  monitoring.getServiceInfos = jest
+    .fn()
+    .mockResolvedValue([{ service: "TekuValidatorService", config: { command: ["--beacon-node-api-endpoint=http://down:5051"] } }]);
+  monitoring.queryBeaconApi = jest.fn().mockResolvedValue({ code: 5, info: "error" });
+
+  const result = await monitoring.findBeaconPort();
+
+  expect(result.code).toEqual(1);
+});
+
+// A VC behind Charon only holds key shares, so the attestation rewards have to be summed for the DV keys
+test("the balance of a VC behind Charon is summed for the cluster's DV keys", async () => {
+  const monitoring = new Monitoring({});
+  monitoring.findBeaconPort = jest.fn().mockResolvedValue({ code: 0, data: { url: "http://127.0.0.1:5051" } });
+  monitoring.getServiceInfos = jest.fn().mockResolvedValue([
+    {
+      service: "TekuValidatorService",
+      config: { serviceID: "teku", dependencies: { consensusClients: [{ service: "CharonService", id: "charon" }] } },
+    },
+  ]);
+  monitoring.getPublicKeys = jest.fn();
+  monitoring.validatorAccountManager.getDVTKeys = jest
+    .fn()
+    .mockResolvedValue([{ distributed_public_key: "0xdv1" }, { distributed_public_key: "0xdv2" }]);
+  monitoring.queryBeaconApi = jest.fn().mockImplementation(async (url, endpoint) =>
+    endpoint.includes("finality")
+      ? { code: 0, data: { api_reponse: { data: { finalized: { epoch: "100" } } } } }
+      : {
+          code: 0,
+          data: {
+            api_reponse: {
+              data: {
+                total_rewards: [
+                  { validator_index: "1", head: "10", source: "20", target: "30" },
+                  { validator_index: "2", head: "1", source: "2", target: "3" },
+                ],
+              },
+            },
+          },
+        }
+  );
+
+  const result = await monitoring.getBalanceStatus();
+
+  expect(monitoring.getPublicKeys).not.toHaveBeenCalled();
+  expect(monitoring.queryBeaconApi).toHaveBeenCalledWith(
+    "http://127.0.0.1:5051",
+    "/eth/v1/beacon/rewards/attestations/100",
+    ["0xdv1", "0xdv2"],
+    "POST",
+    expect.anything()
+  );
+  expect(result.data.balance).toEqual(66);
+});
+
+// null lets the staking page keep the stats it has instead of resetting every key
+describe("validator state on a failed fetch", () => {
+  const monitoringWithBeacon = (execResults) => {
+    const monitoring = new Monitoring({});
+    monitoring.findBeaconPort = jest.fn().mockResolvedValue({ code: 0, data: { url: "http://127.0.0.1:5051" } });
+    monitoring.nodeConnection = { sshService: { exec: jest.fn() } };
+    execResults.forEach((r) => monitoring.nodeConnection.sshService.exec.mockResolvedValueOnce(r));
+    return monitoring;
+  };
+  const finality = { rc: 0, stderr: "", stdout: JSON.stringify({ data: { current_justified: { epoch: "99" } } }) };
+
+  test("no reachable beacon returns null", async () => {
+    const monitoring = new Monitoring({});
+    monitoring.findBeaconPort = jest.fn().mockResolvedValue({ code: 1, info: "no beacon" });
+
+    expect(await monitoring.getValidatorState(["0xa"])).toBeNull();
+  });
+
+  test("a failed curl returns null", async () => {
+    const monitoring = monitoringWithBeacon([{ rc: 7, stderr: "", stdout: "" }, finality]);
+
+    expect(await monitoring.getValidatorState(["0xa"])).toBeNull();
+  });
+
+  test("keys unknown to the beacon are an answer, not a failure", async () => {
+    const monitoring = monitoringWithBeacon([{ rc: 0, stderr: "", stdout: JSON.stringify({ code: 404, message: "not found" }) }, finality]);
+
+    expect(await monitoring.getValidatorState(["0xa"])).toEqual([]);
+  });
+});
+
+// One exec for all queries of a widget instead of one channel and login shell each
+test("prometheus queries are batched into a single exec and split per query", async () => {
+  const monitoring = new Monitoring({});
+  monitoring.getPrometheusTarget = jest.fn().mockResolvedValue({ addr: "127.0.0.1", port: "9090" });
+  const execShared = jest.fn().mockResolvedValue({
+    rc: 0,
+    stderr: "",
+    stdout: [
+      '{"status":"success","data":{"result":[1]}}',
+      "=====STEREUM_PROMETHEUS_BATCH=====",
+      "",
+      "=====STEREUM_PROMETHEUS_BATCH=====",
+      '{"status":"success","data":{"result":[3]}}',
+      "=====STEREUM_PROMETHEUS_BATCH=====",
+      "",
+    ].join("\n"),
+  });
+  monitoring.nodeConnection = { sshService: { execShared } };
+
+  const results = await monitoring.queryPrometheusBatch({ a: "up", b: "broken", c: "sum(x) by (y)" });
+
+  expect(execShared).toHaveBeenCalledTimes(1);
+  expect(results.map((r) => r.key)).toEqual(["a", "b", "c"]);
+  expect(results[0].result.data.result).toEqual([1]);
+  expect(results[1].result.status).toEqual("error"); // its curl answered nothing
+  expect(results[2].result.data.result).toEqual([3]);
+});
+
+describe("service snapshot", () => {
+  const snapshotMonitoring = () => {
+    const monitoring = new Monitoring({ serviceConfigVersion: 0 });
+    monitoring.checkStereumInstallation = jest.fn().mockResolvedValue(true);
+    monitoring.serviceManager = {
+      readServiceConfigurationsWithBroken: jest.fn().mockImplementation(async () => ({
+        services: [
+          { id: "teku", service: "TekuBeaconService", ports: [{ destinationIp: "0.0.0.0", destinationPort: "5051" }], dependencies: {} },
+          { id: "prom", service: "PrometheusService", ports: [], dependencies: {} },
+        ],
+        broken: [],
+      })),
+    };
+    monitoring.nodeConnection.listServices = jest.fn().mockResolvedValue([{ Names: "stereum-teku", State: "running" }]);
+    return monitoring;
+  };
+
+  // Every widget asked with its own filter, and each cache miss read every config again
+  test("concurrent callers with different filters share one read", async () => {
+    const monitoring = snapshotMonitoring();
+
+    const [all, prom, again] = await Promise.all([
+      monitoring.getServiceInfos(),
+      monitoring.getServiceInfos("PrometheusService"),
+      monitoring.refreshServiceInfos(),
+    ]);
+
+    expect(monitoring.serviceManager.readServiceConfigurationsWithBroken).toHaveBeenCalledTimes(1);
+    expect(all).toHaveLength(2);
+    expect(prom.map((s) => s.service)).toEqual(["PrometheusService"]);
+    expect(again).toHaveLength(2);
+  });
+
+  test("a config write or playbook run makes the next caller read again", async () => {
+    const monitoring = snapshotMonitoring();
+    await monitoring.getServiceInfos();
+
+    monitoring.nodeConnection.serviceConfigVersion++;
+    await monitoring.getServiceInfos();
+
+    expect(monitoring.serviceManager.readServiceConfigurationsWithBroken).toHaveBeenCalledTimes(2);
+  });
+
+  test("the header refresh accepts a much younger snapshot than other readers", async () => {
+    const monitoring = snapshotMonitoring();
+    await monitoring.getServiceInfos();
+    monitoring.serviceSnapshot.at -= Monitoring.SERVICE_REFRESH_MAX_AGE_MS + 1;
+
+    await monitoring.getServiceInfos(); // still young enough
+    expect(monitoring.serviceManager.readServiceConfigurationsWithBroken).toHaveBeenCalledTimes(1);
+    await monitoring.refreshServiceInfos(); // too old for the header
+    expect(monitoring.serviceManager.readServiceConfigurationsWithBroken).toHaveBeenCalledTimes(2);
+  });
+
+  test("callers get their own copy to modify", async () => {
+    const monitoring = snapshotMonitoring();
+    const first = await monitoring.getServiceInfos();
+    first[0].config.ports[0].destinationIp = "127.0.0.1";
+
+    const second = await monitoring.getServiceInfos();
+    expect(second[0].config.ports[0].destinationIp).toEqual("0.0.0.0");
   });
 });

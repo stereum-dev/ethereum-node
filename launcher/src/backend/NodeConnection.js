@@ -26,6 +26,8 @@ if (process.env.IS_DEV === "true" || process.env.NODE_ENV === "test") {
 export class NodeConnection {
   constructor(nodeConnectionParams) {
     this.sshService = new SSHService();
+    // bumped whenever service configs or containers may have changed, so cached snapshots are refetched
+    this.serviceConfigVersion = 0;
     this.nodeConnectionParams = nodeConnectionParams;
     this.os = null;
     this.osv = null;
@@ -331,6 +333,10 @@ export class NodeConnection {
   /**
    * start a playbook
    */
+  invalidateServiceConfigs() {
+    this.serviceConfigVersion++;
+  }
+
   async runPlaybook(playbook, extraVars) {
     if (!this.settings) {
       throw new Error("Settings not loaded! Run findStereumSettings() first.");
@@ -370,6 +376,8 @@ export class NodeConnection {
     } catch (err) {
       log.error("Can't run playbook '" + playbook + "'", err);
       throw new Error("Can't run playbook: " + err, { cause: err });
+    } finally {
+      this.invalidateServiceConfigs();
     }
 
     if (SSHService.checkExecError(ansibleResult)) {
@@ -409,7 +417,7 @@ export class NodeConnection {
   async listServicesConfigurations() {
     let services;
     try {
-      services = await this.sshService.exec("ls -1 /etc/stereum/services 2>/dev/null");
+      services = await this.sshService.execShared("ls -1 /etc/stereum/services 2>/dev/null");
     } catch (err) {
       log.error("Can't read services configurations", err);
       throw new Error("Can't read services configurations: " + err, { cause: err });
@@ -445,11 +453,41 @@ export class NodeConnection {
   /**
    * read a specific service configuration
    */
+  /**
+   * Read every service config in one exec instead of an ls plus one cat per file.
+   * Throws when the read fails, so a connection problem is not mistaken for broken configs.
+   * @returns {Promise<Array<{file: string, yaml: string}>>}
+   */
+  async readServiceYAMLs() {
+    const marker = "=====STEREUM_SERVICE_FILE";
+    let result;
+    try {
+      result = await this.sshService.execShared(
+        [
+          "cd /etc/stereum/services 2>/dev/null || exit 0",
+          'for f in *.yaml; do [ -f "$f" ] || continue; ' + `printf '\\n${marker} %s=====\\n' "$f"; cat "$f" || exit 1; done`,
+        ].join("\n")
+      );
+    } catch (err) {
+      log.error("Can't read service configurations", err);
+      throw new Error("Can't read service configurations: " + err, { cause: err });
+    }
+    if (SSHService.checkExecError(result, true)) {
+      throw new Error("Failed reading service configurations: " + SSHService.extractExecError(result));
+    }
+
+    // [before first marker, file, content, file, content, ...]
+    const parts = result.stdout.split(new RegExp(`\\n${marker} (.+?)=====\\n`));
+    const files = [];
+    for (let i = 1; i < parts.length; i += 2) files.push({ file: parts[i], yaml: parts[i + 1] ?? "" });
+    return files;
+  }
+
   async readServiceYAML(serviceId) {
     let serviceYAML;
     try {
       const suffix = serviceId.endsWith(".yaml") ? "" : ".yaml";
-      serviceYAML = await this.sshService.exec("cat /etc/stereum/services/" + serviceId + suffix);
+      serviceYAML = await this.sshService.execShared("cat /etc/stereum/services/" + serviceId + suffix);
     } catch (err) {
       log.error("Can't read service yaml of " + serviceId, err);
       throw new Error("Can't read service yaml of " + serviceId + ": " + err, { cause: err });
@@ -1725,6 +1763,7 @@ export class NodeConnection {
       configStatus = await this.sshService.exec(
         "echo -e " + StringUtils.escapeStringForShell(service.data.trim()) + " > /etc/stereum/services/" + service.id + ".yaml"
       );
+      this.invalidateServiceConfigs();
     } catch (err) {
       this.taskManager.otherSubTasks.push({
         name: "write " + service.service + " yaml",
@@ -1773,6 +1812,7 @@ export class NodeConnection {
           serviceConfiguration.id +
           ".yaml"
       );
+      this.invalidateServiceConfigs();
       if (setupID) await this.configManager.addServiceIntoSetup(serviceConfiguration, setupID);
     } catch (err) {
       this.taskManager.otherSubTasks.push({
@@ -1809,7 +1849,7 @@ export class NodeConnection {
   async listServices() {
     let serviceJsons;
     try {
-      serviceJsons = await this.sshService.exec("docker ps --format '{{json .}}' --no-trunc");
+      serviceJsons = await this.sshService.execShared("docker ps --format '{{json .}}' --no-trunc");
     } catch (err) {
       log.error("Can't list services: ", err);
       throw new Error("Can't list services: " + err, { cause: err });
@@ -1895,6 +1935,7 @@ export class NodeConnection {
       otherRunRef: ref,
       status: !(await this.sshService.exec("docker rm -vf $(docker ps -aq)")).rc,
     });
+    this.invalidateServiceConfigs();
 
     this.taskManager.otherSubTasks.push({
       name: "remove Docker-Images",
