@@ -174,6 +174,15 @@ const formatServiceId = (id) => (id && id.length >= 7 ? `${id.slice(0, 5)}...${i
 
 const selectedPair = computed(() => servicePairs.value[setupStore.currentPairIndex] || null);
 
+// Validators behind a DV client (Charon/Pluto) depend on it, so follow it to its beacon nodes
+const consensusDependencies = (validator, services) =>
+  (validator.config?.dependencies?.consensusClients || []).flatMap((dependency) => {
+    const dependencyService = services.find(
+      (service) => service.service === dependency.service && service.config?.serviceID === dependency.id
+    );
+    return dependencyService?.category === "validator" ? dependencyService.config?.dependencies?.consensusClients || [] : [dependency];
+  });
+
 const relatedValidators = computed(() => {
   if (!selectedPair.value?.consensusService) return [];
 
@@ -184,7 +193,7 @@ const relatedValidators = computed(() => {
   return servicesToCheck.filter(
     (service) =>
       service.category === "validator" &&
-      service.config?.dependencies?.consensusClients?.some(
+      consensusDependencies(service, servicesToCheck).some(
         (dependency) =>
           dependency.service === selectedPair.value.consensusService.service && dependency.id === selectedPair.value.consensusService.id
       )
@@ -210,29 +219,29 @@ const allValidatorPairs = computed(() => {
         console.warn(`Services list is missing or malformed in setup with network: ${network || "Unknown"}`);
         return [];
       }
-      return services.filter((service) => service.category === "validator");
+      return services
+        .filter((service) => service.category === "validator")
+        .map((validator) => ({ validator, services, network: network || "Unknown" }));
     });
 
-    return validators.map((validator) => {
+    return validators.map(({ validator, services, network }) => {
+      const dependencies = consensusDependencies(validator, services);
       const relatedPairs = servicePairs.value
         ? servicePairs.value.filter((pair) =>
-            validator.config?.dependencies?.consensusClients?.some(
+            dependencies.some(
               (dependency) => dependency.service === pair.consensusService.service && dependency.id === pair.consensusService.id
             )
           )
         : [];
 
       if (relatedPairs.length === 0) {
-        console.warn(`No related pairs found for validator ${validator.service} in network ${validator.network || "Unknown"}`);
+        console.warn(`No related pairs found for validator ${validator.service} in network ${network}`);
       }
 
       return {
         validator,
-        pairs: relatedPairs.map((pair) => ({
-          ...pair,
-          network: setupsToCheck.find((setup) => setup.services.includes(validator))?.network || "Unknown",
-        })),
-        network: setupsToCheck.find((setup) => setup.services.includes(validator))?.network || "Unknown",
+        pairs: relatedPairs.map((pair) => ({ ...pair, network })),
+        network,
       };
     });
   } catch (error) {

@@ -2,7 +2,6 @@ import ControlService from "@/store/ControlService";
 import { useServices } from "@/store/services";
 import { useNodeManage } from "@/store/nodeManage";
 import { useStakingStore } from "@/store/theStaking";
-import axios from "axios";
 import { isObolDVTService } from "@/share/ObolDVTServices";
 
 export async function useListKeys(forceRefresh) {
@@ -102,39 +101,13 @@ export async function useListKeys(forceRefresh) {
 }
 
 export async function useUpdateValidatorStats() {
-  const nodeManageStore = useNodeManage();
   const stakingStore = useStakingStore();
   const serviceStore = useServices();
   let totalBalance = 0;
   let data = [];
 
   try {
-    data = await ControlService.getValidatorState(stakingStore.keys.map((key) => key.key));
-
-    if (!data || data.length == 0) {
-      data = [];
-      let latestEpochResponse = await axios.get(nodeManageStore.currentNetwork.dataEndpoint + "/epoch/latest", {
-        validateStatus: function (status) {
-          return status < 500;
-        },
-      });
-      var latestEpoch = latestEpochResponse.data.data.epoch;
-      let buffer = stakingStore.keys.map((key) => key.key);
-      if (stakingStore.keys.length <= 100) {
-        const chunkSize = 50;
-        for (let i = 0; i < buffer.length; i += chunkSize) {
-          //split validator accounts into chunks of 50 (api url limit)
-          const chunk = buffer.slice(i, i + chunkSize);
-          let response = await axios.get(nodeManageStore.currentNetwork.dataEndpoint + "/validator/" + encodeURIComponent(chunk.join()), {
-            validateStatus: function (status) {
-              return status < 500;
-            },
-          });
-
-          if (response.data.data) data = data.concat(response.data.data); //merge all gathered stats in one array
-        }
-      }
-    }
+    data = (await ControlService.getValidatorState(stakingStore.keys.map((key) => key.key))) || [];
   } catch (err) {
     console.log("Couldn't fetch validator stats:\n", err);
     stakingStore.keys.forEach((key) => {
@@ -169,7 +142,7 @@ export async function useUpdateValidatorStats() {
       let dateEligibility = new Date();
       let dateWithdrawable = new Date();
       let now = new Date();
-      latestEpoch = latestEpoch ? parseInt(latestEpoch) : parseInt(info.latestEpoch);
+      const latestEpoch = parseInt(info.latestEpoch);
       let activationEpoch = parseInt(info.activationEpoch);
       let exitEpoch = parseInt(info.exitEpoch);
       let elgibilityEpoch = parseInt(info.activationElgibilityEpoch);
