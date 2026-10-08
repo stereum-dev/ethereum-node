@@ -1,5 +1,5 @@
 <template>
-  <div class="absolute top-[1px] bottom-2 w-full h-[554px] p-2">
+  <div class="absolute top-px bottom-2 w-full h-[554px] p-2">
     <LogsPage
       :client="client"
       @close-log="closeLog"

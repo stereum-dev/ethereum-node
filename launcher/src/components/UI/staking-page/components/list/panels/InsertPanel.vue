@@ -1,6 +1,6 @@
 <template>
   <div
-    class="animate__animated animate__fadeIn w-full h-full max-h-[32px] col-start-1 col-span-full rounded-sm flex justify-center items-center cursor-pointer shadow-md shadow-gray-800"
+    class="animate__animated animate__fadeIn w-full h-full max-h-[32px] col-start-1 col-span-full rounded-xs flex justify-center items-center cursor-pointer shadow-md shadow-gray-800"
     :class="
       isUploadDisabled || stakingStore.isStakingDisabled ? 'opacity-25 pointer-events-none bg-[#243535]' : 'bg-[#336666] hover:bg-[#234545]'
     "

@@ -43,7 +43,7 @@ import { computed } from 'vue';
 
     <div
       v-if="stakingStore.isRenameKeyActive"
-      class="col-start-3 col-end-8 self-center overflow-hidden flex justify-start items-center text-[10px]"
+      class="col-start-3 col-end-8 self-center overflow-hidden flex justify-start items-center text-2xs"
       @mouseenter="footerStore.cursorLocation = `${props.item.key}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
@@ -56,7 +56,7 @@ import { computed } from 'vue';
       @mouseenter="footerStore.cursorLocation = `${props.item.key}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <span class="text-center font-semibold text-[10px]" :class="props.item?.selected ? 'text-gray-800' : ''">{{ displayText }}</span>
+      <span class="text-center font-semibold text-2xs" :class="props.item?.selected ? 'text-gray-800' : ''">{{ displayText }}</span>
     </div>
 
     <img
@@ -69,7 +69,7 @@ import { computed } from 'vue';
     />
 
     <span
-      class="col-start-9 col-end-12 self-center text-center text-[10px] overflow-hidden"
+      class="col-start-9 col-end-12 self-center text-center text-2xs overflow-hidden"
       :class="props.item?.selected ? 'text-gray-800' : ''"
       :style="{ color: getStatusColor }"
       @mouseenter="
@@ -90,7 +90,7 @@ import { computed } from 'vue';
     </div>
 
     <span
-      class="col-start-14 col-end-17 self-center text-center text-[10px] overflow-hidden"
+      class="col-start-14 col-end-17 self-center text-center text-2xs overflow-hidden"
       :class="props.item?.selected ? 'text-gray-800' : ''"
       @mouseenter="footerStore.cursorLocation = `${balExpl}`"
       @mouseleave="footerStore.cursorLocation = ''"
@@ -118,7 +118,7 @@ import { computed } from 'vue';
         @mouseleave="footerStore.cursorLocation = ''"
       >
         <img
-          class="w-5 h-5 bg-[#343434] rounded-sm hover:scale-105 active:scale-95 cursor-pointer transition-all duration-150"
+          class="w-5 h-5 bg-[#343434] rounded-xs hover:scale-105 active:scale-95 cursor-pointer transition-all duration-150"
           src="/img/icon/staking-page-icons/copy.png"
           alt="Icon"
           @mousedown.prevent

@@ -7,7 +7,7 @@
         >
           <label
             for="uploadFile"
-            class="capitalize font-normal text-lg px-2 py-2.5 outline-none rounded-md cursor-pointer mx-auto w-max block text-gray-200"
+            class="capitalize font-normal text-lg px-2 py-2.5 outline-hidden rounded-md cursor-pointer mx-auto w-max block text-gray-200"
           >
             Import Genesis
           </label>

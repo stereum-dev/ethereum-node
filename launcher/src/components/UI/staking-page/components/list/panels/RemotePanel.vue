@@ -1,20 +1,20 @@
 <template>
   <div
-    class="animate__animated animate__fadeIn w-full h-full max-h-[32px] col-start-1 col-span-full rounded-sm flex justify-center items-center cursor-pointer border border-[#3e4347] px-[1px]"
+    class="animate__animated animate__fadeIn w-full h-full max-h-[32px] col-start-1 col-span-full rounded-xs flex justify-center items-center cursor-pointer border border-[#3e4347] px-px"
   >
     <div class="w-full h-7 grid grid-cols-12 bg-[#171D22] space-x-1 cursor-default">
       <div
-        class="col-start-1 col-end-3 w-full h-full flex justify-start items-center bg-[#a7aeb5] hover:bg-slate-300 rounded-sm space-x-1 cursor-pointer transition-all duration-150 px-1"
+        class="col-start-1 col-end-3 w-full h-full flex justify-start items-center bg-[#a7aeb5] hover:bg-slate-300 rounded-xs space-x-1 cursor-pointer transition-all duration-150 px-1"
         :class="getLocalWeb3Signer?.config?.serviceID ? 'cursor-pointer' : 'pointer-events-none opacity-50'"
         @click="openLocalList"
       >
         <img class="w-5 h-5" :src="web3SignerAssets.icon" alt="Service Icon" @mousedown.prevent />
-        <span class="text-[10px] text-gray-700 font-semibold">{{ web3SignerAssets.name }}</span>
+        <span class="text-2xs text-gray-700 font-semibold">{{ web3SignerAssets.name }}</span>
       </div>
       <input
         id="input1"
         v-model="stakingStore.remoteUrl"
-        class="col-start-3 col-end-11 w-full h-full bg-[#171D22] border px-4 rounded-sm outline-none text-xs text-gray-400 border-gray-500 placeholder:text-gray-400"
+        class="col-start-3 col-end-11 w-full h-full bg-[#171D22] border px-4 rounded-xs outline-hidden text-xs text-gray-400 border-gray-500 placeholder:text-gray-400"
         type="text"
         autofocus
         placeholder="Add URL to import remote keys"

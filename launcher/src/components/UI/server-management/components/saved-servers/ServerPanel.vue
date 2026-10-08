@@ -14,12 +14,12 @@
         v-model="searchQuery"
         type="text"
         :placeholder="`${t('multiServer.serchFor')}`"
-        class="w-full h-7 rounded-md border-gray-200 py-2 shadow-sm sm:text-sm px-2"
+        class="w-full h-7 rounded-md border-gray-200 py-2 shadow-xs sm:text-sm px-2"
         @mouseenter="footerStore.cursorLocation = `${t('serverList.search')}`"
         @mouseleave="footerStore.cursorLocation = ''"
       />
 
-      <span class="absolute inset-y-0 end-0 grid w-10 place-content-center">
+      <span class="absolute inset-y-0 inset-e-0 grid w-10 place-content-center">
         <button type="button" class="text-gray-600 hover:text-gray-700">
           <span class="sr-only">{{ $t("multiServer.serch") }} </span>
 

@@ -66,7 +66,7 @@
               v-model="stakingStore.withdrawIsChecked"
               type="checkbox"
               name="marketing_accept"
-              class="h-5 w-5 rounded-md border-gray-200 bg-white shadow-sm"
+              class="h-5 w-5 rounded-md border-gray-200 bg-white shadow-xs"
             />
 
             <span class="text-sm text-gray-400">{{ $t("stakingPage.readConeq") }}</span>

@@ -8,7 +8,7 @@
     </div>
     <div class="volume-box w-2/3 h-full flex flex-col justify-center items-center">
       <div
-        class="volume_services flex w-full h-1/4 border rounded-sm border-gray-700 overflow-hidden relative mt-1 mr-2 cursor-pointer"
+        class="volume_services flex w-full h-1/4 border rounded-xs border-gray-700 overflow-hidden relative mt-1 mr-2 cursor-pointer"
         @click="storageToggl"
       >
         <div

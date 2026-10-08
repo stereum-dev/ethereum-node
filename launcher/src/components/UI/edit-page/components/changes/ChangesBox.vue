@@ -66,7 +66,7 @@ const contentBgColor = (item) => {
     } else if (content === "NETWORK") {
       bg = "bg-teal-700 text-gray-100 text-sm font-semibold min-w-[100px]";
     } else if (content === "SWITCH CLIENT") {
-      bg = "bg-teal-700 text-gray-200 text-[10px] font-semibold min-w-[100px]";
+      bg = "bg-teal-700 text-gray-200 text-2xs font-semibold min-w-[100px]";
     } else if (content === "MODIFY") {
       bg = "bg-teal-700 text-gray-200 text-sm font-semibold min-w-[100px]";
     }

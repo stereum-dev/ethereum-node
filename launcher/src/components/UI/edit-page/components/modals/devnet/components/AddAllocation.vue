@@ -11,7 +11,7 @@
             <div class="w-full flex justify-between items-center mb-2">
               <h3 class="text-md font-normal text-white">{{ address }}</h3>
               <button
-                class="w-7 h-7 bg-red-500 text-white p-1 rounded shadow-sm shadow-gray-700 flex justify-center items-center hover:bg-red-700 active:scale-90 active:shadow-none"
+                class="w-7 h-7 bg-red-500 text-white p-1 rounded-sm shadow-xs shadow-gray-700 flex justify-center items-center hover:bg-red-700 active:scale-90 active:shadow-none"
                 :class="{ 'opacity-50 pointer-events-none': isDeleting }"
                 @click="deleteAccount(address)"
               >
@@ -33,7 +33,7 @@
         </div>
         <div class="w-full px-8 flex justify-center items-center mt-2">
           <div
-            class="justify-self-center bg-[#336666] hover:bg-[#407d7d] cursor-pointer shadow-sm shadow-[#101111] active:scale-95 active:shadow-none text-white px-4 py-1 rounded"
+            class="justify-self-center bg-[#336666] hover:bg-[#407d7d] cursor-pointer shadow-xs shadow-[#101111] active:scale-95 active:shadow-none text-white px-4 py-1 rounded-sm"
             @click="allocDataReview = false"
           >
             Back to Add Account
@@ -86,7 +86,7 @@
         <div class="w-full flex justify-center items-center space-x-2">
           <!-- Add Account Button -->
           <div
-            class="w-1/3 h-[35px] rounded-md shadow-sm shadow-[#101111] cursor-pointer active:scale-95 active:shadow-none flex justify-center items-center bg-[#336666] hover:bg-[#407d7d]"
+            class="w-1/3 h-[35px] rounded-md shadow-xs shadow-[#101111] cursor-pointer active:scale-95 active:shadow-none flex justify-center items-center bg-[#336666] hover:bg-[#407d7d]"
             :class="buttonDisabled ? 'opacity-50 pointer-events-none' : ''"
             @click="addAccount"
           >
@@ -95,7 +95,7 @@
           <!-- Review Button -->
           <div
             v-if="Object.keys(allocData).length > 0"
-            class="w-1/3 h-[35px] rounded-md shadow-sm shadow-[#101111] cursor-pointer active:scale-95 active:shadow-none flex justify-center items-center text-white px-4 py-2 bg-[#336666] hover:bg-[#407d7d]"
+            class="w-1/3 h-[35px] rounded-md shadow-xs shadow-[#101111] cursor-pointer active:scale-95 active:shadow-none flex justify-center items-center text-white px-4 py-2 bg-[#336666] hover:bg-[#407d7d]"
             @click="allocDataReview = true"
           >
             <span class="text-xs text-center text-gray-200 font-normal">Edit Allocation </span>

@@ -79,7 +79,7 @@
     <Transition name="slide">
       <ul
         v-show="dropdown"
-        class="w-[17rem] transition-all min-h-[100px] max-h-[140px] duration-400 ease-in-out absolute right-[25px] top-12 bg-neutral-800/80 border border-gray-700 rounded-lg shadow-lg pt-18 pb-1 z-10 divide-gray-400 overflow-y-auto flex flex-col justify-start items-center divide-y-[1px]"
+        class="w-68 transition-all min-h-[100px] max-h-[140px] duration-400 ease-in-out absolute right-[25px] top-12 bg-neutral-800/80 border border-gray-700 rounded-lg shadow-lg pt-18 pb-1 z-10 divide-gray-400 overflow-y-auto flex flex-col justify-start items-center divide-y"
         @mouseleave="colseDropdown"
       >
         <li

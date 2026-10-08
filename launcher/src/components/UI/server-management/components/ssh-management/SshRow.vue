@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-8 grid grid-cols-12 items-center border border-gray-500 rounded-sm p-1 bg-[#2f373c]">
+  <div class="w-full h-8 grid grid-cols-12 items-center border border-gray-500 rounded-xs p-1 bg-[#2f373c]">
     <span class="col-start-1 col-end-12 text-xs text-gray-300">{{ sshKey }}</span>
     <img
       class="col-start-12 col-span-1 justify-self-center self-center h-6 border border-transparent rounded-md p-1 bg-black hover:border-red-500 active:scale-90 cursor-pointer"

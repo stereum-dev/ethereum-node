@@ -9,7 +9,7 @@
         <div
           v-for="portData in matchingPorts"
           :key="portData.uniqueKey"
-          class="row-port w-full h-1/5 flex justify-start items-center border border-gray-400 rounded-sm pl-1 pr-1"
+          class="row-port w-full h-1/5 flex justify-start items-center border border-gray-400 rounded-xs pl-1 pr-1"
           @mouseenter="updateCursorLocation(portData)"
           @mouseleave="clearCursorLocation"
         >

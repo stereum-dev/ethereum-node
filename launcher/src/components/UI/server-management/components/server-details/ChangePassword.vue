@@ -20,7 +20,7 @@
           v-model="serverStore.newPassword"
           type="password"
           :name="password"
-          class="w-full h-8 text-sm col-start-1 col-end-11 row-start-2 row-span-1 bg-gray-300 text-gray-700 font-semibold px-2 outline-none border rounded-sm"
+          class="w-full h-8 text-sm col-start-1 col-end-11 row-start-2 row-span-1 bg-gray-300 text-gray-700 font-semibold px-2 outline-hidden border rounded-xs"
           :class="error ? 'border-red-500' : 'border-transparent'"
           :placeholder="`${$t('multiServer.EnterNewPass')}`"
           @mouseenter="footerStore.cursorLocation = `${t('serverDetail.confirmPass')}`"
@@ -35,7 +35,7 @@
             v-model="serverStore.verifyPassword"
             type="password"
             :name="verifyPassword"
-            class="col-start-1 col-span-full w-full h-8 text-sm bg-gray-300 text-gray-700 font-semibold px-2 outline-none border rounded-sm"
+            class="col-start-1 col-span-full w-full h-8 text-sm bg-gray-300 text-gray-700 font-semibold px-2 outline-hidden border rounded-xs"
             :class="error ? 'border-red-500' : 'border-transparent'"
             :placeholder="`${$t('multiServer.verifyPass')}`"
             @mouseenter="footerStore.cursorLocation = `${t('serverDetail.confirmPass2')}`"
@@ -47,7 +47,7 @@
       </div>
       <div class="w-full h-full col-start-1 col-span-full row-start-3 row-span-1 flex justify-center items-center space-x-4 py-1">
         <div
-          class="w-1/3 h-7 flex items-center justify-center rounded-sm bg-teal-800 hover:bg-teal-950 p-[3px] border border-teal-800 hover:border-gray-200 shadow-md shadow-black active:shadow-none active:scale-95 transition duration-150 ease-in-out cursor-pointer text-gray-100 text-sm font-semibold uppercase"
+          class="w-1/3 h-7 flex items-center justify-center rounded-xs bg-teal-800 hover:bg-teal-950 p-[3px] border border-teal-800 hover:border-gray-200 shadow-md shadow-black active:shadow-none active:scale-95 transition duration-150 ease-in-out cursor-pointer text-gray-100 text-sm font-semibold uppercase"
           @click="changePassword"
           @mouseenter="footerStore.cursorLocation = `${t('serverDetail.confirmBtn')}`"
           @mouseleave="footerStore.cursorLocation = ''"
@@ -55,7 +55,7 @@
           Confirm
         </div>
         <div
-          class="w-1/3 h-7 flex items-center justify-center rounded-sm bg-red-800 hover:bg-red-950 p-[3px] border border-red-800 hover:border-gray-200 shadow-md shadow-black active:shadow-none active:scale-95 transition duration-150 ease-in-out cursor-pointer text-gray-100 text-sm font-semibold uppercase"
+          class="w-1/3 h-7 flex items-center justify-center rounded-xs bg-red-800 hover:bg-red-950 p-[3px] border border-red-800 hover:border-gray-200 shadow-md shadow-black active:shadow-none active:scale-95 transition duration-150 ease-in-out cursor-pointer text-gray-100 text-sm font-semibold uppercase"
           @click="denyPassChange"
           @mouseenter="footerStore.cursorLocation = `${t('serverDetail.cancel')}`"
           @mouseleave="footerStore.cursorLocation = ''"

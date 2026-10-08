@@ -13,7 +13,7 @@
             }}</span>
             <div class="col-start-4 col-span-full relative inline-block w-full">
               <button
-                class="h-7 relative z-10 block w-full px-4 py-1 text-sm text-gray-600 bg-white border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-opacity-40 focus:ring-blue-300"
+                class="h-7 relative z-10 block w-full px-4 py-1 text-sm text-gray-600 bg-white border border-gray-300 rounded-md shadow-xs focus:border-blue-500 focus:ring-3 focus:ring-opacity-40 focus:ring-blue-300"
                 @click.prevent.stop="isOpen = !isOpen"
               >
                 <span class="text-center font-semibold">{{ serverStore.selectedKeyType || `${$t("multiServer.selectKeyType")}` }}</span>
@@ -46,7 +46,7 @@
                 v-model="serverStore.savePath"
                 type="text"
                 readonly
-                class="h-7 shadow rounded-l-md py-2 px-3 text-gray-800 leading-tight w-full"
+                class="h-7 shadow-sm rounded-l-md py-2 px-3 text-gray-800 leading-tight w-full"
               />
             </div>
             <div class="h-full col-start-12 col-span-1 bg-gray-100 rounded-r-md flex justify-center items-center">
@@ -76,7 +76,7 @@
               id="sshPassword"
               v-model="serverStore.sshPassword"
               type="text"
-              class="col-start-4 col-span-full h-7 shadow border rounded py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:shadow-outline"
+              class="col-start-4 col-span-full h-7 shadow-sm border rounded-sm py-2 px-3 text-gray-800 leading-tight focus:outline-hidden focus:shadow-outline"
               :placeholder="`${$t('multiServer.optionalSshPass')}`"
             />
           </div>
@@ -88,17 +88,17 @@
             >
             <label
               for="AcceptConditions"
-              class="col-start-11 col-span-full flex justify-center items-center relative h-7 w-full cursor-pointer [-webkit-tap-highlight-color:_transparent]"
+              class="col-start-11 col-span-full flex justify-center items-center relative h-7 w-full cursor-pointer [-webkit-tap-highlight-color:transparent]"
             >
               <input
                 id="AcceptConditions"
                 v-model="expertOptions"
                 type="checkbox"
-                class="peer sr-only [&:checked_+_span_svg[data-checked-icon]]:block [&:checked_+_span_svg[data-unchecked-icon]]:hidden"
+                class="peer sr-only [&:checked+span_svg[data-checked-icon]]:block [&:checked+span_svg[data-unchecked-icon]]:hidden"
               />
 
               <span
-                class="absolute inset-y-0 start-0 z-10 m-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-white text-gray-400 transition-all peer-checked:start-6 peer-checked:text-green-600"
+                class="absolute inset-y-0 inset-s-0 z-10 m-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-white text-gray-400 transition-all peer-checked:inset-s-6 peer-checked:text-green-600"
               >
                 <svg data-unchecked-icon xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                   <path
@@ -131,7 +131,7 @@
             }}</span>
             <div class="col-start-4 col-span-full relative inline-block w-full">
               <button
-                class="h-7 relative z-10 block w-full px-4 py-1 text-sm text-gray-600 bg-white border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-opacity-40 focus:ring-blue-300"
+                class="h-7 relative z-10 block w-full px-4 py-1 text-sm text-gray-600 bg-white border border-gray-300 rounded-md shadow-xs focus:border-blue-500 focus:ring-3 focus:ring-opacity-40 focus:ring-blue-300"
                 :class="{
                   'opacity-50 pointer-events-none cursor-not-allowed': !expertOptions,
                 }"
@@ -167,7 +167,7 @@
             }}</span>
             <div class="col-start-4 col-span-full relative inline-block w-full">
               <button
-                class="h-7 relative z-10 block w-full px-4 py-1 text-sm text-gray-600 bg-white border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-opacity-40 focus:ring-blue-300"
+                class="h-7 relative z-10 block w-full px-4 py-1 text-sm text-gray-600 bg-white border border-gray-300 rounded-md shadow-xs focus:border-blue-500 focus:ring-3 focus:ring-opacity-40 focus:ring-blue-300"
                 :class="{
                   'opacity-50 pointer-events-none cursor-not-allowed': !expertOptions,
                 }"
@@ -200,7 +200,7 @@
           <!--Submit button -->
           <div class="w-full h-full col-start-1 col-span-full row-start-7 row-span-2 grid grid-cols-12 items-center">
             <button
-              class="h-9 col-start-9 col-span-full bg-teal-500 hover:bg-teal-700 text-white font-bold py-1 px-4 rounded focus:outline-none focus:shadow-outline shadow-md shadow-black active:scale-95"
+              class="h-9 col-start-9 col-span-full bg-teal-500 hover:bg-teal-700 text-white font-bold py-1 px-4 rounded-sm focus:outline-hidden focus:shadow-outline shadow-md shadow-black active:scale-95"
               type="button"
               :class="{
                 'opacity-50 pointer-events-none cursor-not-allowed': isDisabled,

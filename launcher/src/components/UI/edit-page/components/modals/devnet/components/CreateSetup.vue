@@ -60,7 +60,7 @@ const getSetupColor = (color) => {
 <template>
   <div class="w-3/4 max-h-[300px] grid grid-cols-6 grid-rows-8 py-4 px-8 mt-2 gap-y-1 mx-auto">
     <div class="w-full max-h-full col-start-1 col-span-full row-start-2 row-end-9 flex justify-center items-center">
-      <form class="w-full h-full rounded p-1 grid grid-cols-5 grid-rows-3 items-center gap-y-1">
+      <form class="w-full h-full rounded-sm p-1 grid grid-cols-5 grid-rows-3 items-center gap-y-1">
         <div class="col-start-1 col-span-full row-start-1 row-span-1 grid grid-cols-2 grid-rows-2 items-center">
           <span v-if="nameMsg" class="col-start-1 col-span-full row-start-1 row-span-1 text-red-400 text-xs">{{ nameMsg }}</span>
           <span v-else class="col-start-1 col-span-full row-start-1 row-span-1 text-gray-300 text-sm">Setup Name</span>
@@ -68,7 +68,7 @@ const getSetupColor = (color) => {
             id="setupName"
             ref="setupNameInput"
             v-model="setupStore.devnetConfigData.setupName"
-            class="col-start-1 col-span-full row-start-2 row-span-1 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            class="col-start-1 col-span-full row-start-2 row-span-1 shadow-sm appearance-none border rounded-sm w-full py-2 px-3 text-gray-700 leading-tight focus:outline-hidden focus:shadow-outline"
             type="text"
             placeholder="Please enter a name for your setup"
             required

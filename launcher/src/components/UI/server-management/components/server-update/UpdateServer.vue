@@ -15,7 +15,7 @@
       <!-- <div class="w-full h-full col-start-10 col-span-full row-start-1 row-span-1 flex justify-center items-center">
         <div
           v-if="serverStore.isMajorUpgradeButtonActive"
-          class="w-full h-full bg-[#336666] rounded-sm max-h-6 shadow-md shadow-black hover:bg-teal-700 active:shadow-none hover:scale-105 transition-all duration-100 ease-in-out cursor-pointer active:scale-100 flex justify-center items-center text-xs font-normal font-sans text-gray-200 uppercase p-1"
+          class="w-full h-full bg-[#336666] rounded-xs max-h-6 shadow-md shadow-black hover:bg-teal-700 active:shadow-none hover:scale-105 transition-all duration-100 ease-in-out cursor-pointer active:scale-100 flex justify-center items-center text-xs font-normal font-sans text-gray-200 uppercase p-1"
           @click="runUpdateToNoble"
         >
           24.04 Update
@@ -38,7 +38,7 @@
           class="w-5 h-5 spinner self-center justify-self-center"
           src="/animation/loading/loading-circle.gif"
         />
-        <div v-else class="w-full col-start-1 col-span-1 bg-red-700 rounded-sm flex justify-center item-center">
+        <div v-else class="w-full col-start-1 col-span-1 bg-red-700 rounded-xs flex justify-center item-center">
           <span class="text-sm font-semibold text-gray-300 text-center">{{ serverStore.numberOfUpdatablePackages }}</span>
         </div>
 
@@ -53,7 +53,7 @@
       <div class="col-start-1 col-span-full row-start-11 row-span-full w-full h-full grid grid-cols-12 py-2">
         <div class="w-full h-full col-start-1 col-end-6 flex justify-center items-center">
           <div
-            class="w-full h-full flex justify-evenly items-center bg-[#4d7575] hover:bg-[#243535] rounded-sm active:scale-90 shadow-md shadow-black active:shadow-none transition-all duration-100 ease-in-out cursor-pointer"
+            class="w-full h-full flex justify-evenly items-center bg-[#4d7575] hover:bg-[#243535] rounded-xs active:scale-90 shadow-md shadow-black active:shadow-none transition-all duration-100 ease-in-out cursor-pointer"
             :class="{
               'opacity-40 pointer-events-none bg-[#3d4244] scale-95': serverStore.isUpdateProcessing || serverStore.isMajorUpgradeActive,
             }"

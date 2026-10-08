@@ -12,7 +12,7 @@
           </div>
 
           <div class="arrow-box flex justify-center items-center w-[10%] h-full text-gray-200 text-lg font-semibold uppercase">
-            <ServiceArrow direction="next" :class="{ 'rotate-[270deg]': isOpen, 'rotate-90': !isOpen }" class="z-10" />
+            <ServiceArrow direction="next" :class="{ 'rotate-270': isOpen, 'rotate-90': !isOpen }" class="z-10" />
           </div>
         </div>
 

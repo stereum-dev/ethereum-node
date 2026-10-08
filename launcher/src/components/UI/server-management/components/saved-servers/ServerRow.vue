@@ -2,7 +2,7 @@ import { ref, computed, watch, watchEffect } from 'vue';
 <template>
   <div class="w-full h-[55px] grid grid-cols-24 items-center gap-x-1">
     <div
-      class="w-full h-[55px] min-h-[55px] col-start-1 rounded-l-md px-2 py-1 shadow-md shadow-[#1f2021] grid grid-cols-10 gap-x-2 cursor-pointer transition-all duration-200 ease-in-out outline outline-transparent hover:bg-blue-400"
+      class="w-full h-[55px] min-h-[55px] col-start-1 rounded-l-md px-2 py-1 shadow-md shadow-[#1f2021] grid grid-cols-10 gap-x-2 cursor-pointer transition-all duration-200 ease-in-out outline-solid outline-transparent hover:bg-blue-400"
       :class="[
         connectedServer && route.path !== '/login'
           ? 'bg-[#336666] border border-teal-300 '
@@ -23,7 +23,7 @@ import { ref, computed, watch, watchEffect } from 'vue';
 
       <div
         v-else
-        class="col-start-1 col-span-1 h-[38px] w-[38px] self-center mx-auto flex-none rounded-full bg-gray-50 border border-gray-300 shadow-sm shadow-[#1f2021]"
+        class="col-start-1 col-span-1 h-[38px] w-[38px] self-center mx-auto flex-none rounded-full bg-gray-50 border border-gray-300 shadow-xs shadow-[#1f2021]"
       >
         <img class="w-full h-full rounded-full" :src="serverAvatar" alt="Server Avatar" @click="avatarModalHandler" />
       </div>
@@ -53,7 +53,7 @@ import { ref, computed, watch, watchEffect } from 'vue';
     >
       <div
         v-if="!connectedServer && route.path !== '/login' && sshExists"
-        class="w-full h-full bg-transparent rounded-r-md justify-self-center self-center flex justify-center items-center cursor-pointer hover:shadow-sm hover:shadow-[#1b1c1c] active:scale-95 relative"
+        class="w-full h-full bg-transparent rounded-r-md justify-self-center self-center flex justify-center items-center cursor-pointer hover:shadow-xs hover:shadow-[#1b1c1c] active:scale-95 relative"
         @click="quickLogin"
       >
         <img

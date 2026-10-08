@@ -43,7 +43,7 @@
       @mousedown.prevent
     />
     <span
-      class="text-[10px] font-semibold text-center col-start-6 col-span-1"
+      class="text-2xs font-semibold text-center col-start-6 col-span-1"
       :class="getTextColor"
       @mouseenter="footerStore.cursorLocation = `${numValidator}`"
       @mouseleave="footerStore.cursorLocation = ''"

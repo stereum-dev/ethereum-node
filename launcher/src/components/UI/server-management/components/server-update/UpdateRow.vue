@@ -12,13 +12,13 @@ import { useServers } from '@/store/servers';
     </div>
     <div
       v-if="serverStore.isUpdateProcessing"
-      class="w-full h-full col-start-11 col-span-full flex justify-center items-center bg-gray-700 rounded-sm user-select-none pointer-events-none cursor-not-allowed"
+      class="w-full h-full col-start-11 col-span-full flex justify-center items-center bg-gray-700 rounded-xs user-select-none pointer-events-none cursor-not-allowed"
     >
       <img class="w-5" src="/img/icon/base-header-icons/update-modal-download-disabled.png" alt="icon" />
     </div>
     <div
       v-else
-      class="w-full h-full col-start-11 col-span-full self-center flex justify-center items-center bg-[#4d7575] hover:bg-[#243535] active:border-none active:shadow-none border border-transparent hover:border-[#4d7575] rounded-sm cursor-pointer transition-colors shadow-sm shadow-[#182020]"
+      class="w-full h-full col-start-11 col-span-full self-center flex justify-center items-center bg-[#4d7575] hover:bg-[#243535] active:border-none active:shadow-none border border-transparent hover:border-[#4d7575] rounded-xs cursor-pointer transition-colors shadow-xs shadow-[#182020]"
       @click="updatePackage"
       @mouseenter="footerStore.cursorLocation = `${update} `"
       @mouseleave="footerStore.cursorLocation = ''"

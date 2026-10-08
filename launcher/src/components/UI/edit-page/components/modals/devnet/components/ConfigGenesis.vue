@@ -11,7 +11,7 @@
             <input
               v-model="flattenedGenesis[key]"
               :placeholder="key"
-              class="bg-gray-700 text-white p-2 rounded"
+              class="bg-gray-700 text-white p-2 rounded-sm"
               :class="getInputType(flattenedGenesis[key]) === 'checkbox' ? 'w-5 h-5' : 'w-full h-9'"
               :type="getInputType(flattenedGenesis[key])"
               @input="updateStore"

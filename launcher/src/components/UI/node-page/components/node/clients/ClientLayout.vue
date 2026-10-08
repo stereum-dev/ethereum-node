@@ -8,7 +8,7 @@
     @mouseleave="footerStore.cursorLocation = ''"
   >
     <div
-      class="w-[178px] h-[16px] absolute top-[-18px] -left-[1px] rounded-r-full pl-2 flex justify-between items-center text-[10px] font-semibold capitalize"
+      class="w-[178px] h-[16px] absolute top-[-18px] -left-px rounded-r-full pl-2 flex justify-between items-center text-2xs font-semibold capitalize"
       :class="[setupStore.getBGColor(setupStore.selectedSetup?.color), setupStore.getTextColor(setupStore.selectedSetup?.color)]"
     >
       <span> {{ props.client.name }}</span>

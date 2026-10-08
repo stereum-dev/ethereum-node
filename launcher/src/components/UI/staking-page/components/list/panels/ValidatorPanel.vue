@@ -1,12 +1,12 @@
 <template>
   <div
-    class="animate__animated animate__fadeIn w-full h-full max-h-[32px] col-start-1 col-span-full bg-[#3e4347] rounded-sm flex justify-center items-center cursor-pointer p-1"
+    class="animate__animated animate__fadeIn w-full h-full max-h-[32px] col-start-1 col-span-full bg-[#3e4347] rounded-xs flex justify-center items-center cursor-pointer p-1"
   >
     <div class="w-full h-full grid grid-cols-7 bg-[#171D22]">
       <div
         v-for="service in runningValidators"
         :key="service.config?.serviceID"
-        class="col-span-1 w-22 h-full flex justify-start items-center hover:bg-slate-300 rounded-sm space-x-1 cursor-pointer transition-all duration-150 px-1 border border-gray-700"
+        class="col-span-1 w-22 h-full flex justify-start items-center hover:bg-slate-300 rounded-xs space-x-1 cursor-pointer transition-all duration-150 px-1 border border-gray-700"
         :class="getBgColor(service.setupId)?.background"
         @click="pickValidator(service)"
       >

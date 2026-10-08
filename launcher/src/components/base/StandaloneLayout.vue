@@ -3,10 +3,10 @@
     class="flex flex-col justify-between box-border items-center w-screen h-screen border-2 border-slate-500 rounded-lg z-30 select-none"
   >
     <div
-      class="w-full rounded-t-lg h-16 bg-gradient-to-b from-10% from-[#264744] via-[#325d5a] to-[#264744] to-95% border-b border-[#1c3634] flex justify-between items-center px-4"
+      class="w-full rounded-t-lg h-16 bg-linear-to-b from-10% from-[#264744] via-[#325d5a] to-[#264744] to-95% border-b border-[#1c3634] flex justify-between items-center px-4"
     >
       <div
-        class="h-9 px-4 border border-[#4b8585] rounded-full flex justify-center items-center cursor-pointer bg-[#387272] hover:bg-[#264e4e] shadow-sm shadow-[#1c3634] transition-colors duration-200 ease-in-out active:scale-95"
+        class="h-9 px-4 border border-[#4b8585] rounded-full flex justify-center items-center cursor-pointer bg-[#387272] hover:bg-[#264e4e] shadow-xs shadow-[#1c3634] transition-colors duration-200 ease-in-out active:scale-95"
         @click="backToLogin"
       >
         <span class="text-sm font-semibold uppercase text-gray-200">{{ $t("nukeModal.backToLogin") }}</span>

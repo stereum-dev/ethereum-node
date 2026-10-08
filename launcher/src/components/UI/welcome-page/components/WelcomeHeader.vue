@@ -14,7 +14,7 @@ import { ref } from 'vue';
     <div
       v-if="isHovered"
       role="tooltip"
-      class="absolute top-10 right-10 max-w-xs break-words rounded bg-[#1d1f20] px-3 py-2 text-center text-xs font-medium text-white outline-none"
+      class="absolute top-10 right-10 max-w-xs wrap-break-word rounded-sm bg-[#1d1f20] px-3 py-2 text-center text-xs font-medium text-white outline-hidden"
     >
       <span>{{ $t("welcomePage.logOutBtn") }}</span>
     </div>

@@ -14,10 +14,10 @@
         v-model="searchQuery"
         type="text"
         :placeholder="`${t('multiServer.serchFor')}`"
-        class="w-full h-full rounded-md border-gray-200 py-2.5 pe-10 shadow-sm sm:text-sm px-2"
+        class="w-full h-full rounded-md border-gray-200 py-2.5 pe-10 shadow-xs sm:text-sm px-2"
       />
 
-      <span class="absolute inset-y-0 end-0 grid w-10 place-content-center">
+      <span class="absolute inset-y-0 inset-e-0 grid w-10 place-content-center">
         <button type="button" class="text-gray-600 hover:text-gray-700">
           <span class="sr-only">{{ t("multiServer.serch") }} </span>
 
@@ -38,7 +38,7 @@
       <div
         v-for="service in filteredServices"
         :key="service.service"
-        class="w-full h-10 border border-gray-800 rounded-sm cursor-pointer grid grid-cols-5 p-1 hover:bg-gray-700 transition-all duration-100"
+        class="w-full h-10 border border-gray-800 rounded-xs cursor-pointer grid grid-cols-5 p-1 hover:bg-gray-700 transition-all duration-100"
         draggable="true"
         @dragstart="dragStart($event, service)"
         @click="addServices(service)"
@@ -49,12 +49,12 @@
       </div>
     </div>
     <div
-      class="col-start-1 col-span-full row-start-14 row-span-full w-full h-full bg-[#151618] rounded-md flex flex-col justify-between items-center p-1 shadow-sm shadow-black active:shadow-none border border-gray-700"
+      class="col-start-1 col-span-full row-start-14 row-span-full w-full h-full bg-[#151618] rounded-md flex flex-col justify-between items-center p-1 shadow-xs shadow-black active:shadow-none border border-gray-700"
     >
       <span class="text-xs text-center text-gray-100 font-sans uppercase mt-1">{{ t("multiServer.cstmServ") }}</span>
 
       <div
-        class="w-full h-8 bg-teal-700 rounded-sm text-center p-1 cursor-pointer hover:bg-teal-900 transition-all duration-100"
+        class="w-full h-8 bg-teal-700 rounded-xs text-center p-1 cursor-pointer hover:bg-teal-900 transition-all duration-100"
         @click="addServices(customService)"
       >
         <span class="text-sm text-gray-200"> {{ t("multiServer.create") }} </span>

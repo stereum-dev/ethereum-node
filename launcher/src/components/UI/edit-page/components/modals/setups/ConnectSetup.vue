@@ -1,6 +1,6 @@
 <template>
   <div
-    class="min-w-screen h-screen fixed flex justify-center items-center inset-0 z-50 outline-none focus:outline-none bg-no-repeat bg-center bg-cover rounded-lg"
+    class="min-w-screen h-screen fixed flex justify-center items-center inset-0 z-50 outline-hidden focus:outline-hidden bg-no-repeat bg-center bg-cover rounded-lg"
   >
     <div class="absolute bg-black opacity-80 inset-0 z-0 rounded-lg" @click="closeWindow"></div>
     <div
@@ -98,7 +98,7 @@
               <div v-for="(group, index) in serviceGroups" :key="index" class="w-full mb-4">
                 <div class="flex items-center gap-2 bg-neutral-900/90 rounded-lg p-1">
                   <div
-                    class="w-[125px] h-[65px] flex-shrink-0 p-1 rounded-md cursor-pointer transition-colors duration-200"
+                    class="w-[125px] h-[65px] shrink-0 p-1 rounded-md cursor-pointer transition-colors duration-200"
                     :class="[
                       isServiceSelected(group.consensus) ? 'bg-teal-700' : 'bg-neutral-800 hover:bg-neutral-700',
                       'border border-gray-700',
@@ -114,7 +114,7 @@
                         </div>
                       </div>
                       <div class="w-full flex justify-center items-center">
-                        <span class="w-full text-[10px] text-gray-300 text-center">{{
+                        <span class="w-full text-2xs text-gray-300 text-center">{{
                           useTruncate(group?.consensus.config?.serviceID, 0, 10)
                         }}</span>
                       </div>
@@ -124,7 +124,7 @@
                   <!-- Execution Services -->
                   <template v-for="execution in group.executions" :key="execution.id">
                     <div
-                      class="w-[125px] h-[65px] flex-shrink-0 p-1 rounded-md transition-colors duration-200"
+                      class="w-[125px] h-[65px] shrink-0 p-1 rounded-md transition-colors duration-200"
                       :class="[
                         {
                           'bg-teal-700': isServiceSelected(execution),
@@ -145,7 +145,7 @@
                           </div>
                         </div>
                         <div class="w-full flex justify-center items-center">
-                          <span class="w-full text-[10px] text-gray-300 text-center">{{
+                          <span class="w-full text-2xs text-gray-300 text-center">{{
                             useTruncate(execution.config?.serviceID, 0, 10)
                           }}</span>
                         </div>

@@ -5,9 +5,9 @@
       @mouseenter="footerStore.cursorLocation = `epoch: ${stakingStore.currentEpoch}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >
-      <span class="w-1/2 flex justify-center items-center text-[10px] text-amber-300 font-semibold"> Epoch </span>
+      <span class="w-1/2 flex justify-center items-center text-2xs text-amber-300 font-semibold"> Epoch </span>
 
-      <span class="w-1/2 text-[10px] text-amber-300 font-semibold text-center"> {{ stakingStore.currentEpoch }}</span>
+      <span class="w-1/2 text-2xs text-amber-300 font-semibold text-center"> {{ stakingStore.currentEpoch }}</span>
     </div>
     <div class="w-full h-full col-start-4 col-span-full bg-black overflow-hidden grid grid-cols-3 divide-x divide-gray-600">
       <span
@@ -22,8 +22,8 @@
         @mouseenter="footerStore.cursorLocation = `slot: ${stakingStore.currentSlot}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
-        <span class="text-[10px] text-amber-300 font-semibold">Slot</span>
-        <span class="text-[10px] text-amber-300 font-semibold">{{ stakingStore.currentSlot }}</span>
+        <span class="text-2xs text-amber-300 font-semibold">Slot</span>
+        <span class="text-2xs text-amber-300 font-semibold">{{ stakingStore.currentSlot }}</span>
       </div>
     </div>
   </div>

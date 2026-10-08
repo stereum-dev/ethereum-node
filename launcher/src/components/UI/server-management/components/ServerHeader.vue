@@ -24,7 +24,7 @@ import { ref, watchEffect, onMounted } from 'vue';
           v-for="tab in serverStore.tabs"
           :key="tab.name"
           :class="[
-            'col-span-1 w-8 h-8 bg-gray-500 hover:text-teal-500 border border-gray-500 hover:border-teal-200 rounded-sm shadow-md shadow-black flex justify-center items-center cursor-pointer active:scale-95 transition-all duration-200 active:shadow-none',
+            'col-span-1 w-8 h-8 bg-gray-500 hover:text-teal-500 border border-gray-500 hover:border-teal-200 rounded-xs shadow-md shadow-black flex justify-center items-center cursor-pointer active:scale-95 transition-all duration-200 active:shadow-none',
             tab.isActive ? 'bg-teal-500 border-teal-200' : '',
             isConnectedServer && tab.name === 'login' ? ' opacity-30 pointer-events-none scale-90 shadow-none' : '',
             isServerToConnect && tab.name !== 'login' ? ' opacity-30 pointer-events-none scale-90 shadow-none' : '',

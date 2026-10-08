@@ -22,7 +22,7 @@ const props = defineProps({
 const emit = defineEmits(["prev", "next"]);
 
 const directionClass = computed(() => {
-  return props.direction === "next" ? "rotate-[270deg]" : "rotate-90";
+  return props.direction === "next" ? "rotate-270" : "rotate-90";
 });
 
 const emitDirection = () => {

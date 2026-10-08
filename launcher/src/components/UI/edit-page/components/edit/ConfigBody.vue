@@ -10,7 +10,7 @@
     ]"
   >
     <div
-      class="absolute top-0 w-full mx-auto grid grid-cols-3 h-6 border border-gray-950 rounded-t-[5px] text-xs font-[400] font-sans"
+      class="absolute top-0 w-full mx-auto grid grid-cols-3 h-6 border border-gray-950 rounded-t-[5px] text-xs font-normal font-sans"
       :class="[setupStore.getBGColor(setupStore.selectedSetup?.color), setupStore.getTextColor(setupStore.selectedSetup?.color)]"
     >
       <span class="col-start-1 justify-self-center self-center">{{ $t("editBody.executionClient") }}</span>

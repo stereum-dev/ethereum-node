@@ -45,14 +45,14 @@
 
         <div class="flex justify-end text-md font-bold py-3 mt-2 text-center space-y-4 relative">
           <button
-            class="w-[8rem] mr-2 px-5 py-2 shadow-sm rounded-full hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-110 active:scale-100 text-gray-200 font-semibold uppercase bg-green-500 border border-green-500 hover:bg-green-600"
+            class="w-32 mr-2 px-5 py-2 shadow-xs rounded-full hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-110 active:scale-100 text-gray-200 font-semibold uppercase bg-green-500 border border-green-500 hover:bg-green-600"
             :class="{ 'opacity-40 pointer-events-none': btnDisabled }"
             @click="handleEnter($event)"
             @keydown.enter="handleEnter($event)"
           >
             {{ t("twoFactorAuth.submit") }}
           </button>
-          <span class="absolute bottom-1 left-[17rem] text-xs flex justify-center items-center text-red-500 mx-auto">
+          <span class="absolute bottom-1 left-68 text-xs flex justify-center items-center text-red-500 mx-auto">
             {{ t("deleteModal.close") }}
           </span>
         </div>

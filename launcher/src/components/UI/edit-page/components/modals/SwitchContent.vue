@@ -5,7 +5,7 @@
       <div class="w-full relative">
         <button
           aria-expanded="false"
-          class="w-full h-[40px] border border-gray-400 shadow-sm shadow-gray-600 rounded-md font-normal text-md text-gray-400 px-4 py-2 hover:brightness-110 flex items-center whitespace-nowrap space-x-4 justify-center"
+          class="w-full h-[40px] border border-gray-400 shadow-xs shadow-gray-600 rounded-md font-normal text-md text-gray-400 px-4 py-2 hover:brightness-110 flex items-center whitespace-nowrap space-x-4 justify-center"
           @click="switchDropdownOpen = !switchDropdownOpen"
         >
           <img v-if="properties.itemToInstall?.icon" class="w-6" :src="properties.itemToInstall?.sIcon" alt="Client Icon" />

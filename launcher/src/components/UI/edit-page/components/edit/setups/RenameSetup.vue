@@ -2,7 +2,7 @@
   <div class="w-full h-full col-start-6 col-span-full flex justify-center items-center">
     <div
       v-if="setupStore.isRenameSetupActive"
-      class="w-full h-full col-start-6 col-span-1 flex justify-center items-center bg-teal-800 border border-gray-600 rounded-sm p-[2px]"
+      class="w-full h-full col-start-6 col-span-1 flex justify-center items-center bg-teal-800 border border-gray-600 rounded-xs p-[2px]"
       @click="confirmRename"
       @mouseenter="footerStore.cursorLocation = 'Rename Node Setup'"
       @mouseleave="footerStore.cursorLocation = ''"
@@ -15,7 +15,7 @@
     </div>
     <div
       v-else
-      class="w-full h-full col-start-6 col-span-1 flex justify-center items-center bg-[#333539] border border-gray-600 rounded-sm p-[2px]"
+      class="w-full h-full col-start-6 col-span-1 flex justify-center items-center bg-[#333539] border border-gray-600 rounded-xs p-[2px]"
       :class="{
         'pointer-events-none opacity-45 ': setupStore.selectedSetup === null,
       }"
