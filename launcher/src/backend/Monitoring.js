@@ -3,6 +3,7 @@ import { ValidatorAccountManager } from "./ValidatorAccountManager";
 import { StringUtils } from "./StringUtils.js";
 import { isObolDVTService, OBOL_DVT_SERVICES } from "@/share/ObolDVTServices";
 import { SSHService } from "./SSHService.js";
+import { configuredBeaconUrls, ssvBeaconAddr } from "./BeaconEndpoints.js";
 import * as log from "electron-log";
 import * as crypto from "crypto";
 import * as fs from "fs";
@@ -916,9 +917,18 @@ export class Monitoring {
 
   // Find beacon port from FIRST AVAILABLE running consesus client on the local system
   // If "synced" is set to true, the consensus client also needs to be fully synced
+  // Without a local beacon node, falls back to the beacons the node's services are configured against
   async findBeaconPort(synced = false) {
     const result = await this.getBeaconStatus();
     if (result.code) {
+      const configured = await this.findConfiguredBeacon(synced);
+      if (configured) {
+        return {
+          code: 0,
+          info: "success: configured beacon endpoint found",
+          data: { url: configured, port: false, source: "configured", full_result: result },
+        };
+      }
       return {
         code: 1,
         info: "error: could not find beacon port (" + result.info + ")",
@@ -928,14 +938,18 @@ export class Monitoring {
         },
       };
     }
+    const local = (obj) => ({
+      url: `http://${obj.beacon.destinationIp}:${obj.beacon.destinationPort}`,
+      addr: obj.beacon.destinationIp,
+      port: obj.beacon.destinationPort,
+      source: "local",
+      full_result: result,
+    });
     if (!synced) {
       return {
         code: 0,
         info: "success: first available beacon port found",
-        data: {
-          port: result.data[0].beacon.destinationPort,
-          full_result: result,
-        },
+        data: local(result.data[0]),
       };
     }
     for (const obj of result.data) {
@@ -943,10 +957,7 @@ export class Monitoring {
         return {
           code: 0,
           info: "success: first available beacon port where consensus client is fully synced found",
-          data: {
-            port: obj.beacon.destinationPort,
-            full_result: result,
-          },
+          data: local(obj),
         };
       }
     }
@@ -958,6 +969,34 @@ export class Monitoring {
         full_result: result,
       },
     };
+  }
+
+  // First configured beacon endpoint (validator clients, Charon/Pluto, SSV, external consensus) that answers
+  async findConfiguredBeacon(synced = false) {
+    const serviceInfos = await this.getServiceInfos();
+    if (!Array.isArray(serviceInfos) || serviceInfos.length < 1) return null;
+
+    const ssvAddrs = [];
+    for (const ssv of serviceInfos.filter((s) => s.service === "SSVNetworkService")) {
+      const dataDir = (ssv.config?.volumes || []).find((v) => typeof v === "string" && v.endsWith(":/data"))?.split(":")[0];
+      if (!dataDir) continue;
+      try {
+        const res = await this.nodeConnection.sshService.exec(`cat ${dataDir}/config.yaml`);
+        const addr = res.rc ? null : ssvBeaconAddr(res.stdout);
+        if (addr) ssvAddrs.push(addr);
+      } catch (e) {
+        continue;
+      }
+    }
+
+    for (const url of configuredBeaconUrls(serviceInfos, ssvAddrs)) {
+      const res = await this.queryBeaconApi(url, "/eth/v1/node/syncing");
+      if (res.code) continue;
+      const status = res.data.api_reponse?.data || {};
+      if (synced && !(status.is_syncing === false || status.is_syncing === "false" || status.sync_distance < 1)) continue;
+      return url;
+    }
+    return null;
   }
 
   // Get all locally imported public keys from given validator service id
@@ -1629,8 +1668,8 @@ export class Monitoring {
           if (xx.length) {
             services[clientType][clt.service].forEach(function (item, index) {
               try {
-                //Nethermind returns the peers per client type (e.g. Geth, Erigon, Nethermind ...), therefore we need to sum them up
-                if (clt.service == "NethermindService") {
+                // Nethermind splits peers by client type and Teku by direction (inbound/outbound), so sum them up
+                if (["NethermindService", "TekuBeaconService"].includes(clt.service)) {
                   details[clientType]["numPeer"] = parseInt(
                     xx
                       .filter((s) => s.metric.__name__ == services[clientType][clt.service][index])
@@ -1827,7 +1866,7 @@ export class Monitoring {
       if (beaconResult.code) {
         throw new Error("error: could not get balancestatus due to missing beacon port (" + beaconResult.info + ")");
       }
-      const baseURL = `http://127.0.0.1:${beaconResult.data.port}`;
+      const baseURL = beaconResult.data.url;
 
       // Get latest finalized epoch
       const finalizedResult = await this.queryBeaconApi(baseURL, "/eth/v1/beacon/states/head/finality_checkpoints");
@@ -1866,7 +1905,7 @@ export class Monitoring {
       if (beaconResult.code) {
         throw new Error("error: could not get balancestatus due to missing beacon port (" + beaconResult.info + ")");
       }
-      const baseURL = `http://127.0.0.1:${beaconResult.data.port}`;
+      const baseURL = beaconResult.data.url;
 
       // Get attestation rewards for given validators
       const blockResult = await this.queryBeaconApi(baseURL, "/eth/v1/beacon/rewards/blocks/" + slot);
@@ -1890,7 +1929,7 @@ export class Monitoring {
       if (beaconResult.code) {
         throw new Error("error: could not get balancestatus due to missing beacon port (" + beaconResult.info + ")");
       }
-      const baseURL = `http://127.0.0.1:${beaconResult.data.port}`;
+      const baseURL = beaconResult.data.url;
 
       // Get attestation rewards for given validators
       const blockResult = await this.queryBeaconApi(baseURL, "/eth/v1/beacon/rewards/sync_committee/" + slot, validators, "POST");
@@ -1906,6 +1945,28 @@ export class Monitoring {
   }
 
   // Get balance status
+  // On-chain public keys of the given validator services, deduplicated
+  // A VC behind Charon/Pluto only holds key shares, which are not on chain, so the cluster's DV keys are used
+  async getOnChainValidatorKeys(validatorServiceInfos) {
+    let keys = [];
+    for (const obj of validatorServiceInfos) {
+      const dvtDependency = (obj.config.dependencies?.consensusClients || []).find((d) => isObolDVTService(d.service));
+      if (dvtDependency) {
+        try {
+          const dvs = await this.validatorAccountManager.getDVTKeys(dvtDependency.id);
+          keys.push(...dvs.map((dv) => dv.distributed_public_key));
+          continue;
+        } catch (e) {
+          return { code: 1, info: "error: distributed validator public keys not available (" + e + ")", data: "" };
+        }
+      }
+      const result = await this.getPublicKeys(obj.config.serviceID);
+      if (result.code) return result;
+      keys.push(...result.data);
+    }
+    return { code: 0, info: "success: retrieved on-chain validator keys", data: [...new Set(keys)] };
+  }
+
   async getBalanceStatus() {
     // Get local beacon port from first available consensus client
     const beaconResult = await this.findBeaconPort();
@@ -1916,7 +1977,7 @@ export class Monitoring {
         data: "",
       };
     }
-    const baseURL = `http://127.0.0.1:${beaconResult.data.port}`;
+    const baseURL = beaconResult.data.url;
 
     // Get all service configurations
     const serviceInfos = await this.getServiceInfos();
@@ -1939,17 +2000,11 @@ export class Monitoring {
     }
 
     // Get all imported public keys for each running validator service
-    let arrValidatorPublicKeys = [];
-    for (const obj of validatorServiceInfos) {
-      const result = await this.getPublicKeys(obj.config.serviceID);
-      if (result.code) {
-        result.code = 444;
-        result.info = "error: validator public keys for balancestatus not available -> " + result.info;
-        return result;
-      }
-      arrValidatorPublicKeys = [...arrValidatorPublicKeys, ...result.data];
+    const keysResult = await this.getOnChainValidatorKeys(validatorServiceInfos);
+    if (keysResult.code) {
+      return { code: 444, info: "error: validator public keys for balancestatus not available -> " + keysResult.info, data: "" };
     }
-    arrValidatorPublicKeys = [...new Set(arrValidatorPublicKeys)]; // unique values!
+    const arrValidatorPublicKeys = keysResult.data;
 
     // Get most recent finalized epoch
     const finalityResult = await this.queryBeaconApi(baseURL, "/eth/v1/beacon/states/head/finality_checkpoints");
@@ -3187,7 +3242,7 @@ export class Monitoring {
       if (beaconResult.code) {
         throw new Error("error: could not get balancestatus due to missing beacon port (" + beaconResult.info + ")");
       }
-      const baseURL = `http://127.0.0.1:${beaconResult.data.port}`;
+      const baseURL = beaconResult.data.url;
 
       let genesisRes = await this.queryBeaconApi(baseURL, "/eth/v1/beacon/genesis", [], "GET");
       let specRes = await this.queryBeaconApi(baseURL, "/eth/v1/config/spec", [], "GET");
@@ -3229,7 +3284,7 @@ export class Monitoring {
       if (beaconResult.code) {
         throw new Error("error: could not get balancestatus due to missing beacon port (" + beaconResult.info + ")");
       }
-      const baseURL = `http://127.0.0.1:${beaconResult.data.port}`;
+      const baseURL = beaconResult.data.url;
 
       const { current_epoch, current_slot } = await this.getCurrentEpochandSlot();
 
@@ -3258,29 +3313,42 @@ export class Monitoring {
     let validatorBalances = [];
     // get status of beacon container
     try {
-      const beaconStatus = await this.getBeaconStatus();
-      if (beaconStatus.code === 0) {
-        const beaconAPIPort = beaconStatus.data[0].beacon.destinationPort;
+      const beaconResult = await this.findBeaconPort();
+      if (beaconResult.code === 0) {
+        const beaconURL = beaconResult.data.url;
 
         // get validator's states from beacon container
-        if (beaconAPIPort !== "" && validatorPublicKeys.length > 0) {
+        if (validatorPublicKeys.length > 0) {
           var beaconAPIRunCmd = "";
           var beaconAPIRunCmdLastEpoch = "";
-          let validatorNotFound;
           const chunkSize = 250;
           let data = [];
+          let answered = false;
 
           for (let i = 0; i < validatorPublicKeys.length; i += chunkSize) {
             const chunk = validatorPublicKeys.slice(i, i + chunkSize);
-            const beaconAPICmd = `curl -s -X GET 'http://localhost:${beaconAPIPort}/eth/v1/beacon/states/head/validators?id=${chunk.join()}' -H 'accept: application/json'`;
+            const beaconAPICmd = `curl -s -X GET '${beaconURL}/eth/v1/beacon/states/head/validators?id=${chunk.join()}' -H 'accept: application/json'`;
             beaconAPIRunCmd = await this.nodeConnection.sshService.exec(beaconAPICmd);
 
             //check response
-            validatorNotFound =
-              beaconAPIRunCmd.rc != 0 || beaconAPIRunCmd.stderr || JSON.parse(beaconAPIRunCmd.stdout).hasOwnProperty("message");
-            if (!validatorNotFound) data = data.concat(JSON.parse(beaconAPIRunCmd.stdout).data); //merge all gathered stats in one array
+            if (beaconAPIRunCmd.rc != 0 || beaconAPIRunCmd.stderr) continue;
+            let response;
+            try {
+              response = JSON.parse(beaconAPIRunCmd.stdout);
+            } catch (e) {
+              continue;
+            }
+            // A 404 means none of the keys are on chain yet, which is an answer too
+            if (response.hasOwnProperty("message")) {
+              if (response.code == 404) answered = true;
+              continue;
+            }
+            answered = true;
+            data = data.concat(response.data); //merge all gathered stats in one array
           }
-          const beaconAPICmdLastEpoch = `curl -s -X GET 'http://localhost:${beaconAPIPort}/eth/v1/beacon/states/head/finality_checkpoints' -H 'accept: application/json'`;
+          // null tells the caller the beacon could not be asked, so it keeps the stats it has
+          if (!answered) return null;
+          const beaconAPICmdLastEpoch = `curl -s -X GET '${beaconURL}/eth/v1/beacon/states/head/finality_checkpoints' -H 'accept: application/json'`;
           beaconAPIRunCmdLastEpoch = await this.nodeConnection.sshService.exec(beaconAPICmdLastEpoch);
 
           const queryResult = data;
@@ -3308,9 +3376,10 @@ export class Monitoring {
         // - activation_epoch: epoch_number
         // - activeSince: active_since_day
         return validatorBalances;
-      } else if (beaconStatus.code === 2) return validatorBalances; // empty array will be returned, if there is a no running consensus client
+      } else return null; // no beacon node is reachable
     } catch (error) {
       console.log("Error occured to get Beacon node status: ", error);
+      return null;
     }
   }
 

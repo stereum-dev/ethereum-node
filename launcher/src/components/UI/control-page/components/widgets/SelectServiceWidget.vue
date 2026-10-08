@@ -90,6 +90,8 @@ import { ref, computed, watch, onMounted } from "vue";
 import { useControlStore } from "@/store/theControl";
 import { useSetups } from "@/store/setups";
 import { useStakingStore } from "@/store/theStaking";
+import { useServices } from "@/store/services";
+import { countOnChainKeys } from "@/composables/validators";
 
 import DropdownOption from "../fragments/DropdownOption.vue";
 import ServiceArrow from "../fragments/ServiceArrow.vue";
@@ -100,6 +102,7 @@ import NoData from "./NoData.vue";
 const controlStore = useControlStore();
 const setupStore = useSetups();
 const stakingStore = useStakingStore();
+const serviceStore = useServices();
 
 const isOpen = ref(false);
 const currentIndex = ref(0);
@@ -346,7 +349,9 @@ watch(
   { immediate: true }
 );
 
-const formattedValidatorNo = computed(() => stakingStore.keys.length.toString().padStart(3, "0"));
+const formattedValidatorNo = computed(() =>
+  countOnChainKeys(stakingStore.keys, serviceStore.installedServices).toString().padStart(3, "0")
+);
 
 const toggleDropdown = () => {
   isOpen.value = !isOpen.value;
