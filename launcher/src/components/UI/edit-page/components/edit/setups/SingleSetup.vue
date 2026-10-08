@@ -6,7 +6,7 @@
     @mouseleave="props.setup.isActive = false"
   >
     <div
-      class="w-full h-full col-start-1 col-span-full row-start-1 row-span-2 text-[10px] text-center font-semibold capitalize overflow-hidden whitespace-nowrap truncate p-1 rounded-t-[0.28rem]"
+      class="w-full h-full col-start-1 col-span-full row-start-1 row-span-2 text-2xs text-center font-semibold capitalize overflow-hidden whitespace-nowrap truncate p-1 rounded-t-[0.28rem]"
       :class="[textColor, bgColor]"
     >
       <span>{{ props.setup.setupName }}</span>

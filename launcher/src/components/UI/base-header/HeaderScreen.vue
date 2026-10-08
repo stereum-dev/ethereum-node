@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full rounded-t-lg h-16 bg-gradient-to-b from-10% from-[#264744] via-[#325d5a] vie-10% to-[#264744] to-95% border-b border-[#1c3634] grid grid-cols-24"
+    class="w-full rounded-t-lg h-16 bg-linear-to-b from-10% from-[#264744] via-[#325d5a] vie-10% to-[#264744] to-95% border-b border-[#1c3634] grid grid-cols-24"
   >
     <LogoSection />
     <TabsSection />

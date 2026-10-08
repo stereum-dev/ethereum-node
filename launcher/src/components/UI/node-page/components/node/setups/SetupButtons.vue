@@ -1,7 +1,7 @@
 <template>
   <div class="col-start-2 col-span-1 row-start-3 row-span-full grid grid-cols-2 grid-rows-2 relative p-2 gap-2">
     <!-- <div
-      class="p-1 w-8 h-8 col-start-1 col-span-1 row-start-1 row-span-1 flex justify-center items-center transition-colors duration-200 bg-gray-600 border border-gray-600 hover:border-gray-300 rounded-sm shadow-lg shadow-black active:shadow-none active:scale-95"
+      class="p-1 w-8 h-8 col-start-1 col-span-1 row-start-1 row-span-1 flex justify-center items-center transition-colors duration-200 bg-gray-600 border border-gray-600 hover:border-gray-300 rounded-xs shadow-lg shadow-black active:shadow-none active:scale-95"
     >
       <button
         v-if="isConfigActive"
@@ -32,7 +32,7 @@
       </button>
     </div> -->
     <button
-      class="w-full h-7 col-start-1 col-span-1 row-start-2 row-span-1 p-1 transition-colors duration-200 bg-gray-600 hover:bg-gray-500 flex justify-center items-center active:scale-95 box-border rounded-sm shadow-md shadow-black active:shadow-none mx-auto self-center"
+      class="w-full h-7 col-start-1 col-span-1 row-start-2 row-span-1 p-1 transition-colors duration-200 bg-gray-600 hover:bg-gray-500 flex justify-center items-center active:scale-95 box-border rounded-xs shadow-md shadow-black active:shadow-none mx-auto self-center"
       @click="exportSetup"
       @mouseenter="footerStore.cursorLocation = `${exportConfig}`"
       @mouseleave="footerStore.cursorLocation = ''"
@@ -41,7 +41,7 @@
     </button>
 
     <button
-      class="h-7 w-full row-start-1 row-span-1 col-start-1 col-span-full p-1 transition-colors duration-200 bg-teal-800 hover:bg-teal-700 rounded-sm active:shadow-none active:scale-95 shadow-md shadow-black text-xs text-gray-200 font-semibold uppercase"
+      class="h-7 w-full row-start-1 row-span-1 col-start-1 col-span-full p-1 transition-colors duration-200 bg-teal-800 hover:bg-teal-700 rounded-xs active:shadow-none active:scale-95 shadow-md shadow-black text-xs text-gray-200 font-semibold uppercase"
       @click="openSetup"
       @mouseenter="footerStore.cursorLocation = `${openConfig}`"
       @mouseleave="footerStore.cursorLocation = ''"

@@ -1,7 +1,7 @@
 import { ref } from 'vue';
 <template>
   <div
-    class="absolute top-[7rem] left-[1.3rem] w-[390px] h-[150px] justify-center items-center animate__animated transition-all duration-500 z-50 bg-white rounded-sm shadow-lg overflow-hidden grid grid-cols-5 grid-rows-4 gap-2 p-2"
+    class="absolute top-28 left-[1.3rem] w-[390px] h-[150px] justify-center items-center animate__animated transition-all duration-500 z-50 bg-white rounded-xs shadow-lg overflow-hidden grid grid-cols-5 grid-rows-4 gap-2 p-2"
     :class="serverStore.isPasswordChanged ? 'animate__fadeInDown' : 'animate__fadeOutUp'"
   >
     <p class="col-start-1 col-span-full row-start-1 row-span-1 text-center text-md font-bold text-gray-700 uppercase">

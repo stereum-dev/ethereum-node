@@ -88,7 +88,7 @@ import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
 import { useClickInstall } from "@/store/clickInstallation";
 import { useNodeManage } from "@/store/nodeManage";
-import jsYaml from "js-yaml";
+import * as jsYaml from "js-yaml";
 export default {
   data() {
     return {

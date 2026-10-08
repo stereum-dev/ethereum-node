@@ -29,7 +29,7 @@
             v-model="clickStore.startServicesAfterInstall"
             type="checkbox"
             name="Start up client after installation?"
-            class="h-5 w-5 rounded-md border-gray-200 bg-white shadow-sm"
+            class="h-5 w-5 rounded-md border-gray-200 bg-white shadow-xs"
           />
 
           <span class="text-sm text-gray-300 font-semibold">{{ $t("pluginName.startOnInstall") }}</span>
@@ -51,7 +51,7 @@
               v-model="clickStore.installMonitoring"
               type="checkbox"
               name="marketing_accept"
-              class="h-5 w-5 rounded-md border-gray-200 bg-white shadow-sm"
+              class="h-5 w-5 rounded-md border-gray-200 bg-white shadow-xs"
             />
             <span class="text-sm text-gray-300 font-semibold">{{ $t("pluginName.instMonit") }}</span>
           </label>

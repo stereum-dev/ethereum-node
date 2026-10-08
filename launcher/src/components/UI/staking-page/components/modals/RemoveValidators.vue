@@ -55,7 +55,7 @@
 
               <label for="yes" class="flex justify-center items-center space-x-2" @click="stakingStore.pickedSlashing === 'yes'">
                 <span
-                  class="w-6 h-6 cursor-pointer rounded-full border border-gray-100 px-2 py-1 text-sm font-medium shadow-sm hover:scale-110 flex justify-center items-center transition-all ease-in-out duration-150"
+                  class="w-6 h-6 cursor-pointer rounded-full border border-gray-100 px-2 py-1 text-sm font-medium shadow-xs hover:scale-110 flex justify-center items-center transition-all ease-in-out duration-150"
                   :class="{ 'bg-blue-500': stakingStore.pickedSlashing === 'yes' }"
                 ></span>
                 <span class="text-gray-200 font-semibold text-center">{{ $t("stakingPage.yes") }}</span>
@@ -67,7 +67,7 @@
 
               <label for="no" class="flex justify-center items-center space-x-2" @click="stakingStore.pickedSlashing === 'no'">
                 <span
-                  class="w-6 h-6 cursor-pointer rounded-full border border-gray-100 px-2 py-1 text-sm font-medium shadow-sm hover:scale-110 flex justify-center items-center transition-all ease-in-out duration-150"
+                  class="w-6 h-6 cursor-pointer rounded-full border border-gray-100 px-2 py-1 text-sm font-medium shadow-xs hover:scale-110 flex justify-center items-center transition-all ease-in-out duration-150"
                   :class="{ 'bg-blue-500': stakingStore.pickedSlashing === 'no' }"
                 ></span>
                 <span class="text-gray-200 font-semibold text-center">{{ $t("stakingPage.no") }}</span>

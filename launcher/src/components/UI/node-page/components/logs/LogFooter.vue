@@ -103,7 +103,7 @@
     <div
       class="w-full h-full col-start-8 col-span-full flex justify-center items-center border border-gray-400 rounded-md bg-gray-200 relative"
     >
-      <div v-if="!isExportCustomizedLines" class="w-8 flex justify-evenly items-center px-1 relative bg-gray-200 rounded-sm">
+      <div v-if="!isExportCustomizedLines" class="w-8 flex justify-evenly items-center px-1 relative bg-gray-200 rounded-xs">
         <svg
           aria-hidden="true"
           class="w-5 h-5 text-gray-500 dark:text-gray-400"

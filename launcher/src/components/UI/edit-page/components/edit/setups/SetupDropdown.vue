@@ -3,7 +3,7 @@
     <label
       v-if="setupStore.isRenameSetupActive && route.path === '/edit'"
       for="rename"
-      class="w-full h-full col-start-1 col-end-6 text-gray-800 bg-[#232528] rounded-sm border border-gray-600 flex justify-center items-center"
+      class="w-full h-full col-start-1 col-end-6 text-gray-800 bg-[#232528] rounded-xs border border-gray-600 flex justify-center items-center"
     >
       <input
         id="rename"
@@ -24,17 +24,17 @@
     >
       <span
         v-if="setupStore.selectedSetup !== null && setupStore.selectedSetup?.isActive"
-        class="col-start-1 col-span-1 w-4 h-4 rounded-full self-center justify-self-center shadow-sm shadow-black"
+        class="col-start-1 col-span-1 w-4 h-4 rounded-full self-center justify-self-center shadow-xs shadow-black"
         :class="setupStore.getBGColor(setupStore.selectedSetup?.color)"
       ></span>
       <img
         v-else
-        class="col-start-1 col-span-1 w-4 h-4 rounded-full self-center justify-self-center shadow-sm shadow-black"
+        class="col-start-1 col-span-1 w-4 h-4 rounded-full self-center justify-self-center shadow-xs shadow-black"
         src="/img/icon/stereum-icons/stereum-logo.png"
         alt="Server View"
       />
       <span
-        class="self-center col-start-2 text-sm font-sans font-[500] overflow-hidden truncate text-gray-200 ml-2"
+        class="self-center col-start-2 text-sm font-sans font-medium overflow-hidden truncate text-gray-200 ml-2"
         :class="route.path === '/edit' ? 'col-end-9' : 'col-end-11'"
         >{{ getSelectedOption }}</span
       >

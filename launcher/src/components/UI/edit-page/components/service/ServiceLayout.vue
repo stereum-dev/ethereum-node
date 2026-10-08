@@ -5,7 +5,7 @@
     @mousedown.prevent.stop
   >
     <!-- <div
-      class="w-[155px] h-4 absolute top-[-18px] -left-[1px] rounded-r-full bg-[#264744] pl-2 flex justify-between items-center text-gray-300 font-semibold text-[10px] capitalize"
+      class="w-[155px] h-4 absolute top-[-18px] -left-px rounded-r-full bg-[#264744] pl-2 flex justify-between items-center text-gray-300 font-semibold text-2xs capitalize"
     >
       {{ client.name }}
       <span class="w-5 h-4 bg-green-500 border border-green-500 rounded-r-full"></span>

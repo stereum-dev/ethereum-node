@@ -20,15 +20,15 @@
                     >{{ $t("updatePanel.osTitle") }}</span
                   >
                   <div class="col-start-1 col-end-6 row-start-2 row-span-1 flex justify-between items-center">
-                    <div class="col-start-1 col-span-3 row-start-1 row-span-1 text-[10px] text-gray-300 font-semibold">
+                    <div class="col-start-1 col-span-3 row-start-1 row-span-1 text-2xs text-gray-300 font-semibold">
                       <span>{{ $t("updatePanel.version") }}:</span>
                     </div>
-                    <div class="col-start-4 col-span-3 row-start-1 row-span-1 text-[10px] text-amber-400 font-semibold mr-3">
+                    <div class="col-start-4 col-span-3 row-start-1 row-span-1 text-2xs text-amber-400 font-semibold mr-3">
                       <span>{{ osVersionCurrent }}</span>
                     </div>
                   </div>
                   <div class="col-start-1 col-end-6 row-start-3 row-span-1 flex justify-between items-center">
-                    <div class="col-start-1 col-span-3 row-start-1 row-span-1 text-[10px] text-gray-300 font-semibold">
+                    <div class="col-start-1 col-span-3 row-start-1 row-span-1 text-2xs text-gray-300 font-semibold">
                       <span>{{ $t("updatePanel.available") }}:</span>
                     </div>
                     <div class="col-start-4 col-span-3 row-start-2 row-span-1 flex justify-center items-center">
@@ -39,7 +39,7 @@
                       />
                       <div
                         v-else
-                        class="w-4 h-4 bg-red-700 rounded-full p-1 text-[10px] text-gray-200 text-center flex justify-center items-center mr-5"
+                        class="w-4 h-4 bg-red-700 rounded-full p-1 text-2xs text-gray-200 text-center flex justify-center items-center mr-5"
                       >
                         <span>{{ serverStore.numberOfUpdatablePackages }}</span>
                       </div>
@@ -73,10 +73,10 @@
                     >{{ $t("updatePanel.launcherTitle") }}</span
                   >
                   <div class="col-start-1 col-end-12 row-start-2 row-span-1 grid grid-cols-12">
-                    <div class="col-start-1 col-span-3 row-start-1 row-span-1 text-[10px] text-gray-300 font-semibold">
+                    <div class="col-start-1 col-span-3 row-start-1 row-span-1 text-2xs text-gray-300 font-semibold">
                       <span>{{ $t("updatePanel.current") }}:</span>
                     </div>
-                    <div class="col-start-4 col-span-3 row-start-1 row-span-1 text-[10px] text-amber-400 font-semibold ml-2">
+                    <div class="col-start-4 col-span-3 row-start-1 row-span-1 text-2xs text-amber-400 font-semibold ml-2">
                       <span>{{ serviceStore?.launcherVersion }}</span>
                     </div>
                   </div>
@@ -92,30 +92,30 @@
                     >{{ $t("updatePanel.nodeTitle") }}</span
                   >
                   <div class="col-start-1 col-end-6 row-start-2 row-span-1 flex justify-between items-center">
-                    <div class="col-start-1 col-span-3 row-start-1 row-span-1 text-[10px] text-gray-300 font-semibold">
+                    <div class="col-start-1 col-span-3 row-start-1 row-span-1 text-2xs text-gray-300 font-semibold">
                       <span>{{ $t("updatePanel.current") }}:</span>
                     </div>
-                    <div class="col-start-4 col-span-3 row-start-1 row-span-1 text-[10px] text-amber-400 font-semibold">
+                    <div class="col-start-4 col-span-3 row-start-1 row-span-1 text-2xs text-amber-400 font-semibold">
                       <span>{{ headerStore.stereumUpdate.current }}</span>
                     </div>
                   </div>
                   <div class="col-start-1 col-end-6 row-start-3 row-span-1 flex justify-between items-center">
-                    <div class="col-start-1 col-span-3 row-start-1 row-span-1 text-[10px] text-gray-300 font-semibold">
+                    <div class="col-start-1 col-span-3 row-start-1 row-span-1 text-2xs text-gray-300 font-semibold">
                       <span>{{ $t("updatePanel.latest") }}:</span>
                     </div>
-                    <div class="col-start-4 col-span-3 row-start-1 row-span-1 text-[10px] text-amber-400 font-semibold">
+                    <div class="col-start-4 col-span-3 row-start-1 row-span-1 text-2xs text-amber-400 font-semibold">
                       <span>{{ headerStore.stereumUpdate?.version }}</span>
                     </div>
                   </div>
                   <div class="col-start-9 col-end-13 row-start-1 row-span-2 flex justify-between items-center space-x-1">
                     <div
-                      class="w-[50px] h-[20px] bg-cyan-300 hover:bg-cyan-600 flex justify-center items-center p-1 rounded-sm cursor-pointer active:scale-95 transition-transform"
+                      class="w-[50px] h-[20px] bg-cyan-300 hover:bg-cyan-600 flex justify-center items-center p-1 rounded-xs cursor-pointer active:scale-95 transition-transform"
                       @click="searchUpdate"
                     >
                       <img class="w-4" src="/img/icon/base-header-icons/update-modal-search-button.png" alt="icon" />
                     </div>
                     <div
-                      class="w-[50px] h-[20px] bg-teal-600 hover:bg-teal-800 flex justify-center items-center p-1 rounded-sm cursor-pointer active:scale-95 transition-transform"
+                      class="w-[50px] h-[20px] bg-teal-600 hover:bg-teal-800 flex justify-center items-center p-1 rounded-xs cursor-pointer active:scale-95 transition-transform"
                       :class="{
                         'opacity-40 pointer-events-none bg-[#3d4244] scale-95': !checkStereumUpdate || headerStore.updating,
                       }"
@@ -152,7 +152,7 @@
                     >{{ $t("updatePanel.serviceTitle") }}</span
                   >
                   <span
-                    class="col-start-1 col-end-13 row-start-2 row-span-1 self-start text-[10px] font-semibold text-gray-300 text-left uppercase justify-self-start py-1"
+                    class="col-start-1 col-end-13 row-start-2 row-span-1 self-start text-2xs font-semibold text-gray-300 text-left uppercase justify-self-start py-1"
                     >{{ $t("updatePanel.serviceDesc") }}</span
                   >
                 </div>
@@ -161,7 +161,7 @@
           </div>
           <div class="col-start-1 col-span-3 row-start-7 row-span-5 flex flex-col justify-between items-center">
             <div class="w-full h-[200px] flex justify-center items-center mx-auto px-1">
-              <div class="w-full h-full flex flex-col justify-start items-center bg-[#334d4d] border border-gray-500 rounded-sm">
+              <div class="w-full h-full flex flex-col justify-start items-center bg-[#334d4d] border border-gray-500 rounded-xs">
                 <div class="w-full h-[28px] flex justify-center items-center p-1 space-x-4 border-b border-gray-500 bg-teal-800">
                   <div class="w-5 h-5 bg-[#243d36] rounded-full p-1">
                     <img class="w-3" src="/img/icon/base-header-icons/header-update-button-green.png" alt="icon" @click="copyUpdates" />
@@ -178,13 +178,13 @@
                   >
                     <div
                       v-if="item.running || headerStore.updating"
-                      class="w-[50px] h-[25px] p-1 flex justify-center items-center bg-gray-700 rounded-sm user-select-none pointer-events-none cursor-not-allowed"
+                      class="w-[50px] h-[25px] p-1 flex justify-center items-center bg-gray-700 rounded-xs user-select-none pointer-events-none cursor-not-allowed"
                     >
                       <img class="w-5" src="/img/icon/base-header-icons/update-modal-download-disabled.png" alt="icon" />
                     </div>
                     <div
                       v-else
-                      class="w-[50px] h-[25px] p-1 flex justify-center items-center bg-[#4d7575] hover:bg-[#243535] rounded-sm cursor-pointer active:scale-95 transition-transform"
+                      class="w-[50px] h-[25px] p-1 flex justify-center items-center bg-[#4d7575] hover:bg-[#243535] rounded-xs cursor-pointer active:scale-95 transition-transform"
                       @click="$emit('runUpdate', item)"
                     >
                       <img class="w-5" src="/img/icon/base-header-icons/update-modal-download.png" alt="icon" />
@@ -203,7 +203,7 @@
           <div class="col-start-1 col-span-3 row-start-12 row-end-13 w-full h-full flex justify-evenly items-center">
             <div class="w-1/2 h-full flex justify-center items-center p-1">
               <div
-                class="w-2/3 h-full flex justify-evenly items-center bg-[#334d4d] border border-gray-500 rounded-sm text-gray-400 text-sm font-semibold hover:bg-[#243535] transition-colors cursor-pointer active:scale-95"
+                class="w-2/3 h-full flex justify-evenly items-center bg-[#334d4d] border border-gray-500 rounded-xs text-gray-400 text-sm font-semibold hover:bg-[#243535] transition-colors cursor-pointer active:scale-95"
                 :class="{
                   'opacity-40 pointer-events-none bg-[#3d4244] scale-95':
                     (!checkAvailableServicesNewUpdate && !checkStereumUpdate) || headerStore.updating,

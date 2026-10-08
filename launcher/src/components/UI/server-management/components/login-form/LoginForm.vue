@@ -21,7 +21,7 @@
           v-model="serverStore.loginState.hostName"
           type="text"
           :placeholder="`${t('multiServer.serverName')}`"
-          class="h-8 self-center col-start-1 col-end-10 row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
+          class="h-8 self-center col-start-1 col-end-10 row-start-2 row-span-2 shadow-sm appearance-none border rounded-sm w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-hidden focus:shadow-outline bg-gray-200"
           required
           @change="serverNameChanged = true"
           @mouseenter="footerStore.cursorLocation = `${t('loginForm.addServerName')}`"
@@ -42,7 +42,7 @@
 
           <div
             v-if="removeHovered"
-            class="absolute -top-11 right-5 w-36 rounded-sm bg-[#202632] px-3 py-2 text-center text-xs font-medium text-white outline-none capitalize"
+            class="absolute -top-11 right-5 w-36 rounded-xs bg-[#202632] px-3 py-2 text-center text-xs font-medium text-white outline-hidden capitalize"
           >
             {{ $t("loginServer.removeServer") }}
           </div>
@@ -59,7 +59,7 @@
           />
           <div
             v-if="addHovered"
-            class="absolute -top-11 -right-5 w-28 rounded-sm uppercase bg-[#202632] px-3 py-2 text-center text-xs font-medium text-white outline-none"
+            class="absolute -top-11 -right-5 w-28 rounded-xs uppercase bg-[#202632] px-3 py-2 text-center text-xs font-medium text-white outline-hidden"
           >
             {{ $t("multiServer.saveServer") }}
           </div>
@@ -80,7 +80,7 @@
             v-model="serverStore.loginState.ip"
             type="text"
             placeholder="114.72.86.90"
-            class="h-8 self-center col-start-1 col-end-11 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
+            class="h-8 self-center col-start-1 col-end-11 shadow-sm appearance-none border rounded-sm w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-hidden focus:shadow-outline bg-gray-200"
             required
             @mouseenter="footerStore.cursorLocation = `${t('loginForm.ipOrHost')}`"
             @mouseleave="footerStore.cursorLocation = ''"
@@ -109,7 +109,7 @@
           v-model="serverStore.loginState.port"
           type="text"
           placeholder="22"
-          class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
+          class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 shadow-sm appearance-none border rounded-sm w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-hidden focus:shadow-outline bg-gray-200"
           @mouseenter="footerStore.cursorLocation = `${t('loginForm.port')}`"
           @mouseleave="footerStore.cursorLocation = ''"
         />
@@ -126,7 +126,7 @@
           v-model="serverStore.loginState.username"
           type="text"
           placeholder="root"
-          class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
+          class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 shadow-sm appearance-none border rounded-sm w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-hidden focus:shadow-outline bg-gray-200"
           required
           @change="serverUsernameChanged = true"
           @mouseenter="footerStore.cursorLocation = `${t('loginForm.uName')}`"
@@ -141,7 +141,7 @@
 
         <label
           for="AcceptConditions"
-          class="col-start-6 col-end-9 row-start-2 row-span-full self-center relative h-6 w-12 cursor-pointer [-webkit-tap-highlight-color:_transparent] flex justify-center items-center"
+          class="col-start-6 col-end-9 row-start-2 row-span-full self-center relative h-6 w-12 cursor-pointer [-webkit-tap-highlight-color:transparent] flex justify-center items-center"
           @mouseenter="footerStore.cursorLocation = `${t('loginForm.tgll')}`"
           @mouseleave="footerStore.cursorLocation = ''"
         >
@@ -149,12 +149,12 @@
             id="AcceptConditions"
             v-model="serverStore.loginState.useAuth"
             type="checkbox"
-            class="peer sr-only [&:checked_+_span_svg[data-checked-icon]]:block [&:checked_+_span_svg[data-unchecked-icon]]:hidden bg-gray-200"
+            class="peer sr-only [&:checked+span_svg[data-checked-icon]]:block [&:checked+span_svg[data-unchecked-icon]]:hidden bg-gray-200"
             @input="toggleSSH"
           />
 
           <span
-            class="absolute inset-y-0 start-0 z-10 m-1 inline-flex h-4 w-4 items-center justify-center rounded-full bg-white text-gray-400 transition-all peer-checked:start-6 peer-checked:text-green-600"
+            class="absolute inset-y-0 inset-s-0 z-10 m-1 inline-flex h-4 w-4 items-center justify-center rounded-full bg-white text-gray-400 transition-all peer-checked:inset-s-6 peer-checked:text-green-600"
           >
             <svg data-unchecked-icon xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
               <path
@@ -189,7 +189,7 @@
           v-model="serverStore.loginState.keyPath"
           type="text"
           placeholder="/user/.ssh/id_rsa"
-          class="h-8 self-center col-start-1 col-end-12 row-start-2 row-span-2 overflow-hidden appearance-none border rounded-l-md w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
+          class="h-8 self-center col-start-1 col-end-12 row-start-2 row-span-2 overflow-hidden appearance-none border rounded-l-md w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-hidden focus:shadow-outline bg-gray-200"
           required
           @input="validateSSHKeyPath"
         />
@@ -214,7 +214,7 @@
           id="password"
           v-model="serverStore.loginState.passphrase"
           type="password"
-          class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
+          class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 shadow-sm appearance-none border rounded-sm w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-hidden focus:shadow-outline bg-gray-200"
           placeholder="******************"
           @mouseenter="footerStore.cursorLocation = `${t('loginForm.pass')}`"
           @mouseleave="footerStore.cursorLocation = ''"
@@ -231,7 +231,7 @@
           id="password"
           v-model="serverStore.loginState.password"
           type="password"
-          class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 shadow appearance-none border rounded w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
+          class="h-8 self-center col-start-1 col-span-full row-start-2 row-span-2 shadow-sm appearance-none border rounded-sm w-full py-1 px-2 text-gray-800 text-sm font-semibold leading-tight focus:outline-hidden focus:shadow-outline bg-gray-200"
           placeholder="******************"
           required
           @input="validatePassword"
@@ -243,7 +243,7 @@
       <div class="col-start-1 col-span-full row-start-6 row-span-1 flex justify-center items-center">
         <button
           v-if="!serverStore.connectingProcess"
-          class="w-full h-[50px] hover:bg-teal-700 text-gray-800 hover:text-white font-bold py-1 px-4 rounded-md focus:outline-none focus:shadow-outline active:scale-95 transition-all ease-in-out duration-100 shadow-lg shadow-black active:shadow-none text-md uppercase"
+          class="w-full h-[50px] hover:bg-teal-700 text-gray-800 hover:text-white font-bold py-1 px-4 rounded-md focus:outline-hidden focus:shadow-outline active:scale-95 transition-all ease-in-out duration-100 shadow-lg shadow-black active:shadow-none text-md uppercase"
           :class="serverStore.isIpScannerModalActive || buttonDisabled ? 'bg-gray-400 opacity-50 pointer-events-none ' : 'bg-gray-200'"
           type="submit"
           :disabled="buttonDisabled"

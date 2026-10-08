@@ -4,7 +4,7 @@
       v-model="searchTerm"
       type="text"
       placeholder="Search language..."
-      class="w-full shrink-0 bg-[#1E2429] text-gray-200 placeholder-gray-400 text-base rounded-md border border-[#33393E] px-4 py-2 focus:outline-none focus:border-[#4d7575]"
+      class="w-full shrink-0 bg-[#1E2429] text-gray-200 placeholder-gray-400 text-base rounded-md border border-[#33393E] px-4 py-2 focus:outline-hidden focus:border-[#4d7575]"
     />
 
     <div class="grow min-h-0 overflow-y-auto bg-[#1E2429] border border-[#4d7575] rounded-md p-2">

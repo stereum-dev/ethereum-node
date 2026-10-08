@@ -6,7 +6,7 @@
       @click="$emit('hideModal')"
     ></div>
     <div
-      class="w-full h-[492px] absolute top-[56px] left-[1px] z-30 bg-[#2d3438] rounded-md flex flex-col justify-start items-center p-4"
+      class="w-full h-[492px] absolute top-[56px] left-px z-30 bg-[#2d3438] rounded-md flex flex-col justify-start items-center p-4"
       :class="leftDistance ? leftDistance : 'left-0'"
       aria-labelledby="modal-title"
       role="dialog"
@@ -278,7 +278,7 @@
 
         <!-- confirm button box -->
         <button
-          class="expert-modal-btn w-[100px] h-8 px-6 py-1 font-medium tracking-wide text-white transition-colors duration-300 transform bg-red-500 rounded-sm hover:bg-red-700 focus:outline-none uppercase text-sm"
+          class="expert-modal-btn w-[100px] h-8 px-6 py-1 font-medium tracking-wide text-white transition-colors duration-300 transform bg-red-500 rounded-xs hover:bg-red-700 focus:outline-hidden uppercase text-sm"
           @click="$emit('hideModal')"
         >
           close
@@ -286,23 +286,23 @@
 
         <button
           v-if="!nothingsChanged"
-          class="expert-modal-btn w-[100px] h-8 px-4 py-1 font-medium tracking-wide text-white divnsition-colors duration-300 transform bg-[#609879] rounded-sm hover:bg-[#4c7960] focus:outline-none uppercase text-sm"
+          class="expert-modal-btn w-[100px] h-8 px-4 py-1 font-medium tracking-wide text-white divnsition-colors duration-300 transform bg-[#609879] rounded-xs hover:bg-[#4c7960] focus:outline-hidden uppercase text-sm"
           @click="confirmExpertChanges(item, false)"
         >
           Confirm
         </button>
 
-        <button v-else class="w-[100px] h-8 px-4 py-1 font-medium tracking-wide text-white rounded-sm disabled uppercase text-sm">
+        <button v-else class="w-[100px] h-8 px-4 py-1 font-medium tracking-wide text-white rounded-xs disabled uppercase text-sm">
           <span>Confirm</span>
         </button>
         <button
           v-if="!nothingsChanged"
-          class="expert-modal-btn w-[200px] h-8 px-6 py-1 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-[#609879] rounded-sm hover:bg-[#4c7960] focus:outline-none text-sm"
+          class="expert-modal-btn w-[200px] h-8 px-6 py-1 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-[#609879] rounded-xs hover:bg-[#4c7960] focus:outline-hidden text-sm"
           @click="confirmExpertChanges(item, true)"
         >
           Confirm & Restart
         </button>
-        <button v-else class="w-[200px] h-8 px-6 py-1 font-medium tracking-wide text-white uppercase rounded-sm disabled text-sm">
+        <button v-else class="w-[200px] h-8 px-6 py-1 font-medium tracking-wide text-white uppercase rounded-xs disabled text-sm">
           <span>Confirm & Restart</span>
         </button>
       </div>

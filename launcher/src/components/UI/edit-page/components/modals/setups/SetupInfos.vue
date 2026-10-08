@@ -51,7 +51,7 @@
           <span
             v-for="service in getSelectedSetup.services"
             :key="service.service"
-            class="col-span-1 text-xs text-gray-300 font-semibold text-center capitalize bg-teal-700 rounded-sm p-1"
+            class="col-span-1 text-xs text-gray-300 font-semibold text-center capitalize bg-teal-700 rounded-xs p-1"
             >{{ service.service }}</span
           >
         </div>

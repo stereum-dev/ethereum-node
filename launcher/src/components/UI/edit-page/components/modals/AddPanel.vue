@@ -7,7 +7,7 @@ import { onMounted, watch, onUnmounted, ref } from 'vue';
         <span class="col-start-2 col-span-3 text-gray-400 text-left">{{ $t("editModals.installationPath") }}</span>
         <input
           v-model="props.properties.installDir"
-          class="col-start-6 col-span-7 min-h-[30px] border border-gray-500 px-2 py-1 text-left text-gray-400 text-xs rounded bg-[#141516] focus:border-teal-500"
+          class="col-start-6 col-span-7 min-h-[30px] border border-gray-500 px-2 py-1 text-left text-gray-400 text-xs rounded-sm bg-[#141516] focus:border-teal-500"
           type="text"
           autofocus
         />
@@ -33,7 +33,7 @@ import { onMounted, watch, onUnmounted, ref } from 'vue';
         <span class="col-start-2 col-span-3 text-gray-400 text-left">External Source</span>
         <input
           v-model="sourceLink"
-          class="col-start-6 col-span-7 min-h-[30px] border border-gray-500 px-2 py-1 text-left text-gray-400 text-xs rounded bg-[#141516] focus:border-teal-500"
+          class="col-start-6 col-span-7 min-h-[30px] border border-gray-500 px-2 py-1 text-left text-gray-400 text-xs rounded-sm bg-[#141516] focus:border-teal-500"
           type="text"
           autofocus
         />
@@ -49,7 +49,7 @@ import { onMounted, watch, onUnmounted, ref } from 'vue';
         <span class="col-start-2 col-span-3 text-gray-400 text-left">JWT TOKEN</span>
         <input
           v-model="jwtToken"
-          class="col-start-6 col-span-7 min-h-[30px] border border-gray-500 px-2 py-1 text-left text-gray-400 text-xs rounded bg-[#141516] focus:border-teal-500"
+          class="col-start-6 col-span-7 min-h-[30px] border border-gray-500 px-2 py-1 text-left text-gray-400 text-xs rounded-sm bg-[#141516] focus:border-teal-500"
           type="text"
           autofocus
         />
@@ -81,7 +81,7 @@ import { onMounted, watch, onUnmounted, ref } from 'vue';
 
         <div
           v-if="isOpen"
-          class="absolute top-8 end-2 z-10 mt-2 max-h-[160px] w-56 rounded-md border border-gray-100 bg-white shadow-lg overflow-x-hidden overflow-y-auto"
+          class="absolute top-8 inset-e-2 z-10 mt-2 max-h-[160px] w-56 rounded-md border border-gray-100 bg-white shadow-lg overflow-x-hidden overflow-y-auto"
           role="menu"
         >
           <div class="p-2" @mouseleave="isOpen = false">

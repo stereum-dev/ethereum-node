@@ -1,5 +1,5 @@
 import { resolve } from "path";
-import { defineConfig, externalizeDepsPlugin } from "electron-vite";
+import { defineConfig } from "electron-vite";
 import vue from "@vitejs/plugin-vue";
 
 // Electron main & preload run in Node/Electron: keep every runtime dependency
@@ -9,11 +9,11 @@ export default defineConfig({
   main: {
     // electron-store v11 is ESM-only; externalizing it as a CJS require lands the
     // constructor on `.default`. Bundle it instead so Vite handles the interop.
-    plugins: [externalizeDepsPlugin({ exclude: ["electron-store"] })],
     resolve: {
       alias: { "@": resolve(__dirname, "src") },
     },
     build: {
+      externalizeDeps: { exclude: ["electron-store"] },
       outDir: "out/main",
       rollupOptions: {
         input: { index: resolve(__dirname, "src/background.js") },
@@ -21,7 +21,6 @@ export default defineConfig({
     },
   },
   preload: {
-    plugins: [externalizeDepsPlugin()],
     resolve: {
       alias: { "@": resolve(__dirname, "src") },
     },

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="col-start-1 col-span-full overflow-x-hidden overflow-y-auto px-1 flex justify-start items-center space-y-2 border bg-[#151618] rounded-b-sm mb-[1px]"
+    class="col-start-1 col-span-full overflow-x-hidden overflow-y-auto px-1 flex justify-start items-center space-y-2 border bg-[#151618] rounded-b-sm mb-px"
     :class="[
       stakingStore.isOverDropZone ? 'border-dashed border-blue-500' : 'border-gray-600',
       stakingStore.inputWrongKey ? 'border-red-500' : '',

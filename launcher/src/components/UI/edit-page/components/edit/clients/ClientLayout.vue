@@ -11,8 +11,8 @@ import { computed, ref } from 'vue';
     <div class="flex flex-col justify-center items-center gap-2">
       <span class="text-xs text-gray-200 font-semibold">{{ client.name }}</span>
       <img class="w-10" :src="client.sIcon" alt="icon" />
-      <p class="text-[10px] text-gray-400">
-        ID:<span class="text-[10px] text-gray-200 ml-1">{{ serviceId }}</span>
+      <p class="text-2xs text-gray-400">
+        ID:<span class="text-2xs text-gray-200 ml-1">{{ serviceId }}</span>
       </p>
     </div>
 
@@ -24,13 +24,13 @@ import { computed, ref } from 'vue';
     </div>
     <div
       v-if="checkClientConnection && props.client.category !== 'execution' && props.client.service !== 'ExternalConsensusService'"
-      class="flex justify-evenly items-center absolute end-1 top-0"
+      class="flex justify-evenly items-center absolute inset-e-1 top-0"
     >
       <img class="w-3" src="/img/icon/edit-node-icons/service-connected.png" alt="icon" />
     </div>
     <div
       v-else-if="!checkClientConnection && props.client.category !== 'execution' && props.client.service !== 'ExternalConsensusService'"
-      class="flex justify-evenly items-center absolute end-1 top-0"
+      class="flex justify-evenly items-center absolute inset-e-1 top-0"
     >
       <img class="w-3" src="/img/icon/edit-node-icons/not-service-connected.png" alt="icon" />
     </div>

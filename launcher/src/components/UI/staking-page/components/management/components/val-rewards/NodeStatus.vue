@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-full max-h-5 col-start-1 col-span-full row-span-1 grid grid-cols-6 items-center px-[1px]">
+  <div class="w-full h-full max-h-5 col-start-1 col-span-full row-span-1 grid grid-cols-6 items-center px-px">
     <div class="h-full col-start-1 col-end-4 self-center flex justify-start items-center px-2 rounded-l-full">
       <span class="text-[8px] text-amber-300 font-normal font-sans text-left">NODE STATUS</span>
     </div>

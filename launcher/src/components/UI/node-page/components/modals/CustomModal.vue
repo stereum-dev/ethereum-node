@@ -26,7 +26,7 @@
         <div class="flex justify-end text-md font-bold py-3 mt-2 text-center space-y-4">
           <button
             v-if="confirmText !== ''"
-            class="w-[8rem] mr-2 px-5 py-2 shadow-sm rounded-full hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-110 active:scale-100 text-gray-200 font-semibold uppercase"
+            class="w-32 mr-2 px-5 py-2 shadow-xs rounded-full hover:shadow-lg transition-all duration-300 ease-in-out hover:scale-110 active:scale-100 text-gray-200 font-semibold uppercase"
             :class="[
               btnColor === 'red'
                 ? 'bg-red-500 border border-gray-200 hover:bg-red-600'
@@ -38,7 +38,7 @@
             {{ confirmText }}
           </button>
 
-          <span class="absolute bottom-1 left-[17rem] text-xs flex justify-center items-center text-red-500 mx-auto">{{
+          <span class="absolute bottom-1 left-68 text-xs flex justify-center items-center text-red-500 mx-auto">{{
             clickOutsideText
           }}</span>
         </div>

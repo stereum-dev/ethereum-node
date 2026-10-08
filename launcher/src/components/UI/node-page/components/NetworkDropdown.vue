@@ -29,7 +29,7 @@
         class="flex items-center p-2 text-sm text-gray-600 transition-colors duration-300 transform dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white"
       >
         <img
-          class="flex-shrink-0 object-cover mx-1 rounded-full w-8 h-8"
+          class="shrink-0 object-cover mx-1 rounded-full w-8 h-8"
           src="/img/icon/network-icons/ethereum-mainnet-circle.png"
           alt="mainnet icon"
         />
@@ -43,7 +43,7 @@
         class="flex items-center p-2 text-sm text-gray-600 transition-colors duration-300 transform dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white"
       >
         <img
-          class="flex-shrink-0 object-cover mx-1 rounded-full w-8 h-8"
+          class="shrink-0 object-cover mx-1 rounded-full w-8 h-8"
           src="/img/icon/network-icons/ethereum-mainnet-circle.png"
           alt="mainnet icon"
         />
@@ -57,7 +57,7 @@
         class="flex items-center p-2 text-sm text-gray-600 transition-colors duration-300 transform dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white"
       >
         <img
-          class="flex-shrink-0 object-cover mx-1 rounded-full w-8 h-8"
+          class="shrink-0 object-cover mx-1 rounded-full w-8 h-8"
           src="/img/icon/network-icons/ethereum-mainnet-circle.png"
           alt="mainnet icon"
         />

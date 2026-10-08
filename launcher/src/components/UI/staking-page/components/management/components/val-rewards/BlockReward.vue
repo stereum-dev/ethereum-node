@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full h-full max-h-5 col-start-1 col-span-full row-start-7 row-span-1 grid grid-cols-6 items-center p-[1px]"
+    class="w-full h-full max-h-5 col-start-1 col-span-full row-start-7 row-span-1 grid grid-cols-6 items-center p-px"
     @mouseenter="footerStore.cursorLocation = `${blockProdreward}`"
     @mouseleave="footerStore.cursorLocation = ''"
   >

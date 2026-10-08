@@ -8,7 +8,7 @@
             left: (volumePercentage <= 92 ? volumePercentage : 92) + '%',
             background: langStore.currentVolume === 0 ? '#ff0000' : '#336666',
           }"
-          class="slider-thumb absolute h-4 flex items-center justify-center w-4 rounded-full shadow border border-gray-300 top-0 cursor-pointer"
+          class="slider-thumb absolute h-4 flex items-center justify-center w-4 rounded-full shadow-sm border border-gray-300 top-0 cursor-pointer"
           @mousedown="startDrag"
         ></div>
       </div>

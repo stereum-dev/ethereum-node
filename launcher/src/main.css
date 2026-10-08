@@ -1,24 +1,107 @@
-@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap");
-@tailwind base;
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap") layer(base);
+@import "tailwindcss";
 
-::-webkit-scrollbar {
-  background-color: transparent;
-  width: 5px;
-  height: 5px;
+@plugin 'tailwind-scrollbar';
+@plugin 'tailwindcss-animated';
+
+@theme {
+  --background-image-drop: url("/img/icon/edit-node-icons/drag-service-icon.png");
+
+  --text-2xs: 10px;
+
+  --grid-template-rows-7: repeat(7, minmax(0, 1fr));
+  --grid-template-rows-8: repeat(8, minmax(0, 1fr));
+  --grid-template-rows-12: repeat(12, minmax(0, 1fr));
+  --grid-template-rows-13: repeat(13, minmax(0, 1fr));
+  --grid-template-rows-14: repeat(14, minmax(0, 1fr));
+  --grid-template-rows-15: repeat(15, minmax(0, 1fr));
+
+  --grid-template-columns-24: repeat(24, minmax(0, 1fr));
+
+  --grid-column-start-13: 13;
+  --grid-column-start-14: 14;
+  --grid-column-start-15: 15;
+  --grid-column-start-16: 16;
+  --grid-column-start-17: 17;
+  --grid-column-start-18: 18;
+  --grid-column-start-19: 19;
+  --grid-column-start-20: 20;
+  --grid-column-start-21: 21;
+  --grid-column-start-22: 22;
+  --grid-column-start-23: 23;
+  --grid-column-start-24: 24;
+  --grid-column-start-25: 25;
+
+  --grid-column-end-13: 13;
+  --grid-column-end-14: 14;
+  --grid-column-end-15: 15;
+  --grid-column-end-16: 16;
+  --grid-column-end-17: 17;
+  --grid-column-end-18: 18;
+  --grid-column-end-19: 19;
+  --grid-column-end-20: 20;
+  --grid-column-end-21: 21;
+  --grid-column-end-22: 22;
+  --grid-column-end-23: 23;
+  --grid-column-end-24: 24;
+  --grid-column-end-25: 25;
+
+  --grid-row-start-6: 6;
+  --grid-row-start-7: 7;
+  --grid-row-start-8: 8;
+  --grid-row-start-9: 9;
+  --grid-row-start-10: 10;
+  --grid-row-start-11: 11;
+  --grid-row-start-12: 12;
+  --grid-row-start-13: 13;
+  --grid-row-start-14: 14;
+
+  --grid-row-end-6: 6;
+  --grid-row-end-7: 7;
+  --grid-row-end-8: 8;
+  --grid-row-end-9: 9;
+  --grid-row-end-10: 10;
+  --grid-row-end-11: 11;
+  --grid-row-end-12: 12;
+  --grid-row-end-13: 13;
+  --grid-row-end-14: 14;
 }
 
-::-webkit-scrollbar-thumb {
-  background-color: #85cac4;
-  border-radius: 20px;
-}
-::-webkit-scrollbar-corner {
-  width: 0;
-  height: 0;
-  background-color: transparent;
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
 }
 
-@tailwind components;
-@tailwind utilities;
+@layer base {
+  ::-webkit-scrollbar {
+    background-color: transparent;
+    width: 5px;
+    height: 5px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: #85cac4;
+    border-radius: 20px;
+  }
+  ::-webkit-scrollbar-corner {
+    width: 0;
+    height: 0;
+    background-color: transparent;
+  }
+}
 html body {
   min-width: 1024px;
   min-height: 576px;

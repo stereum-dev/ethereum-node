@@ -1,6 +1,6 @@
 <template>
   <div
-    class="h-full w-[154px] col-start-1 col-span-full row-start-1 row-span-1 rounded-r-full pl-2 flex justify-between items-center text-[10px] font-semibold capitalize"
+    class="h-full w-[154px] col-start-1 col-span-full row-start-1 row-span-1 rounded-r-full pl-2 flex justify-between items-center text-2xs font-semibold capitalize"
     :class="[setupStore.getBGColor(setupStore.selectedSetup?.color), setupStore.getTextColor(setupStore.selectedSetup?.color)]"
   >
     {{ props.client.name }}

@@ -9,7 +9,7 @@
   >
     <div class="w-full h-full grid grid-cols-3 grid-rows-15">
       <div
-        class="col-start-1 col-span-full row-start-1 row-span-1 w-full mx-auto grid grid-cols-3 h-6 bg-[#33393E] border border-gray-950 rounded-t-[5px] text-gray-300 text-xs font-[400] font-sans"
+        class="col-start-1 col-span-full row-start-1 row-span-1 w-full mx-auto grid grid-cols-3 h-6 bg-[#33393E] border border-gray-950 rounded-t-[5px] text-gray-300 text-xs font-normal font-sans"
       >
         <span class="col-start-1 justify-self-center self-center">{{ $t("editModals.executionClients") }}</span>
         <span class="col-start-2 justify-self-center self-center">{{ $t("editModals.consensusClients") }}</span>

@@ -6,7 +6,7 @@
       <div class="col-start-1 col-span-full row-start-1 row-span-1 text-xs font-bold uppercase text-[#336666]">
         {{ t("serverSetting.nodeServerTtl") }}
       </div>
-      <div class="col-start-1 col-span-full row-start-2 row-span-1 rounded-sm px-1 grid grid-cols-12 items-center">
+      <div class="col-start-1 col-span-full row-start-2 row-span-1 rounded-xs px-1 grid grid-cols-12 items-center">
         <span class="col-start-1 col-end-11 text-left text-gray-200 text-xs"> {{ t("serverSetting.auto") }}</span>
         <label
           class="h-full col-start-11 col-span-full items-center relative cursor-pointer p-[2px]"
@@ -50,7 +50,7 @@
             type="number"
             min="1"
             max="28"
-            class="w-full h-7 bg-[#2a2a2c] text-white border border-gray-700 rounded-md p-2 text-sm focus:border-[#336666] focus:outline-none transition-colors"
+            class="w-full h-7 bg-[#2a2a2c] text-white border border-gray-700 rounded-md p-2 text-sm focus:border-[#336666] focus:outline-hidden transition-colors"
             :class="!isEditActive ? 'cursor-not-allowed opacity-50' : ''"
             :disabled="!isEditActive"
             placeholder="1-28"
@@ -66,7 +66,7 @@
             type="number"
             min="0"
             max="23"
-            class="w-full h-7 bg-[#2a2a2c] text-white border border-gray-700 rounded-md p-2 text-sm focus:border-[#336666] focus:outline-none transition-colors"
+            class="w-full h-7 bg-[#2a2a2c] text-white border border-gray-700 rounded-md p-2 text-sm focus:border-[#336666] focus:outline-hidden transition-colors"
             placeholder="0-23"
             :class="!isEditActive ? 'cursor-not-allowed opacity-50' : ''"
             :disabled="!isEditActive"
@@ -82,7 +82,7 @@
             type="number"
             min="0"
             max="59"
-            class="w-full h-7 bg-[#2a2a2c] text-white border border-gray-700 rounded-md p-2 text-sm focus:border-[#336666] focus:outline-none transition-colors"
+            class="w-full h-7 bg-[#2a2a2c] text-white border border-gray-700 rounded-md p-2 text-sm focus:border-[#336666] focus:outline-hidden transition-colors"
             placeholder="0-59"
             :class="!isEditActive ? 'cursor-not-allowed opacity-50' : ''"
             :disabled="!isEditActive"
@@ -91,7 +91,7 @@
       </div>
 
       <button
-        class="col-start-1 col-span-full row-start-7 row-span-1 bg-gradient-to-r from-[#336666] to-[#4a8080] hover:from-[#4a8080] hover:to-[#336666] text-xs uppercase text-white font-medium py-1 px-4 rounded-md transition-all duration-300 ease-in-out transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+        class="col-start-1 col-span-full row-start-7 row-span-1 bg-linear-to-r from-[#336666] to-[#4a8080] hover:from-[#4a8080] hover:to-[#336666] text-xs uppercase text-white font-medium py-1 px-4 rounded-md transition-all duration-300 ease-in-out transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
         :class="!areInputsValid ? 'cursor-not-allowed opacity-50 pointer-events-none' : ''"
         :disabled="!areInputsValid"
         @click="confirmChanges"

@@ -39,7 +39,7 @@
         />
       </transition-group>
     </div>
-    <div class="absolute bottom-[3rem] inset-x-0 h-14">
+    <div class="absolute bottom-12 inset-x-0 h-14">
       <div v-if="displayNewTask" class="message-box">
         <p class="msg-title">
           {{ displayNewTask }}

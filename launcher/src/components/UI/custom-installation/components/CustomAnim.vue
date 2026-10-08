@@ -3,13 +3,13 @@
     <div class="w-full h-full flex justify-center items-center">
       <div class="anim__content__box">
         <div class="anim__img__content">
-          <img class="z-[2]" src="/animation/custom/custom-1.png" alt="Anim Image " />
+          <img class="z-2" src="/animation/custom/custom-1.png" alt="Anim Image " />
           <img v-for="(img, idx) in images" :key="img" :src="img" :class="`z-[${idx}]`" alt="Animation" />
         </div>
       </div>
     </div>
 
-    <div class="absolute bottom-[3rem] inset-x-0 h-14 z-50">
+    <div class="absolute bottom-12 inset-x-0 h-14 z-50">
       <div v-if="displayNewTask" class="message-box">
         <p class="msg-title">
           {{ displayNewTask }}

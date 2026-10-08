@@ -3,7 +3,7 @@
     class="w-full h-7 col-start-1 col-span-full row-start-1 row-span-1 grid grid-cols-24 items-center rounded-md bg-[#151618] py-0 divide-x divide-gray-600"
   >
     <div class="col-start-1 col-end-13 h-full flex justify-start items-center bg-[#232426] divide-x divide-gray-600 rounded-l-md">
-      <p class="w-2/5 text-[10px] text-gray-400 font-medium font-sans uppercase pl-6 relative flex items-center text-center">
+      <p class="w-2/5 text-2xs text-gray-400 font-medium font-sans uppercase pl-6 relative flex items-center text-center">
         Page Filter
 
         <span class="ml-2 w-2 h-2 border-t-2 border-r-2 border-gray-400 transform rotate-45 text-right"></span>

@@ -36,7 +36,7 @@
         <div
           v-for="service in getServerServices"
           :key="service"
-          class="w-full h-7 min-h-7 bg-[#282a2c] hover:bg-gray-700 rounded-sm border border-gray-600 mx-auto shadow-md shadow-black grid grid-cols-6 items-center p-[2px] cursor-pointer overflow-hidden"
+          class="w-full h-7 min-h-7 bg-[#282a2c] hover:bg-gray-700 rounded-xs border border-gray-600 mx-auto shadow-md shadow-black grid grid-cols-6 items-center p-[2px] cursor-pointer overflow-hidden"
           :class="service?.isDuplicated ? 'pointer-events-none opacity-50' : ''"
           @dblclick="addService(service)"
         >

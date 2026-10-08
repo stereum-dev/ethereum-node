@@ -4,7 +4,7 @@
   >
     <div class="w-full h-full col-start-1 col-end-3 grid grid-cols-3 py-1">
       <div
-        class="w-2/3 h-full col-start-1 col-span-1 flex justify-center items-center rounded-sm bg-[#336666] hover:bg-[#234545] transition-all duration-100 cursor-pointer px-1 active:scale-95"
+        class="w-2/3 h-full col-start-1 col-span-1 flex justify-center items-center rounded-xs bg-[#336666] hover:bg-[#234545] transition-all duration-100 cursor-pointer px-1 active:scale-95"
         :class="stakingStore.isPreviewListActive || stakingStore.isStakingDisabled ? 'opacity-50 pointer-events-none ' : ''"
       >
         <img
@@ -30,7 +30,7 @@
       </div>
 
       <div
-        class="w-2/3 h-full col-start-2 col-span-1 flex justify-center items-center rounded-sm bg-[#336666] hover:bg-[#234545] transition-all duration-100 cursor-pointer active:scale-95 px-1"
+        class="w-2/3 h-full col-start-2 col-span-1 flex justify-center items-center rounded-xs bg-[#336666] hover:bg-[#234545] transition-all duration-100 cursor-pointer active:scale-95 px-1"
         :class="
           stakingStore.isGroupListActive || stakingStore.isPreviewListActive || stakingStore.isStakingDisabled
             ? 'opacity-50 pointer-events-none '

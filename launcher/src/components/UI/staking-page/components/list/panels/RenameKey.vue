@@ -1,11 +1,11 @@
 <template>
   <div
-    class="animate__animated animate__fadeIn w-full h-full max-h-[32px] col-start-1 col-span-full bg-[#3e4347] rounded-sm flex justify-center items-center cursor-pointer"
+    class="animate__animated animate__fadeIn w-full h-full max-h-[32px] col-start-1 col-span-full bg-[#3e4347] rounded-xs flex justify-center items-center cursor-pointer"
   >
     <div
       v-if="alertMessage !== ''"
       role="alert"
-      class="absolute -top-[90px] left-14 w-2/3 max-h-36 rounded border-s-4 p-4 z-50 bg-red-100 border-red-400"
+      class="absolute top-[-90px] left-14 w-2/3 max-h-36 rounded-sm border-s-4 p-4 z-50 bg-red-100 border-red-400"
     >
       <div class="flex items-center gap-2 text-red-800">
         <strong class="block font-medium">{{ $t("stakingPage.somethingWrong") }}</strong>
@@ -24,7 +24,7 @@
       <input
         id="input1"
         v-model="stakingStore.validatorDisplayName"
-        class="col-start-2 col-end-10 w-full bg-[#171D22] border px-4 rounded-sm outline-none text-xs text-gray-400 border-gray-500 placeholder:text-gray-400"
+        class="col-start-2 col-end-10 w-full bg-[#171D22] border px-4 rounded-xs outline-hidden text-xs text-gray-400 border-gray-500 placeholder:text-gray-400"
         type="text"
         autofocus
         :class="inputClass"

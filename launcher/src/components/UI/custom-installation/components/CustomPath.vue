@@ -72,7 +72,7 @@
                   :class="{ 'invalid-path': !clickStore.isPathValid }"
                   type="text"
                   placeholder="/opt/stereum"
-                  class="custom-path-input w-full h-full bg-gray-300 rounded-full px-2 text-lg text-gray-800 font-semibold outline-none"
+                  class="custom-path-input w-full h-full bg-gray-300 rounded-full px-2 text-lg text-gray-800 font-semibold outline-hidden"
                   @input="validatePath"
                 />
               </div>

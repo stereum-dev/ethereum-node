@@ -9,11 +9,11 @@
         t("twoFactorAuth.urSecret")
       }}</span>
       <div
-        class="key-code w-[68%] h-full bg-black flex justify-between items-center rounded-full text-gray-300 pl-2 text-[10px] font-normal rounded-l-none"
+        class="key-code w-[68%] h-full bg-black flex justify-between items-center rounded-full text-gray-300 pl-2 text-2xs font-normal rounded-l-none"
       >
         {{ !props.secretKey ? wait : props.secretKey }}
         <div
-          class="send-btn w-8 h-8 rounded-md text-2xs uppercase bg-teal-700 hover:bg-teal-900 flex justify-center items-center text-gray-100 cursor-pointer right-[1px]"
+          class="send-btn w-8 h-8 rounded-md text-2xs uppercase bg-teal-700 hover:bg-teal-900 flex justify-center items-center text-gray-100 cursor-pointer right-px"
           @click="copyKey"
           @mouseenter="footerStore.cursorLocation = `${t('twoFactor.copy')} `"
           @mouseleave="footerStore.cursorLocation = ''"
@@ -37,7 +37,7 @@
       />
       <div
         v-if="props.timeBased && !authStore.isSendingCode"
-        class="send-btn w-16 h-8 rounded-md text-2xs uppercase bg-teal-700 hover:bg-teal-900 flex justify-center items-center text-gray-100 cursor-pointer absolute right-[1px]"
+        class="send-btn w-16 h-8 rounded-md text-2xs uppercase bg-teal-700 hover:bg-teal-900 flex justify-center items-center text-gray-100 cursor-pointer absolute right-px"
         @click="sendCode"
         @mouseenter="footerStore.cursorLocation = `${t('twoFactor.send')} `"
         @mouseleave="footerStore.cursorLocation = ''"
@@ -46,7 +46,7 @@
       </div>
       <div
         v-if="props.timeBased && authStore.isSendingCode"
-        class="send-btn w-16 h-8 rounded-md text-2xs uppercase bg-teal-700 hover:bg-teal-900 flex justify-center items-center space-x-2 text-gray-100 cursor-pointer absolute right-[1px]"
+        class="send-btn w-16 h-8 rounded-md text-2xs uppercase bg-teal-700 hover:bg-teal-900 flex justify-center items-center space-x-2 text-gray-100 cursor-pointer absolute right-px"
         @click="sendCode"
         @mouseenter="footerStore.cursorLocation = `${t('twoFactor.send')} `"
         @mouseleave="footerStore.cursorLocation = ''"
@@ -56,7 +56,7 @@
       </div>
     </div>
     <div class="col-start-1 col-end-10 row-start-2 row-span-2 w-full h-full grid grid-cols-2 grid-rows-2 py-2">
-      <span class="col-start-1 col-span-full row-start-1 row-span-1 text-left text-[10px] font-normal text-gray-200 w-full h-full"
+      <span class="col-start-1 col-span-full row-start-1 row-span-1 text-left text-2xs font-normal text-gray-200 w-full h-full"
         ><ol>
           <li>1. {{ t("twoFactorAuth.scanCode") }}</li>
           <li>2. {{ t("twoFactorAuth.enterCodeApp") }}</li>
