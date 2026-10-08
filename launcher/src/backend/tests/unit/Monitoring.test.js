@@ -87,7 +87,7 @@ test("service infos that were handed in are not read a second time", async () =>
 // Stereum, so the check must separate "absent" from "could not tell".
 describe("checkStereumInstallation", () => {
   const nodeConnectionWith = (execImpl) => ({
-    sshService: { connected: true, exec: execImpl },
+    sshService: { connected: true, exec: execImpl, execShared: execImpl },
   });
 
   beforeAll(() => {
@@ -143,7 +143,7 @@ describe("checkStereumInstallation", () => {
   test("does not probe a node it is not connected to", async () => {
     const monitoring = new Monitoring();
     const exec = jest.fn();
-    const nc = { sshService: { connected: false, exec } };
+    const nc = { sshService: { connected: false, exec, execShared: exec } };
     await expect(monitoring.checkStereumInstallation(nc)).resolves.toBe(false);
     expect(exec).not.toHaveBeenCalled();
   });
@@ -323,5 +323,97 @@ describe("validator state on a failed fetch", () => {
     const monitoring = monitoringWithBeacon([{ rc: 0, stderr: "", stdout: JSON.stringify({ code: 404, message: "not found" }) }, finality]);
 
     expect(await monitoring.getValidatorState(["0xa"])).toEqual([]);
+  });
+});
+
+// One exec for all queries of a widget instead of one channel and login shell each
+test("prometheus queries are batched into a single exec and split per query", async () => {
+  const monitoring = new Monitoring({});
+  monitoring.getPrometheusTarget = jest.fn().mockResolvedValue({ addr: "127.0.0.1", port: "9090" });
+  const execShared = jest.fn().mockResolvedValue({
+    rc: 0,
+    stderr: "",
+    stdout: [
+      '{"status":"success","data":{"result":[1]}}',
+      "=====STEREUM_PROMETHEUS_BATCH=====",
+      "",
+      "=====STEREUM_PROMETHEUS_BATCH=====",
+      '{"status":"success","data":{"result":[3]}}',
+      "=====STEREUM_PROMETHEUS_BATCH=====",
+      "",
+    ].join("\n"),
+  });
+  monitoring.nodeConnection = { sshService: { execShared } };
+
+  const results = await monitoring.queryPrometheusBatch({ a: "up", b: "broken", c: "sum(x) by (y)" });
+
+  expect(execShared).toHaveBeenCalledTimes(1);
+  expect(results.map((r) => r.key)).toEqual(["a", "b", "c"]);
+  expect(results[0].result.data.result).toEqual([1]);
+  expect(results[1].result.status).toEqual("error"); // its curl answered nothing
+  expect(results[2].result.data.result).toEqual([3]);
+});
+
+describe("service snapshot", () => {
+  const snapshotMonitoring = () => {
+    const monitoring = new Monitoring({ serviceConfigVersion: 0 });
+    monitoring.checkStereumInstallation = jest.fn().mockResolvedValue(true);
+    monitoring.serviceManager = {
+      readServiceConfigurationsWithBroken: jest.fn().mockImplementation(async () => ({
+        services: [
+          { id: "teku", service: "TekuBeaconService", ports: [{ destinationIp: "0.0.0.0", destinationPort: "5051" }], dependencies: {} },
+          { id: "prom", service: "PrometheusService", ports: [], dependencies: {} },
+        ],
+        broken: [],
+      })),
+    };
+    monitoring.nodeConnection.listServices = jest.fn().mockResolvedValue([{ Names: "stereum-teku", State: "running" }]);
+    return monitoring;
+  };
+
+  // Every widget asked with its own filter, and each cache miss read every config again
+  test("concurrent callers with different filters share one read", async () => {
+    const monitoring = snapshotMonitoring();
+
+    const [all, prom, again] = await Promise.all([
+      monitoring.getServiceInfos(),
+      monitoring.getServiceInfos("PrometheusService"),
+      monitoring.refreshServiceInfos(),
+    ]);
+
+    expect(monitoring.serviceManager.readServiceConfigurationsWithBroken).toHaveBeenCalledTimes(1);
+    expect(all).toHaveLength(2);
+    expect(prom.map((s) => s.service)).toEqual(["PrometheusService"]);
+    expect(again).toHaveLength(2);
+  });
+
+  test("a config write or playbook run makes the next caller read again", async () => {
+    const monitoring = snapshotMonitoring();
+    await monitoring.getServiceInfos();
+
+    monitoring.nodeConnection.serviceConfigVersion++;
+    await monitoring.getServiceInfos();
+
+    expect(monitoring.serviceManager.readServiceConfigurationsWithBroken).toHaveBeenCalledTimes(2);
+  });
+
+  test("the header refresh accepts a much younger snapshot than other readers", async () => {
+    const monitoring = snapshotMonitoring();
+    await monitoring.getServiceInfos();
+    monitoring.serviceSnapshot.at -= Monitoring.SERVICE_REFRESH_MAX_AGE_MS + 1;
+
+    await monitoring.getServiceInfos(); // still young enough
+    expect(monitoring.serviceManager.readServiceConfigurationsWithBroken).toHaveBeenCalledTimes(1);
+    await monitoring.refreshServiceInfos(); // too old for the header
+    expect(monitoring.serviceManager.readServiceConfigurationsWithBroken).toHaveBeenCalledTimes(2);
+  });
+
+  test("callers get their own copy to modify", async () => {
+    const monitoring = snapshotMonitoring();
+    const first = await monitoring.getServiceInfos();
+    first[0].config.ports[0].destinationIp = "127.0.0.1";
+
+    const second = await monitoring.getServiceInfos();
+    expect(second[0].config.ports[0].destinationIp).toEqual("0.0.0.0");
   });
 });

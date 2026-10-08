@@ -15,6 +15,9 @@ export class SSHService {
   // buries sshd in half-open handshakes until MaxStartups/fail2ban lock the client out.
   static MAX_POOL_SIZE = 6;
   static MAX_SESSIONS_PER_CONNECTION = 5;
+  static ACQUIRE_POLL_MS = 25;
+
+  static ACQUIRE_WAIT_MS = 30000;
   static RECONNECT_DELAYS_MS = [2000, 5000, 15000, 30000, 60000];
   // 5s x 2 detects a dead transport in ~10s. Keepalives ride the existing connection, so
   // shortening them costs a few bytes and cannot trip MaxStartups/fail2ban.
@@ -130,27 +133,61 @@ export class SSHService {
     }
   }
 
-  /** Pooled connection with spare capacity, opening one if needed. Growth is single-flight. */
+  /**
+   * Pooled connection with spare capacity, opening one if needed. Growth is single-flight and a call
+   * stops dialing after a failed dial, so a dead network cannot turn waiting callers into a storm.
+   * When every connection is full the call waits for a free channel rather than going past sshd's
+   * MaxSessions, which refuses the extra channels with "Channel open failure".
+   */
   async acquireConnection() {
-    let conn = this.getConnectionFromPool();
-    if (conn) return conn;
-    if (this.loggingOut || !this.connectionInfo) return null;
-    if (this.connectionPool.length >= SSHService.MAX_POOL_SIZE) {
-      // saturated: reuse the least-loaded rather than opening past the cap
-      return this.connectionPool.reduce((a, b) => (a._chanMgr._count <= b._chanMgr._count ? a : b), this.connectionPool[0]);
+    let dialFailed = false;
+    const waitUntil = Date.now() + SSHService.ACQUIRE_WAIT_MS;
+    for (;;) {
+      const conn = this.reserveConnection();
+      if (conn) return conn;
+      if (this.loggingOut || !this.connectionInfo) return null;
+      if (!dialFailed && this.connectionPool.length < SSHService.MAX_POOL_SIZE) {
+        if (!this.growing) {
+          this.growing = this.connect(this.connectionInfo)
+            .catch((err) => {
+              log.error("Failed opening an SSH connection: ", err);
+              return null;
+            })
+            .finally(() => {
+              this.growing = null;
+            });
+        }
+        if (!(await this.growing)) dialFailed = true;
+        continue;
+      }
+      if (this.connectionPool.length === 0) return null;
+      if (Date.now() > waitUntil) {
+        // channels that never close would otherwise block every caller; overload the least-loaded one
+        log.warn("SSH :: no free channel after waiting, using the least-loaded connection");
+        return this.reserveConnection(true);
+      }
+      await new Promise((resolve) => setTimeout(resolve, SSHService.ACQUIRE_POLL_MS));
     }
-    if (!this.growing) {
-      this.growing = this.connect(this.connectionInfo)
-        .catch((err) => {
-          log.error("Failed opening an SSH connection: ", err);
-          return null;
-        })
-        .finally(() => {
-          this.growing = null;
-        });
-    }
-    await this.growing;
-    return this.getConnectionFromPool() ?? this.connectionPool[0] ?? null;
+  }
+
+  // Open channels plus slots handed out whose channel is not opened yet
+  static connectionLoad(conn) {
+    return conn._chanMgr._count + (conn._reserved || 0);
+  }
+
+  /**
+   * Least-loaded connection with spare capacity (any connection if force is set), with a slot reserved
+   * on it. Callers open their channel right after the await, so the slot is released on the next
+   * macrotask, once that channel is counted by ssh2 itself.
+   */
+  reserveConnection(force = false) {
+    const conn = force
+      ? this.connectionPool.reduce((a, b) => (SSHService.connectionLoad(a) <= SSHService.connectionLoad(b) ? a : b), this.connectionPool[0])
+      : this.getConnectionFromPool();
+    if (!conn) return conn;
+    conn._reserved = (conn._reserved || 0) + 1;
+    setTimeout(() => conn._reserved--, 0);
+    return conn;
   }
 
   static checkExecError(err, accept_empty_result = false) {
@@ -253,9 +290,9 @@ export class SSHService {
 
   /** Least-loaded connection with spare capacity, or undefined. Never opens one. */
   getConnectionFromPool() {
-    const candidates = this.connectionPool.filter((c) => c._chanMgr._count < SSHService.MAX_SESSIONS_PER_CONNECTION);
+    const candidates = this.connectionPool.filter((c) => SSHService.connectionLoad(c) < SSHService.MAX_SESSIONS_PER_CONNECTION);
     if (candidates.length === 0) return undefined;
-    return candidates.reduce((a, b) => (a._chanMgr._count <= b._chanMgr._count ? a : b));
+    return candidates.reduce((a, b) => (SSHService.connectionLoad(a) <= SSHService.connectionLoad(b) ? a : b));
   }
 
   async connect(connectionInfo, currentWindow = null) {
@@ -398,8 +435,28 @@ export class SSHService {
   }
 
   async exec(command, useSudo = true, useRoot = true) {
-    const ensureSudoCommand = `sudo -u ${useRoot ? "root" : this.connectionInfo.user} -i <<'=====EOF'\n` + command + `\n=====EOF`;
+    // A plain bash instead of a login shell (sudo -i): sourcing the profiles cost ~200ms on every exec.
+    // HOME and the start directory stay those of the target user; PATH comes from sudo's secure_path.
+    const ensureSudoCommand =
+      `sudo -u ${useRoot ? "root" : this.connectionInfo.user} -H bash <<'=====EOF'\ncd ~\n` + command + `\n=====EOF`;
     return this.execCommand(useSudo ? ensureSudoCommand : command);
+  }
+
+  /**
+   * exec for read-only commands: concurrent callers of the same command share one channel instead
+   * of each queueing their own (the same configs, docker ps and install check are polled from many
+   * places at once). Never use it for commands with side effects.
+   */
+  async execShared(command, useSudo = true, useRoot = true) {
+    const key = `${useSudo}:${useRoot}:${command}`;
+    this.sharedExecs = this.sharedExecs || new Map();
+    if (!this.sharedExecs.has(key)) {
+      this.sharedExecs.set(
+        key,
+        this.exec(command, useSudo, useRoot).finally(() => this.sharedExecs.delete(key))
+      );
+    }
+    return { ...(await this.sharedExecs.get(key)) };
   }
 
   async execCommand(command) {

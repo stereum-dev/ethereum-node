@@ -13,6 +13,7 @@ test("findOS Ubuntu", () => {
   SSHService.SSHService.mockImplementation(() => {
     return {
       exec: mMock,
+      execShared: mMock,
     };
   });
 
@@ -34,6 +35,7 @@ test("findOS CentOS", () => {
   SSHService.SSHService.mockImplementation(() => {
     return {
       exec: mMock,
+      execShared: mMock,
     };
   });
 
@@ -68,6 +70,7 @@ test("findStereumSettings", async () => {
   SSHService.SSHService.mockImplementation(() => {
     return {
       exec: mMock,
+      execShared: mMock,
     };
   });
 
@@ -101,6 +104,7 @@ test("findStereumSettings failure", async () => {
   SSHService.SSHService.mockImplementation(() => {
     return {
       exec: mMock,
+      execShared: mMock,
     };
   });
 
@@ -121,6 +125,7 @@ test("prepareStereumNode failure ubuntu installpkg", async () => {
   SSHService.SSHService.mockImplementation(() => {
     return {
       exec: mMock,
+      execShared: mMock,
     };
   });
 
@@ -144,6 +149,7 @@ test("prepareStereumNode error ubuntu installpkg", async () => {
   SSHService.SSHService.mockImplementation(() => {
     return {
       exec: mMock,
+      execShared: mMock,
     };
   });
 
@@ -167,6 +173,7 @@ test("prepareStereumNode failure ubuntu unsupported os", async () => {
   SSHService.SSHService.mockImplementation(() => {
     return {
       exec: mMock,
+      execShared: mMock,
     };
   });
 
@@ -193,6 +200,7 @@ test("prepareStereumNode failure ubuntu install", async () => {
   SSHService.SSHService.mockImplementation(() => {
     return {
       exec: mMock,
+      execShared: mMock,
     };
   });
 
@@ -220,6 +228,7 @@ test("prepareStereumNode error ubuntu install", async () => {
   SSHService.SSHService.mockImplementation(() => {
     return {
       exec: mMock,
+      execShared: mMock,
     };
   });
 
@@ -250,6 +259,7 @@ test("prepareStereumNode success", async () => {
   SSHService.SSHService.mockImplementation(() => {
     return {
       exec: mMock,
+      execShared: mMock,
     };
   });
 
@@ -304,6 +314,7 @@ test("prepareStereumNode error playbook", async () => {
   SSHService.SSHService.mockImplementation(() => {
     return {
       exec: mMock,
+      execShared: mMock,
     };
   });
 
@@ -346,6 +357,7 @@ test("prepareStereumNode failure playbook", async () => {
   SSHService.SSHService.mockImplementation(() => {
     return {
       exec: mMock,
+      execShared: mMock,
     };
   });
 
@@ -380,6 +392,7 @@ test("playbookStatus error", async () => {
   SSHService.SSHService.mockImplementation(() => {
     return {
       exec: mMock,
+      execShared: mMock,
     };
   });
 
@@ -402,6 +415,7 @@ test("playbookStatus failure", async () => {
   SSHService.SSHService.mockImplementation(() => {
     return {
       exec: mMock,
+      execShared: mMock,
     };
   });
 
@@ -425,6 +439,7 @@ test("playbookStatus success", async () => {
   SSHService.SSHService.mockImplementation(() => {
     return {
       exec: mMock,
+      execShared: mMock,
     };
   });
 
@@ -443,6 +458,7 @@ test("runPlaybook extravars success", async () => {
   SSHService.SSHService.mockImplementation(() => {
     return {
       exec: mMock,
+      execShared: mMock,
     };
   });
 
@@ -486,6 +502,7 @@ test("listServicesConfigurations success", async () => {
   SSHService.SSHService.mockImplementation(() => {
     return {
       exec: mMock,
+      execShared: mMock,
     };
   });
 
@@ -513,6 +530,7 @@ test("listServicesConfigurations success empty", async () => {
   SSHService.SSHService.mockImplementation(() => {
     return {
       exec: mMock,
+      execShared: mMock,
     };
   });
 
@@ -537,6 +555,7 @@ test("readServiceConfiguration success", async () => {
   SSHService.SSHService.mockImplementation(() => {
     return {
       exec: mMock,
+      execShared: mMock,
     };
   });
 
@@ -563,6 +582,7 @@ test("writeServiceConfiguration success", async () => {
   SSHService.SSHService.mockImplementation(() => {
     return {
       exec: mMock,
+      execShared: mMock,
     };
   });
 
@@ -598,6 +618,7 @@ test("listServices success", async () => {
   SSHService.SSHService.mockImplementation(() => {
     return {
       exec: mMock,
+      execShared: mMock,
     };
   });
 
@@ -937,6 +958,7 @@ test("getServiceDetails success", async () => {
   SSHService.SSHService.mockImplementation(() => {
     return {
       exec: mMock,
+      execShared: mMock,
     };
   });
 

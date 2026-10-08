@@ -56,12 +56,16 @@ export default {
     this.refresh = setInterval(this.getTasks, 5000); //refresh data
   },
   unmounted() {
+    clearInterval(this.polling);
+    clearInterval(this.refresh);
+    clearTimeout(this.animationStart);
+    clearInterval(this.animationTimer);
     this.images = [];
   },
 
   methods: {
     displayImages() {
-      setTimeout(() => {
+      this.animationStart = setTimeout(() => {
         setTimeout(() => {
           this.images.push(this.importingAnimations[0]);
         }, 400);
@@ -70,7 +74,7 @@ export default {
         }, 800);
         this.images = [];
 
-        setInterval(() => {
+        this.animationTimer = setInterval(() => {
           setTimeout(() => {
             this.images.slice(3, 1);
           }, 200);

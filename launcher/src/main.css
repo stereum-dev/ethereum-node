@@ -83,6 +83,23 @@
   ::file-selector-button {
     border-color: var(--color-gray-200, currentcolor);
   }
+
+  /* v4 makes form fields transparent, which hid inputs styled only with a dark text color */
+  input:not([type="button"], [type="reset"], [type="submit"]),
+  select,
+  textarea {
+    background-color: revert;
+  }
+
+  /* v3 placeholder color and pointer cursor on buttons */
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--color-gray-400);
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
 }
 
 @layer base {

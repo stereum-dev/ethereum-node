@@ -27,6 +27,10 @@ jest.mock("ssh2", () => {
       const stream = new EE();
       stream.stderr = new EE();
       this.lastStream = stream;
+      // like ssh2, the channel is counted as soon as it is requested and freed when it closes
+      this._chanMgr._count++;
+      this.peakChannels = Math.max(this.peakChannels || 0, this._chanMgr._count);
+      stream.once("close", () => this._chanMgr._count--);
       cb(null, stream);
       if (!cmd.includes("HANG") && !global.__sshMock.hangEverything) setTimeout(() => stream.emit("close", 0), 0);
     }
@@ -310,4 +314,49 @@ test("concurrent execs share a single new connection instead of opening one each
   await Promise.all([ssh.execCommand("ls"), ssh.execCommand("ls"), ssh.execCommand("ls")]);
 
   expect(mockCtl.built).toHaveLength(1);
+});
+
+// sshd refuses channels past MaxSessions with "Channel open failure". Callers picked a connection
+// by its open channels, which only count once the channel is requested after the await, so a burst
+// of execs in one tick all landed on the same connection.
+test("a burst of execs never puts more channels on a connection than allowed", async () => {
+  const ssh = new SSHService();
+  ssh.connectionInfo = INFO;
+
+  await Promise.all(Array.from({ length: 20 }, () => ssh.execCommand("ls")));
+
+  for (const conn of mockCtl.built) expect(conn.peakChannels).toBeLessThanOrEqual(SSHService.MAX_SESSIONS_PER_CONNECTION);
+  expect(mockCtl.built.length).toBeLessThanOrEqual(SSHService.MAX_POOL_SIZE);
+});
+
+test("a saturated pool waits for a free channel instead of overloading a connection", async () => {
+  const ssh = new SSHService();
+  ssh.connectionInfo = INFO;
+  const slots = SSHService.MAX_POOL_SIZE * SSHService.MAX_SESSIONS_PER_CONNECTION;
+
+  const hanging = Array.from({ length: slots }, () => ssh.execCommand("HANG"));
+  await settle(50);
+  const waiting = ssh.execCommand("ls");
+  await settle(50);
+
+  // every connection is full, so the extra exec has not opened a channel yet
+  for (const conn of mockCtl.built) expect(conn._chanMgr._count).toBeLessThanOrEqual(SSHService.MAX_SESSIONS_PER_CONNECTION);
+
+  mockCtl.built[0].lastStream.emit("close", 0); // one channel frees up
+  await expect(waiting).resolves.toMatchObject({ rc: 0 });
+  void hanging;
+});
+
+test("identical read-only execs in flight share one channel and each get their own result", async () => {
+  const ssh = new SSHService();
+  ssh.connectionInfo = INFO;
+  await ssh.acquireConnection();
+  const conn = mockCtl.built[0];
+  const execSpy = jest.spyOn(conn, "exec");
+
+  const results = await Promise.all(Array.from({ length: 5 }, () => ssh.execShared("cat /etc/stereum/services/x.yaml")));
+
+  expect(execSpy).toHaveBeenCalledTimes(1);
+  results[0].stdout = "changed";
+  expect(results[1].stdout).not.toEqual("changed");
 });

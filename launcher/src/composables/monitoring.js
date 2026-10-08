@@ -1,19 +1,28 @@
 import ControlService from "@/store/ControlService";
 import { useControlStore } from "@/store/theControl";
 
-async function requestQueued() {
+const lastRequestAt = {};
+
+// Skips a request while the previous one of the same kind is still running (or younger than minIntervalMs)
+async function requestQueued(meth, minIntervalMs = 0) {
   const controlStore = useControlStore();
   controlStore.request = Array.isArray(controlStore.request) ? controlStore.request : [];
-  const ARGUMENTS = Array.prototype.slice.call(arguments); // convert functon "arguments" to Array
-  const meth = ARGUMENTS.length ? ARGUMENTS.shift() : null;
-  const args = ARGUMENTS.length ? ARGUMENTS : null; // eslint-disable-line no-unused-vars
   if (meth in controlStore.request && controlStore.request[meth]) {
     return;
   }
+  if (Date.now() - (lastRequestAt[meth] || 0) < minIntervalMs) {
+    return;
+  }
+  lastRequestAt[meth] = Date.now();
   controlStore.request[meth] = true;
-  const resp = await ControlService[meth]();
-  controlStore.request[meth] = false;
-  return resp;
+  try {
+    return await ControlService[meth]();
+  } catch (err) {
+    console.warn(`${meth} failed:`, err);
+  } finally {
+    // a failed request must not block this metric for the rest of the session
+    controlStore.request[meth] = false;
+  }
 }
 
 export async function useRefreshNodeStats() {
@@ -98,8 +107,8 @@ export async function useRefreshMetrics() {
         } catch (e) {}
       }
     });
-    // Get Balance Status
-    requestQueued("getBalanceStatus").then((response) => {
+    // Get Balance Status (rewards of the last finalized epoch, which only changes every few minutes)
+    requestQueued("getBalanceStatus", 60000).then((response) => {
       if (response) {
         try {
           controlStore.balancestatus = response.data;

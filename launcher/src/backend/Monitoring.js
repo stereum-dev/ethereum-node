@@ -5,7 +5,6 @@ import { isObolDVTService, OBOL_DVT_SERVICES } from "@/share/ObolDVTServices";
 import { SSHService } from "./SSHService.js";
 import { configuredBeaconUrls, ssvBeaconAddr } from "./BeaconEndpoints.js";
 import * as log from "electron-log";
-import * as crypto from "crypto";
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
@@ -14,8 +13,8 @@ const { powerMonitor } = require("electron");
 
 const globalMonitoringCache = {
   intervalHandler: null,
-  isRefreshing: 0,
-  refreshIntervalSeconds: 5,
+  isRefreshing: false,
+  refreshIntervalSeconds: 30, // disk usage changes slowly and du is heavy on large volumes
   nodestatsInitialized: false,
   storagestatus: {},
   setTime: 300,
@@ -28,12 +27,13 @@ export class Monitoring {
   // it offers to install over a working node. Retry before believing an inconclusive answer.
   static INSTALL_CHECK_ATTEMPTS = 3;
   static INSTALL_CHECK_RETRY_MS = 500;
+  // How old a service snapshot getServiceInfos / refreshServiceInfos (the 2s header poll) accept
+  static SERVICE_INFOS_MAX_AGE_MS = 10000;
+  static SERVICE_REFRESH_MAX_AGE_MS = 1500;
 
   constructor(nodeConnection) {
     this.nodeConnection = nodeConnection;
-    this.nodeConnectionProm = nodeConnection;
     this.serviceManager = new ServiceManager(this.nodeConnection);
-    this.serviceManagerProm = new ServiceManager(this.nodeConnectionProm);
     this.validatorAccountManager = new ValidatorAccountManager(this.nodeConnection, this.serviceManager);
     this.isLoggedIn = false;
     this.triedCurlInstall = false;
@@ -41,7 +41,8 @@ export class Monitoring {
     this.wsTunnel = {};
     this.beaconTunnel = {};
     this.globalMonitoringCache = { ...globalMonitoringCache };
-    this.serviceInfosCacheFile = path.join(os.tmpdir(), "server_infos_cache_" + process.getCreationTime() + ".txt");
+    this.serviceSnapshot = null;
+    this.serviceSnapshotFetch = null;
     this.lastKnownHeadBlockFile = path.join(os.tmpdir(), "last_head_block_cache.txt");
   }
 
@@ -55,9 +56,39 @@ export class Monitoring {
     this.wsTunnel = {};
     this.beaconTunnel = {};
     this.globalMonitoringCache = { ...globalMonitoringCache };
+    this.serviceSnapshot = null;
+    this.serviceSnapshotFetch = null;
+    this.temperatureSource = null;
+  }
+
+  /**
+   * Parsed service configs, the broken ones and the container states, shared by every caller.
+   * A snapshot older than maxAgeMs or taken before a config write / playbook run is refetched,
+   * and concurrent callers share one fetch instead of each reading every config themselves.
+   * Returns null when Stereum is not installed or the containers could not be listed.
+   */
+  async getServiceSnapshot(maxAgeMs) {
+    const version = this.nodeConnection.serviceConfigVersion ?? 0;
+    const snapshot = this.serviceSnapshot;
+    if (snapshot && snapshot.version === version && Date.now() - snapshot.at <= maxAgeMs) return snapshot;
+    if (this.serviceSnapshotFetch?.version === version) return this.serviceSnapshotFetch.promise;
+
+    const at = Date.now();
+    const promise = (async () => {
+      if (!(await this.checkStereumInstallation())) return null;
+      const { services, broken } = await this.serviceManager.readServiceConfigurationsWithBroken();
+      const states = await this.nodeConnection.listServices();
+      if (!Array.isArray(states)) return null;
+      const fresh = { at, version, services, broken, states };
+      if (this.serviceSnapshotFetch?.promise === promise) this.serviceSnapshot = fresh;
+      return fresh;
+    })();
+    this.serviceSnapshotFetch = { version, promise };
     try {
-      fs.unlinkSync(this.serviceInfosCacheFile);
-    } catch (e) {}
+      return await promise;
+    } finally {
+      if (this.serviceSnapshotFetch?.promise === promise) this.serviceSnapshotFetch = null;
+    }
   }
 
   // Jobs to handle on login
@@ -74,19 +105,18 @@ export class Monitoring {
   }
 
   // Refresh global monitoring cache on request
+  // Never runs twice at once: du over large chain data can take longer than the refresh interval
   async refreshGlobalMonitoringCache() {
-    const uxtsNow = Math.floor(Date.now() / 1000);
-    const elapsedSeconds = uxtsNow - this.globalMonitoringCache.isRefreshing;
-    const refreshTimeoutInSeconds = 30; // allow further refresh at least after 30 seconds
-    const refreshTimeoutReached = elapsedSeconds > refreshTimeoutInSeconds;
-    if (!this.globalMonitoringCache.isRefreshing || refreshTimeoutReached) {
-      this.globalMonitoringCache.isRefreshing = uxtsNow;
+    if (this.globalMonitoringCache.isRefreshing) return;
+    this.globalMonitoringCache.isRefreshing = true;
+    try {
       if (!this.globalMonitoringCache.nodestatsInitialized) {
         this.getNodeStats(); // dont cache but initialize nodestats in background once for faster page lodaing afterwards
         this.globalMonitoringCache.nodestatsInitialized = true;
       }
       this.globalMonitoringCache.storagestatus = await this.getStorageStatus(true);
-      this.globalMonitoringCache.isRefreshing = 0;
+    } finally {
+      this.globalMonitoringCache.isRefreshing = false;
     }
   }
 
@@ -136,7 +166,7 @@ export class Monitoring {
       }
       let result;
       try {
-        result = await ssh.exec(probe);
+        result = await ssh.execShared(probe);
       } catch (err) {
         log.warn(`Stereum installation check failed (attempt ${attempt}): `, err?.message || err);
         continue;
@@ -152,10 +182,10 @@ export class Monitoring {
   }
 
   async refreshServiceInfos() {
-    if (await this.checkStereumInstallation()) {
-      const { services: serviceConfigs, broken: brokenConfigs } = await this.serviceManager.readServiceConfigurationsWithBroken();
-      const serviceStates = await this.nodeConnection.listServices();
-      if ((serviceConfigs.length > 0 || brokenConfigs.length > 0) && serviceStates && Array.isArray(serviceStates)) {
+    const snapshot = await this.getServiceSnapshot(Monitoring.SERVICE_REFRESH_MAX_AGE_MS);
+    if (snapshot) {
+      const { services: serviceConfigs, broken: brokenConfigs, states: serviceStates } = snapshot;
+      if (serviceConfigs.length > 0 || brokenConfigs.length > 0) {
         let newInfo = serviceConfigs.map((config) => {
           const newState = serviceStates.find((state) => state.Names.replace("stereum-", "") === config.id);
           return {
@@ -272,30 +302,12 @@ export class Monitoring {
   // Returns array of matched services with their associated (formated) config
   // Caches results for 10 seconds!
   async getServiceInfos() {
-    const cache_max_seconds = 10;
     const args = Array.prototype.slice.call(arguments); // convert function "arguments" to Array
-    const hash = crypto.createHash("md5").update(args.join("-")).digest("hex"); // cache id
-    const file = this.serviceInfosCacheFile;
-    const dnow = new Date(); // eslint-disable-line no-unused-vars
-    var cont = {};
-    //console.log("INCOMING '"+args.join("-")+"' -> " + hash);
-    try {
-      cont = fs.readFileSync(file);
-      cont = JSON.parse(cont);
-      if (cont.hasOwnProperty(hash)) {
-        var uxts = Math.floor(Date.now() / 1000);
-        var diff = uxts - cont[hash].uxts;
-        if (diff < cache_max_seconds) {
-          //console.log('RETURN cache ' + hash, file);
-          return cont[hash].data;
-        }
-        //console.log('REQUIRE fresh cache ' + hash, dnow);
-      }
-    } catch (e) {}
-    if (await this.checkStereumInstallation()) {
-      var serviceConfigs = await this.serviceManagerProm.readServiceConfigurations();
-      const serviceStates = await this.nodeConnectionProm.listServices();
-      if (serviceConfigs && Array.isArray(serviceConfigs) && serviceConfigs.length > 0 && serviceStates && Array.isArray(serviceStates)) {
+    const snapshot = await this.getServiceSnapshot(Monitoring.SERVICE_INFOS_MAX_AGE_MS);
+    if (snapshot) {
+      var serviceConfigs = snapshot.services;
+      const serviceStates = snapshot.states;
+      if (serviceConfigs.length > 0) {
         serviceConfigs = args.length < 1 ? serviceConfigs : serviceConfigs.filter((s) => args.includes(s.service));
         serviceConfigs = serviceConfigs
           .map((config) => {
@@ -324,16 +336,8 @@ export class Monitoring {
             };
           })
           .sort((a, b) => args.indexOf(a.service) - args.indexOf(b.service));
-        if (Array.isArray(serviceConfigs) && serviceConfigs.length > 0) {
-          //console.log('REFRESH cache ' + hash, dnow, file);
-          cont[hash] = {
-            data: serviceConfigs,
-            uxts: Math.floor(Date.now() / 1000),
-            hash: hash,
-          };
-          fs.writeFileSync(file, JSON.stringify(cont));
-        }
-        return serviceConfigs;
+        // callers modify what they get (e.g. the beacon port's address), so the snapshot must not be shared
+        return JSON.parse(JSON.stringify(serviceConfigs));
       }
     }
     return [];
@@ -380,50 +384,13 @@ export class Monitoring {
   // timeout=<duration>: Evaluation timeout. Optional. Defaults to and is capped by the value of the -query.timeout flag.
   // Returns json parsed result as described on Prometheus API reference (even for internal errors)
   async queryPrometheus(query, time = null, timeout = 5) {
-    // Get Prometheus connection infos from config
-    const serviceInfos = await this.getServiceInfos("PrometheusService");
-    if (serviceInfos.length < 1) {
-      return {
-        status: "error",
-        errorType: "internal",
-        error: "service infos unavailable",
-      };
-    }
-    const prometheus = serviceInfos.pop();
-    if (typeof prometheus !== "object" || !prometheus.hasOwnProperty("config")) {
-      return {
-        status: "error",
-        errorType: "internal",
-        error: "prometheus config unavailable",
-      };
-    }
-    let addr = prometheus.config.ports[0].destinationIp;
-    let port = prometheus.config.ports[0].destinationPort;
-    if (!prometheus.hasOwnProperty("state") || prometheus.state != "running") {
-      return {
-        status: "error",
-        errorType: "internal",
-        error: "prometheus service not running",
-      };
-    }
-
-    // Escape single quotes in query for bash command (note the single quotes for curl -d arguments)
-    query = query.replaceAll("'", "'\\''");
-
-    // Build curl command
-    const cmd =
-      `
-      curl -s -X POST http://${addr}:${port}/api/v1/query \
-      -H "Content-Type: application/x-www-form-urlencoded" \
-      -d 'query=${query}&timeout=${timeout}` +
-      (time ? `&time=${time}` : "") +
-      `'
-    `.trim();
+    const target = await this.getPrometheusTarget();
+    if (target.error) return target.error;
 
     // Execute the CURL command on the node and return the result
     let result;
     try {
-      result = await this.nodeConnection.sshService.exec(cmd);
+      result = await this.nodeConnection.sshService.execShared(Monitoring.prometheusCurl(target, query, time, timeout));
     } catch (err) {
       //throw err;
       return {
@@ -432,9 +399,66 @@ export class Monitoring {
         error: err,
       };
     }
+    return Monitoring.parsePrometheusResult(result);
+  }
 
+  // Run several queries in one SSH exec instead of one channel and login shell each
+  // queries: { key: query } (not yet URI encoded), returns [{ key, result }] like queryPrometheus per query
+  async queryPrometheusBatch(queries) {
+    const entries = Object.entries(queries);
+    const target = await this.getPrometheusTarget();
+    if (target.error) return entries.map(([key]) => ({ key, result: target.error }));
+
+    const marker = "=====STEREUM_PROMETHEUS_BATCH=====";
+    const cmd = entries
+      .map(([, query]) => Monitoring.prometheusCurl(target, encodeURIComponent(query)) + `\nprintf '\\n${marker}\\n'`)
+      .join("\n");
+
+    let result;
+    try {
+      result = await this.nodeConnection.sshService.execShared(cmd);
+    } catch (err) {
+      return entries.map(([key]) => ({ key, result: { status: "error", errorType: "internal", error: err } }));
+    }
+    const parts = result.stdout.split(`\n${marker}\n`);
+    return entries.map(([key], i) => ({
+      key,
+      result: Monitoring.parsePrometheusResult({ rc: result.rc, stdout: (parts[i] ?? "").trim(), stderr: result.stderr }),
+    }));
+  }
+
+  // Address of the running Prometheus, or { error } in the format Prometheus answers errors with
+  async getPrometheusTarget() {
+    // Get Prometheus connection infos from config
+    const serviceInfos = await this.getServiceInfos("PrometheusService");
+    if (serviceInfos.length < 1) {
+      return { error: { status: "error", errorType: "internal", error: "service infos unavailable" } };
+    }
+    const prometheus = serviceInfos.pop();
+    if (typeof prometheus !== "object" || !prometheus.hasOwnProperty("config")) {
+      return { error: { status: "error", errorType: "internal", error: "prometheus config unavailable" } };
+    }
+    if (!prometheus.hasOwnProperty("state") || prometheus.state != "running") {
+      return { error: { status: "error", errorType: "internal", error: "prometheus service not running" } };
+    }
+    return { addr: prometheus.config.ports[0].destinationIp, port: prometheus.config.ports[0].destinationPort };
+  }
+
+  static prometheusCurl({ addr, port }, query, time = null, timeout = 5) {
+    // Escape single quotes in query for bash command (note the single quotes for curl -d arguments)
+    query = query.replaceAll("'", "'\\''");
+    return (
+      `curl -s -X POST http://${addr}:${port}/api/v1/query -H "Content-Type: application/x-www-form-urlencoded" -d 'query=${query}&timeout=${timeout}` +
+      (time ? `&time=${time}` : "") +
+      "'"
+    );
+  }
+
+  // Return the json parsed result of stdout, or an error in the same format as prometheus does
+  // {rc: 0, stdout: "{"status":"success","data":{"resultType":"vector","result":[]}}", stderr: ""}
+  // {rc: 0, stdout: "{"status":"error","errorType":"bad_data","error":"invalid parameter \"query\": 1:20: parse error: unexpected \"=\""}", stderr: ""}
+  static parsePrometheusResult(result) {
     // No data in stdout or data in stderr? Executed code above failed to run!
-    // Return error in same format as prometheus does for consistency reasons.
     if (result.rc || result.stdout == "" || result.stderr != "") {
       var err = "E:" + result.rc + ": executed code failed to run";
       if (result.stderr != "") {
@@ -449,12 +473,11 @@ export class Monitoring {
         data: result,
       };
     }
-
-    // Return the json parsed result of stdout
-    // {rc: 0, stdout: "{"status":"success","data":{"resultType":"vector","result":[]}}", stderr: ""}
-    // {rc: 0, stdout: "{"status":"error","errorType":"bad_data","error":"invalid parameter \"query\": 1:20: parse error: unexpected \"=\""}", stderr: ""}
-    // {rc: 0, stdout: "{"status":"error","errorType":"bad_data","error":"… 1:1: parse error: no expression found in input"}", stderr: ""}
-    return JSON.parse(result.stdout);
+    try {
+      return JSON.parse(result.stdout);
+    } catch (e) {
+      return { status: "error", errorType: "internal", error: "invalid prometheus response (" + e + ")", data: result };
+    }
   }
 
   // Query RPC API via CURL on the node
@@ -1799,7 +1822,7 @@ export class Monitoring {
     // Execute the command on the node
     let result;
     try {
-      result = await this.nodeConnectionProm.sshService.exec(sshcmd);
+      result = await this.nodeConnection.sshService.exec(sshcmd);
     } catch (err) {
       return {
         code: 333,
@@ -3045,22 +3068,43 @@ export class Monitoring {
   // Get CPU temperature from the remote server using lm-sensors or hwmon
   async getCPUTemperature() {
     try {
-      // Check and install lm-sensors if not installed
-      const installed = await this.checkAndInstallLmSensors();
-      if (installed) {
-        const temperature = await this.getTemperatureFromLmSensors();
-        if (temperature && temperature !== null) return temperature;
-      }
-      // Fallback to hwmon if lm-sensors does not provide a valid temperature
-      return await this.getTemperatureFromHwmon();
+      const source = await this.getTemperatureSource();
+      if (source.type === "sensors") return await this.getTemperatureFromLmSensors();
+      if (source.type === "hwmon") return await this.readHwmonTemperature(source.dir);
+      return null;
     } catch (error) {
       console.error("Error determining CPU temperature:", error);
       throw error;
     }
   }
 
+  // Where the CPU temperature comes from, detected once per session instead of on every vitals call
+  async getTemperatureSource() {
+    if (this.temperatureSource) return this.temperatureSource;
+    if (!this.temperatureSourceDetection) {
+      this.temperatureSourceDetection = this.detectTemperatureSource()
+        .then((source) => (this.temperatureSource = source))
+        .finally(() => (this.temperatureSourceDetection = null));
+    }
+    return this.temperatureSourceDetection;
+  }
+
+  async detectTemperatureSource() {
+    // Check and install lm-sensors if not installed
+    const installed = await this.checkAndInstallLmSensors();
+    if (installed && (await this.getTemperatureFromLmSensors()) !== null) return { type: "sensors" };
+    // Fallback to hwmon if lm-sensors does not provide a valid temperature
+    const hwmon = await this.nodeConnection.sshService.exec(
+      'for d in /sys/class/hwmon/*; do n=$(cat "$d/name" 2>/dev/null); if [ "$n" = coretemp ] || [ "$n" = k10temp ]; then echo "$d"; break; fi; done'
+    );
+    if (hwmon.rc === -1) throw new Error("hwmon detection failed: " + hwmon.stderr); // not connected, retry next time
+    const dir = hwmon.stdout.trim();
+    return dir ? { type: "hwmon", dir } : { type: "none" };
+  }
+
   async checkAndInstallLmSensors() {
     const checkInstalled = await this.nodeConnection.sshService.exec("dpkg -l lm-sensors");
+    if (checkInstalled.rc === -1) throw new Error("lm-sensors check failed: " + checkInstalled.stderr); // not connected
     if (!checkInstalled.stdout.includes("ii  lm-sensors")) {
       await this.nodeConnection.sshService.exec("sudo apt-get update && sudo apt-get install -y lm-sensors");
     }
@@ -3080,23 +3124,10 @@ export class Monitoring {
     }
   }
 
-  async getTemperatureFromHwmon() {
-    const hwmonDevices = await this.nodeConnection.sshService.exec("ls /sys/class/hwmon/");
-    const hwmonDirs = hwmonDevices.stdout.trim().split("\n");
-
-    for (const dir of hwmonDirs) {
-      const name = await this.nodeConnection.sshService.exec(`cat /sys/class/hwmon/${dir}/name`);
-      if (name.stdout.trim() === "coretemp" || name.stdout.trim() === "k10temp") {
-        const tempCPUResult = await this.nodeConnection.sshService.exec(`cat /sys/class/hwmon/${dir}/temp1_input`);
-        const tempInMillidegrees = parseInt(tempCPUResult.stdout.trim(), 10);
-
-        if (!isNaN(tempInMillidegrees)) {
-          const cpuTemperature = (tempInMillidegrees / 1000).toFixed(1);
-          return cpuTemperature;
-        }
-      }
-    }
-    return null;
+  async readHwmonTemperature(dir) {
+    const tempCPUResult = await this.nodeConnection.sshService.exec(`cat ${dir}/temp1_input`);
+    const tempInMillidegrees = parseInt(tempCPUResult.stdout.trim(), 10);
+    return isNaN(tempInMillidegrees) ? null : (tempInMillidegrees / 1000).toFixed(1);
   }
 
   //serverNmae
@@ -3540,11 +3571,7 @@ export class Monitoring {
         peer_ping_latency: "histogram_quantile(0.90, sum(rate(p2p_ping_latency_secs_bucket[2m])) by (le,peer))",
       };
 
-      const queryPromises = Object.entries(queries).map(([key, query]) => {
-        return this.queryPrometheus(encodeURIComponent(query)).then((result) => ({ key, result }));
-      });
-
-      const results = await Promise.all(queryPromises);
+      const results = await this.queryPrometheusBatch(queries);
 
       let alerts = results
         .map((metric) => {
@@ -3679,12 +3706,7 @@ export class Monitoring {
         ssvnoms_ValidatorsPerOperatorLimit: "ssvnoms_ValidatorsPerOperatorLimit[30m]",
       };
 
-      // Create promises to query Prometheus for all metrics
-      const queryPromises = Object.entries(queries).map(([key, query]) =>
-        this.queryPrometheus(encodeURIComponent(query)).then((result) => ({ key, result }))
-      );
-
-      const results = await Promise.all(queryPromises);
+      const results = await this.queryPrometheusBatch(queries);
 
       // Process results and extract metric values, including handling labeled metrics
       const metrics = results.flatMap((metric) => {
@@ -3782,13 +3804,7 @@ export class Monitoring {
         lcoms_exit_request_timestamp: "lcoms_exit_request_timestamp",
       };
 
-      // Create promises to fetch all metric data from Prometheus
-      const queryPromises = Object.entries(queries).map(([key, query]) => {
-        return this.queryPrometheus(encodeURIComponent(query)).then((result) => ({ key, result }));
-      });
-
-      // Wait for all Prometheus queries to resolve
-      const results = await Promise.all(queryPromises);
+      const results = await this.queryPrometheusBatch(queries);
 
       // Process results and extract metric values, ensuring missing metrics return null
       const metrics = Object.keys(queries).map((key) => {
@@ -3838,11 +3854,7 @@ export class Monitoring {
         lcoms_required_bond: "lcoms_required_bond",
       };
 
-      const queryPromises = Object.entries(queries).map(([key, query]) => {
-        return this.queryPrometheus(encodeURIComponent(query)).then((result) => ({ key, result }));
-      });
-
-      const results = await Promise.all(queryPromises);
+      const results = await this.queryPrometheusBatch(queries);
 
       let currentBond = null;
       let requiredBond = null;
@@ -3984,11 +3996,7 @@ export class Monitoring {
       cluster_validators: `cluster_validators{instance=~".*${serviceID}.*"}`,
     };
 
-    const queryPromises = Object.entries(queries).map(([key, query]) => {
-      return this.queryPrometheus(encodeURIComponent(query)).then((result) => ({ key, result }));
-    });
-
-    const results = await Promise.all(queryPromises);
+    const results = await this.queryPrometheusBatch(queries);
 
     const stats = {};
 

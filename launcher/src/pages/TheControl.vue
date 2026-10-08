@@ -9,7 +9,8 @@ export default {
   components: { ControlScreen },
 
   mounted() {
-    this.polling = setInterval(this.refresh, 100); //refresh services
+    this.refresh();
+    this.polling = setInterval(this.refresh, 2000); // each metric is skipped while its last request still runs
   },
   beforeUnmount() {
     clearInterval(this.polling);

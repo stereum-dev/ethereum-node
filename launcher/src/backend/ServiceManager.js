@@ -186,31 +186,22 @@ export class ServiceManager {
     const broken = [];
 
     try {
+      // the directory holds the launcher's own "<id>.yaml" files - backups and
+      // editor leftovers next to them are not read
       let configFiles;
       try {
-        configFiles = await this.nodeConnection.listServicesConfigurations();
+        configFiles = await this.nodeConnection.readServiceYAMLs();
       } catch (err) {
-        log.error("Can't read services configurations", err);
+        // nothing was read, so nothing is known about any file - a lost
+        // connection must not mark every service broken
+        log.error("Can't read service configurations, giving up on this read", err);
         return { services: [], broken: [] };
       }
 
-      for (const configFile of configFiles) {
-        // the directory holds the launcher's own "<id>.yaml" files - backups and
-        // editor leftovers next to them are not configs
-        if (!configFile.endsWith(".yaml")) continue;
+      for (const { file: configFile, yaml: configYAML } of configFiles) {
         // the file name is the service id, and unlike the file's content it is
         // still readable when the config itself is broken
         const serviceID = configFile.replace(/\.yaml$/, "");
-
-        let configYAML;
-        try {
-          configYAML = await this.nodeConnection.readServiceYAML(configFile);
-        } catch (err) {
-          // nothing was read, so nothing is known about this file or the ones
-          // after it - a lost connection must not mark every service broken
-          log.error("Can't read service configurations, giving up on this read", err);
-          return { services: [], broken: [] };
-        }
 
         // a save truncates the file before writing it, so an empty read is a
         // race with a save rather than a broken config
@@ -2360,6 +2351,7 @@ export class ServiceManager {
       let consensusClients = [];
       //remove existing config files
       await this.nodeConnection.sshService.exec(`rm -rf /etc/stereum && mkdir -p /etc/stereum/services`);
+      this.nodeConnection.invalidateServiceConfigs();
       this.nodeConnection.taskManager.otherTasksHandler(ref, `Removed existing config files`, true);
 
       //write config files
@@ -2405,6 +2397,7 @@ export class ServiceManager {
 
       // create stereum config file
       await this.nodeConnection.sshService.exec(`rm -rf /etc/stereum && mkdir -p /etc/stereum/services`);
+      this.nodeConnection.invalidateServiceConfigs();
       const settings = {
         stereum_settings: {
           settings: {
