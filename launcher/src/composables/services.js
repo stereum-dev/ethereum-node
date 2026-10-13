@@ -89,7 +89,17 @@ export async function useFrontendServices() {
       try {
         services = await ControlService.refreshServiceInfos();
         await loadSetups();
-        setups = getAllSetups();
+        // fresh objects every 2s: carry over the UI state (open setup menu, marked for removal), or the menu closes on each tick
+        const previous = new Map((setupStore.editSetups.length ? setupStore.editSetups : setupStore.allSetups).map((s) => [s.setupId, s]));
+        setups = getAllSetups().map((setup) => {
+          const old = previous.get(setup.setupId);
+          if (!old) return setup;
+          return {
+            ...setup,
+            isActive: !!old.isActive,
+            ...(old.isRemoveProcessing !== undefined && { isRemoveProcessing: old.isRemoveProcessing }),
+          };
+        });
         setupStore.allSetups = setups;
         setupStore.editSetups = setups;
       } catch (error) {
