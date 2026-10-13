@@ -2,16 +2,20 @@
   <ValidatorModal :title="t('validatorsPage.importTitle')" icon="/img/icon/staking-page-icons/validator-import.svg" wide @close="close">
     <!-- 1: files -->
     <template v-if="step === 'files'">
+      <!-- the drop zone shrinks to one line once files are in, so the summary and the list stay in view -->
       <label
-        class="flex flex-col items-center justify-center gap-1 rounded-lg border-2 border-dashed px-4 py-5 text-xs cursor-pointer transition-colors"
-        :class="dragging ? 'border-teal-300 bg-[#224141]' : 'border-[#4b8585] bg-[#0D0D12] hover:border-teal-400'"
+        class="flex items-center justify-center rounded-lg border-2 border-dashed px-4 text-xs cursor-pointer transition-colors"
+        :class="[
+          dragging ? 'border-teal-300 bg-[#224141]' : 'border-[#4b8585] bg-[#0D0D12] hover:border-teal-400',
+          hasFiles ? 'flex-row gap-2 py-2' : 'flex-col gap-1 py-5',
+        ]"
         @dragover.prevent="dragging = true"
         @dragleave="dragging = false"
         @drop.prevent="onDrop"
       >
-        <img src="/img/icon/staking-page-icons/validator-import.svg" class="w-8 h-8" alt="" />
-        <span class="font-semibold">{{ t("validatorsPage.importDrop") }}</span>
-        <span class="text-gray-400">{{ t("validatorsPage.importDropHint") }}</span>
+        <img src="/img/icon/staking-page-icons/validator-import.svg" :class="hasFiles ? 'w-5 h-5' : 'w-8 h-8'" alt="" />
+        <span class="font-semibold">{{ hasFiles ? t("validatorsPage.importDropMore") : t("validatorsPage.importDrop") }}</span>
+        <span v-if="!hasFiles" class="text-gray-400">{{ t("validatorsPage.importDropHint") }}</span>
         <input type="file" multiple accept=".json,.txt" class="hidden" @change="onPick" />
       </label>
 
@@ -25,7 +29,8 @@
         />
       </div>
 
-      <div v-if="keystores.length || fileProblems.length" class="flex flex-wrap items-center gap-2">
+      <!-- what was picked up, above the list so it never scrolls out of view -->
+      <div v-if="hasFiles" class="flex flex-wrap items-center gap-2">
         <span class="px-3 py-1 rounded-full text-xs font-semibold border border-[#4b8585] bg-[#224141]">{{
           t("validatorsPage.importCount", keystores.length)
         }}</span>
@@ -36,42 +41,39 @@
           t("validatorsPage.importSkipped", fileProblems.length)
         }}</span>
       </div>
-      <!-- thousands of keystores stay cheap: only the rows in view are rendered -->
-      <div v-if="keystores.length" :style="{ height: `${Math.min(keystores.length * 28, 160)}px` }">
-        <VirtualList :items="keystores" :item-height="28" :item-key="(ks) => ks.pubkey">
-          <template #default="{ item: ks }">
-            <div class="flex items-center gap-2 h-[24px] rounded-full bg-[#1d2023] px-3 text-xs">
-              <img src="/img/icon/node-page-icons/validator-key-icon.png" class="w-3.5 h-3.5" alt="" />
-              <span class="grow truncate" :title="ks.name">{{ shortPubkey(ks.pubkey) }}</span>
-              <span class="text-2xs" :class="passwordOf(ks) ? 'text-gray-400' : 'text-red-400'">
-                {{
-                  ks.password !== null
-                    ? t("validatorsPage.passwordFile")
-                    : sharedPassword
-                      ? t("validatorsPage.passwordShared")
-                      : t("validatorsPage.passwordMissing")
-                }}
-              </span>
-              <button class="text-gray-400 hover:text-white" @click="removeKeystore(ks)">✕</button>
-            </div>
-          </template>
-        </VirtualList>
-      </div>
       <div v-if="reading" class="flex items-center gap-2 rounded-full bg-[#1d2023] px-3 py-1 text-xs text-gray-300">
         <img src="/animation/loading/turning-circle.gif" class="w-4 h-4" alt="" />
         <span class="grow truncate">{{
           t("validatorsPage.slashingReading", { name: reading.name, percent: Math.floor(reading.fraction * 100) })
         }}</span>
       </div>
-      <div v-if="slashing" class="flex items-center gap-2 rounded-full bg-[#1d2023] px-3 py-1 text-xs">
+      <div v-if="slashing" class="flex items-center gap-2 rounded-full border border-[#4b8585] bg-[#224141] px-3 py-1 text-xs">
         <img src="/img/icon/staking-page-icons/validator-state-slashed.png" class="w-3.5 h-3.5" alt="" />
         <span class="grow truncate" :title="slashing.name">{{ t("validatorsPage.slashingFile", { name: slashing.name }) }}</span>
-        <span class="shrink-0 text-2xs text-gray-400">{{
+        <span class="shrink-0 text-2xs text-[#7fb3b3]">{{
           t("validatorsPage.slashingSummary", { validators: slashing.stats.validators, size: formatBytes(slashing.size) })
         }}</span>
         <button class="text-gray-400 hover:text-white" @click="slashing = null">✕</button>
       </div>
-      <p v-for="problem in fileProblems" :key="problem" class="text-2xs text-red-400">{{ problem }}</p>
+      <div v-if="fileProblems.length" class="max-h-16 overflow-y-auto flex flex-col">
+        <p v-for="problem in fileProblems" :key="problem" class="text-2xs text-red-400">{{ problem }}</p>
+      </div>
+
+      <!-- thousands of keystores stay cheap: only the rows in view are rendered -->
+      <div v-if="keystores.length" :style="{ height: `${Math.min(keystores.length * 28, 140)}px` }">
+        <VirtualList :items="keystores" :item-height="28" :item-key="(ks) => ks.pubkey">
+          <template #default="{ item: ks }">
+            <div class="flex items-center gap-2 h-[24px] rounded-full bg-[#1d2023] px-3 text-xs">
+              <img src="/img/icon/node-page-icons/validator-key-icon.png" class="w-3.5 h-3.5" alt="" />
+              <span class="grow truncate" :title="ks.name">{{ shortPubkey(ks.pubkey) }}</span>
+              <span class="text-2xs" :class="passwordOf(ks) ? 'text-gray-400' : 'text-red-400'">
+                {{ passwordLabel(ks) }}
+              </span>
+              <button class="text-gray-400 hover:text-white" @click="removeKeystore(ks)">✕</button>
+            </div>
+          </template>
+        </VirtualList>
+      </div>
     </template>
 
     <!-- 2: check -->
@@ -225,7 +227,13 @@ const fileProblems = ref([]);
 const sharedPassword = ref("");
 
 const baseName = (name) => name.replace(/\.(json|txt)$/i, "");
-const passwordOf = (ks) => ks.password ?? passwordFiles.value[baseName(ks.name)] ?? (sharedPassword.value || null);
+// an empty password file counts as none, so the shared password still applies
+const passwordOf = (ks) => ks.password || passwordFiles.value[baseName(ks.name)] || sharedPassword.value || null;
+const passwordLabel = (ks) => {
+  if (ks.password) return t("validatorsPage.passwordFile");
+  if (sharedPassword.value) return t("validatorsPage.passwordShared");
+  return ks.password === "" ? t("validatorsPage.passwordFileEmpty") : t("validatorsPage.passwordMissing");
+};
 
 // keystores are a few KB; anything this large can only be a slashing protection export, read as a stream
 const STREAM_FROM = 32 * 1024 * 1024;
@@ -290,6 +298,7 @@ const onDrop = (event) => {
 };
 const onPick = (event) => addFiles([...event.target.files]);
 
+const hasFiles = computed(() => keystores.value.length > 0 || !!slashing.value || fileProblems.value.length > 0);
 const withoutPassword = computed(() => keystores.value.filter((ks) => !passwordOf(ks)).length);
 const filesReady = computed(() => !reading.value && keystores.value.length > 0 && keystores.value.every((ks) => passwordOf(ks)));
 
