@@ -346,12 +346,25 @@ describe("per-key settings", () => {
       }))
     );
     expect((await v.readKeySettings("lh", [key(3)], "graffiti")).defaultUnknown).toEqual([key(3)]);
+    // Lodestar without a graffiti flag
+    v.keymanagerCalls = jest.fn(async (id, requests) =>
+      requests.map(() => ({ status: 404, body: { message: `No graffiti for pubkey ${key(4)}` }, raw: "", url: "u" }))
+    );
+    expect((await v.readKeySettings("lh", [key(4)], "graffiti")).defaultUnknown).toEqual([key(4)]);
     const calls = taskManager.otherTasksHandler.mock.calls;
     expect(calls[1].slice(1, 3)).toEqual(["Read 1 of 2", true]);
     expect(calls[1][3]).toContain(`${key(2)}: client default, not reported by the client`);
   });
 
   // Lighthouse answers 202 while refusing a graffiti because --graffiti-file is set
+  // Lodestar answers 500 "Body cannot be empty when content-type is set to 'application/json'" otherwise
+  test("requests without a body send no JSON content type", () => {
+    const del = Validators.curlBlock("http://b", "T", false, { method: "DELETE", path: "/x", body: null });
+    const post = Validators.curlBlock("http://b", "T", false, { method: "POST", path: "/x", body: { a: 1 } });
+    expect(del).not.toContain("Content-Type");
+    expect(post).toContain('header = "Content-Type: application/json"');
+  });
+
   test("an accepted status with an error in the body counts as failed", async () => {
     const v = withBatch([202]);
     v.keymanagerCalls = jest.fn(async (id, requests) =>
@@ -1315,7 +1328,7 @@ describe("remote keys", () => {
 
     expect(exec).toHaveBeenCalledWith(
       "docker run --rm -i --network=stereum curlimages/curl:8.11.0 -K - <<'=====KEYMANAGER'\n" +
-        'url = "http://stereum-lh:5062/eth/v1/remotekeys"\nrequest = "GET"\nheader = "Content-Type: application/json"\n' +
+        'url = "http://stereum-lh:5062/eth/v1/remotekeys"\nrequest = "GET"\n' +
         'header = "Authorization: Bearer TOKEN"\nsilent\nwrite-out = "\\n%{http_code}"\n=====KEYMANAGER'
     );
     expect(result).toEqual({

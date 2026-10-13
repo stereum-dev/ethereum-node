@@ -267,7 +267,8 @@ export class Validators {
     return [
       `url = ${value(base + path)}`,
       `request = ${value(method)}`,
-      `header = "Content-Type: application/json"`,
+      // only with a body: Lodestar refuses a JSON content type without one (DELETE answers 500)
+      body ? `header = "Content-Type: application/json"` : "",
       token ? `header = ${value("Authorization: Bearer " + token)}` : "",
       body ? `data = ${value(JSON.stringify(body))}` : "",
       "silent",
@@ -1424,8 +1425,8 @@ export class Validators {
   }
 
   // a key without its own graffiti uses the client's default, which some clients cannot report: Prysm looks it up
-  // by validator index (none before the deposit), Lighthouse answers 500 without a --graffiti flag
-  static DEFAULT_UNKNOWN = /could not find validator index|no graffiti found/i;
+  // by validator index (none before the deposit), Lighthouse answers 500 without a --graffiti flag, Lodestar 404
+  static DEFAULT_UNKNOWN = /could not find validator index|no graffiti found|no graffiti for pubkey/i;
 
   // The text the user typed: Prysm pads it to its 32 bytes on chain with zero bytes, Lighthouse answers with those
   // 32 bytes as hex (0x4c48...)
