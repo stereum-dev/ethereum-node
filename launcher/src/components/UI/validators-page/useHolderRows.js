@@ -19,8 +19,11 @@ export function useHolderRows() {
   const holder = computed(() => validatorsStore.selectedHolder);
   const keysEntry = computed(() => validatorsStore.keysByHolder[holder.value?.id]);
   const statesEntry = computed(() => validatorsStore.statesByHolder[holder.value?.id]);
-  // shares are not on chain, their stats are those of the distributed validator on the Charon/Pluto holder
-  const hasStats = computed(() => !!holder.value && holder.value.role !== "share");
+  // shares are not on chain, their stats are those of the distributed validator on the Charon/Pluto holder;
+  // without any beacon answer yet (a lone Web3Signer) the states are unknown, not "not on chain"
+  const hasStats = computed(
+    () => !!holder.value && holder.value.role !== "share" && !(statesEntry.value?.error && !statesEntry.value?.chain)
+  );
   const coinIcon = computed(() => {
     const coin = NETWORK_COINS[holder.value?.network];
     return coin ? `/img/icon/control-page-icons/network-currency-icons/${coin}` : null;

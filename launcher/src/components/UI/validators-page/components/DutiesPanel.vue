@@ -35,7 +35,7 @@
     </div>
 
     <p v-if="!hasActive && statesEntry?.error" class="text-2xs text-amber-300 px-1 truncate" :title="statesEntry.error">
-      {{ t("validatorsPage.statesError") }}: {{ statesEntry.error }}
+      {{ t(statesEntry.chain ? "validatorsPage.statesError" : "validatorsPage.statesUnavailable") }}: {{ statesEntry.error }}
     </p>
     <p v-else-if="!hasActive" class="text-xs text-gray-500 px-1">{{ t("validatorsPage.duties.noActive") }}</p>
     <template v-else>

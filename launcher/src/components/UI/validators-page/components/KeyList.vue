@@ -85,7 +85,9 @@
       {{ t("validatorsPage.walletMissing") }}
     </div>
     <p v-else-if="keysEntry?.error" class="text-2xs text-red-400 px-1">{{ t("validatorsPage.keysError") }}: {{ keysEntry.error }}</p>
-    <p v-if="statesEntry?.error" class="text-2xs text-amber-300 px-1">{{ t("validatorsPage.statesError") }}: {{ statesEntry.error }}</p>
+    <p v-if="statesEntry?.error" class="text-2xs text-amber-300 px-1">
+      {{ t(statesEntry.chain ? "validatorsPage.statesError" : "validatorsPage.statesUnavailable") }}: {{ statesEntry.error }}
+    </p>
     <p
       v-if="validatorsStore.csm.error && CSM_ROLES.includes(holder?.role)"
       class="text-2xs text-amber-300 px-1 truncate"
