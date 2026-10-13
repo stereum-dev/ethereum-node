@@ -1401,7 +1401,7 @@
       "elsewhereAccept": "I remove them from the other client before these start validating.",
       "elsewhereUnknown": "The keys of {clients} could not be read, so keys they also use are not flagged here.",
       "notOnSigner": "{count} keys are not on this signer. The client cannot sign with them until the signer has them.",
-      "onChainAccept": "Remote keys come without slashing protection. I confirm these keys are stopped everywhere else.",
+      "onChainAccept": "The validator client keeps no slashing protection for remote keys, only the signer can protect them. I confirm these keys are stopped everywhere else.",
       "allUnknown": "None of these keys is known on {network}. Check that the signer belongs to this network.",
       "prysmSwitch": "Prysm uses either local keys or one remote signer. It will be restarted with {url} as its remote signer.",
       "prysmSwitchAccept": "Restart Prysm in remote signer mode",
