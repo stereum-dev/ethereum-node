@@ -142,7 +142,7 @@
         </div>
         <div
           v-else-if="check.remoteSigner?.mode === 'switch'"
-          class="rounded-lg border border-sky-500 bg-sky-900/20 px-3 py-2 text-xs text-sky-200 flex flex-col gap-2"
+          class="rounded-lg border border-[#4b8585] bg-[#224141] px-3 py-2 text-xs text-gray-200 flex flex-col gap-2"
         >
           <span>{{ t(`validatorsPage.remoteImport.${switchClient}Switch`, { url: checkedUrl }) }}</span>
           <span v-if="check.remoteSigner.kept">{{
@@ -197,24 +197,26 @@
         <p v-if="allUnknown" class="text-xs text-amber-300">
           {{ t("validatorsPage.remoteImport.allUnknown", { network: holder?.network }) }}
         </p>
-        <p v-if="check.doppelganger" class="text-xs text-sky-300">{{ t("validatorsPage.importDoppelganger") }}</p>
+        <p v-if="check.doppelganger" class="text-xs text-[#7fb3b3]">{{ t("validatorsPage.importDoppelganger") }}</p>
       </template>
     </template>
 
     <!-- 3: importing -->
-    <div v-else-if="step === 'importing'" class="flex flex-col gap-1 text-sm text-gray-300">
-      <span class="flex items-center gap-2">
-        <img src="/animation/loading/turning-circle.gif" class="w-6 h-6" alt="" />{{
-          t("validatorsPage.remoteImport.importing", { count: importCount })
-        }}
-      </span>
-      <span v-if="check?.remoteSigner?.mode === 'switch'" class="pl-8 text-xs text-sky-300">{{
+    <div v-else-if="step === 'importing'" class="flex flex-col items-center gap-1 text-sm text-gray-300">
+      <ImportAnimation :label="t('validatorsPage.remoteImport.importing', { count: importCount })" />
+      <span v-if="check?.remoteSigner?.mode === 'switch'" class="text-xs text-[#7fb3b3]">{{
         t(`validatorsPage.remoteImport.${switchClient}Restarting`)
       }}</span>
     </div>
 
     <!-- 4: done -->
-    <ImportResult v-else :results="result.results ?? []" :info="resultInfo" :doppelganger="!!check?.doppelganger" />
+    <ImportResult
+      v-else
+      :results="result.results ?? []"
+      :info="resultInfo"
+      :doppelganger="!!check?.doppelganger"
+      :on-chain="check?.statesKnown ? (check.onChain ?? {}) : null"
+    />
 
     <template #footer>
       <template v-if="step === 'source'">
@@ -247,6 +249,7 @@ import ActionButton from "../ActionButton.vue";
 import CheckMark from "../CheckMark.vue";
 import VirtualList from "../VirtualList.vue";
 import ImportResult from "./ImportResult.vue";
+import ImportAnimation from "./ImportAnimation.vue";
 import ControlService from "@/store/ControlService";
 import { useValidatorsStore } from "@/store/validators";
 import { useServices } from "@/store/services";
