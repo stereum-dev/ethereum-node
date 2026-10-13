@@ -256,6 +256,7 @@ describe("per-key settings", () => {
       }))
     );
     v.taskManager = taskManager;
+    v.graffitiFileOf = jest.fn().mockResolvedValue(null);
     return v;
   };
 
@@ -308,6 +309,7 @@ describe("per-key settings", () => {
   // Prysm answers "stereum.net" padded to 32 bytes, which the dialog took for an invalid, different value
   test("graffiti read back without the zero bytes Prysm pads it with", async () => {
     const v = new Validators({ nodeConnection: { taskManager: { otherTasksHandler: jest.fn() } } });
+    v.graffitiFileOf = jest.fn().mockResolvedValue(null);
     v.keymanagerCalls = jest.fn(async (id, requests) =>
       requests.map(() => ({ status: 200, body: { data: { graffiti: "stereum.net" + "\0".repeat(21) } }, raw: "", url: "u" }))
     );
@@ -315,12 +317,16 @@ describe("per-key settings", () => {
     expect(result.values[key(1)]).toEqual("stereum.net");
     expect(Validators.cleanGraffiti('Grüße "Stereum"\0\0')).toEqual('Grüße "Stereum"');
     expect(Validators.cleanGraffiti(undefined)).toBeUndefined();
+    // Lighthouse answers with the bytes as hex
+    expect(Validators.cleanGraffiti("0x4c48204150492074657374000000000000000000000000000000000000000000")).toEqual("LH API test");
+    expect(Validators.cleanGraffiti("0x" + Buffer.from("Grüße").toString("hex").padEnd(64, "0"))).toEqual("Grüße");
   });
 
   // Prysm looks the default graffiti up by validator index, which a never-deposited key does not have yet
   test("a default graffiti Prysm cannot read before the deposit is no failure", async () => {
     const taskManager = { otherTasksHandler: jest.fn() };
     const v = new Validators({ nodeConnection: { taskManager } });
+    v.graffitiFileOf = jest.fn().mockResolvedValue(null);
     v.keymanagerCalls = jest.fn(async (id, requests) =>
       requests.map((r, i) =>
         i
@@ -330,9 +336,97 @@ describe("per-key settings", () => {
     );
     const result = await v.readKeySettings("lh", [key(1), key(2)], "graffiti");
     expect(result).toEqual({ code: 0, values: { [key(1)]: "stereum.net" }, failed: {}, defaultUnknown: [key(2)] });
+    // Lighthouse without a --graffiti flag answers 500 for its default
+    v.keymanagerCalls = jest.fn(async (id, requests) =>
+      requests.map(() => ({
+        status: 500,
+        body: { message: "INTERNAL_SERVER_ERROR: No graffiti found, unable to return the process-wide default" },
+        raw: "",
+        url: "u",
+      }))
+    );
+    expect((await v.readKeySettings("lh", [key(3)], "graffiti")).defaultUnknown).toEqual([key(3)]);
     const calls = taskManager.otherTasksHandler.mock.calls;
     expect(calls[1].slice(1, 3)).toEqual(["Read 1 of 2", true]);
-    expect(calls[1][3]).toContain(`${key(2)}: client default, not readable until the key is on chain`);
+    expect(calls[1][3]).toContain(`${key(2)}: client default, not reported by the client`);
+  });
+
+  // Lighthouse answers 202 while refusing a graffiti because --graffiti-file is set
+  test("an accepted status with an error in the body counts as failed", async () => {
+    const v = withBatch([202]);
+    v.keymanagerCalls = jest.fn(async (id, requests) =>
+      requests.map((r) => ({
+        status: 202,
+        body: { code: 401, message: 'Unable to update graffiti as the "--graffiti-file" flag is set' },
+        raw: "",
+        url: "u" + r.path,
+      }))
+    );
+    expect(await v.setKeySetting("lh", [key(1)], "graffiti", "x")).toEqual({ code: 0, ok: [], failed: [key(1)] });
+    expect(v.taskManager.otherTasksHandler.mock.calls[1][3]).toContain("--graffiti-file");
+  });
+
+  describe("Lighthouse graffiti file", () => {
+    const FILE = "/opt/stereum/lighthouse-lh/graffitis/graffitis.yaml";
+    const lighthouse = (text) => {
+      const exec = jest.fn(async (cmd) =>
+        cmd.startsWith("cat ") ? { rc: 0, stdout: text, stderr: "" } : { rc: 0, stdout: "", stderr: "" }
+      );
+      const v = new Validators({
+        nodeConnection: {
+          taskManager: { otherTasksHandler: jest.fn() },
+          sshService: { exec },
+          readServiceConfiguration: jest.fn().mockResolvedValue({
+            id: "lh",
+            service: "LighthouseValidatorService",
+            command: ["--graffiti-file=/opt/app/graffitis/graffitis.yaml", "--http"],
+            volumes: ["/opt/stereum/lighthouse-lh/graffitis:/opt/app/graffitis"],
+          }),
+        },
+      });
+      v.keymanagerCalls = jest.fn();
+      const written = () =>
+        exec.mock.calls
+          .map((c) => c[0])
+          .filter((c) => !c.startsWith("cat '"))
+          .map((c) => c.split("\n").slice(1, -1).join("\n"))
+          .join("\n");
+      return { v, exec, written };
+    };
+
+    test("the file is found through the volume of the --graffiti-file flag", async () => {
+      expect(await lighthouse("").v.graffitiFileOf("lh")).toEqual({ path: FILE });
+    });
+
+    test("keys get their own lines, the old page's default stays, and the API is never asked", async () => {
+      const { v, written } = lighthouse("default: stereum.net\n");
+      const result = await v.setKeySetting("lh", [key(1), key(2)], "graffiti", 'Grüße "Stereum"');
+      expect(result).toEqual({ code: 0, ok: [key(1), key(2)], failed: [] });
+      expect(written()).toEqual(`default: stereum.net\n${key(1)}: Grüße "Stereum"\n${key(2)}: Grüße "Stereum"`);
+      expect(v.keymanagerCalls).not.toHaveBeenCalled();
+    });
+
+    test("a reset removes only that key's line", async () => {
+      const { v, written } = lighthouse(`default: stereum.net\n${key(1)}: one\n${key(2)}: two\n`);
+      await v.setKeySetting("lh", [key(1)], "graffiti", null);
+      expect(written()).toEqual(`default: stereum.net\n${key(2)}: two`);
+    });
+
+    test("reading takes a key's line, else the default, and asks the API only for the rest", async () => {
+      const { v } = lighthouse(`${key(1)}: own\n`);
+      v.keymanagerCalls.mockResolvedValue([{ status: 200, body: { data: { graffiti: "flag" } }, url: "u" }]);
+      expect((await v.readKeySettings("lh", [key(1), key(2)], "graffiti")).values).toEqual({ [key(1)]: "own", [key(2)]: "flag" });
+      expect(v.keymanagerCalls.mock.calls[0][1]).toEqual([{ method: "GET", path: `/eth/v1/validator/${key(2)}/graffiti` }]);
+      const withDefault = lighthouse("default: stereum.net\n");
+      expect((await withDefault.v.getGraffiti("lh", key(3))).graffiti).toEqual("stereum.net");
+    });
+
+    test("the parser follows Lighthouse: first colon, trimmed value, exact default key", () => {
+      expect(Validators.parseGraffitiFile(`default: a:b \n ${key(1)}: x\n${key(2).toUpperCase().replace("0X", "0x")}:  y\n`)).toEqual({
+        default: "a:b",
+        keys: { [key(2)]: "y" },
+      });
+    });
   });
 
   test("no value resets the setting to the client default", async () => {

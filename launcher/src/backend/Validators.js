@@ -1221,18 +1221,21 @@ export class Validators {
     const task = `${body ? "Set" : "Reset"} ${setting === "graffiti" ? "graffiti" : "fee recipient"} (${keys.length})`;
     this.nodeConnection.taskManager?.otherTasksHandler(ref, task);
     try {
+      const file = setting === "graffiti" ? await this.graffitiFileOf(serviceID) : null;
+      if (file) return await this.setGraffitiInFile(file, keys, body ? value : null, ref);
       const method = body ? "POST" : "DELETE";
       const answers = await this.keymanagerCalls(
         serviceID,
         keys.map((pubkey) => ({ method, path: `/eth/v1/validator/${pubkey}/${setting}`, body }))
       );
-      // 202 accepted on set, 204 no content on delete
-      const accepted = (status) => status === 202 || status === 204 || status === 200;
-      const ok = keys.filter((_, i) => accepted(answers[i]?.status));
+      // 202 accepted on set, 204 no content on delete; an error in the body counts even then, as Lighthouse
+      // answers 202 when it refuses a graffiti while --graffiti-file is set
+      const accepted = (a) => [200, 202, 204].includes(a?.status) && !(Number(a?.body?.code) >= 400);
+      const ok = keys.filter((_, i) => accepted(answers[i]));
       const failed = keys.filter((k) => !ok.includes(k));
       const lines = keys.map((pubkey, i) => {
         const { status, body: answer, raw } = answers[i] ?? {};
-        const detail = accepted(status) ? "" : ", answer: " + (answer ? JSON.stringify(answer) : raw || "(empty)");
+        const detail = accepted(answers[i]) ? "" : ", answer: " + (answer ? JSON.stringify(answer) : raw || "(empty)");
         return `${pubkey}: HTTP ${status ?? 0}${detail}`;
       });
       this.nodeConnection.taskManager?.otherTasksHandler(
@@ -1268,27 +1271,43 @@ export class Validators {
     const task = `Read ${setting === "graffiti" ? "graffiti" : "fee recipient"} (${keys.length})`;
     this.nodeConnection.taskManager?.otherTasksHandler(ref, task);
     try {
-      const answers = await this.keymanagerCalls(
-        serviceID,
-        keys.map((pubkey) => ({ method: "GET", path: `/eth/v1/validator/${pubkey}/${setting}` }))
-      );
+      // a graffiti file wins over everything else in the client, so its value is the one used on proposals
       const values = {};
+      const fromFile = [];
+      const file = setting === "graffiti" ? await this.graffitiFileOf(serviceID) : null;
+      if (file) {
+        const parsed = Validators.parseGraffitiFile((await this.readGraffitiFile(file.path)).text);
+        for (const pubkey of keys) {
+          const value = parsed.keys[pubkey] ?? parsed.default;
+          if (value !== undefined && value !== null) {
+            values[pubkey] = value;
+            fromFile.push(pubkey);
+          }
+        }
+      }
+      const asked = keys.filter((k) => !fromFile.includes(k));
+      const answers = asked.length
+        ? await this.keymanagerCalls(
+            serviceID,
+            asked.map((pubkey) => ({ method: "GET", path: `/eth/v1/validator/${pubkey}/${setting}` }))
+          )
+        : [];
       const failed = {};
       const defaultUnknown = [];
-      keys.forEach((pubkey, i) => {
+      asked.forEach((pubkey, i) => {
         const { status, body, raw } = answers[i] ?? {};
         const value = setting === "graffiti" ? Validators.cleanGraffiti(body?.data?.graffiti) : body?.data?.ethaddress;
         if (status === 200 && typeof value === "string") values[pubkey] = value;
-        else if (Validators.NO_INDEX.test(body?.message)) defaultUnknown.push(pubkey);
+        else if (Validators.DEFAULT_UNKNOWN.test(body?.message)) defaultUnknown.push(pubkey);
         else failed[pubkey] = body?.message || (raw ? String(raw).slice(0, 200) : `HTTP ${status ?? 0}`);
       });
       const lines = keys.map(
         (pubkey) =>
           `${pubkey}: ${
             pubkey in values
-              ? JSON.stringify(values[pubkey])
+              ? JSON.stringify(values[pubkey]) + (fromFile.includes(pubkey) ? " (graffiti file)" : "")
               : defaultUnknown.includes(pubkey)
-                ? "client default, not readable until the key is on chain"
+                ? "client default, not reported by the client"
                 : "failed - " + failed[pubkey]
           }`
       );
@@ -1297,7 +1316,11 @@ export class Validators {
         ref,
         `Read ${keys.length - failedCount - defaultUnknown.length} of ${keys.length}`,
         !failedCount,
-        [`GET ${answers[0]?.url?.replace(keys[0], "{pubkey}") ?? setting}`, ...lines].join("\n")
+        [
+          ...(file ? [`graffiti file ${file.path}`] : []),
+          ...(asked.length ? [`GET ${answers[0]?.url?.replace(asked[0], "{pubkey}") ?? setting}`] : []),
+          ...lines,
+        ].join("\n")
       );
       this.nodeConnection.taskManager?.otherTasksHandler(
         ref,
@@ -1315,22 +1338,117 @@ export class Validators {
     }
   }
 
-  // Prysm looks a key's default graffiti up by validator index, so before the deposit it cannot say what it is
-  static NO_INDEX = /could not find validator index/i;
+  // Lighthouse refuses the keymanager graffiti API while it reads a graffiti file (Stereum always passes
+  // --graffiti-file), so its graffiti lives in that file: { path } on the host, or null
+  async graffitiFileOf(serviceID) {
+    const client = await this.nodeConnection.readServiceConfiguration(serviceID);
+    if (client?.service !== "LighthouseValidatorService") return null;
+    const command = Array.isArray(client.command) ? client.command : String(client.command ?? "").split(/\s+/);
+    const flag = command.find((c) => c.startsWith("--graffiti-file="));
+    if (!flag) return null;
+    const inContainer = flag.slice("--graffiti-file=".length);
+    const volumes = (client.volumes || []).map((v) => (typeof v === "string" ? ServiceVolume.buildByConfig(v) : v));
+    const volume = volumes.find((v) => v?.servicePath && inContainer.startsWith(v.servicePath + "/"));
+    // a config-derived path, but it still goes into single quotes
+    const path = volume ? volume.destinationPath + inContainer.slice(volume.servicePath.length) : null;
+    return path && !path.includes("'") ? { path } : null;
+  }
 
-  // Prysm pads graffiti to its 32 bytes on chain with zero bytes; without them it is the text the user typed
+  // The graffiti file's text, empty when there is none yet: { text, rc }
+  async readGraffitiFile(path) {
+    const result = await this.nodeConnection.sshService.exec(`cat '${path}' 2>/dev/null || true`);
+    return { text: String(result.stdout ?? ""), rc: result.rc };
+  }
+
+  // Lighthouse's graffiti file: "default: <text>" and "0x<pubkey>: <text>" lines, split at the first colon
+  static parseGraffitiFile(text) {
+    const keys = {};
+    let fallback = null;
+    for (const line of String(text ?? "").split("\n")) {
+      const i = line.indexOf(":");
+      if (i < 0) continue;
+      const key = line.slice(0, i);
+      const value = line.slice(i + 1).trim();
+      if (key === "default") fallback = value;
+      else if (/^0x[0-9a-fA-F]{96}$/.test(key)) keys[key.toLowerCase()] = value;
+    }
+    return { default: fallback, keys };
+  }
+
+  // The file with each key in changes set (value) or removed (null); other lines stay as they are, blank ones go,
+  // since Lighthouse rejects the whole file over a single invalid line
+  static updateGraffitiFile(text, changes) {
+    const out = [];
+    const done = new Set();
+    for (const line of String(text ?? "").split("\n")) {
+      if (!line.trim()) continue;
+      const key = line.match(/^(0x[0-9a-fA-F]{96}):/)?.[1].toLowerCase();
+      if (key && changes.has(key)) {
+        if (!done.has(key) && changes.get(key) !== null) out.push(`${key}: ${changes.get(key)}`);
+        done.add(key);
+        continue;
+      }
+      out.push(line);
+    }
+    for (const [key, value] of changes) if (!done.has(key) && value !== null) out.push(`${key}: ${value}`);
+    return out.length ? out.join("\n") + "\n" : "";
+  }
+
+  // Set (value) or remove (null) the keys' lines in the graffiti file; Lighthouse reads it on every proposal
+  async setGraffitiInFile(file, keys, value, ref) {
+    const before = await this.readGraffitiFile(file.path);
+    const next = Validators.updateGraffitiFile(before.text, new Map(keys.map((k) => [k, value])));
+    let write = { rc: 0, stderr: "" };
+    for (const cmd of Validators.keysYamlCommands(next, file.path)) {
+      write = await this.nodeConnection.sshService.exec(cmd);
+      if (write.rc != 0) break;
+    }
+    const ok = write.rc == 0 ? keys : [];
+    const failed = write.rc == 0 ? [] : keys;
+    const parsed = Validators.parseGraffitiFile(next);
+    this.nodeConnection.taskManager?.otherTasksHandler(
+      ref,
+      `Wrote graffiti file (${keys.length})`,
+      write.rc == 0,
+      [
+        file.path,
+        value !== null ? `value: ${JSON.stringify(value)}` : "lines removed, back to the file's default",
+        `default: ${parsed.default ?? "(none)"}, ${Object.keys(parsed.keys).length} keys with their own graffiti`,
+        ...(write.rc == 0
+          ? keys.map((k) => `${k}: ${value !== null ? "set" : "removed"}`)
+          : [`write failed (rc ${write.rc}): ${write.stderr}`]),
+      ].join("\n")
+    );
+    this.nodeConnection.taskManager?.otherTasksHandler(ref, "Result", write.rc == 0, `${ok.length} applied, ${failed.length} failed`);
+    return { code: 0, ok, failed };
+  }
+
+  // a key without its own graffiti uses the client's default, which some clients cannot report: Prysm looks it up
+  // by validator index (none before the deposit), Lighthouse answers 500 without a --graffiti flag
+  static DEFAULT_UNKNOWN = /could not find validator index|no graffiti found/i;
+
+  // The text the user typed: Prysm pads it to its 32 bytes on chain with zero bytes, Lighthouse answers with those
+  // 32 bytes as hex (0x4c48...)
   static cleanGraffiti(value) {
-    return typeof value === "string" ? value.replace(/\0+$/, "") : value;
+    if (typeof value !== "string") return value;
+    const text = /^0x[0-9a-fA-F]{64}$/.test(value) ? Buffer.from(value.slice(2), "hex").toString("utf8") : value;
+    return text.replace(/\0+$/, "");
   }
 
   // Current per-key graffiti (without a task panel entry), { code, graffiti } or { code, info }
   async getGraffiti(serviceID, pubkey) {
     try {
       if (!PUBKEY.test(String(pubkey).toLowerCase())) throw new Error("invalid public key");
+      const file = await this.graffitiFileOf(serviceID);
+      if (file) {
+        const parsed = Validators.parseGraffitiFile((await this.readGraffitiFile(file.path)).text);
+        const value = parsed.keys[String(pubkey).toLowerCase()] ?? parsed.default;
+        if (value !== undefined && value !== null) return { code: 0, graffiti: value };
+      }
       const client = await this.nodeConnection.readServiceConfiguration(serviceID);
       const result = await this.monitoring.validatorAccountManager.keymanagerAPI(client, "GET", `/eth/v1/validator/${pubkey}/graffiti`);
       const data = Validators.parseJson(result.stdout);
-      if (!data?.data && Validators.NO_INDEX.test(data?.message)) return { code: 0, graffiti: null, defaultUnknown: true };
+      if (!data?.data && Validators.DEFAULT_UNKNOWN.test(data?.message)) return { code: 0, graffiti: null, defaultUnknown: true };
       if (!data?.data) throw new Error(data?.message || result.stderr || "no graffiti returned");
       return { code: 0, graffiti: Validators.cleanGraffiti(data.data.graffiti) ?? "" };
     } catch (err) {
