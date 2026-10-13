@@ -414,7 +414,7 @@ const checkChips = computed(() => {
     { label: t("validatorsPage.importAlready"), count: check.value?.alreadyImported?.length ?? 0 },
     { label: t("validatorsPage.status.active"), count: onChain.filter((s) => String(s.status).startsWith("active")).length },
     { label: t("validatorsPage.status.unknown"), count: checkedKeys.value.length - onChain.length },
-  ].filter((chip, i) => i === 0 || chip.count);
+  ].filter((chip, i) => i === 0 || (chip.count && (i < 2 || check.value?.statesKnown)));
 });
 const importAllowed = computed(
   () =>
@@ -442,7 +442,8 @@ const runCheck = async () => {
   switchAccepted.value = false;
   let res;
   try {
-    res = (await ControlService.prepareKeyImport(holderId, checkedKeys.value, checkedUrl.value)) ?? {
+    // a plain array: IPC cannot clone the reactive one
+    res = (await ControlService.prepareKeyImport(holderId, [...checkedKeys.value], checkedUrl.value)) ?? {
       code: 1,
       info: t("validatorsPage.noAnswer"),
     };

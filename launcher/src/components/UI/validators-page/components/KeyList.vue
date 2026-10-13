@@ -178,7 +178,8 @@
           >
             <CheckMark :checked="!!validatorsStore.selection[item.pubkey]" @toggle="validatorsStore.toggleSelection(item.pubkey)" />
             <span class="w-6 h-6 rounded-full bg-[#0D0D12] border border-[#4b8585] flex items-center justify-center">
-              <img :src="keyIcon(item)" class="w-4 h-4" alt="" />
+              <!-- the remote icon is drawn dark, inverted it reads like the light key icon -->
+              <img :src="keyIcon(item)" class="w-4 h-4" :class="{ 'invert brightness-90': item.remote }" alt="" />
             </span>
             <span class="flex items-center gap-1.5 min-w-0">
               <span class="min-w-0 truncate font-semibold" :title="item.pubkey">{{ item.alias || shortPubkey(item.pubkey) }}</span>
