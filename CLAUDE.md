@@ -117,6 +117,7 @@ New UI must look like the rest of Stereum. The validators page (`src/components/
   - one subtask per API call, with the request line, the HTTP status or curl exit code, and the answer as received;
   - a closing `Result` subtask with counts and failures;
   - keystores, passwords, API tokens and signed exits never go into the panel;
-  - calls made inside another task don't open a task of their own.
+  - calls made inside another task don't open a task of their own;
+  - keep task names to about 24 characters (the panel wraps longer ones) and subtask names to about 28 (the panel cuts them off), e.g. `Set fee recipient (45)`, `Removed 20 of 45`.
 - **One SSH exec is one command of at most ~128 KB** (the remote shell's single-argument limit). Size request bodies by bytes, write large files in chunks (`Validators.keysYamlCommands`), and reduce EIP-3076 slashing protection to the minimal form (`src/share/slashingProtection.js`) before it travels anywhere.
 - CI (`.github/workflows/`) runs Jest unit tests, Molecule role tests, integration tests, ESLint/Prettier, and `shellcheck` on shell scripts. Shell scripts in `controls/` must pass shellcheck.
