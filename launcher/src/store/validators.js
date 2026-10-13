@@ -99,7 +99,8 @@ export const useValidatorsStore = defineStore("validators", {
     // Keys are listed once per holder unless forced; a failed listing keeps the keys it had
     async loadKeys(holderId, force = false) {
       // read back through the store, so writes to the entry are reactive (??= would hand out the raw object)
-      if (!this.keysByHolder[holderId]) this.keysByHolder[holderId] = { keys: [], loading: false, error: null, loadedAt: null };
+      if (!this.keysByHolder[holderId])
+        this.keysByHolder[holderId] = { keys: [], walletMissing: false, loading: false, error: null, loadedAt: null };
       const entry = this.keysByHolder[holderId];
       if (entry.loading || (entry.loadedAt && !force)) return;
       entry.loading = true;
@@ -107,6 +108,7 @@ export const useValidatorsStore = defineStore("validators", {
         const result = await ControlService.listHolderKeys(holderId);
         if (result?.code === 0) {
           entry.keys = result.keys;
+          entry.walletMissing = !!result.walletMissing;
           entry.error = null;
           entry.loadedAt = Date.now();
         } else {
@@ -174,7 +176,7 @@ export const useValidatorsStore = defineStore("validators", {
       const result = await ControlService.getKeyGraffiti(holderId, pubkey);
       this.graffitis[pubkey] =
         result?.code === 0
-          ? { graffiti: result.graffiti, loading: false, error: null }
+          ? { graffiti: result.graffiti, defaultUnknown: !!result.defaultUnknown, loading: false, error: null }
           : { graffiti: null, loading: false, error: result?.info };
     },
 

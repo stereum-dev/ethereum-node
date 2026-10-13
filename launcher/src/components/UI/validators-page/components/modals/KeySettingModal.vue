@@ -12,7 +12,36 @@
         <img src="/animation/loading/turning-circle.gif" class="w-4 h-4" alt="" />{{ t("validatorsPage.loading") }}
       </span>
       <span v-else-if="current?.error" class="text-xs text-amber-300 break-all">{{ current.error }}</span>
+      <span v-else-if="current?.defaultUnknown" class="text-xs text-gray-400">{{ t("validatorsPage.defaultUnknown") }}</span>
       <span v-else class="text-sm font-semibold break-all select-text">{{ currentValue || "-" }}</span>
+    </div>
+
+    <!-- bulk: the distinct current values with their key counts; a click takes one over into the input -->
+    <div v-else class="flex flex-col gap-1">
+      <span class="text-2xs font-semibold uppercase text-[#7fb3b3]">{{ t("validatorsPage.currentValues", pubkeys.length) }}</span>
+      <span v-if="bulk.loading" class="flex items-center gap-2 text-xs text-gray-400">
+        <img src="/animation/loading/turning-circle.gif" class="w-4 h-4" alt="" />{{ t("validatorsPage.loading") }}
+      </span>
+      <span v-else-if="bulk.info" class="text-xs text-amber-300 break-all">{{ bulk.info }}</span>
+      <template v-else>
+        <button
+          v-for="group in valueGroups.shown"
+          :key="group.value"
+          class="flex items-center gap-2 rounded-full bg-[#1d2023] hover:bg-[#25292c] border border-transparent hover:border-[#4b8585] px-3 py-1 text-xs text-left"
+          :title="t('validatorsPage.useValue')"
+          @click="useValue(group.value)"
+        >
+          <span class="grow truncate font-semibold select-text">{{ group.value || t("validatorsPage.emptyValue") }}</span>
+          <span class="shrink-0 text-2xs text-[#7fb3b3]">{{ t("validatorsPage.keyCount", group.count) }}</span>
+        </button>
+        <span v-if="valueGroups.more" class="px-3 text-2xs text-gray-400">{{ t("validatorsPage.moreValues", valueGroups.more) }}</span>
+        <span v-if="valueGroups.defaultUnknown" class="px-3 text-xs text-gray-400">{{
+          t("validatorsPage.defaultUnknownKeys", valueGroups.defaultUnknown)
+        }}</span>
+        <span v-if="valueGroups.failed" class="px-3 text-xs text-amber-300">{{
+          t("validatorsPage.valuesFailed", valueGroups.failed)
+        }}</span>
+      </template>
     </div>
 
     <div class="flex flex-col gap-1">
@@ -62,6 +91,7 @@ import ValidatorModal from "../ValidatorModal.vue";
 import ActionButton from "../ActionButton.vue";
 import KeyLabel from "./KeyLabel.vue";
 import { useValidatorsStore } from "@/store/validators";
+import ControlService from "@/store/ControlService";
 import { useServices } from "@/store/services";
 import { FEE_RECIPIENT } from "@/share/validatorStatus";
 import i18n from "@/includes/i18n";
@@ -109,6 +139,31 @@ const current = computed(() =>
 );
 const currentValue = computed(() => (props.setting === "graffiti" ? current.value?.graffiti : current.value?.address));
 
+// bulk: current values of all selected keys, grouped by value with the most common first
+const SHOWN_VALUES = 5;
+const bulk = ref({ loading: false, values: {}, failed: {}, info: null });
+const loadBulk = async () => {
+  bulk.value = { ...bulk.value, loading: true, info: null };
+  try {
+    const result = await ControlService.readKeySettings(holderId, [...props.pubkeys], props.setting);
+    bulk.value =
+      result?.code === 0 ? { loading: false, ...result, info: null } : { loading: false, values: {}, failed: {}, info: result?.info };
+  } catch (err) {
+    bulk.value = { loading: false, values: {}, failed: {}, info: String(err?.message || err) };
+  }
+};
+const valueGroups = computed(() => {
+  const counts = new Map();
+  for (const value of Object.values(bulk.value.values ?? {})) counts.set(value, (counts.get(value) ?? 0) + 1);
+  const groups = [...counts].map(([value, count]) => ({ value, count })).sort((a, b) => b.count - a.count);
+  return {
+    shown: groups.slice(0, SHOWN_VALUES),
+    more: Math.max(0, groups.length - SHOWN_VALUES),
+    failed: Object.keys(bulk.value.failed ?? {}).length,
+    defaultUnknown: bulk.value.defaultUnknown?.length ?? 0,
+  };
+});
+
 const draft = ref("");
 const input = ref(null);
 const busy = ref(false);
@@ -128,9 +183,14 @@ const apply = async (value) => {
   try {
     result.value = await validatorsStore.applyKeySetting(holderId, targets.value, props.setting, value);
     if (result.value.code === 0 && !result.value.failed.length) draft.value = "";
+    if (!single.value) loadBulk();
   } finally {
     busy.value = false;
   }
+};
+const useValue = (value) => {
+  draft.value = value;
+  input.value?.focus();
 };
 const save = () => valid.value && !busy.value && apply(props.setting === "graffiti" ? draft.value : draft.value.trim());
 
@@ -138,7 +198,7 @@ onMounted(async () => {
   if (single.value) {
     if (props.setting === "graffiti") validatorsStore.loadGraffiti(holderId, props.pubkeys[0]);
     else validatorsStore.loadFeeRecipient(holderId, props.pubkeys[0]);
-  }
+  } else loadBulk();
   await nextTick();
   input.value?.focus();
 });

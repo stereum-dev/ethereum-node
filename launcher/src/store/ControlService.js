@@ -782,6 +782,10 @@ class ControlService extends EventEmitter {
   }
 
   // setting: "graffiti" | "feerecipient", value null resets it to the client default
+  async readKeySettings(serviceID, pubkeys, setting) {
+    return this.promiseIpc.send("readKeySettings", { serviceID, pubkeys, setting });
+  }
+
   async setKeySetting(serviceID, pubkeys, setting, value) {
     return this.promiseIpc.send("setKeySetting", { serviceID, pubkeys, setting, value });
   }

@@ -162,8 +162,10 @@ export class Validators {
       // Prysm answers an error for keystores in remote signer mode and for remote keys in local mode
       const prysm = client.service === "PrysmValidatorService";
       const prysmRemote = prysm && !!prysmSignerFlags(client.command).url;
-      const keystores = prysmRemote ? [] : await this.keymanagerList(vam, client, "/eth/v1/keystores", subtask);
-      const keys = keystores.map((k) => ({ pubkey: k.validating_pubkey.toLowerCase(), remote: !!k.readonly }));
+      const keystores = prysmRemote ? [] : await this.keymanagerList(vam, client, "/eth/v1/keystores", subtask, { noWallet: prysm });
+      // a new Prysm has no wallet until the first import creates it: no keys, not an error
+      const walletMissing = keystores === null;
+      const keys = (keystores ?? []).map((k) => ({ pubkey: k.validating_pubkey.toLowerCase(), remote: !!k.readonly }));
       if (holder.role !== "signer" && (!prysm || prysmRemote)) {
         for (const k of await this.keymanagerList(vam, client, "/eth/v1/remotekeys", subtask)) {
           const pubkey = k.pubkey.toLowerCase();
@@ -175,8 +177,14 @@ export class Validators {
         }
       }
       const remote = keys.filter((k) => k.remote).length;
-      subtask("Result", true, `${keys.length} keys: ${keys.length - remote} local, ${remote} remote`);
-      return { code: 0, keys };
+      subtask(
+        "Result",
+        true,
+        walletMissing
+          ? "0 keys: Prysm has no wallet yet, the first import creates it"
+          : `${keys.length} keys: ${keys.length - remote} local, ${remote} remote`
+      );
+      return { code: 0, keys, ...(walletMissing ? { walletMissing } : {}) };
     } catch (err) {
       log.error("Listing validator keys of " + serviceID + " failed: ", err);
       subtask("Result", false, String(err?.message || err));
@@ -437,7 +445,7 @@ export class Validators {
           const shown = body?.slashing_protection ? { ...answer, body: { ...body, slashing_protection: "(see the saved file)" } } : answer;
           this.nodeConnection.taskManager?.otherTasksHandler(
             ref,
-            `Removed ${i + chunk.length} of ${keys.length} ${kind}`,
+            `Removed ${i + chunk.length} of ${keys.length}${kind === "remote keys" ? " remote" : ""}`,
             Array.isArray(body?.data) && !chunkLines.some(isFailure),
             Validators.keyLines(chunkLines) + "\n\n" + Validators.answerText(shown)
           );
@@ -455,7 +463,7 @@ export class Validators {
         }
         this.nodeConnection.taskManager?.otherTasksHandler(
           ref,
-          "Saved slashing protection on the node",
+          "Saved slashing protection",
           write.rc == 0,
           write.rc == 0
             ? `${savedTo}\n${interchange.data?.length ?? 0} validators`
@@ -664,7 +672,7 @@ export class Validators {
           url: signer.url,
         });
         if (plan.mode === "blocked") {
-          this.nodeConnection.taskManager?.otherTasksHandler(ref, "Prysm cannot use this remote signer", false, plan.reason);
+          this.nodeConnection.taskManager?.otherTasksHandler(ref, "Prysm signer blocked", false, plan.reason);
           return { code: 1, info: plan.reason, reason: plan.reason };
         }
         if (plan.mode === "switch") {
@@ -762,7 +770,7 @@ export class Validators {
       await new Promise((resolve) => setTimeout(resolve, RESTART_POLL_MS));
     }
     const command = Array.isArray(client.command) ? client.command.join("\n") : String(client.command);
-    this.nodeConnection.taskManager?.otherTasksHandler(ref, `Restarted ${name} with remote signer`, true, "new command:\n" + command);
+    this.nodeConnection.taskManager?.otherTasksHandler(ref, `Restarted ${name} for signer`, true, "new command:\n" + command);
   }
 
   /**
@@ -1195,7 +1203,8 @@ export class Validators {
     }
 
     const ref = StringUtils.createRandomString();
-    const task = `${body ? "Setting" : "Resetting"} ${setting === "graffiti" ? "Graffiti" : "Fee Recipient"} (${keys.length} keys)`;
+    // the task panel wraps names past ~24 characters
+    const task = `${body ? "Set" : "Reset"} ${setting === "graffiti" ? "graffiti" : "fee recipient"} (${keys.length})`;
     this.nodeConnection.taskManager?.otherTasksHandler(ref, task);
     try {
       const method = body ? "POST" : "DELETE";
@@ -1233,6 +1242,73 @@ export class Validators {
     }
   }
 
+  /**
+   * Current graffiti or fee recipient of many keys in one batched call, for the bulk dialog.
+   * Returns { code: 0, values: { pubkey: value }, failed: { pubkey: message } } or { code, info }.
+   */
+  async readKeySettings(serviceID, pubkeys, setting) {
+    const keys = cleanKeys(pubkeys);
+    if (!keys.length) return { code: 1, info: "no valid keys" };
+    if (!["graffiti", "feerecipient"].includes(setting)) return { code: 1, info: "unknown setting " + setting };
+    const ref = StringUtils.createRandomString();
+    const task = `Read ${setting === "graffiti" ? "graffiti" : "fee recipient"} (${keys.length})`;
+    this.nodeConnection.taskManager?.otherTasksHandler(ref, task);
+    try {
+      const answers = await this.keymanagerCalls(
+        serviceID,
+        keys.map((pubkey) => ({ method: "GET", path: `/eth/v1/validator/${pubkey}/${setting}` }))
+      );
+      const values = {};
+      const failed = {};
+      const defaultUnknown = [];
+      keys.forEach((pubkey, i) => {
+        const { status, body, raw } = answers[i] ?? {};
+        const value = setting === "graffiti" ? Validators.cleanGraffiti(body?.data?.graffiti) : body?.data?.ethaddress;
+        if (status === 200 && typeof value === "string") values[pubkey] = value;
+        else if (Validators.NO_INDEX.test(body?.message)) defaultUnknown.push(pubkey);
+        else failed[pubkey] = body?.message || (raw ? String(raw).slice(0, 200) : `HTTP ${status ?? 0}`);
+      });
+      const lines = keys.map(
+        (pubkey) =>
+          `${pubkey}: ${
+            pubkey in values
+              ? JSON.stringify(values[pubkey])
+              : defaultUnknown.includes(pubkey)
+                ? "client default, not readable until the key is on chain"
+                : "failed - " + failed[pubkey]
+          }`
+      );
+      const failedCount = Object.keys(failed).length;
+      this.nodeConnection.taskManager?.otherTasksHandler(
+        ref,
+        `Read ${keys.length - failedCount - defaultUnknown.length} of ${keys.length}`,
+        !failedCount,
+        [`GET ${answers[0]?.url?.replace(keys[0], "{pubkey}") ?? setting}`, ...lines].join("\n")
+      );
+      this.nodeConnection.taskManager?.otherTasksHandler(
+        ref,
+        "Result",
+        !failedCount,
+        `${keys.length - failedCount} read, ${failedCount} failed`
+      );
+      return { code: 0, values, failed, defaultUnknown };
+    } catch (err) {
+      log.error(task + " failed: ", err);
+      this.nodeConnection.taskManager?.otherTasksHandler(ref, "Result", false, String(err?.message || err));
+      return { code: 2, info: String(err?.message || err) };
+    } finally {
+      this.nodeConnection.taskManager?.otherTasksHandler(ref);
+    }
+  }
+
+  // Prysm looks a key's default graffiti up by validator index, so before the deposit it cannot say what it is
+  static NO_INDEX = /could not find validator index/i;
+
+  // Prysm pads graffiti to its 32 bytes on chain with zero bytes; without them it is the text the user typed
+  static cleanGraffiti(value) {
+    return typeof value === "string" ? value.replace(/\0+$/, "") : value;
+  }
+
   // Current per-key graffiti (without a task panel entry), { code, graffiti } or { code, info }
   async getGraffiti(serviceID, pubkey) {
     try {
@@ -1240,16 +1316,18 @@ export class Validators {
       const client = await this.nodeConnection.readServiceConfiguration(serviceID);
       const result = await this.monitoring.validatorAccountManager.keymanagerAPI(client, "GET", `/eth/v1/validator/${pubkey}/graffiti`);
       const data = Validators.parseJson(result.stdout);
+      if (!data?.data && Validators.NO_INDEX.test(data?.message)) return { code: 0, graffiti: null, defaultUnknown: true };
       if (!data?.data) throw new Error(data?.message || result.stderr || "no graffiti returned");
-      return { code: 0, graffiti: data.data.graffiti ?? "" };
+      return { code: 0, graffiti: Validators.cleanGraffiti(data.data.graffiti) ?? "" };
     } catch (err) {
       log.error("Reading the graffiti of " + pubkey + " failed: ", err);
       return { code: 1, info: String(err?.message || err) };
     }
   }
 
-  // A keymanager list (data array), reported to subtask(name, ok, text) with the answer as received
-  async keymanagerList(vam, client, path, subtask = () => {}) {
+  // A keymanager list (data array), reported to subtask(name, ok, text) with the answer as received.
+  // noWallet: Prysm's "wallet not initialized" answer means no keys yet and returns null
+  async keymanagerList(vam, client, path, subtask = () => {}, { noWallet = false } = {}) {
     const result = await vam.keymanagerAPI(client, "GET", path);
     const stdout = String(result.stdout ?? "").trim();
     const data = stdout ? Validators.parseJson(stdout) : null;
@@ -1260,18 +1338,21 @@ export class Validators {
     } else if (!Array.isArray(data?.data)) {
       error = `keymanager ${path}: ${data?.message || "unexpected answer"}`;
     }
+    const walletMissing = noWallet && !!error && /wallet not initialized/i.test(String(data?.message));
     const base = `${client.service.includes("Teku") ? "https" : "http"}://stereum-${client.id}:${validatorPorts[client.service]}`;
     subtask(
       `GET ${path}`,
-      !error,
+      !error || walletMissing,
       [
+        ...(walletMissing ? ["no wallet yet: Stereum creates it with the first import"] : []),
         `GET ${base}${path}`,
         `curl exit ${result.rc}${Validators.curlExitReason(result.rc) ? " (" + Validators.curlExitReason(result.rc) + ")" : ""}`,
         ...(String(result.stderr ?? "").trim() ? ["stderr: " + String(result.stderr).trim()] : []),
-        ...(error ? [error] : []),
+        ...(error && !walletMissing ? [error] : []),
         "answer:\n" + (data ? JSON.stringify(data, null, 2) : stdout || "(empty)"),
       ].join("\n")
     );
+    if (walletMissing) return null;
     if (error) throw new Error(error);
     return data.data;
   }

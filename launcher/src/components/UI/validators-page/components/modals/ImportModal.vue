@@ -19,6 +19,10 @@
         <input type="file" multiple accept=".json,.txt" class="hidden" @change="onPick" />
       </label>
 
+      <p v-if="walletMissing" class="rounded-lg border border-[#4b8585] bg-[#224141] px-3 py-1.5 text-xs text-gray-200">
+        {{ t("validatorsPage.walletMissingImport") }}
+      </p>
+
       <div class="flex flex-col gap-1">
         <span class="text-2xs font-semibold uppercase text-[#7fb3b3]">{{ t("validatorsPage.importPassword") }}</span>
         <input
@@ -298,6 +302,8 @@ const onDrop = (event) => {
 };
 const onPick = (event) => addFiles([...event.target.files]);
 
+// a new Prysm has no wallet yet; the import creates it and restarts the client once
+const walletMissing = computed(() => !!validatorsStore.keysByHolder[holderId]?.walletMissing);
 const hasFiles = computed(() => keystores.value.length > 0 || !!slashing.value || fileProblems.value.length > 0);
 const withoutPassword = computed(() => keystores.value.filter((ks) => !passwordOf(ks)).length);
 const filesReady = computed(() => !reading.value && keystores.value.length > 0 && keystores.value.every((ks) => passwordOf(ks)));

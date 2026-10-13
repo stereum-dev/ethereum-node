@@ -77,6 +77,13 @@
       <span class="w-2.5 h-2.5 shrink-0 rounded-full bg-red-500" />
       {{ t("validatorsPage.clientStopped") }}
     </div>
+    <div
+      v-else-if="keysEntry?.walletMissing"
+      class="flex items-center gap-2 rounded-lg border border-[#4b8585] bg-[#224141] px-3 py-1.5 text-xs text-gray-200"
+    >
+      <img src="/img/icon/staking-page-icons/validator-import.svg" class="w-4 h-4 shrink-0" alt="" />
+      {{ t("validatorsPage.walletMissing") }}
+    </div>
     <p v-else-if="keysEntry?.error" class="text-2xs text-red-400 px-1">{{ t("validatorsPage.keysError") }}: {{ keysEntry.error }}</p>
     <p v-if="statesEntry?.error" class="text-2xs text-amber-300 px-1">{{ t("validatorsPage.statesError") }}: {{ statesEntry.error }}</p>
     <p

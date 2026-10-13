@@ -884,6 +884,10 @@ ipcMain.handle("getKeyGraffiti", async (event, args) => {
   return await validators.getGraffiti(args.serviceID, args.pubkey);
 });
 
+ipcMain.handle("readKeySettings", async (event, args) => {
+  return await validators.readKeySettings(args.serviceID, args.pubkeys, args.setting);
+});
+
 ipcMain.handle("setKeySetting", async (event, args) => {
   return await validators.setKeySetting(args.serviceID, args.pubkeys, args.setting, args.value);
 });

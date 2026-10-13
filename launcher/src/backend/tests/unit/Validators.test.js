@@ -202,6 +202,35 @@ describe("key listing", () => {
       expect(calls().at(-1)).toHaveLength(1);
     });
 
+    test("a Prysm without wallet lists no keys and says the import creates it, without failing", async () => {
+      const taskManager = { otherTasksHandler: jest.fn() };
+      const keymanagerAPI = jest.fn().mockResolvedValue({
+        rc: 0,
+        stdout: JSON.stringify({ message: "Prysm Wallet not initialized. Please create a new wallet.", code: 503 }),
+      });
+      const monitoring = {
+        nodeConnection: {
+          taskManager,
+          readServiceConfiguration: jest.fn().mockResolvedValue({ id: "prysm", service: "PrysmValidatorService", command: [] }),
+        },
+        getServiceInfos: jest.fn().mockResolvedValue([info("PrysmValidatorService", "prysm")]),
+        validatorAccountManager: { keymanagerAPI },
+      };
+
+      const result = await new Validators(monitoring).listHolderKeys("prysm", { report: true });
+
+      expect(result).toEqual({ code: 0, keys: [], walletMissing: true });
+      const calls = taskManager.otherTasksHandler.mock.calls;
+      expect(calls.map((c) => [c[1], c[2]])).toEqual([
+        ["Listing Keys", undefined],
+        ["GET /eth/v1/keystores", true],
+        ["Result", true],
+        [undefined, undefined],
+      ]);
+      expect(calls[1][3]).toContain("no wallet yet: Stereum creates it with the first import");
+      expect(calls[2][3]).toEqual("0 keys: Prysm has no wallet yet, the first import creates it");
+    });
+
     test("listings inside other tasks add no entry of their own", async () => {
       const { v, calls } = lister([
         { rc: 0, stdout: JSON.stringify({ data: [] }) },
@@ -246,6 +275,64 @@ describe("per-key settings", () => {
     expect(data).toContain("POST http://stereum-lh:7500/eth/v1/validator/{pubkey}/graffiti");
     expect(data).toContain(`${key(1)}: HTTP 202`);
     expect(data).toContain(`${key(2)}: HTTP 400, answer: {"message":"bad graffiti"}`);
+  });
+
+  test("the current values of many keys are read in one batched call and reported per key", async () => {
+    const taskManager = { otherTasksHandler: jest.fn() };
+    const v = new Validators({ nodeConnection: { taskManager } });
+    v.keymanagerCalls = jest.fn(async (id, requests) =>
+      requests.map((r, i) =>
+        i === 2
+          ? { status: 500, body: { message: "internal error" }, raw: "", url: "http://stereum-lh:7500" + r.path }
+          : { status: 200, body: { data: { ethaddress: i ? "0xB" : "0xA" } }, raw: "", url: "http://stereum-lh:7500" + r.path }
+      )
+    );
+
+    const result = await v.readKeySettings("lh", [key(1), key(2), key(3), "nope"], "feerecipient");
+
+    expect(v.keymanagerCalls.mock.calls[0][1]).toEqual(
+      [key(1), key(2), key(3)].map((k) => ({ method: "GET", path: `/eth/v1/validator/${k}/feerecipient` }))
+    );
+    expect(result).toEqual({
+      code: 0,
+      values: { [key(1)]: "0xA", [key(2)]: "0xB" },
+      failed: { [key(3)]: "internal error" },
+      defaultUnknown: [],
+    });
+    const names = taskManager.otherTasksHandler.mock.calls.map((c) => c[1]);
+    expect(names).toEqual(["Read fee recipient (3)", "Read 2 of 3", "Result", undefined]);
+    // short enough for the task panel, which wraps longer names
+    expect(names.filter(Boolean).every((n) => n.length <= 24)).toBe(true);
+  });
+
+  // Prysm answers "stereum.net" padded to 32 bytes, which the dialog took for an invalid, different value
+  test("graffiti read back without the zero bytes Prysm pads it with", async () => {
+    const v = new Validators({ nodeConnection: { taskManager: { otherTasksHandler: jest.fn() } } });
+    v.keymanagerCalls = jest.fn(async (id, requests) =>
+      requests.map(() => ({ status: 200, body: { data: { graffiti: "stereum.net" + "\0".repeat(21) } }, raw: "", url: "u" }))
+    );
+    const result = await v.readKeySettings("lh", [key(1)], "graffiti");
+    expect(result.values[key(1)]).toEqual("stereum.net");
+    expect(Validators.cleanGraffiti('Grüße "Stereum"\0\0')).toEqual('Grüße "Stereum"');
+    expect(Validators.cleanGraffiti(undefined)).toBeUndefined();
+  });
+
+  // Prysm looks the default graffiti up by validator index, which a never-deposited key does not have yet
+  test("a default graffiti Prysm cannot read before the deposit is no failure", async () => {
+    const taskManager = { otherTasksHandler: jest.fn() };
+    const v = new Validators({ nodeConnection: { taskManager } });
+    v.keymanagerCalls = jest.fn(async (id, requests) =>
+      requests.map((r, i) =>
+        i
+          ? { status: 500, body: { message: `could not find validator index for public key \`${key(2)}\`` }, raw: "", url: "u" }
+          : { status: 200, body: { data: { graffiti: "stereum.net" } }, raw: "", url: "u" }
+      )
+    );
+    const result = await v.readKeySettings("lh", [key(1), key(2)], "graffiti");
+    expect(result).toEqual({ code: 0, values: { [key(1)]: "stereum.net" }, failed: {}, defaultUnknown: [key(2)] });
+    const calls = taskManager.otherTasksHandler.mock.calls;
+    expect(calls[1].slice(1, 3)).toEqual(["Read 1 of 2", true]);
+    expect(calls[1][3]).toContain(`${key(2)}: client default, not readable until the key is on chain`);
   });
 
   test("no value resets the setting to the client default", async () => {
@@ -307,10 +394,10 @@ describe("key removal", () => {
     const calls = v.taskManager.otherTasksHandler.mock.calls;
     expect(calls.map((c) => c[1])).toEqual([
       "Removing 45 keys",
-      "Removed 20 of 45 keystores",
-      "Removed 40 of 45 keystores",
-      "Removed 45 of 45 keystores",
-      "Saved slashing protection on the node",
+      "Removed 20 of 45",
+      "Removed 40 of 45",
+      "Removed 45 of 45",
+      "Saved slashing protection",
       "Result",
       undefined,
     ]);
@@ -1239,7 +1326,7 @@ describe("remote keys", () => {
         // the import only starts once Prysm answers again
         expect(v.keymanagerRequest.mock.calls.findIndex((c) => c[1].method === "POST")).toEqual(3);
         expect(result).toMatchObject({ code: 0, restarted: true });
-        expect(taskManager.otherTasksHandler.mock.calls.map((c) => c[1])).toContain("Restarted Prysm with remote signer");
+        expect(taskManager.otherTasksHandler.mock.calls.map((c) => c[1])).toContain("Restarted Prysm for signer");
         closedTask(taskManager);
       } finally {
         jest.useRealTimers();
@@ -1305,7 +1392,7 @@ describe("remote keys", () => {
       expect(v.keymanagerRequest.mock.calls.map((c) => c[1].method)).toEqual(["GET", "POST"]);
       expect(posts()).toHaveLength(1);
       expect(result).toMatchObject({ code: 0, restarted: true });
-      expect(taskManager.otherTasksHandler.mock.calls.map((c) => c[1])).toContain("Restarted Teku with remote signer");
+      expect(taskManager.otherTasksHandler.mock.calls.map((c) => c[1])).toContain("Restarted Teku for signer");
       closedTask(taskManager);
     });
 
