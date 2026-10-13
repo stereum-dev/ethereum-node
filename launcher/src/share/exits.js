@@ -24,12 +24,17 @@ export function exitBlocker(state, currentEpoch, shardCommitteePeriod) {
 
 const yes = (value) => value === true || value === "true";
 
+// slots the head may trail the clock: missed blocks leave small gaps, a stopped execution client a growing one.
+// Prysm keeps reporting is_syncing, is_optimistic and el_offline as false for minutes after its execution client stops
+export const MAX_SYNC_DISTANCE = 16;
+
 // syncing = /eth/v1/node/syncing data (or null if unreachable)
 export function beaconBlocker(syncing) {
   if (!syncing || typeof syncing !== "object") return "unreachable";
   if (yes(syncing.is_syncing)) return "syncing";
   if (yes(syncing.is_optimistic)) return "optimistic";
   if (yes(syncing.el_offline)) return "elOffline";
+  if (Number(syncing.sync_distance) > MAX_SYNC_DISTANCE) return "behind";
   return null;
 }
 

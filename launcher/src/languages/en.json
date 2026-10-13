@@ -1305,7 +1305,8 @@
       "unreachable": "The beacon node did not answer.",
       "syncing": "The beacon node is still syncing.",
       "optimistic": "The beacon node is optimistic (execution client not synced).",
-      "elOffline": "The beacon node's execution client is offline."
+      "elOffline": "The beacon node's execution client is offline.",
+      "behind": "The beacon node's head is behind the chain (is its execution client running and synced?)."
     },
     "exitError": {
       "notAvailable": "Exit is not available for this client.",

@@ -41,6 +41,15 @@ describe("beaconBlocker", () => {
     expect(beaconBlocker({ is_syncing: false, el_offline: "true" })).toEqual("elOffline");
     expect(beaconBlocker(null)).toEqual("unreachable");
   });
+
+  // Prysm with a stopped Besu: all flags false while the head falls behind (12 slots after ~2 minutes)
+  test("a head that falls behind the clock blocks, small gaps from missed blocks do not", () => {
+    const healthy = { is_syncing: false, is_optimistic: false, el_offline: false };
+    expect(beaconBlocker({ ...healthy, sync_distance: "3" })).toBeNull();
+    expect(beaconBlocker({ ...healthy, sync_distance: "16" })).toBeNull();
+    expect(beaconBlocker({ ...healthy, sync_distance: "17" })).toEqual("behind");
+    expect(beaconBlocker({ ...healthy, sync_distance: 40 })).toEqual("behind");
+  });
 });
 
 describe("checkSignedExit", () => {
