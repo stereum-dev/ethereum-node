@@ -32,6 +32,8 @@
         v-if="canImport"
         icon="/img/icon/staking-page-icons/validator-import.svg"
         :label="t('validatorsPage.import')"
+        :title="whenRunning(t('validatorsPage.import'))"
+        :disabled="clientStopped"
         primary
         @click="openImport([])"
       />
@@ -68,7 +70,14 @@
       <img src="/img/icon/staking-page-icons/obol-key.png" class="w-3.5 h-3.5" alt="" />
       {{ t("validatorsPage.shareNote", { client: dvtClientName }) }}
     </p>
-    <p v-if="keysEntry?.error" class="text-2xs text-red-400 px-1">{{ t("validatorsPage.keysError") }}: {{ keysEntry.error }}</p>
+    <div
+      v-if="clientStopped"
+      class="flex items-center gap-2 rounded-lg border border-red-500/60 bg-red-900/20 px-3 py-1.5 text-xs text-red-200"
+    >
+      <span class="w-2.5 h-2.5 shrink-0 rounded-full bg-red-500" />
+      {{ t("validatorsPage.clientStopped") }}
+    </div>
+    <p v-else-if="keysEntry?.error" class="text-2xs text-red-400 px-1">{{ t("validatorsPage.keysError") }}: {{ keysEntry.error }}</p>
     <p v-if="statesEntry?.error" class="text-2xs text-amber-300 px-1">{{ t("validatorsPage.statesError") }}: {{ statesEntry.error }}</p>
     <p
       v-if="validatorsStore.csm.error && CSM_ROLES.includes(holder?.role)"
@@ -85,24 +94,32 @@
         <ActionButton
           icon="/img/icon/staking-page-icons/option-graffiti.png"
           :label="t('validatorsPage.graffiti')"
+          :title="whenRunning(t('validatorsPage.graffiti'))"
+          :disabled="clientStopped"
           @click="openBulk('graffiti')"
         />
         <ActionButton
           icon="/img/icon/staking-page-icons/option-fee-recepient.png"
           :label="t('validatorsPage.feeRecipient')"
+          :title="whenRunning(t('validatorsPage.feeRecipient'))"
+          :disabled="clientStopped"
           @click="openBulk('feerecipient')"
         />
       </template>
       <button
         v-if="canRemove"
-        class="h-7 px-3 rounded-full bg-red-800 hover:bg-red-700 border border-red-500 text-2xs font-semibold uppercase whitespace-nowrap"
+        class="h-7 px-3 rounded-full bg-red-800 hover:bg-red-700 border border-red-500 text-2xs font-semibold uppercase whitespace-nowrap disabled:opacity-40 disabled:cursor-not-allowed"
+        :title="whenRunning(t('validatorsPage.remove'))"
+        :disabled="clientStopped"
         @click="openBulk('remove')"
       >
         {{ t("validatorsPage.remove") }}
       </button>
       <button
         v-if="canExit"
-        class="h-7 px-3 rounded-full border border-red-500 text-red-300 bg-transparent hover:bg-red-900/40 text-2xs font-semibold uppercase whitespace-nowrap"
+        class="h-7 px-3 rounded-full border border-red-500 text-red-300 bg-transparent hover:bg-red-900/40 text-2xs font-semibold uppercase whitespace-nowrap disabled:opacity-40 disabled:cursor-not-allowed"
+        :title="whenRunning(t('validatorsPage.exit'))"
+        :disabled="clientStopped"
         @click="openBulk('exit')"
       >
         {{ t("validatorsPage.exit") }}
@@ -166,11 +183,17 @@
             </span>
             <span class="text-gray-300">{{ item.state?.index ?? "-" }}</span>
             <span v-if="item.exitSent" class="flex items-center gap-1.5 min-w-0">
-              <img :src="STATUS_META.exiting.icon" class="w-5 h-5 shrink-0" alt="" />
+              <img :src="STATUS_META.exiting.icon" class="w-5 h-5 shrink-0" :class="STATUS_META.exiting.iconClass" alt="" />
               <span class="truncate text-amber-400">{{ t("validatorsPage.status.exitSent") }}</span>
             </span>
             <span v-else class="flex items-center gap-1.5 min-w-0">
-              <img v-if="hasStats" :src="STATUS_META[item.bucket].icon" class="w-5 h-5 shrink-0" alt="" />
+              <img
+                v-if="hasStats"
+                :src="STATUS_META[item.bucket].icon"
+                class="w-5 h-5 shrink-0"
+                :class="STATUS_META[item.bucket].iconClass"
+                alt=""
+              />
               <span class="truncate" :class="STATUS_META[item.bucket].color">{{
                 hasStats ? t(`validatorsPage.status.${item.bucket}`) : "n/a"
               }}</span>
@@ -203,21 +226,24 @@
                 v-if="canSetKeySettings"
                 small
                 icon="/img/icon/staking-page-icons/option-graffiti.png"
-                :label="t('validatorsPage.graffiti')"
+                :label="whenRunning(t('validatorsPage.graffiti'))"
+                :disabled="clientStopped"
                 @click="openModal('graffiti', item)"
               />
               <IconButton
                 v-if="canSetKeySettings && !item.csm"
                 small
                 icon="/img/icon/staking-page-icons/option-fee-recepient.png"
-                :label="t('validatorsPage.feeRecipient')"
+                :label="whenRunning(t('validatorsPage.feeRecipient'))"
+                :disabled="clientStopped"
                 @click="openModal('feerecipient', item)"
               />
               <IconButton
                 v-if="canRemove"
                 small
                 icon="/img/icon/staking-page-icons/option-remove.png"
-                :label="t('validatorsPage.remove')"
+                :label="whenRunning(t('validatorsPage.remove'))"
+                :disabled="clientStopped"
                 @click="openModal('remove', item)"
               />
               <IconButton
@@ -270,6 +296,8 @@ const {
   canExit,
   exitDisabled,
   exitLabel,
+  clientStopped,
+  whenRunning,
 } = useKeyActions();
 const openModal = (type, row) => (validatorsStore.modal = { type, pubkeys: [row.pubkey] });
 const hasExplorer = computed(() => !!explorerUrl(holder.value?.network, "x"));
@@ -295,7 +323,8 @@ const copyKeys = async (list, from) => {
 };
 
 const openImport = (files) => (validatorsStore.modal = { type: "import", pubkeys: [], files: markRaw(files) });
-const onDropFiles = (event) => canImport.value && event.dataTransfer?.files?.length && openImport([...event.dataTransfer.files]);
+const onDropFiles = (event) =>
+  canImport.value && !clientStopped.value && event.dataTransfer?.files?.length && openImport([...event.dataTransfer.files]);
 
 const exportCsv = (list) => {
   const name = `${holder.value?.service?.replace(/Service$/, "") ?? "validators"}-${holder.value?.network ?? ""}-keys.csv`;

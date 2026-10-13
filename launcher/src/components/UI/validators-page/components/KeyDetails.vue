@@ -32,19 +32,22 @@
       <IconButton
         v-if="canSetKeySettings"
         icon="/img/icon/staking-page-icons/option-graffiti.png"
-        :label="t('validatorsPage.graffiti')"
+        :label="whenRunning(t('validatorsPage.graffiti'))"
+        :disabled="clientStopped"
         @click="openModal('graffiti')"
       />
       <IconButton
         v-if="canSetKeySettings && csmPosition === undefined"
         icon="/img/icon/staking-page-icons/option-fee-recepient.png"
-        :label="t('validatorsPage.feeRecipient')"
+        :label="whenRunning(t('validatorsPage.feeRecipient'))"
+        :disabled="clientStopped"
         @click="openModal('feerecipient')"
       />
       <IconButton
         v-if="canRemove"
         icon="/img/icon/staking-page-icons/option-remove.png"
-        :label="t('validatorsPage.remove')"
+        :label="whenRunning(t('validatorsPage.remove'))"
+        :disabled="clientStopped"
         @click="openModal('remove')"
       />
       <IconButton
@@ -82,7 +85,7 @@ import i18n from "@/includes/i18n";
 
 const t = i18n.global.t;
 const validatorsStore = useValidatorsStore();
-const { copied, copyPubkey, canSetKeySettings, canRemove, canExit, exitDisabled, exitLabel } = useKeyActions();
+const { copied, copyPubkey, canSetKeySettings, canRemove, canExit, exitDisabled, exitLabel, clientStopped, whenRunning } = useKeyActions();
 
 const FAR_FUTURE = Number.MAX_SAFE_INTEGER;
 const epochText = (epoch) => (Number.isFinite(epoch) && epoch < FAR_FUTURE ? String(epoch) : "-");

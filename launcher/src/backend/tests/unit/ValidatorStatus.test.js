@@ -18,7 +18,7 @@ test("statuses are bucketed for filtering", () => {
   expect(statusBucket({ status: "pending_initialized" })).toEqual("pending");
   expect(statusBucket({ status: "pending_queued" })).toEqual("pending");
   expect(statusBucket({ status: "exited_unslashed" })).toEqual("exited");
-  expect(statusBucket({ status: "withdrawal_possible" })).toEqual("withdrawn");
+  expect(statusBucket({ status: "withdrawal_possible" })).toEqual("exited");
   expect(statusBucket({ status: "withdrawal_done" })).toEqual("withdrawn");
   expect(statusBucket({ status: "exited_slashed" })).toEqual("slashed");
   expect(statusBucket({ status: "active_slashed", slashed: true })).toEqual("slashed");

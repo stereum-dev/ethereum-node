@@ -10,7 +10,7 @@
     @click="$emit('select', card.filter)"
   >
     <span class="w-10 h-10 shrink-0 rounded-full bg-[#0D0D12] border border-[#4b8585]/60 flex items-center justify-center">
-      <img :src="card.icon" class="w-7 h-7 object-contain" alt="" />
+      <img :src="card.icon" class="w-7 h-7 object-contain" :class="card.iconClass" alt="" />
     </span>
     <span class="flex flex-col min-w-0">
       <span class="text-2xs font-semibold uppercase text-gray-400 truncate">{{ card.label }}</span>

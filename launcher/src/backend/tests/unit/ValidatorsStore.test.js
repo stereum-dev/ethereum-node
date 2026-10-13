@@ -148,13 +148,41 @@ describe("exits", () => {
 
 test("exit stays open for unknown and pending keys, and closes once sent or exiting", () => {
   const store = useValidatorsStore();
-  store.holders = [{ id: "lh", role: "validator" }];
+  store.holders = [{ id: "lh", role: "validator", state: "running" }];
   store.selectedHolderId = "lh";
   const { exitDisabled, exitLabel } = useKeyActions();
   for (const bucket of ["active", "pending", "unknown"]) expect(exitDisabled({ bucket })).toBe(false);
   for (const bucket of ["exiting", "exited", "withdrawn", "slashed"]) expect(exitDisabled({ bucket })).toBe(true);
   expect(exitDisabled({ bucket: "active", exitSent: true })).toBe(true);
   expect(exitLabel({ bucket: "active", exitSent: true })).toEqual("Exit sent");
+});
+
+test("a stopped client blocks every action that needs its API and says why", () => {
+  const store = useValidatorsStore();
+  store.holders = [{ id: "lh", role: "validator", state: "exited" }];
+  store.selectedHolderId = "lh";
+  const { clientStopped, whenRunning, exitDisabled, exitLabel } = useKeyActions();
+  expect(clientStopped.value).toBe(true);
+  expect(exitDisabled({ bucket: "active" })).toBe(true);
+  expect(exitLabel({ bucket: "active" })).toEqual("Exit (client not running)");
+  expect(whenRunning("Remove")).toEqual("Remove (client not running)");
+  store.holders[0].state = "running";
+  expect([clientStopped.value, whenRunning("Remove"), exitDisabled({ bucket: "active" })]).toEqual([false, "Remove", false]);
+});
+
+test("the search finds a key by part of its index", () => {
+  const { useHolderRows } = require("@/components/UI/validators-page/useHolderRows");
+  const store = useValidatorsStore();
+  const OTHER = "0x" + "b".repeat(96);
+  store.holders = [{ id: "lh", role: "validator", state: "running" }];
+  store.selectedHolderId = "lh";
+  store.keysByHolder.lh = { keys: [{ pubkey: KEY }, { pubkey: OTHER }], loading: false };
+  store.statesByHolder = { lh: { byPubkey: { [KEY]: { index: "1645300", status: "active_ongoing" }, [OTHER]: { index: "17" } } } };
+  const { rows } = useHolderRows();
+  store.search = "16453";
+  expect(rows.value.map((r) => r.pubkey)).toEqual([KEY]);
+  store.search = "1645300";
+  expect(rows.value.map((r) => r.pubkey)).toEqual([KEY]);
 });
 
 describe("remote key import", () => {

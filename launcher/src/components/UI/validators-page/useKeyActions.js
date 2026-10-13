@@ -35,6 +35,9 @@ export function useKeyActions() {
   // remote keys only into a validator client with its own keys: shares go through Charon/Pluto, and Web3Signer is the source
   const canImportRemote = computed(() => validatorsStore.selectedHolder?.role === "validator");
   const holderRunning = computed(() => validatorsStore.selectedHolder?.state === "running");
+  // everything that goes through the client's API waits until it runs again; aliases and groups do not
+  const clientStopped = computed(() => !!validatorsStore.selectedHolder && !holderRunning.value);
+  const whenRunning = (label) => (clientStopped.value ? i18n.global.t("validatorsPage.clientStoppedAction", { action: label }) : label);
   // why remote import is not possible right now, so the user is not sent through the whole modal first
   const remoteImportBlock = computed(() => {
     const holder = validatorsStore.selectedHolder;
@@ -49,9 +52,10 @@ export function useKeyActions() {
   // Charon/SSV exit with their cluster, and Web3Signer keys exit through the VC that uses them
   const canExit = computed(() => ["validator", "share"].includes(validatorsStore.selectedHolder?.role));
   // only a known state rules a key out; pending keys may export, unknown ones are left to the preflight
-  const exitDisabled = (row) => !!row.exitSent || EXIT_DONE_BUCKETS.includes(row.bucket);
+  const exitDisabled = (row) => clientStopped.value || !!row.exitSent || EXIT_DONE_BUCKETS.includes(row.bucket);
   const exitLabel = (row) => {
     if (row.exitSent) return i18n.global.t("validatorsPage.status.exitSent");
+    if (clientStopped.value) return whenRunning(i18n.global.t("validatorsPage.exit"));
     return exitDisabled(row) ? i18n.global.t("validatorsPage.exitUnavailable") : i18n.global.t("validatorsPage.exit");
   };
 
@@ -64,6 +68,8 @@ export function useKeyActions() {
     canImport,
     canImportRemote,
     holderRunning,
+    clientStopped,
+    whenRunning,
     remoteImportBlock,
     canExit,
     exitDisabled,

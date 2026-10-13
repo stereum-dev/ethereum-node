@@ -34,7 +34,7 @@
         :title="`${card.label}: ${card.value}`"
         @click="select(card.filter)"
       >
-        <img :src="card.icon" class="w-4 h-4 shrink-0 object-contain" alt="" />
+        <img :src="card.icon" class="w-4 h-4 shrink-0 object-contain" :class="card.iconClass" alt="" />
         <span class="text-2xs font-semibold uppercase text-gray-400 truncate grow">{{ card.label }}</span>
         <span class="text-sm font-bold" :class="card.color">{{ card.value }}</span>
       </button>
@@ -83,6 +83,7 @@ const statusCards = computed(() =>
         filter: bucket,
         label: t(`validatorsPage.status.${bucket}`),
         icon: STATUS_META[bucket].icon,
+        iconClass: STATUS_META[bucket].iconClass,
         value: counts.value[bucket],
         color: STATUS_META[bucket].color,
       }))

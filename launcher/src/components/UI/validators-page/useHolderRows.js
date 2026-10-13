@@ -78,7 +78,10 @@ export function useHolderRows() {
     return scopedRows.value.filter(
       (row) =>
         (filter === "all" || row.bucket === filter) &&
-        (!search || row.pubkey.includes(search) || row.alias?.toLowerCase().includes(search) || String(row.state?.index ?? "") === search)
+        (!search ||
+          row.pubkey.includes(search) ||
+          row.alias?.toLowerCase().includes(search) ||
+          String(row.state?.index ?? "").includes(search))
     );
   });
 

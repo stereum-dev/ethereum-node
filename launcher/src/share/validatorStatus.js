@@ -14,6 +14,8 @@ export function statusBucket(state, queued = false) {
   if (status.startsWith("active")) return "active";
   if (status.startsWith("pending")) return "pending";
   if (status.startsWith("exited")) return "exited";
+  // withdrawal_possible: exited and withdrawable, but the balance is still there until the sweep pays it out
+  if (status === "withdrawal_possible") return "exited";
   if (status.startsWith("withdrawal")) return "withdrawn";
   return "unknown";
 }
