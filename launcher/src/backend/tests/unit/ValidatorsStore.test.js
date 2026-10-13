@@ -406,6 +406,20 @@ describe("duties, rewards, clusters and CSM", () => {
     expect(store.dutiesByHolder.lh.loading).toBe(false);
   });
 
+  // the epoch of a late attestation reward may predate the page; without committee membership its sync reward is 0
+  test("a row that only the attestation reward created gets a sync reward of 0 outside the committee", async () => {
+    const store = withHolder();
+    store.dutiesByHolder.lh = { data: { ...duties, sync: { ...duties.sync, current: [] } }, loading: false, error: null, loadedAt: 1 };
+    ControlService.getHolderRewards.mockResolvedValueOnce({
+      code: 0,
+      attestation: { epoch: 97, total: 40, ideal: 40, effectiveness: 1, missed: [], missedCount: 0 },
+      blocks: [],
+      unsupported: {},
+    });
+    await store.loadRewards("lh", { epoch: 99, attestationEpoch: 97 });
+    expect(store.rewardsByHolder.lh.history.find((r) => r.epoch === 97)).toEqual({ epoch: 97, attestation: 40, sync: 0 });
+  });
+
   test("shares never ask for duties", async () => {
     const store = withHolder("share");
     expect(await store.loadDuties("lh")).toBeNull();

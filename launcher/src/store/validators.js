@@ -377,7 +377,12 @@ export const useValidatorsStore = defineStore("validators", {
         // attestation rewards lag behind: their row is the finalized epoch, filled in when it arrives
         if (result.attestation) {
           entry.attestation = result.attestation;
-          entry.history = mergeRewardHistory(entry.history, { epoch: result.attestation.epoch, attestation: result.attestation.total });
+          const row = { epoch: result.attestation.epoch, attestation: result.attestation.total };
+          // an epoch from before the page was open has no sync reward booked; no committee membership means 0
+          const existing = entry.history.find((r) => r.epoch === row.epoch);
+          const members = syncCommitteeOf(duties, row.epoch);
+          if (!Number.isFinite(existing?.sync) && members && !members.length) row.sync = 0;
+          entry.history = mergeRewardHistory(entry.history, row);
         }
         return result;
       } catch (err) {

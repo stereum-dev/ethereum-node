@@ -90,10 +90,22 @@
               class="h-6 shrink-0 items-center px-2 rounded-full bg-linear-to-r from-[#25302f] to-[#1b1f22] text-2xs"
             >
               <span class="text-gray-300">{{ row.epoch }}</span>
-              <span class="text-right" :title="cellTitle('attestation')">{{ cell(row.attestation, "attestation") }}</span>
+              <span
+                v-if="attestationPending(row)"
+                class="text-right text-gray-500"
+                :title="t('validatorsPage.duties.attestationPending')"
+                >{{ t("validatorsPage.duties.pending") }}</span
+              >
+              <span v-else class="text-right" :title="cellTitle('attestation')">{{ cell(row.attestation, "attestation") }}</span>
               <span class="text-right" :title="cellTitle('sync')">{{ cell(row.sync, "sync") }}</span>
               <span class="text-right" :title="cellTitle('block') ?? consensusOnly">{{ cell(row.block, "block") }}</span>
-              <span class="text-right font-semibold" :class="rowTotal(row) < 0 ? 'text-red-400' : 'text-[#74fa65]'">{{
+              <span
+                v-if="attestationPending(row)"
+                class="text-right text-gray-500"
+                :title="t('validatorsPage.duties.attestationPending')"
+                >{{ t("validatorsPage.duties.pending") }}</span
+              >
+              <span v-else class="text-right font-semibold" :class="rowTotal(row) < 0 ? 'text-red-400' : 'text-[#74fa65]'">{{
                 formatGwei(rowTotal(row))
               }}</span>
             </div>
@@ -166,6 +178,9 @@ const stateText = (row) => {
 const unsupported = (kind) => !!rewards.value?.unsupported?.[kind];
 const cell = (value, kind) => (Number.isFinite(value) ? formatGwei(value) : unsupported(kind) ? "n/a" : "-");
 const cellTitle = (kind) => (unsupported(kind) ? t("validatorsPage.duties.unsupported") : undefined);
+// attestation rewards arrive once their epoch is finalized, about two epochs later; until then the total is not final
+const attestedUpTo = computed(() => rewards.value?.attestation?.epoch ?? -1);
+const attestationPending = (row) => !Number.isFinite(row.attestation) && !unsupported("attestation") && row.epoch > attestedUpTo.value;
 const rowTotal = (row) => {
   const parts = [row.attestation, row.sync, row.block].filter(Number.isFinite);
   return parts.length ? parts.reduce((a, b) => a + b, 0) : NaN;
