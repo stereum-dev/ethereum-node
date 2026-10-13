@@ -1,0 +1,108 @@
+import { compareVersions, gloasForkTime, gloasReadiness, GLOAS_FORKS } from "@/share/gloasFork";
+
+const SEPOLIA_FORK = 1791294816; // 2026-10-06, epoch 353024
+const HOODI_FORK = 1793036568; // 2026-10-26 17:42:48 UTC, epoch 132352
+
+const service = (service, network, imageVersion, name = service) => ({ service, name, config: { network, imageVersion } });
+
+test("the fork time follows from genesis and epoch", () => {
+  expect(gloasForkTime("sepolia")).toBe(SEPOLIA_FORK);
+  expect(gloasForkTime("hoodi")).toBe(HOODI_FORK);
+});
+
+test("an unscheduled or unknown network has no fork time", () => {
+  expect(GLOAS_FORKS.mainnet.epoch).toBeNull();
+  expect(gloasForkTime("mainnet")).toBeNull();
+  expect(gloasForkTime("gnosis")).toBeNull();
+  expect(gloasForkTime(undefined)).toBeNull();
+});
+
+test.each([
+  ["v8.2.2", "8.3.0-rc.0", -1],
+  ["v8.3.0-rc.0", "8.3.0-rc.0", 0],
+  ["v8.3.0-rc.1", "8.3.0-rc.0", 1],
+  ["v8.3.0", "8.3.0-rc.0", 1],
+  ["multiarch-v26.8.0", "26.10.0", -1],
+  ["multiarch-v26.10.0", "26.10.0", 0],
+  ["v1.17.10", "1.17.7", 1],
+  ["1.12", "1.12.0", 0],
+  ["v3.0.0-rc.10", "3.0.0-rc.9", 1],
+])("compareVersions(%s, %s) = %d", (a, b, expected) => {
+  expect(compareVersions(a, b)).toBe(expected);
+});
+
+test("tags that are not versions are not compared", () => {
+  expect(compareVersions("latest", "1.0.0")).toBeNull();
+  expect(compareVersions(undefined, "1.0.0")).toBeNull();
+});
+
+test("only services below the minimum are listed", () => {
+  const result = gloasReadiness(
+    [
+      service("TekuBeaconService", "sepolia", "26.8.1", "Teku"),
+      service("GethService", "sepolia", "v1.17.7", "Geth"),
+      service("LighthouseValidatorService", "sepolia", "v8.3.0-rc.0", "Lighthouse"),
+      service("NimbusBeaconService", "sepolia", "multiarch-v26.8.0", "Nimbus"),
+    ],
+    SEPOLIA_FORK - 86400
+  );
+
+  expect(result).toEqual([
+    {
+      network: "sepolia",
+      forkTime: SEPOLIA_FORK,
+      forked: false,
+      outdated: [
+        { name: "Teku", service: "TekuBeaconService", version: "26.8.1", minimum: "26.9.1" },
+        { name: "Nimbus", service: "NimbusBeaconService", version: "multiarch-v26.8.0", minimum: "26.10.0" },
+      ],
+    },
+  ]);
+});
+
+test("the result says when the fork has passed", () => {
+  const [sepolia] = gloasReadiness([service("PrysmBeaconService", "sepolia", "v7.1.8")], SEPOLIA_FORK);
+
+  expect(sepolia.forked).toBe(true);
+});
+
+test("networks without a schedule, unchecked services and unknown tags are skipped", () => {
+  const result = gloasReadiness(
+    [
+      service("TekuBeaconService", "hoodi", "26.8.1"),
+      service("TekuBeaconService", "mainnet", "26.8.1"),
+      service("MetricsExporterService", "sepolia", "v1.0.0"),
+      service("GethService", "sepolia", "latest"),
+      { service: "GethService" },
+    ],
+    SEPOLIA_FORK
+  );
+
+  expect(result).toEqual([]);
+});
+
+test("a service without a compatible release is always listed", () => {
+  const [sepolia] = gloasReadiness([service("CharonService", "sepolia", "v1.11.0", "Obol Charon")], SEPOLIA_FORK);
+
+  expect(sepolia.outdated).toEqual([{ name: "Obol Charon", service: "CharonService", version: "v1.11.0", minimum: null }]);
+});
+
+test("on hoodi only lodestar is checked so far", () => {
+  const result = gloasReadiness(
+    [
+      service("LodestarBeaconService", "hoodi", "v1.49.0", "Lodestar"),
+      service("LodestarValidatorService", "hoodi", "v1.50.0", "Lodestar VC"),
+      service("TekuBeaconService", "hoodi", "26.10.0", "Teku"),
+    ],
+    HOODI_FORK - 86400
+  );
+
+  expect(result).toEqual([
+    {
+      network: "hoodi",
+      forkTime: HOODI_FORK,
+      forked: false,
+      outdated: [{ name: "Lodestar", service: "LodestarBeaconService", version: "v1.49.0", minimum: "1.50.0" }],
+    },
+  ]);
+});

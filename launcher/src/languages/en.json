@@ -516,7 +516,14 @@
     "stats": "STATUS: OPEN",
     "clientService": "CLIENT / SERVICE",
     "csm": "csm operator monitoring",
-    "brokenConfig": "config unreadable"
+    "brokenConfig": "config unreadable",
+    "gloasSoon": "GLAMSTERDAM IN {n} DAY | GLAMSTERDAM IN {n} DAYS",
+    "gloasPassed": "GLAMSTERDAM: CLIENT TOO OLD",
+    "gloasUpdate": "> update",
+    "gloasNeeds": "needs",
+    "gloasNoRelease": "no compatible release yet",
+    "gloasHover": "Glamsterdam forks on {network} on {date}. Update before then: {list}",
+    "gloasHoverPassed": "{network} forked to Glamsterdam on {date}. These clients no longer follow the chain: {list}"
   },
   "resyncModal": {
     "message": "YOUR CLIENT Stores blockchain data ON YOUR SERVER SO YOUR NODE CAN serve the network. this is necessary for your node TO PICK up its ATTESTATION DUTY in STAKING. BY USING THIS OPTION YOU ARE DELETING YOUR CLIENTS's CURRENT BLOCKCHAIN DATA & USE THE SELECTED OPTION AS A SOURCE TO SYNCHRONIZE YOUR NODE ANEW.",

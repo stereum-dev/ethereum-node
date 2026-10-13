@@ -291,6 +291,29 @@
           </div>
         </template>
 
+        <!-- clients too old for a scheduled Glamsterdam fork -->
+        <template v-for="gloas in gloasAlerts" :key="gloas.network">
+          <div
+            v-if="!alertShowState.includes(gloas.level)"
+            :class="`status-message_${gloas.level} h-9 pointer`"
+            @mouseenter="cursorLocation = gloas.hover"
+            @mouseleave="cursorLocation = ''"
+            @click="showUpdate"
+          >
+            <div class="message-icon">
+              <img :src="`/img/icon/node-alert-icons/alert-general-${gloas.level}.png`" alt="glamsterdam" />
+            </div>
+            <div class="message-text_container">
+              <div class="main-message" :class="{ 'text-gray-900': gloas.level === 'yellow' }">
+                <span>{{ gloas.title }}</span>
+              </div>
+              <div class="val-message" :class="{ 'text-gray-900': gloas.level === 'yellow' }">
+                <span>{{ gloas.detail }}</span>
+              </div>
+            </div>
+          </div>
+        </template>
+
         <div
           v-if="stereumUpdate.current !== stereumUpdate.version && !alertShowState.includes('green')"
           class="status-message_green h-9"
@@ -347,9 +370,13 @@ import { useNodeHeader } from "@/store/nodeHeader";
 import { useServices } from "@/store/services";
 import { useFooter } from "@/store/theFooter";
 import { useNodeStore } from "@/store/theNode";
+import { useGloasAlerts } from "@/composables/gloasFork";
 export default {
   components: {
     AlertSkeleton,
+  },
+  setup() {
+    return useGloasAlerts();
   },
   data() {
     return {
