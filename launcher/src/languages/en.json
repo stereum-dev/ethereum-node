@@ -1335,7 +1335,7 @@
     "exitSentNote": "Submitted exits show as Exiting once they are included in a block.",
     "exitExport": "Export signed exits",
     "exitExporting": "Signing {count} exit messages...",
-    "exitExported": "{count} signed exit messages saved.",
+    "exitExported": "{n} signed exit message saved. | {n} signed exit messages saved.",
     "exitExportNote": "Anyone with this file can exit these validators at any time. Keep it safe.",
     "downloadAgain": "Download again",
     "group": "Group",

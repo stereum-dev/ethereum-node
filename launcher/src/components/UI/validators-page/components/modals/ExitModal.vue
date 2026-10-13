@@ -67,7 +67,7 @@
     <template v-else>
       <p v-if="result.info" class="text-xs text-red-400">{{ errorText(result) }}</p>
       <p v-if="mode === 'export' && messages?.length" class="text-xs text-gray-200">
-        {{ t("validatorsPage.exitExported", { count: messages.length }) }}
+        {{ t("validatorsPage.exitExported", messages.length) }}
       </p>
       <div v-if="mode === 'exit'" class="flex flex-wrap gap-2">
         <span
@@ -152,7 +152,7 @@ const serviceStore = useServices();
 const holder = validatorsStore.selectedHolder;
 
 const STATUS_CHIP = {
-  submitted: "border-[#4b8585] text-teal-300",
+  submitted: "border-green-500 text-green-500",
   rejected: "border-red-500 text-red-300",
   signFailed: "border-red-500 text-red-300",
   skipped: "border-gray-600 text-gray-400",
