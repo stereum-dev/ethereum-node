@@ -78,9 +78,45 @@ The app is bundled with **electron-vite** (`electron.vite.config.js`), which dri
 
 At runtime on the target server, `genericPlaybook.yaml` merges three layers into a single `stereum` var: `controls/defaults/stereum_defaults.yaml` (static defaults incl. pinned client `versions:`), `/etc/stereum/stereum.yaml` (per-server settings), and command-line `stereum_args`. Client image versions are pinned in `stereum_defaults.yaml` **and** as `imageVersion` defaults inside each `*Service.js` — keep them coherent when bumping.
 
+## UI design guidelines (launcher)
+
+New UI must look like the rest of Stereum. The validators page (`src/components/UI/validators-page/`) is the reference implementation.
+
+- **Palette, teal family:** `#336666` (primary buttons, selected), `#4b8585` (borders, primary hover), `#224141` (highlighted/info backgrounds, banners), `#264744` / `#447a75` (secondary fills), `#7fb3b3` (muted accent text, labels, info notes).
+- **Dark surfaces:** `#0D0D12` (inputs, inner boxes), `#1d2023` (rows, chips, secondary buttons), `#151618` / `#1E2429` / `#171D22` (panels). Modals use `ValidatorModal.vue` (gradient `#1f2a2a` to `#0D0D12`, `#4b8585` border).
+- **Meaning colors:**
+  - success: `green-500` (icons, borders) and `green-400`/`green-500` (text);
+  - warning or in progress: amber (`amber-300`/`amber-400`/`amber-500`);
+  - error, destructive or blocked: red (`red-400`/`red-500`, boxes `border-red-500 bg-red-900/20`);
+  - neutral or info: the teal family above.
+- **Don't use** `emerald`/mint, `cyan`, or `sky`/blue for info boxes or notes. The only blue is the Pending and CSM queue status (`sky-400`), because those status icons are blue.
+- **Validator status colors and icons** come from `validators-page/statusMeta.js` only. Key rows, summary cards and modals all read from it.
+  - Icons live in `public/img/icon/staking-page-icons/`.
+  - The set has no amber icon, so "Exiting" tints the red exit cart with `iconClass` (`hue-rotate-[35deg] brightness-125`). Reuse that instead of adding look-alike assets.
+  - Buckets come from `statusBucket` in `src/share/validatorStatus.js`. `withdrawal_possible` counts as "exited" until the sweep pays out; only `withdrawal_done` is "withdrawn".
+- **Controls:**
+  - buttons: `ActionButton.vue` (`h-7 rounded-full text-2xs uppercase`, primary teal) and `IconButton.vue`;
+  - chips: `px-3 py-1 rounded-full text-xs font-semibold border` with the meaning color;
+  - search and inputs: `rounded-full bg-[#0D0D12] border-[#4b8585]`, `focus:border-teal-400`.
+- **Loading:**
+  - `/animation/loading/turning-circle.gif` for small spinners;
+  - `ImportAnimation.vue` (the sliding `validator-import.gif` with amber blinking dots) for long running imports, with a progress detail line.
+- **Long lists:**
+  - render them with `VirtualList.vue`; key lists can hold thousands of entries;
+  - use `Set`s for membership checks, never `Array.includes` inside loops.
+- **Text:**
+  - every user-facing string goes in `src/languages/en.json` (other languages come through Crowdin);
+  - counts use vue-i18n plural forms, `"{n} key | {n} keys"` called as `t(key, n)`, never a fixed plural like "1 keys".
+
 ## Conventions
 
 - Prettier + ESLint config are the source of truth (`.prettierrc.json`, `eslint.config.js`). Run `npm run format` before any PR (`format:check` is a CI gate). Lint only files you touched.
 - Style: `camelCase` functions/vars, `PascalCase` classes, `UPPERCASE_WITH_UNDERSCORES` constants, double quotes.
 - Conventional-commit-style PR titles (imperative, no trailing period).
+- **Task panel output is the debugging channel:** users send their task manager output when something fails. Every user-facing backend operation (listing, import, removal, settings, exits) creates a task (`taskManager.otherTasksHandler`):
+  - one subtask per API call, with the request line, the HTTP status or curl exit code, and the answer as received;
+  - a closing `Result` subtask with counts and failures;
+  - keystores, passwords, API tokens and signed exits never go into the panel;
+  - calls made inside another task don't open a task of their own.
+- **One SSH exec is one command of at most ~128 KB** (the remote shell's single-argument limit). Size request bodies by bytes, write large files in chunks (`Validators.keysYamlCommands`), and reduce EIP-3076 slashing protection to the minimal form (`src/share/slashingProtection.js`) before it travels anywhere.
 - CI (`.github/workflows/`) runs Jest unit tests, Molecule role tests, integration tests, ESLint/Prettier, and `shellcheck` on shell scripts. Shell scripts in `controls/` must pass shellcheck.
