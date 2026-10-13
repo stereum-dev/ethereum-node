@@ -169,10 +169,12 @@ export class NodeConnection {
       let installPkgResult;
       const ubuntuMajorVersion = parseFloat(this.osv);
       const needsAnsiblePpa = ubuntuMajorVersion < 26;
+      // add-apt-repository asks Launchpad's API, which some networks block: only for a PPA not set up yet
       const installCmd = needsAnsiblePpa
         ? "sudo -u root apt update &&\
           sudo -u root apt install -y software-properties-common &&\
-          sudo -u root add-apt-repository --yes --update ppa:ansible/ansible &&\
+          (ls /etc/apt/sources.list.d/ansible-ubuntu-ansible-* >/dev/null 2>&1 ||\
+          sudo -u root add-apt-repository --yes --update ppa:ansible/ansible) &&\
           sudo -u root apt install -y pip ansible tar gzip wget git"
         : "sudo -u root apt update &&\
           sudo -u root apt install -y pip ansible tar gzip wget git";
