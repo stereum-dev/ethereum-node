@@ -622,6 +622,26 @@ describe("key import", () => {
     expect(result).toMatchObject({ code: 0, live: [key(1)], alreadyImported: [key(3)], genesisRoot: ROOT, doppelganger: true });
   });
 
+  // a lone Web3Signer has no beacon node, the known root of its network checks the slashing protection
+  test("without a beacon node the known genesis root of the holder's network is used", async () => {
+    const v = importer();
+    const hoodi = "0x212f13fc4df078b6cb7db228f1c8307566dcecf900867401a92023d7ba99cb5f";
+    v.findHolderBeacon = jest.fn().mockResolvedValue({ code: 1, info: "no beacon node" });
+    v.getValidatorHolders = jest.fn().mockResolvedValue([{ id: "lh", role: "signer", network: "hoodi" }]);
+    v.listHolderKeys = jest.fn().mockResolvedValue({ code: 0, keys: [] });
+    v.getValidatorStates = jest.fn().mockResolvedValue({ code: 1, byPubkey: {} });
+    v.keymanagerRequest = jest.fn().mockResolvedValue({ status: 200, body: { data: [{ status: "imported" }] } });
+    const interchange = (root) =>
+      JSON.stringify({
+        metadata: { interchange_format_version: "5", genesis_validators_root: root },
+        data: [{ pubkey: key(1), signed_blocks: [], signed_attestations: [] }],
+      });
+
+    expect(await v.prepareImport("lh", [key(1)])).toMatchObject({ code: 0, genesisRoot: hoodi });
+    expect((await v.importKeys("lh", [keystore(1)], ["pw"], interchange(hoodi))).results[0].status).toEqual("imported");
+    expect((await v.importKeys("lh", [keystore(1)], ["pw"], interchange(ROOT))).info).toContain("different network");
+  });
+
   test("keystores are imported in chunks and reported in their order", async () => {
     const v = importer();
     v.keymanagerRequest = jest

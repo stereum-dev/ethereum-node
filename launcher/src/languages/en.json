@@ -1261,6 +1261,7 @@
     "slashingMinimalSame": "minimal form (EIP-3076), {size}",
     "slashingMissing": "{n} key is not in the file | {n} keys are not in the file",
     "slashingNeverSigned": "{n} key is on chain without slashing protection. I confirm it has never signed anywhere else. | {n} keys are on chain without slashing protection. I confirm they have never signed anywhere else.",
+    "slashingNeverSignedUnknown": "{n} key may be on chain without slashing protection. I confirm it has never signed anywhere else. | {n} keys may be on chain without slashing protection. I confirm they have never signed anywhere else.",
     "importDoppelganger": "Doppelganger protection is on: the client watches the network for a few epochs before the new keys start validating. Some clients, like Teku, only list the keys once that check has passed.",
     "importConfirm": "Import {count}",
     "importing": "Importing {count} keys",

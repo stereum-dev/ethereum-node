@@ -3,6 +3,14 @@
 const PUBKEY = /^0x[0-9a-f]{96}$/;
 const ROOT = /^0x[0-9a-f]{64}$/;
 
+// genesis_validators_root of the public networks, for setups without a beacon node to ask (a lone Web3Signer)
+export const GENESIS_ROOTS = {
+  mainnet: "0x4b363db94e286120d76eb905340fdd4e54bfe9f06bf33ff6cf5ad27f511bfe95",
+  sepolia: "0xd8ea171f3c94aea21ebc42a1ed61052acf3f9209c00e4efbaaddac09ed9b8078",
+  hoodi: "0x212f13fc4df078b6cb7db228f1c8307566dcecf900867401a92023d7ba99cb5f",
+  gnosis: "0xf5dcb5564e829aab27264b9becd5dfaa017085611224cb3036f573368dbb9d47",
+};
+
 const normalizeKey = (key) => {
   const hex = String(key ?? "").toLowerCase();
   return hex.startsWith("0x") ? hex : "0x" + hex;

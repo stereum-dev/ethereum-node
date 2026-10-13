@@ -3,7 +3,7 @@ import * as log from "electron-log";
 import YAML from "yaml";
 import { validatorPorts } from "./ethereum-services/ServicePort.js";
 import { StringUtils } from "./StringUtils.js";
-import { parseKeystore, checkSlashingProtection, hasDoppelgangerProtection } from "@/share/keystores";
+import { parseKeystore, checkSlashingProtection, hasDoppelgangerProtection, GENESIS_ROOTS } from "@/share/keystores";
 import { minimalSlashingProtection, readSlashingProtection } from "@/share/slashingProtection";
 import { exitBlocker, beaconBlocker, checkSignedExit, prysmExitEpoch, PRYSM_EXIT_ISSUE } from "@/share/exits";
 import {
@@ -551,7 +551,10 @@ export class Validators {
         onChain: Object.fromEntries(Object.entries(states.byPubkey ?? {}).map(([k, s]) => [k, { index: s.index, status: s.status }])),
         statesKnown: states.code === 0,
         live,
-        genesisRoot: genesis && !genesis.code ? (genesis.data.api_reponse?.data?.genesis_validators_root ?? null) : null,
+        genesisRoot:
+          (genesis && !genesis.code ? genesis.data.api_reponse?.data?.genesis_validators_root : null) ??
+          GENESIS_ROOTS[holder.network] ??
+          null,
         doppelganger: hasDoppelgangerProtection(info?.service, info?.config?.command),
       };
     } catch (err) {
@@ -583,13 +586,15 @@ export class Validators {
       }
       const beacon = await this.findHolderBeacon(serviceID);
       const genesis = beacon.code ? null : await this.monitoring.queryBeaconApi(beacon.data.url, "/eth/v1/beacon/genesis");
-      const genesisRoot = genesis && !genesis.code ? genesis.data.api_reponse?.data?.genesis_validators_root : null;
+      const asked = genesis && !genesis.code ? genesis.data.api_reponse?.data?.genesis_validators_root : null;
+      const network = asked ? null : (await this.getValidatorHolders()).find((h) => h.id === serviceID)?.network;
+      const genesisRoot = asked ?? GENESIS_ROOTS[network];
       if (!genesisRoot) return { code: 1, info: "the chain's genesis could not be read to check the slashing protection" };
       const check = checkSlashingProtection(JSON.stringify(minimal.interchange), { genesisRoot, pubkeys: parsed.map((p) => p.pubkey) });
       if (!check.ok) return { code: 1, info: "slashing protection rejected: " + check.errors.join(", ") };
       const { stats } = minimal;
       slashingCheck = [
-        `genesis_validators_root: ${genesisRoot} (from ${beacon.data.url})`,
+        `genesis_validators_root: ${genesisRoot} (${asked ? "from " + beacon.data.url : "known root of " + network})`,
         `covers ${parsed.length - check.missing.length} of ${parsed.length} keys`,
         `${stats.validators} validators, ${stats.attestations} attestations and ${stats.blocks} blocks in the file`,
         `highest attestation target epoch ${stats.maxTarget ?? "-"}, highest block slot ${stats.maxSlot ?? "-"}`,

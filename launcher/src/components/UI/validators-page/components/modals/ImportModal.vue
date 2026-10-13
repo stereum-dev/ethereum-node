@@ -156,7 +156,10 @@
           <span v-else class="text-gray-300">{{ t("validatorsPage.slashingNone") }}</span>
           <label v-if="needsNeverSigned" class="flex items-start gap-2 cursor-pointer text-amber-200">
             <input v-model="neverSigned" type="checkbox" class="mt-0.5" />{{
-              t("validatorsPage.slashingNeverSigned", uncoveredOnChain.length)
+              t(
+                check.statesKnown ? "validatorsPage.slashingNeverSigned" : "validatorsPage.slashingNeverSignedUnknown",
+                uncoveredOnChain.length
+              )
             }}
           </label>
         </div>
@@ -323,11 +326,12 @@ const slashingCheck = computed(() => {
     pubkeys: keystores.value.map((k) => k.pubkey),
   });
 });
-// keys on chain that the slashing protection does not cover may have signed before; the user has to vouch for them
+// keys on chain (or maybe, if the chain was not asked) that the slashing protection does not cover may have signed before; the user has to vouch for them
 const uncoveredOnChain = computed(() => {
   const missing = new Set(slashingCheck.value?.missing ?? []);
   const covered = (k) => slashingCheck.value?.ok && !missing.has(k);
-  return keystores.value.map((k) => k.pubkey).filter((k) => check.value?.onChain?.[k] && !covered(k));
+  const maybeOnChain = (k) => !check.value?.statesKnown || check.value?.onChain?.[k];
+  return keystores.value.map((k) => k.pubkey).filter((k) => maybeOnChain(k) && !covered(k));
 });
 const slashingContents = computed(() => {
   const { validators, attestations, blocks } = slashing.value?.stats ?? {};
@@ -353,7 +357,7 @@ const checkChips = computed(() => {
     { label: t("validatorsPage.importAlready"), count: check.value?.alreadyImported?.length ?? 0 },
     { label: t("validatorsPage.status.active"), count: onChain.filter((s) => String(s.status).startsWith("active")).length },
     { label: t("validatorsPage.status.unknown"), count: keystores.value.length - onChain.length },
-  ].filter((chip, i) => i === 0 || chip.count);
+  ].filter((chip, i) => i === 0 || (chip.count && (i < 2 || check.value?.statesKnown)));
 });
 const runCheck = async () => {
   step.value = "check";
