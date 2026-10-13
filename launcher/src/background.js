@@ -869,7 +869,7 @@ ipcMain.handle("getValidatorHolders", async () => {
 });
 
 ipcMain.handle("listHolderKeys", async (event, args) => {
-  return await validators.listHolderKeys(args.serviceID);
+  return await validators.listHolderKeys(args.serviceID, { report: true });
 });
 
 ipcMain.handle("getHolderValidatorStates", async (event, args) => {
@@ -897,7 +897,9 @@ ipcMain.handle("prepareKeyImport", async (event, args) => {
 });
 
 ipcMain.handle("importValidatorKeys", async (event, args) => {
-  return await validators.importKeys(args.serviceID, args.keystores, args.passwords, args.slashingProtection);
+  return await validators.importKeys(args.serviceID, args.keystores, args.passwords, args.slashingProtection, (progress) => {
+    if (!event.sender.isDestroyed()) event.sender.send("importProgress", progress);
+  });
 });
 
 ipcMain.handle("writeKeyEntries", async (event, args) => {

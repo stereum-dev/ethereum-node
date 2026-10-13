@@ -149,29 +149,109 @@ describe("key listing", () => {
     expect(result.code).toEqual(1);
     expect(result.keys).toEqual([]);
   });
+
+  describe("task panel", () => {
+    const lister = (answers) => {
+      const taskManager = { otherTasksHandler: jest.fn() };
+      const keymanagerAPI = jest.fn();
+      answers.forEach((a) => keymanagerAPI.mockResolvedValueOnce(a));
+      const monitoring = {
+        nodeConnection: {
+          taskManager,
+          readServiceConfiguration: jest.fn().mockResolvedValue({ id: "lh", service: "LighthouseValidatorService" }),
+        },
+        getServiceInfos: jest.fn().mockResolvedValue([info("LighthouseValidatorService", "lh")]),
+        validatorAccountManager: { keymanagerAPI },
+      };
+      return { v: new Validators(monitoring), calls: () => taskManager.otherTasksHandler.mock.calls };
+    };
+
+    test("the page's listing shows every answer, then the result", async () => {
+      const keystores = { data: [{ validating_pubkey: key(1), readonly: false }] };
+      const { v, calls } = lister([
+        { rc: 0, stdout: JSON.stringify(keystores) },
+        { rc: 0, stdout: JSON.stringify({ data: [] }) },
+      ]);
+
+      await v.listHolderKeys("lh", { report: true });
+
+      expect(calls().map((c) => [c[1], c[2]])).toEqual([
+        ["Listing Keys", undefined],
+        ["GET /eth/v1/keystores", true],
+        ["GET /eth/v1/remotekeys", true],
+        ["Result", true],
+        [undefined, undefined],
+      ]);
+      expect(calls()[1][3]).toEqual(
+        "GET http://stereum-lh:5062/eth/v1/keystores\ncurl exit 0\nanswer:\n" + JSON.stringify(keystores, null, 2)
+      );
+      expect(calls()[3][3]).toEqual("1 keys: 1 local, 0 remote");
+    });
+
+    test("a stopped client's failure is shown with curl's reason and the raw answer", async () => {
+      const { v, calls } = lister([{ rc: 6, stdout: "", stderr: "" }]);
+
+      const result = await v.listHolderKeys("lh", { report: true });
+
+      expect(result.info).toEqual("keymanager /eth/v1/keystores failed: host not found");
+      const failed = calls().find((c) => c[1] === "GET /eth/v1/keystores");
+      expect(failed[2]).toBe(false);
+      expect(failed[3]).toContain("curl exit 6 (host not found)");
+      expect(failed[3]).toContain("answer:\n(empty)");
+      expect(calls().at(-2)).toEqual([expect.any(String), "Result", false, result.info]);
+      expect(calls().at(-1)).toHaveLength(1);
+    });
+
+    test("listings inside other tasks add no entry of their own", async () => {
+      const { v, calls } = lister([
+        { rc: 0, stdout: JSON.stringify({ data: [] }) },
+        { rc: 0, stdout: JSON.stringify({ data: [] }) },
+      ]);
+      await v.listHolderKeys("lh");
+      expect(calls()).toEqual([]);
+    });
+  });
 });
 
 describe("per-key settings", () => {
   const withBatch = (statuses) => {
-    const v = new Validators({ nodeConnection: {} });
-    v.keymanagerBatch = jest.fn().mockResolvedValue(statuses);
+    const taskManager = { otherTasksHandler: jest.fn() };
+    const v = new Validators({ nodeConnection: { taskManager } });
+    v.keymanagerCalls = jest.fn(async (id, requests) =>
+      requests.map((r, i) => ({
+        status: statuses[i],
+        body: statuses[i] === 400 ? { message: "bad graffiti" } : null,
+        raw: "",
+        method: r.method,
+        url: "http://stereum-lh:7500" + r.path,
+      }))
+    );
+    v.taskManager = taskManager;
     return v;
   };
 
   test("each key is reported as set or failed by its own status", async () => {
     const v = withBatch([202, 400]);
     const result = await v.setKeySetting("lh", [key(1), key(2)], "graffiti", "stereum");
-    expect(v.keymanagerBatch).toHaveBeenCalledWith("lh", [
+    expect(v.keymanagerCalls).toHaveBeenCalledWith("lh", [
       { method: "POST", path: `/eth/v1/validator/${key(1)}/graffiti`, body: { graffiti: "stereum" } },
       { method: "POST", path: `/eth/v1/validator/${key(2)}/graffiti`, body: { graffiti: "stereum" } },
     ]);
     expect(result).toEqual({ code: 0, ok: [key(1)], failed: [key(2)] });
+
+    // the panel shows every key's answer, the rejection with the client's own message
+    const [, name, ok, data] = v.taskManager.otherTasksHandler.mock.calls[1];
+    expect(name).toEqual("Applied to 1 of 2");
+    expect(ok).toBe(false);
+    expect(data).toContain("POST http://stereum-lh:7500/eth/v1/validator/{pubkey}/graffiti");
+    expect(data).toContain(`${key(1)}: HTTP 202`);
+    expect(data).toContain(`${key(2)}: HTTP 400, answer: {"message":"bad graffiti"}`);
   });
 
   test("no value resets the setting to the client default", async () => {
     const v = withBatch([204]);
     const result = await v.setKeySetting("lh", [key(1)], "feerecipient", null);
-    expect(v.keymanagerBatch.mock.calls[0][1][0]).toEqual({
+    expect(v.keymanagerCalls.mock.calls[0][1][0]).toEqual({
       method: "DELETE",
       path: `/eth/v1/validator/${key(1)}/feerecipient`,
       body: null,
@@ -185,7 +265,7 @@ describe("per-key settings", () => {
     expect((await v.setKeySetting("lh", [key(1)], "graffiti", "two\nlines")).code).toEqual(1);
     expect((await v.setKeySetting("lh", [key(1)], "feerecipient", "0x123")).code).toEqual(1);
     expect((await v.setKeySetting("lh", ["not a key"], "graffiti", "ok")).code).toEqual(1);
-    expect(v.keymanagerBatch).not.toHaveBeenCalled();
+    expect(v.keymanagerCalls).not.toHaveBeenCalled();
   });
 
   test("graffiti is limited by bytes, not characters", async () => {
@@ -198,7 +278,11 @@ describe("per-key settings", () => {
 describe("key removal", () => {
   const interchange = (keys) => JSON.stringify({ metadata: { interchange_format_version: "5" }, data: keys.map((pubkey) => ({ pubkey })) });
   const remover = (answers) => {
-    const v = new Validators({ nodeConnection: { sshService: { exec: jest.fn().mockResolvedValue({ rc: 0, stdout: "", stderr: "" }) } } });
+    const taskManager = { otherTasksHandler: jest.fn() };
+    const v = new Validators({
+      nodeConnection: { taskManager, sshService: { exec: jest.fn().mockResolvedValue({ rc: 0, stdout: "", stderr: "" }) } },
+    });
+    v.taskManager = taskManager;
     v.keymanagerRequest = jest.fn();
     answers.forEach((a) => v.keymanagerRequest.mockResolvedValueOnce(a));
     return v;
@@ -206,24 +290,75 @@ describe("key removal", () => {
 
   // large deletes made validator clients run out of memory, so keys go out in chunks
   test("keystores are deleted in chunks and their slashing protection merged", async () => {
-    const keys = Array.from({ length: 150 }, (_, i) => key(i));
-    const v = remover([
-      {
-        status: 200,
-        body: { data: keys.slice(0, 100).map(() => ({ status: "deleted" })), slashing_protection: interchange(keys.slice(0, 100)) },
-      },
-      {
-        status: 200,
-        body: { data: keys.slice(100).map(() => ({ status: "deleted" })), slashing_protection: interchange(keys.slice(100)) },
-      },
-    ]);
+    const keys = Array.from({ length: 45 }, (_, i) => key(i));
+    const v = remover([]);
+    v.keymanagerRequest.mockImplementation(async (id, request) => ({
+      status: 200,
+      body: { data: request.body.pubkeys.map(() => ({ status: "deleted" })), slashing_protection: interchange(request.body.pubkeys) },
+    }));
 
     const result = await v.removeKeys("lh", { local: keys });
 
-    expect(v.keymanagerRequest.mock.calls.map((c) => c[1].body.pubkeys.length)).toEqual([100, 50]);
+    expect(v.keymanagerRequest.mock.calls.map((c) => c[1].body.pubkeys.length)).toEqual([20, 20, 5]);
     expect(Object.values(result.results).every((s) => s === "deleted")).toBe(true);
-    expect(JSON.parse(result.slashingProtection).data).toHaveLength(150);
+    expect(JSON.parse(result.slashingProtection).data).toHaveLength(45);
     expect(result.savedTo).toMatch(/^\/etc\/stereum\/slashing-protection\/lh-\d+\.json$/);
+
+    const calls = v.taskManager.otherTasksHandler.mock.calls;
+    expect(calls.map((c) => c[1])).toEqual([
+      "Removing 45 keys",
+      "Removed 20 of 45 keystores",
+      "Removed 40 of 45 keystores",
+      "Removed 45 of 45 keystores",
+      "Saved slashing protection on the node",
+      "Result",
+      undefined,
+    ]);
+    expect(calls[1][3]).toContain(`${key(0)}: deleted`);
+    expect(calls[1][3]).toContain('"slashing_protection": "(see the saved file)"');
+    expect(calls[4][3]).toContain(`${result.savedTo}\n45 validators`);
+    expect(calls[5][3]).toEqual("45 deleted");
+  });
+
+  // full histories (5.5 MB for 45 keys after 4 days) outgrew the SSH command and, for thousands of keys, any string
+  test("a full slashing protection export is kept in minimal form, downloaded and saved in pieces that fit one SSH command", async () => {
+    const keys = Array.from({ length: 45 }, (_, i) => key(i));
+    const att = (e) => ({ source_epoch: String(e), target_epoch: String(e + 1), signing_root: "0x" + "c".repeat(64) });
+    const v = remover([]);
+    v.keymanagerRequest.mockImplementation(async (id, request) => ({
+      status: 200,
+      body: {
+        data: request.body.pubkeys.map(() => ({ status: "deleted" })),
+        slashing_protection: JSON.stringify({
+          metadata: { interchange_format_version: "5" },
+          data: request.body.pubkeys.map((pubkey) => ({
+            pubkey,
+            signed_blocks: [{ slot: "5" }, { slot: "900" }],
+            signed_attestations: Array.from({ length: 830 }, (_, e) => att(128532 + e)),
+          })),
+        }),
+      },
+    }));
+
+    const result = await v.removeKeys("lh", { local: keys });
+
+    const kept = JSON.parse(result.slashingProtection);
+    expect(kept.data).toHaveLength(45);
+    expect(kept.data[0]).toEqual({
+      pubkey: key(0),
+      signed_blocks: [{ slot: "900" }],
+      signed_attestations: [{ source_epoch: "129361", target_epoch: "129362" }],
+    });
+    expect(result.slashingProtection.length).toBeLessThan(30000);
+    const commands = v.nodeConnection.sshService.exec.mock.calls.map((c) => c[0]);
+    expect(Math.max(...commands.map((c) => c.length))).toBeLessThan(128 * 1024);
+    // the pieces put together are the whole file, and only the last one moves it in place
+    const text = commands
+      .slice(1)
+      .map((c) => c.split("\n").slice(1, -1).join("\n"))
+      .join("\n");
+    expect(JSON.parse(text)).toEqual(kept);
+    expect(commands.at(-1)).toContain(`&& mv -f ${result.savedTo}.tmp ${result.savedTo}`);
   });
 
   test("a chunk the client could not handle is reported per key", async () => {
@@ -247,7 +382,7 @@ describe("key import", () => {
   const keystore = (n) => JSON.stringify({ crypto: {}, pubkey: key(n).slice(2), version: 4 });
   const importer = () => {
     const monitoring = {
-      nodeConnection: {},
+      nodeConnection: { taskManager: { otherTasksHandler: jest.fn() } },
       queryBeaconApi: jest.fn(async (url, endpoint) =>
         endpoint.includes("genesis")
           ? { code: 0, data: { api_reponse: { data: { genesis_validators_root: ROOT } } } }
@@ -270,6 +405,7 @@ describe("key import", () => {
         ]),
     };
     const v = new Validators(monitoring);
+    v.initClient = jest.fn().mockResolvedValue();
     v.findHolderBeacon = jest.fn().mockResolvedValue({ code: 0, data: { url: "http://127.0.0.1:5052" } });
     v.getValidatorHolders = jest.fn().mockResolvedValue([{ id: "lh", role: "validator" }]);
     return v;
@@ -311,6 +447,141 @@ describe("key import", () => {
     expect(result.results[51]).toEqual({ pubkey: key(51), status: "error", message: "wrong password" });
   });
 
+  test("the task panel shows each answer as received and a summary, never keystores or passwords", async () => {
+    const v = importer();
+    const answer = {
+      data: [
+        { status: "imported", message: "" },
+        { status: "duplicate", message: "" },
+      ],
+    };
+    v.keymanagerRequest = jest.fn().mockResolvedValue({
+      status: 200,
+      rc: 0,
+      body: answer,
+      raw: JSON.stringify(answer),
+      stderr: "",
+      method: "POST",
+      url: "http://stereum-lh:5062/eth/v1/keystores",
+    });
+
+    await v.importKeys("lh", [keystore(1), keystore(2)], ["SECRET_PW", "SECRET_PW"]);
+
+    const calls = v.nodeConnection.taskManager.otherTasksHandler.mock.calls;
+    expect(calls.map((c) => c[1])).toEqual(["Importing 2 keys", "Imported 2 of 2", "Result", undefined]);
+    const [, , ok, data] = calls[1];
+    expect(ok).toBe(true);
+    expect(data).toContain(`${key(1)}: imported\n${key(2)}: duplicate`);
+    expect(data).toContain("POST http://stereum-lh:5062/eth/v1/keystores\nHTTP 200\nanswer:\n" + JSON.stringify(answer, null, 2));
+    expect(calls[2][3]).toEqual("1 imported, 1 duplicate");
+    const panel = calls.map((c) => c[3] ?? "").join("\n");
+    expect(panel).not.toContain("SECRET_PW");
+    expect(panel).not.toContain('"crypto"');
+  });
+
+  // a 5.5 MB Prysm export went out with every chunk and the server dropped the SSH connection (HTTP 0 for all)
+  test("every import request fits into one SSH command, even with a full slashing protection export", async () => {
+    const v = importer();
+    const blocks = [];
+    v.keymanagerRequest = jest.fn(async (id, request) => {
+      blocks.push(Validators.curlBlock("http://stereum-prysm:7500", "T".repeat(64), false, request));
+      return { status: 200, body: { data: request.body.keystores.map(() => ({ status: "imported" })) } };
+    });
+    // a real keystore is about 1.8 KB of JSON with many quotes, which the curl config escapes twice
+    const stores = Array.from({ length: 45 }, (_, i) =>
+      JSON.stringify({
+        crypto: { kdf: { params: { salt: "a".repeat(64) } }, cipher: { message: "b".repeat(1500) } },
+        pubkey: key(i).slice(2),
+        version: 4,
+      })
+    );
+    const exported = JSON.stringify({
+      metadata: { interchange_format_version: "5", genesis_validators_root: ROOT },
+      data: stores.map((_, i) => ({
+        pubkey: key(i),
+        signed_blocks: [],
+        signed_attestations: Array.from({ length: 830 }, (_, e) => ({
+          source_epoch: String(128532 + e),
+          target_epoch: String(128533 + e),
+          signing_root: "0x" + "c".repeat(64),
+        })),
+      })),
+    });
+    expect(exported.length).toBeGreaterThan(5_000_000);
+
+    const result = await v.importKeys(
+      "lh",
+      stores,
+      stores.map(() => "a long keystore password!"),
+      exported
+    );
+
+    expect(result.results.every((r) => r.status === "imported")).toBe(true);
+    expect(Math.max(...blocks.map((b) => b.length))).toBeLessThan(128 * 1024);
+    // each chunk carries the minimal entries of its own keys only
+    const sent = v.keymanagerRequest.mock.calls.map((c) => JSON.parse(c[1].body.slashing_protection));
+    expect(sent.flatMap((sp) => sp.data.map((d) => d.pubkey))).toEqual(stores.map((_, i) => key(i)));
+    expect(sent[0].data[0].signed_attestations).toEqual([{ source_epoch: "129361", target_epoch: "129362" }]);
+  });
+
+  test("the import reports its progress per request, after preparing the client", async () => {
+    const v = importer();
+    v.keymanagerRequest = jest.fn(async (id, request) => ({
+      status: 200,
+      body: { data: request.body.keystores.map(() => ({ status: "imported" })) },
+    }));
+    const stores = Array.from({ length: 120 }, (_, i) => keystore(i));
+    const onProgress = jest.fn();
+
+    await v.importKeys(
+      "lh",
+      stores,
+      stores.map(() => "pw"),
+      null,
+      onProgress
+    );
+
+    expect(onProgress.mock.calls.map((c) => c[0])).toEqual([
+      { phase: "preparing", done: 0, total: 120 },
+      { phase: "importing", done: 0, total: 120, chunk: 1, chunks: 3 },
+      { phase: "importing", done: 50, total: 120, chunk: 2, chunks: 3 },
+      { phase: "importing", done: 100, total: 120, chunk: 3, chunks: 3 },
+    ]);
+  });
+
+  test("a request that never ran says why instead of HTTP 0", () => {
+    expect(Validators.curlFailure(-1, 0, null, "Connection lost!")).toEqual("Connection lost!");
+    expect(Validators.curlFailure(2, 0, null, "")).toEqual("no answer (rc 2)");
+    expect(Validators.curlFailure(0, 500, null, "")).toEqual("HTTP 500");
+  });
+
+  // without this a freshly installed Prysm has no wallet and the import fails
+  test("the client's wallet and API access are set up before keys go in, like the staking page did", async () => {
+    const client = { id: "prysm", service: "PrysmValidatorService" };
+    const initWallet = jest.fn().mockResolvedValue();
+    const taskManager = { otherTasksHandler: jest.fn() };
+    const v = new Validators({
+      nodeConnection: { taskManager },
+      serviceManager: { readServiceConfigurations: jest.fn().mockResolvedValue([{ id: "other" }, client]) },
+      validatorAccountManager: { initWallet },
+    });
+
+    await v.initClient("prysm", "ref");
+
+    expect(initWallet).toHaveBeenCalledWith(client, "ref");
+    expect(taskManager.otherTasksHandler.mock.calls[0].slice(0, 3)).toEqual(["ref", "Checked client setup", true]);
+    await expect(v.initClient("gone", "ref")).rejects.toThrow("no validator service gone");
+  });
+
+  test("an answer that is not JSON is shown as it came, a missing one with curl's reason", () => {
+    expect(Validators.answerText({ method: "POST", url: "u", status: 502, body: null, raw: "<html>Bad Gateway</html>" })).toEqual(
+      "POST u\nHTTP 502\nanswer:\n<html>Bad Gateway</html>"
+    );
+    expect(Validators.answerText({ method: "POST", url: "u", status: 0, rc: 7, body: null, raw: "", stderr: "" })).toEqual(
+      "POST u\nno answer: connection refused (curl exit 7)\nanswer: (empty)"
+    );
+  });
+
   test("nothing is sent without a password per keystore or with foreign slashing protection", async () => {
     const v = importer();
     v.keymanagerRequest = jest.fn();
@@ -332,20 +603,20 @@ describe("marked curl output", () => {
     const pretty = JSON.stringify({ data: { message: { epoch: "1" } } }, null, 2);
     const stdout = '{"a":1}' + M(200) + M(200) + pretty + M(200) + '{"code":404,"message":"nope"}' + M(404) + M("000");
     expect(Validators.splitMarked(stdout, 5)).toEqual([
-      { status: 200, body: { a: 1 } },
-      { status: 200, body: null },
-      { status: 200, body: { data: { message: { epoch: "1" } } } },
-      { status: 404, body: { code: 404, message: "nope" } },
-      { status: 0, body: null },
+      { status: 200, body: { a: 1 }, raw: '{"a":1}' },
+      { status: 200, body: null, raw: "" },
+      { status: 200, body: { data: { message: { epoch: "1" } } }, raw: pretty },
+      { status: 404, body: { code: 404, message: "nope" }, raw: '{"code":404,"message":"nope"}' },
+      { status: 0, body: null, raw: "" },
     ]);
   });
 
   test("requests without a marker count as failed", () => {
     expect(Validators.splitMarked('{"a":1}' + M(200) + '{"b":', 2)).toEqual([
-      { status: 200, body: { a: 1 } },
-      { status: 0, body: null },
+      { status: 200, body: { a: 1 }, raw: '{"a":1}' },
+      { status: 0, body: null, raw: "" },
     ]);
-    expect(Validators.splitMarked("", 1)).toEqual([{ status: 0, body: null }]);
+    expect(Validators.splitMarked("", 1)).toEqual([{ status: 0, body: null, raw: "" }]);
   });
 });
 
@@ -645,13 +916,23 @@ describe("exits", () => {
         beacon: (data) =>
           data.message.validator_index === "2" ? [400, JSON.stringify({ code: 400, message: "invalid exit" })] : [200, ""],
       });
-      const { v, received } = exiter({ listed: [key(1), key(2)], byPubkey: { [key(1)]: stateOf(1), [key(2)]: stateOf(2) }, node });
+      const { v, received, taskManager } = exiter({
+        listed: [key(1), key(2)],
+        byPubkey: { [key(1)]: stateOf(1), [key(2)]: stateOf(2) },
+        node,
+      });
 
       const result = await v.exitKeys("lh", [key(1), key(2)]);
 
       expect(result.results[key(1)]).toEqual({ status: "submitted" });
       expect(result.results[key(2)]).toEqual({ status: "rejected", message: "invalid exit" });
       expect(received[0]).toEqual({ message: { epoch: "1", validator_index: "1" }, signature: SIG });
+
+      // the panel shows the beacon node's answer per key, but a signed exit must never end up there
+      const panel = taskManager.otherTasksHandler.mock.calls.map((c) => c[3] ?? "").join("\n");
+      expect(panel).toContain(`${key(1)} (index 1): submitted - HTTP 200`);
+      expect(panel).toContain(`${key(2)} (index 2): rejected - HTTP 400, answer: {"code":400,"message":"invalid exit"}`);
+      expect(panel).not.toContain(SIG);
     });
 
     test("many keys are signed and sent in chunks of 100", async () => {
@@ -669,7 +950,7 @@ describe("exits", () => {
         "Sent 100 of 250",
         "Sent 200 of 250",
         "Sent 250 of 250",
-        "Exiting 250 validators",
+        "Result",
         undefined,
       ]);
     });
@@ -809,7 +1090,15 @@ describe("remote keys", () => {
         'url = "http://stereum-lh:5062/eth/v1/remotekeys"\nrequest = "GET"\nheader = "Content-Type: application/json"\n' +
         'header = "Authorization: Bearer TOKEN"\nsilent\nwrite-out = "\\n%{http_code}"\n=====KEYMANAGER'
     );
-    expect(result).toEqual({ status: 200, rc: 0, body: { data: [] }, stderr: "" });
+    expect(result).toEqual({
+      status: 200,
+      rc: 0,
+      body: { data: [] },
+      raw: '{"data":[]}',
+      stderr: "",
+      method: "GET",
+      url: "http://stereum-lh:5062/eth/v1/remotekeys",
+    });
   });
 
   describe("import", () => {
@@ -838,6 +1127,7 @@ describe("remote keys", () => {
       const v = new Validators({ nodeConnection, serviceManager });
       v.getValidatorHolders = jest.fn().mockResolvedValue([{ id: "vc", role, service }]);
       v.listHolderKeys = jest.fn().mockResolvedValue({ code: 0, keys: listed });
+      v.initClient = jest.fn().mockResolvedValue();
       v.keymanagerRequest = jest.fn(async (id, request) =>
         request.method === "GET"
           ? { status: ready(), rc: 0, body: null }

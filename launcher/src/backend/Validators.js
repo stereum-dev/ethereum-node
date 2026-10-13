@@ -4,6 +4,7 @@ import YAML from "yaml";
 import { validatorPorts } from "./ethereum-services/ServicePort.js";
 import { StringUtils } from "./StringUtils.js";
 import { parseKeystore, checkSlashingProtection, hasDoppelgangerProtection } from "@/share/keystores";
+import { minimalSlashingProtection, readSlashingProtection } from "@/share/slashingProtection";
 import { exitBlocker, beaconBlocker, checkSignedExit } from "@/share/exits";
 import {
   SIGNER_PATH_KEYS,
@@ -33,11 +34,15 @@ const STATES_CHUNK = 500;
 const STATES_MARKER = "=====STEREUM_VALIDATOR_STATES";
 const ADDRESS = /^0x[0-9a-fA-F]{40}$/;
 const KEYMANAGER_BATCH = 200;
-// keys per DELETE: large deletes made validator clients run out of memory (curl exit 52)
-const REMOVE_CHUNK = 100;
+// keys per DELETE: large deletes made validator clients run out of memory (curl exit 52), and each answer
+// carries its keys' full signing history (~120 KB per key after 4 days, ~10 MB after a year)
+const REMOVE_CHUNK = 20;
 const SLASHING_DIR = "/etc/stereum/slashing-protection";
 // keystores per import request: the client decrypts each one, which is slow for many at once
 const IMPORT_CHUNK = 50;
+// keystore and password bytes per import request: the request goes out inside one SSH command, which the
+// server's shell takes as a single argument of at most 128 KB (curl's escaping adds about a quarter)
+const IMPORT_BYTES = 60000;
 // keys signed and broadcast per exec pair
 const EXIT_CHUNK = 100;
 const HTTP_MARKER = "=====STEREUM_HTTP";
@@ -127,9 +132,13 @@ export class Validators {
 
   /**
    * Keys of one holder: [{ pubkey, remote }]. Read straight from the client (or the cluster lock /
-   * SSV network for DVT holders), without the task panel entries the staking page listing creates.
+   * SSV network for DVT holders). report: a "Listing Keys" task with every answer, as the staking page
+   * had, so users can send it in; off for the listings inside other tasks.
    */
-  async listHolderKeys(serviceID) {
+  async listHolderKeys(serviceID, { report = false } = {}) {
+    const ref = report ? StringUtils.createRandomString() : null;
+    const subtask = (name, ok, data) => ref && this.nodeConnection.taskManager?.otherTasksHandler(ref, name, ok, data);
+    if (ref) this.nodeConnection.taskManager?.otherTasksHandler(ref, "Listing Keys");
     try {
       const holder = (await this.getValidatorHolders()).find((h) => h.id === serviceID);
       if (!holder) throw new Error("no validator service " + serviceID);
@@ -141,6 +150,11 @@ export class Validators {
           pubkey: (holder.role === "distributed" ? dv.distributed_public_key : "0x" + dv.public_key).toLowerCase(),
           remote: false,
         }));
+        subtask(
+          holder.role === "distributed" ? "Read cluster lock" : "Read SSV validators",
+          true,
+          `${keys.length} keys\n` + keys.map((k) => k.pubkey).join("\n")
+        );
         return { code: 0, keys };
       }
 
@@ -148,10 +162,10 @@ export class Validators {
       // Prysm answers an error for keystores in remote signer mode and for remote keys in local mode
       const prysm = client.service === "PrysmValidatorService";
       const prysmRemote = prysm && !!prysmSignerFlags(client.command).url;
-      const keystores = prysmRemote ? [] : await this.keymanagerList(vam, client, "/eth/v1/keystores");
+      const keystores = prysmRemote ? [] : await this.keymanagerList(vam, client, "/eth/v1/keystores", subtask);
       const keys = keystores.map((k) => ({ pubkey: k.validating_pubkey.toLowerCase(), remote: !!k.readonly }));
       if (holder.role !== "signer" && (!prysm || prysmRemote)) {
-        for (const k of await this.keymanagerList(vam, client, "/eth/v1/remotekeys")) {
+        for (const k of await this.keymanagerList(vam, client, "/eth/v1/remotekeys", subtask)) {
           const pubkey = k.pubkey.toLowerCase();
           const url = typeof k.url === "string" && k.url ? { url: k.url } : {};
           // Lighthouse lists Web3Signer keys as readonly keystores too
@@ -160,10 +174,15 @@ export class Validators {
           else keys.push({ pubkey, remote: true, ...url });
         }
       }
+      const remote = keys.filter((k) => k.remote).length;
+      subtask("Result", true, `${keys.length} keys: ${keys.length - remote} local, ${remote} remote`);
       return { code: 0, keys };
     } catch (err) {
       log.error("Listing validator keys of " + serviceID + " failed: ", err);
+      subtask("Result", false, String(err?.message || err));
       return { code: 1, info: String(err?.message || err), keys: [] };
+    } finally {
+      if (ref) this.nodeConnection.taskManager?.otherTasksHandler(ref);
     }
   }
 
@@ -185,26 +204,6 @@ export class Validators {
     }
   }
 
-  /**
-   * Run many keymanager requests in one exec: a single curl container reads one config block per
-   * request from stdin (so the token never shows up in a process list) and prints each status code.
-   * requests: [{ method, path, body }]. Returns the HTTP status per request, in order (0 if missing).
-   */
-  async keymanagerBatch(serviceID, requests) {
-    const { base, token, tls, curlTag } = await this.keymanagerTarget(serviceID);
-    const statuses = [];
-    for (let i = 0; i < requests.length; i += KEYMANAGER_BATCH) {
-      const blocks = requests
-        .slice(i, i + KEYMANAGER_BATCH)
-        .map((r) => Validators.curlBlock(base, token, tls, r, [`output = "/dev/null"`, `write-out = "%{http_code}\\n"`]));
-      const cmd = `docker run --rm -i --network=stereum curlimages/curl:${curlTag} -K - <<'=====KEYMANAGER'\n${blocks.join("\nnext\n")}\n=====KEYMANAGER`;
-      const result = await this.nodeConnection.sshService.exec(cmd);
-      const codes = result.stdout.split("\n").filter((l) => /^\d{3}$/.test(l.trim()));
-      for (let j = 0; j < blocks.length; j++) statuses.push(parseInt(codes[j]) || 0);
-    }
-    return statuses;
-  }
-
   // Where and how a validator client's keymanager API is reached: { base, token, tls, curlTag }
   async keymanagerTarget(serviceID) {
     const client = await this.nodeConnection.readServiceConfiguration(serviceID);
@@ -217,15 +216,17 @@ export class Validators {
 
   /**
    * Many keymanager requests whose answers are needed, in KEYMANAGER_BATCH requests per exec with the
-   * token only in the stdin config. Returns [{ status, body }] in request order.
+   * token only in the stdin config. Returns [{ status, body, raw, method, url }] in request order.
    */
   async keymanagerCalls(serviceID, requests) {
     const { base, token, tls, curlTag } = await this.keymanagerTarget(serviceID);
     const prefix = `docker run --rm -i --network=stereum curlimages/curl:${curlTag}`;
     const results = [];
     for (let i = 0; i < requests.length; i += KEYMANAGER_BATCH) {
-      const blocks = requests.slice(i, i + KEYMANAGER_BATCH).map((r) => Validators.curlBlock(base, token, tls, r, [HTTP_WRITE_OUT]));
-      results.push(...(await this.curlConfigRun(prefix, blocks)));
+      const batch = requests.slice(i, i + KEYMANAGER_BATCH);
+      const blocks = batch.map((r) => Validators.curlBlock(base, token, tls, r, [HTTP_WRITE_OUT]));
+      const answers = await this.curlConfigRun(prefix, blocks);
+      results.push(...answers.map((a, j) => ({ ...a, method: batch[j].method, url: base + batch[j].path })));
     }
     return results;
   }
@@ -236,7 +237,7 @@ export class Validators {
     return Validators.splitMarked(result.stdout, blocks.length);
   }
 
-  // Output of HTTP_WRITE_OUT requests -> [{ status, body }] in order; curl prints 000 for a failed transfer
+  // Output of HTTP_WRITE_OUT requests -> [{ status, body, raw }] in order; curl prints 000 for a failed transfer
   static splitMarked(stdout, count) {
     const text = String(stdout ?? "");
     const marker = new RegExp(`\\n?${HTTP_MARKER} (\\d+)(?:\\n|$)`, "g");
@@ -245,10 +246,10 @@ export class Validators {
     let match;
     while (results.length < count && (match = marker.exec(text)) !== null) {
       const body = text.slice(last, match.index).trim();
-      results.push({ status: parseInt(match[1]) || 0, body: body ? Validators.parseJson(body) : null });
+      results.push({ status: parseInt(match[1]) || 0, body: body ? Validators.parseJson(body) : null, raw: body });
       last = marker.lastIndex;
     }
-    while (results.length < count) results.push({ status: 0, body: null });
+    while (results.length < count) results.push({ status: 0, body: null, raw: "" });
     return results;
   }
 
@@ -269,11 +270,11 @@ export class Validators {
       .join("\n");
   }
 
-  // One keymanager request whose answer is needed, with the token passed on stdin: { status, rc, body, stderr }
+  // One keymanager request whose answer is needed, with the token passed on stdin: { status, rc, body, raw, stderr, method, url }
   async keymanagerRequest(serviceID, request) {
     const { base, token, tls, curlTag } = await this.keymanagerTarget(serviceID);
     const block = Validators.curlBlock(base, token, tls, request, [`write-out = "\\n%{http_code}"`]);
-    return this.curlRequest(block, curlTag);
+    return { ...(await this.curlRequest(block, curlTag)), method: request.method, url: base + request.path };
   }
 
   // One curl config block (ending with write-out "\n%{http_code}") run from the stereum network, read from stdin
@@ -286,17 +287,74 @@ export class Validators {
       .trimEnd()
       .split("\n");
     const status = parseInt(lines.pop()) || 0;
-    return { status, rc: result.rc, body: Validators.parseJson(lines.join("\n")), stderr: result.stderr };
+    const raw = lines.join("\n");
+    return { status, rc: result.rc, body: Validators.parseJson(raw), raw, stderr: result.stderr };
   }
 
   // Why a curl request failed, from curl's exit code or the answer
-  static curlFailure(rc, status, body) {
+  static curlFailure(rc, status, body, stderr = "") {
+    if (Validators.curlExitReason(rc)) return Validators.curlExitReason(rc);
+    if (body?.message) return body.message;
+    // no status at all: the request never ran (e.g. the SSH command failed), say why
+    return status ? `HTTP ${status}` : String(stderr ?? "").trim() || `no answer (rc ${rc})`;
+  }
+
+  // [start, end) ranges of keystores per import request, by count and by size
+  static importChunks(keystores, passwords) {
+    const chunks = [];
+    let start = 0;
+    let bytes = 0;
+    keystores.forEach((keystore, i) => {
+      const size = String(keystore).length + String(passwords[i] ?? "").length;
+      if (i > start && (i - start >= IMPORT_CHUNK || bytes + size > IMPORT_BYTES)) {
+        chunks.push([start, i]);
+        start = i;
+        bytes = 0;
+      }
+      bytes += size;
+    });
+    if (keystores.length) chunks.push([start, keystores.length]);
+    return chunks;
+  }
+
+  // curl's exit code in words, null for codes without a known meaning
+  static curlExitReason(rc) {
     if (rc === 6) return "host not found";
     if (rc === 7) return "connection refused";
     if (rc === 28) return "timed out";
     if ([35, 51, 58, 60].includes(rc)) return "TLS error";
     if (rc === 52) return "validator client ran out of memory";
-    return body?.message || `HTTP ${status}`;
+    return null;
+  }
+
+  // Task panel text for one API answer: request line, HTTP status and the answer as received (never the request body, it holds secrets)
+  static answerText({ method, url, status, rc, body, raw, stderr } = {}) {
+    const lines = [`${method} ${url}`];
+    lines.push(status ? `HTTP ${status}` : `no answer${rc ? `: ${Validators.curlExitReason(rc) ?? "curl error"} (curl exit ${rc})` : ""}`);
+    if (String(stderr ?? "").trim()) lines.push("stderr: " + String(stderr).trim());
+    const answer = body !== null && body !== undefined ? JSON.stringify(body, null, 2) : String(raw ?? "").trim();
+    lines.push(answer ? "answer:\n" + answer : "answer: (empty)");
+    return lines.join("\n");
+  }
+
+  // One line per key result: "pubkey: status - message"
+  static keyLines(results) {
+    return results.map((r) => `${r.pubkey}: ${r.status}${r.message ? " - " + r.message : ""}`).join("\n");
+  }
+
+  // Count per status, e.g. "9 imported, 1 duplicate"
+  static countText(results) {
+    const counts = {};
+    for (const r of results) counts[r.status] = (counts[r.status] ?? 0) + 1;
+    return Object.entries(counts)
+      .map(([status, n]) => `${n} ${status}`)
+      .join(", ");
+  }
+
+  // Closing subtask text: the counts, then the keys that did not make it
+  static summaryText(results, isFailure) {
+    const failed = results.filter(isFailure);
+    return Validators.countText(results) + (failed.length ? "\n\nfailed:\n" + Validators.keyLines(failed) : "");
   }
 
   /**
@@ -350,44 +408,68 @@ export class Validators {
     const results = {};
     let interchange = null;
     try {
-      for (const [keys, path] of [
-        [localKeys, "/eth/v1/keystores"],
-        [remoteKeys, "/eth/v1/remotekeys"],
+      const lines = [];
+      const isFailure = (r) => String(r.status).startsWith("error");
+      for (const [keys, path, kind] of [
+        [localKeys, "/eth/v1/keystores", "keystores"],
+        [remoteKeys, "/eth/v1/remotekeys", "remote keys"],
       ]) {
         for (let i = 0; i < keys.length; i += REMOVE_CHUNK) {
           const chunk = keys.slice(i, i + REMOVE_CHUNK);
-          const { status, rc, body } = await this.keymanagerRequest(serviceID, { method: "DELETE", path, body: { pubkeys: chunk } });
+          const answer = await this.keymanagerRequest(serviceID, { method: "DELETE", path, body: { pubkeys: chunk } });
+          const { body } = answer;
+          let chunkLines;
           if (!Array.isArray(body?.data)) {
-            const reason = Validators.curlFailure(rc, status, body);
+            const reason = Validators.curlFailure(answer.rc, answer.status, body, answer.stderr);
             chunk.forEach((key) => (results[key] = "error: " + reason));
-            continue;
+            chunkLines = chunk.map((pubkey) => ({ pubkey, status: results[pubkey] }));
+          } else {
+            // the answer lists one status per requested key, in request order
+            chunk.forEach((key, j) => (results[key] = body.data[j]?.status ?? "error"));
+            chunkLines = chunk.map((pubkey, j) => ({ pubkey, status: results[pubkey], message: body.data[j]?.message }));
+            // minimal right away: full histories of thousands of keys outgrow any string, file and SSH command
+            if (body.slashing_protection) {
+              interchange = Validators.mergeInterchange(interchange, minimalSlashingProtection(body.slashing_protection, chunk));
+            }
           }
-          // the answer lists one status per requested key, in request order
-          chunk.forEach((key, j) => (results[key] = body.data[j]?.status ?? "error"));
-          if (body.slashing_protection) interchange = Validators.mergeInterchange(interchange, body.slashing_protection);
+          lines.push(...chunkLines);
+          // the slashing protection is saved and downloaded on its own, here it would only bury the answer
+          const shown = body?.slashing_protection ? { ...answer, body: { ...body, slashing_protection: "(see the saved file)" } } : answer;
+          this.nodeConnection.taskManager?.otherTasksHandler(
+            ref,
+            `Removed ${i + chunk.length} of ${keys.length} ${kind}`,
+            Array.isArray(body?.data) && !chunkLines.some(isFailure),
+            Validators.keyLines(chunkLines) + "\n\n" + Validators.answerText(shown)
+          );
         }
       }
 
       let savedTo = null;
       if (interchange) {
         savedTo = `${SLASHING_DIR}/${serviceID}-${Date.now()}.json`;
-        const write = await this.nodeConnection.sshService.exec(
-          `mkdir -p ${SLASHING_DIR} && cat > ${savedTo} <<'=====SLASHING'\n${JSON.stringify(interchange)}\n=====SLASHING`
+        // a full export is megabytes: written in pieces, one line per entry, since one SSH command cannot carry it
+        let write = await this.nodeConnection.sshService.exec(`mkdir -p ${SLASHING_DIR}`);
+        for (const cmd of Validators.keysYamlCommands(JSON.stringify(interchange, null, 1), savedTo)) {
+          if (write.rc != 0) break;
+          write = await this.nodeConnection.sshService.exec(cmd);
+        }
+        this.nodeConnection.taskManager?.otherTasksHandler(
+          ref,
+          "Saved slashing protection on the node",
+          write.rc == 0,
+          write.rc == 0
+            ? `${savedTo}\n${interchange.data?.length ?? 0} validators`
+            : `writing ${savedTo} failed (rc ${write.rc}): ${write.stderr || ""}\nthe downloaded copy is the only one`
         );
         if (write.rc != 0) savedTo = null;
       }
 
-      const failed = Object.entries(results).filter(([, status]) => String(status).startsWith("error"));
-      this.nodeConnection.taskManager?.otherTasksHandler(
-        ref,
-        task,
-        !failed.length,
-        failed.length ? failed.map(([key, status]) => `${key}: ${status}`).join("\n") : ""
-      );
+      const failed = lines.filter(isFailure);
+      this.nodeConnection.taskManager?.otherTasksHandler(ref, "Result", !failed.length, Validators.summaryText(lines, isFailure));
       return { code: 0, results, slashingProtection: interchange ? JSON.stringify(interchange, null, 2) : null, savedTo };
     } catch (err) {
       log.error(task + " failed: ", err);
-      this.nodeConnection.taskManager?.otherTasksHandler(ref, task, false, String(err?.message || err));
+      this.nodeConnection.taskManager?.otherTasksHandler(ref, "Result", false, String(err?.message || err));
       return { code: 2, info: String(err?.message || err), results };
     } finally {
       this.nodeConnection.taskManager?.otherTasksHandler(ref);
@@ -472,52 +554,79 @@ export class Validators {
   /**
    * Import keystores (JSON texts) with one password each into a validator client, in chunks.
    * The slashing protection (EIP-3076 text) is checked against the chain before anything is sent.
+   * onProgress({ phase: "preparing" | "importing", done, total, chunk, chunks }) follows the requests.
    * Returns { code, results: [{ pubkey, status, message }] } in keystore order, or { code, info }.
    */
-  async importKeys(serviceID, keystores = [], passwords = [], slashingProtection = null) {
+  async importKeys(serviceID, keystores = [], passwords = [], slashingProtection = null, onProgress = () => {}) {
     if (!keystores.length || keystores.length !== passwords.length) return { code: 1, info: "every keystore needs a password" };
     const parsed = keystores.map(parseKeystore);
     const broken = parsed.findIndex((p) => p.error);
     if (broken >= 0) return { code: 1, info: `keystore ${broken + 1}: ${parsed[broken].error}` };
 
+    let slashingCheck = null;
+    // reduced once to the minimal form, so no chunk ever parses a full export again
+    let minimal = null;
     if (slashingProtection) {
+      try {
+        minimal = readSlashingProtection(slashingProtection);
+      } catch (err) {
+        return { code: 1, info: "slashing protection rejected: " + String(err?.message || err) };
+      }
       const beacon = await this.findHolderBeacon(serviceID);
       const genesis = beacon.code ? null : await this.monitoring.queryBeaconApi(beacon.data.url, "/eth/v1/beacon/genesis");
       const genesisRoot = genesis && !genesis.code ? genesis.data.api_reponse?.data?.genesis_validators_root : null;
       if (!genesisRoot) return { code: 1, info: "the chain's genesis could not be read to check the slashing protection" };
-      const check = checkSlashingProtection(slashingProtection, { genesisRoot, pubkeys: parsed.map((p) => p.pubkey) });
+      const check = checkSlashingProtection(JSON.stringify(minimal.interchange), { genesisRoot, pubkeys: parsed.map((p) => p.pubkey) });
       if (!check.ok) return { code: 1, info: "slashing protection rejected: " + check.errors.join(", ") };
+      const { stats } = minimal;
+      slashingCheck = [
+        `genesis_validators_root: ${genesisRoot} (from ${beacon.data.url})`,
+        `covers ${parsed.length - check.missing.length} of ${parsed.length} keys`,
+        `${stats.validators} validators, ${stats.attestations} attestations and ${stats.blocks} blocks in the file`,
+        `highest attestation target epoch ${stats.maxTarget ?? "-"}, highest block slot ${stats.maxSlot ?? "-"}`,
+        ...(check.missing.length ? ["not in the file:", ...check.missing] : []),
+      ].join("\n");
     }
 
     const ref = StringUtils.createRandomString();
     const task = `Importing ${keystores.length} keys`;
     this.nodeConnection.taskManager?.otherTasksHandler(ref, task);
+    if (slashingCheck) this.nodeConnection.taskManager?.otherTasksHandler(ref, "Checked slashing protection", true, slashingCheck);
     const results = [];
+    const isFailure = (r) => r.status === "error";
     try {
-      for (let i = 0; i < keystores.length; i += IMPORT_CHUNK) {
-        const body = { keystores: keystores.slice(i, i + IMPORT_CHUNK), passwords: passwords.slice(i, i + IMPORT_CHUNK) };
-        if (slashingProtection) body.slashing_protection = slashingProtection;
-        const { status, rc, body: answer } = await this.keymanagerRequest(serviceID, { method: "POST", path: "/eth/v1/keystores", body });
-        body.keystores.forEach((_, j) => {
-          const entry = answer?.data?.[j];
-          results.push({
-            pubkey: parsed[i + j].pubkey,
+      onProgress({ phase: "preparing", done: 0, total: keystores.length });
+      await this.initClient(serviceID, ref);
+      const chunks = Validators.importChunks(keystores, passwords);
+      for (const [n, [start, end]] of chunks.entries()) {
+        onProgress({ phase: "importing", done: start, total: keystores.length, chunk: n + 1, chunks: chunks.length });
+        const body = { keystores: keystores.slice(start, end), passwords: passwords.slice(start, end) };
+        const pubkeys = parsed.slice(start, end).map((p) => p.pubkey);
+        if (minimal) body.slashing_protection = minimalSlashingProtection(minimal.interchange, pubkeys);
+        const answer = await this.keymanagerRequest(serviceID, { method: "POST", path: "/eth/v1/keystores", body });
+        const chunk = pubkeys.map((pubkey, j) => {
+          const entry = answer.body?.data?.[j];
+          return {
+            pubkey,
             status: entry?.status ?? "error",
-            message: entry ? (entry.message ?? "") : Validators.curlFailure(rc, status, answer),
-          });
+            message: entry ? (entry.message ?? "") : Validators.curlFailure(answer.rc, answer.status, answer.body, answer.stderr),
+          };
         });
+        results.push(...chunk);
+        const sent = minimal ? `slashing protection: ${JSON.parse(body.slashing_protection).data.length} validators, minimal form\n` : "";
+        this.nodeConnection.taskManager?.otherTasksHandler(
+          ref,
+          `Imported ${end} of ${keystores.length}`,
+          answer.status === 200 && !chunk.some(isFailure),
+          sent + Validators.keyLines(chunk) + "\n\n" + Validators.answerText(answer)
+        );
       }
-      const failed = results.filter((r) => r.status === "error");
-      this.nodeConnection.taskManager?.otherTasksHandler(
-        ref,
-        task,
-        !failed.length,
-        failed.length ? failed.map((r) => `${r.pubkey}: ${r.message}`).join("\n") : ""
-      );
+      const failed = results.filter(isFailure);
+      this.nodeConnection.taskManager?.otherTasksHandler(ref, "Result", !failed.length, Validators.summaryText(results, isFailure));
       return { code: 0, results };
     } catch (err) {
       log.error(task + " failed: ", err);
-      this.nodeConnection.taskManager?.otherTasksHandler(ref, task, false, String(err?.message || err));
+      this.nodeConnection.taskManager?.otherTasksHandler(ref, "Result", false, String(err?.message || err));
       return { code: 2, info: String(err?.message || err), results };
     } finally {
       this.nodeConnection.taskManager?.otherTasksHandler(ref);
@@ -543,6 +652,7 @@ export class Validators {
     const results = [];
     let restarted = false;
     try {
+      await this.initClient(serviceID, ref);
       if (holder.service === "PrysmValidatorService") {
         const client = await this.nodeConnection.readServiceConfiguration(serviceID);
         const listed = await this.listHolderKeys(serviceID);
@@ -574,42 +684,54 @@ export class Validators {
         }
       }
 
+      const isFailure = (r) => r.status === "error";
       for (let i = 0; i < keys.length; i += REMOTE_IMPORT_CHUNK) {
         const chunk = keys.slice(i, i + REMOTE_IMPORT_CHUNK);
-        const {
-          status,
-          rc,
-          body: answer,
-        } = await this.keymanagerRequest(serviceID, {
+        const answer = await this.keymanagerRequest(serviceID, {
           method: "POST",
           path: "/eth/v1/remotekeys",
           body: { remote_keys: chunk.map((pubkey) => ({ pubkey, url: signer.url })) },
         });
         // the answer lists one status per requested key, in request order
-        chunk.forEach((pubkey, j) => {
-          const entry = answer?.data?.[j];
-          results.push({
+        const chunkResults = chunk.map((pubkey, j) => {
+          const entry = answer.body?.data?.[j];
+          return {
             pubkey,
             status: entry ? (entry.status ?? "error") : "error",
-            message: entry ? (entry.message ?? "") : Validators.curlFailure(rc, status, answer),
-          });
+            message: entry ? (entry.message ?? "") : Validators.curlFailure(answer.rc, answer.status, answer.body, answer.stderr),
+          };
         });
+        results.push(...chunkResults);
+        this.nodeConnection.taskManager?.otherTasksHandler(
+          ref,
+          `Imported ${i + chunk.length} of ${keys.length}`,
+          answer.status === 200 && !chunkResults.some(isFailure),
+          `signer: ${signer.url}\n` + Validators.keyLines(chunkResults) + "\n\n" + Validators.answerText(answer)
+        );
       }
-      const failed = results.filter((r) => r.status === "error");
-      this.nodeConnection.taskManager?.otherTasksHandler(
-        ref,
-        task,
-        !failed.length,
-        failed.length ? failed.map((r) => `${r.pubkey}: ${r.message}`).join("\n") : ""
-      );
+      const failed = results.filter(isFailure);
+      this.nodeConnection.taskManager?.otherTasksHandler(ref, "Result", !failed.length, Validators.summaryText(results, isFailure));
       return { code: 0, results, restarted };
     } catch (err) {
       log.error(task + " failed: ", err);
-      this.nodeConnection.taskManager?.otherTasksHandler(ref, task, false, String(err?.message || err));
+      this.nodeConnection.taskManager?.otherTasksHandler(ref, "Result", false, String(err?.message || err));
       return { code: 2, info: String(err?.message || err), results, restarted };
     } finally {
       this.nodeConnection.taskManager?.otherTasksHandler(ref);
     }
+  }
+
+  // A new client has no Prysm wallet, Nimbus API token or Teku API keystore until the first import creates it, as the staking page did
+  async initClient(serviceID, ref) {
+    const client = (await this.monitoring.serviceManager.readServiceConfigurations()).find((s) => s.id === serviceID);
+    if (!client) throw new Error("no validator service " + serviceID);
+    await this.monitoring.validatorAccountManager.initWallet(client, ref);
+    this.nodeConnection.taskManager?.otherTasksHandler(
+      ref,
+      "Checked client setup",
+      true,
+      `${client.service} ${client.id}: wallet and API access ready`
+    );
   }
 
   // Prysm cannot mix local and remote keys and needs the key file flag, or it does not start (v7)
@@ -639,7 +761,8 @@ export class Validators {
       if (waited + RESTART_POLL_MS > RESTART_READY_TIMEOUT_MS) throw new Error(`${name} did not come back with its keymanager API`);
       await new Promise((resolve) => setTimeout(resolve, RESTART_POLL_MS));
     }
-    this.nodeConnection.taskManager?.otherTasksHandler(ref, `Restarted ${name} with remote signer`, true);
+    const command = Array.isArray(client.command) ? client.command.join("\n") : String(client.command);
+    this.nodeConnection.taskManager?.otherTasksHandler(ref, `Restarted ${name} with remote signer`, true, "new command:\n" + command);
   }
 
   /**
@@ -813,6 +936,7 @@ export class Validators {
         const { signed, failed } = await this.signExits(serviceID, chunk, indexByPubkey, prep.signEpoch);
         for (const [pubkey, failure] of Object.entries(failed)) results[pubkey] = { status: "signFailed", ...failure };
         const sent = [...signed.keys()];
+        const broadcast = {};
         if (sent.length) {
           const answers = await this.curlConfigRun(
             prep.target.prefix,
@@ -827,31 +951,43 @@ export class Validators {
             )
           );
           sent.forEach((pubkey, j) => {
-            const { status, body } = answers[j];
+            const { status, body, raw } = answers[j];
+            broadcast[pubkey] = `HTTP ${status}${status === 200 ? "" : ", answer: " + (body ? JSON.stringify(body) : raw || "(empty)")}`;
             results[pubkey] = status === 200 ? { status: "submitted" } : { status: "rejected", message: body?.message || `HTTP ${status}` };
           });
         }
         const chunkFailed = chunk.filter((p) => results[p].status !== "submitted");
+        // signed messages stay out of the panel, only what the client and the beacon node answered
+        const chunkLines = chunk.map((p) => {
+          const r = results[p];
+          const detail = broadcast[p] ?? r.message ?? "";
+          return `${p} (index ${indexByPubkey[p]}): ${r.status}${detail ? " - " + detail : ""}`;
+        });
         this.nodeConnection.taskManager?.otherTasksHandler(
           ref,
           `Sent ${Math.min(i + EXIT_CHUNK, total)} of ${total}`,
           !chunkFailed.length,
-          chunkFailed.map((p) => `${p}: ${results[p].message}`).join("\n")
+          [
+            `signed by the validator client${prep.signEpoch != null ? ` for epoch ${prep.signEpoch}` : ""}`,
+            `POST ${prep.target.base}/eth/v1/beacon/pool/voluntary_exits`,
+            ...chunkLines,
+          ].join("\n")
         );
       }
 
-      const failed = prep.eligible.filter((p) => results[p].status !== "submitted");
+      const exitResults = prep.eligible.map((pubkey) => ({ pubkey, ...results[pubkey] }));
+      const failed = exitResults.filter((r) => r.status !== "submitted");
       this.nodeConnection.taskManager?.otherTasksHandler(
         ref,
-        task,
+        "Result",
         !failed.length,
-        failed.map((p) => `${p}: ${results[p].message}`).join("\n")
+        Validators.summaryText(exitResults, (r) => r.status !== "submitted")
       );
       log.info(`${task}: ${total - failed.length} submitted, ${failed.length} failed`);
       return { code: 0, results, partial, signEpoch: prep.signEpoch };
     } catch (err) {
       log.error(task + " failed: ", err);
-      this.nodeConnection.taskManager?.otherTasksHandler(ref, task, false, String(err?.message || err));
+      this.nodeConnection.taskManager?.otherTasksHandler(ref, "Result", false, String(err?.message || err));
       return { code: 2, info: String(err?.message || err), results };
     } finally {
       this.nodeConnection.taskManager?.otherTasksHandler(ref);
@@ -897,20 +1033,23 @@ export class Validators {
           ref,
           `Signed ${Math.min(i + EXIT_CHUNK, total)} of ${total}`,
           !chunkFailed.length,
-          chunkFailed.map((f) => `${f.pubkey}: ${f.message}`).join("\n")
+          chunk
+            .map((p) => `${p} (index ${indexByPubkey[p]}): ${result.signed.has(p) ? "signed" : "failed - " + result.failed[p]?.message}`)
+            .join("\n")
         );
       }
       this.nodeConnection.taskManager?.otherTasksHandler(
         ref,
-        task,
+        "Result",
         !failed.length,
-        failed.map((f) => `${f.pubkey}: ${f.message}`).join("\n")
+        `${messages.length} signed, ${failed.length} failed` +
+          (failed.length ? "\n\nfailed:\n" + failed.map((f) => `${f.pubkey}: ${f.message}`).join("\n") : "")
       );
       log.info(`${task}: ${messages.length} signed, ${failed.length} failed`);
       return { code: 0, messages, failed, skipped };
     } catch (err) {
       log.error(task + " failed: ", err);
-      this.nodeConnection.taskManager?.otherTasksHandler(ref, task, false, String(err?.message || err));
+      this.nodeConnection.taskManager?.otherTasksHandler(ref, "Result", false, String(err?.message || err));
       return { code: 2, info: String(err?.message || err) };
     } finally {
       this.nodeConnection.taskManager?.otherTasksHandler(ref);
@@ -1059,23 +1198,35 @@ export class Validators {
     const task = `${body ? "Setting" : "Resetting"} ${setting === "graffiti" ? "Graffiti" : "Fee Recipient"} (${keys.length} keys)`;
     this.nodeConnection.taskManager?.otherTasksHandler(ref, task);
     try {
-      const statuses = await this.keymanagerBatch(
+      const method = body ? "POST" : "DELETE";
+      const answers = await this.keymanagerCalls(
         serviceID,
-        keys.map((pubkey) => ({ method: body ? "POST" : "DELETE", path: `/eth/v1/validator/${pubkey}/${setting}`, body }))
+        keys.map((pubkey) => ({ method, path: `/eth/v1/validator/${pubkey}/${setting}`, body }))
       );
       // 202 accepted on set, 204 no content on delete
-      const ok = keys.filter((_, i) => statuses[i] === 202 || statuses[i] === 204 || statuses[i] === 200);
+      const accepted = (status) => status === 202 || status === 204 || status === 200;
+      const ok = keys.filter((_, i) => accepted(answers[i]?.status));
       const failed = keys.filter((k) => !ok.includes(k));
+      const lines = keys.map((pubkey, i) => {
+        const { status, body: answer, raw } = answers[i] ?? {};
+        const detail = accepted(status) ? "" : ", answer: " + (answer ? JSON.stringify(answer) : raw || "(empty)");
+        return `${pubkey}: HTTP ${status ?? 0}${detail}`;
+      });
       this.nodeConnection.taskManager?.otherTasksHandler(
         ref,
-        task,
+        `Applied to ${ok.length} of ${keys.length}`,
         !failed.length,
-        failed.length ? `Failed for:\n${failed.join("\n")}` : ""
+        [
+          `${method} ${answers[0]?.url?.replace(keys[0], "{pubkey}") ?? setting}`,
+          body ? `value: ${JSON.stringify(body)}` : "back to the client default",
+          ...lines,
+        ].join("\n")
       );
+      this.nodeConnection.taskManager?.otherTasksHandler(ref, "Result", !failed.length, `${ok.length} applied, ${failed.length} failed`);
       return { code: 0, ok, failed };
     } catch (err) {
       log.error(task + " failed: ", err);
-      this.nodeConnection.taskManager?.otherTasksHandler(ref, task, false, String(err?.message || err));
+      this.nodeConnection.taskManager?.otherTasksHandler(ref, "Result", false, String(err?.message || err));
       return { code: 2, info: String(err?.message || err) };
     } finally {
       this.nodeConnection.taskManager?.otherTasksHandler(ref);
@@ -1097,11 +1248,31 @@ export class Validators {
     }
   }
 
-  async keymanagerList(vam, client, path) {
+  // A keymanager list (data array), reported to subtask(name, ok, text) with the answer as received
+  async keymanagerList(vam, client, path, subtask = () => {}) {
     const result = await vam.keymanagerAPI(client, "GET", path);
-    if (result.rc != 0 || !result.stdout) throw new Error(`keymanager ${path} failed: ${result.stderr || "rc " + result.rc}`);
-    const data = JSON.parse(result.stdout);
-    if (!Array.isArray(data.data)) throw new Error(`keymanager ${path}: ${data.message || "unexpected answer"}`);
+    const stdout = String(result.stdout ?? "").trim();
+    const data = stdout ? Validators.parseJson(stdout) : null;
+    let error = null;
+    if (result.rc != 0 || !stdout) {
+      const reason = String(result.stderr ?? "").trim() || Validators.curlExitReason(result.rc) || "rc " + result.rc;
+      error = `keymanager ${path} failed: ${reason}`;
+    } else if (!Array.isArray(data?.data)) {
+      error = `keymanager ${path}: ${data?.message || "unexpected answer"}`;
+    }
+    const base = `${client.service.includes("Teku") ? "https" : "http"}://stereum-${client.id}:${validatorPorts[client.service]}`;
+    subtask(
+      `GET ${path}`,
+      !error,
+      [
+        `GET ${base}${path}`,
+        `curl exit ${result.rc}${Validators.curlExitReason(result.rc) ? " (" + Validators.curlExitReason(result.rc) + ")" : ""}`,
+        ...(String(result.stderr ?? "").trim() ? ["stderr: " + String(result.stderr).trim()] : []),
+        ...(error ? [error] : []),
+        "answer:\n" + (data ? JSON.stringify(data, null, 2) : stdout || "(empty)"),
+      ].join("\n")
+    );
+    if (error) throw new Error(error);
     return data.data;
   }
 
