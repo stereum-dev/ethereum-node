@@ -28,7 +28,7 @@
     <!-- End Node main layout -->
     <!-- Start drawer layout -->
     <img
-      class="w-10 absolute top-50 -right-5 cursor-pointer z-0"
+      class="w-10 absolute -right-5 cursor-pointer z-0"
       src="/img/icon/edit-node-icons/sidebar-out.png"
       alt="Arrow Icon"
       @mousedown.prevent.stop

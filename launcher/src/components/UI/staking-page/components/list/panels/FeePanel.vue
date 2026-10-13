@@ -16,7 +16,7 @@
     <div
       v-if="infoMessage !== ''"
       role="info"
-      class="absolute top-[-90px] left-14 w-2/3 max-h-36 rounded-sm border-s-4 p-4 z-60 bg-gray-100 border-gray-400"
+      class="absolute top-[-90px] left-14 w-2/3 max-h-36 rounded-sm border-s-4 p-4 bg-gray-100 border-gray-400"
     >
       <div class="flex items-center gap-2 text-info-800">
         <strong class="block font-medium">Info</strong>
@@ -24,7 +24,7 @@
 
       <p class="mt-2 text-sm">{{ infoMessage }}</p>
     </div>
-    <div class="w-full h-full grid grid-cols-13 grid-rows-1 py-[2px]">
+    <div class="w-full h-full grid grid-rows-1 py-[2px]">
       <img
         class="w-6 h-6 self-center col-start-1 col-span-1 justify-self-center"
         src="/img/icon/staking-page-icons/option-fee-recepient.png"

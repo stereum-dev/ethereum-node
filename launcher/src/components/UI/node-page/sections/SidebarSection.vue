@@ -1,5 +1,5 @@
 <template>
-  <aside class="flex flex-col items-center w-18 h-full custom-gradient" @pointerdown.prevent.stop @mousedown.prevent.stop>
+  <aside class="flex flex-col items-center h-full custom-gradient" @pointerdown.prevent.stop @mousedown.prevent.stop>
     <div class="w-full max-h-[144px] grid grid-rows-3 mt-20 p-1 gap-y-5">
       <div
         class="col-span-1 row-start-1 row-end-2 p-1 rounded-md text-gray-700 bg-[#23272a] flex justify-center items-center scale-90 hover:scale-105 active:scale-100 border border-[#23272a] hover:border-gray-500 duration-150 hover:shadow-md shadow-[#23272a] transition-all ease-in-out"
