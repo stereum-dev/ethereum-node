@@ -1001,7 +1001,8 @@ export class ServiceManager {
     let newServices = await this.readServiceConfigurations();
     let newService = newServices.filter(({ id: id1 }) => !services.some(({ id: id2 }) => id2 === id1));
     if (switchTask.service.category != "validator") {
-      servicesBelow.forEach((service) => {
+      // awaited: the caller deletes the previous client next and must read these configs, not the old ones
+      for (const service of servicesBelow) {
         let newDependencies = [];
         if (service.service === "OpNodeBeaconService") {
           service.dependencies.consensusClients.forEach((dependency) => {
@@ -1020,11 +1021,11 @@ export class ServiceManager {
         newDependencies.push(newService[0]);
         try {
           let updatedDep = this.addDependencies(service, newDependencies);
-          this.nodeConnection.writeServiceConfiguration(updatedDep.buildConfiguration());
+          await this.nodeConnection.writeServiceConfiguration(updatedDep.buildConfiguration());
         } catch (err) {
           log.error("Dependencies Update Failed:", err);
         }
-      });
+      }
     }
   }
 

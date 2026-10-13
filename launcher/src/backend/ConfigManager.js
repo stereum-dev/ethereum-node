@@ -302,7 +302,7 @@ export class ConfigManager {
 
         await this.writeMultiSetup(setupsObj);
       } else {
-        console.log(`Service ${serviceID} not found in setup ${setupsObj[setupID].name}`);
+        console.log(`Service ${serviceID} not found in setup ${setupsObj[setupID]?.name ?? setupID}`);
       }
     } catch (error) {
       console.error(`Failed to delete service from multiSetup: ${error}`);

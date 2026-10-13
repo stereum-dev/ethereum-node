@@ -418,6 +418,39 @@ const switchMocks = (configs) => {
   return { NodeConnection, writeServiceConfiguration, runPlaybook };
 };
 
+// the dependents were written without awaiting, so deleting the previous client right after read their old
+// config and removed the new beacon node with the old one (a Lodestar validator client lost --beaconNodes)
+test("switchServices has rewritten the dependents before it returns", async () => {
+  const sm = new ServiceManager({ readServiceConfiguration: jest.fn(), writeServiceConfiguration: jest.fn() });
+  const previous = {
+    id: "old-bn",
+    service: "LodestarBeaconService",
+    dependencies: { executionClients: [], mevboost: [], consensusClients: [] },
+  };
+  const vc = {
+    id: "vc",
+    service: "LodestarValidatorService",
+    dependencies: { consensusClients: [{ id: "old-bn" }], executionClients: [] },
+  };
+  const fresh = { id: "new-bn", service: "GrandineBeaconService" };
+  sm.configManager = { deleteServiceFromSetup: jest.fn().mockResolvedValue() };
+  sm.readServiceConfigurations = jest.fn().mockResolvedValueOnce([previous, vc]).mockResolvedValueOnce([previous, vc, fresh]);
+  sm.addServices = jest.fn().mockResolvedValue();
+  sm.addDependencies = jest.fn((service) => ({ buildConfiguration: () => ({ id: service.id }) }));
+  let written = false;
+  sm.nodeConnection.writeServiceConfiguration = jest.fn(() => new Promise((resolve) => setTimeout(() => resolve((written = true)), 20)));
+
+  await sm.switchServices({
+    id: "old-bn",
+    setupId: "setup",
+    service: { service: "LodestarBeaconService", category: "consensus", config: { serviceID: "old-bn" } },
+    data: { itemToInstall: { service: "GrandineBeaconService" }, data: {} },
+  });
+
+  expect(sm.addDependencies).toHaveBeenCalledWith(vc, [{ id: "old-bn" }, fresh]);
+  expect(written).toBe(true);
+});
+
 test("switchServices swaps charon for pluto in place", async () => {
   const config = charonConfig("charon-id");
   const vc = validatorConfig("vc-id", "charon-id");
