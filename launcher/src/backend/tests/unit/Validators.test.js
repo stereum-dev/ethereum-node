@@ -1222,7 +1222,7 @@ describe("exits", () => {
       const result = await v.exitKeys("lh", [key(1)]);
       expect(result).toMatchObject({ code: 2, info: "Not connected" });
       const calls = taskManager.otherTasksHandler.mock.calls;
-      expect(calls[0][1]).toEqual("Exiting 1 validators");
+      expect(calls[0][1]).toEqual("Exiting 1 validator");
       expect(calls[calls.length - 1]).toHaveLength(1);
     });
 

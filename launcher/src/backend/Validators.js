@@ -83,6 +83,9 @@ const allUnsupported = (answers) => answers.length > 0 && answers.every((a) => U
 
 // Backend of the validators page (the staking page rebuild). It works on top of Monitoring so it
 // shares its service snapshot, beacon resolution and DV key lookup instead of reading them again.
+// "1 key", "2 keys": task names read like the page
+const count = (n, word) => `${n} ${word}${n === 1 ? "" : "s"}`;
+
 export class Validators {
   constructor(monitoring) {
     this.monitoring = monitoring;
@@ -412,7 +415,7 @@ export class Validators {
     if (!localKeys.length && !remoteKeys.length) return { code: 1, info: "no valid keys" };
 
     const ref = StringUtils.createRandomString();
-    const task = `Removing ${localKeys.length + remoteKeys.length} keys`;
+    const task = `Removing ${count(localKeys.length + remoteKeys.length, "key")}`;
     this.nodeConnection.taskManager?.otherTasksHandler(ref, task);
     const results = {};
     let interchange = null;
@@ -603,7 +606,7 @@ export class Validators {
     }
 
     const ref = StringUtils.createRandomString();
-    const task = `Importing ${keystores.length} keys`;
+    const task = `Importing ${count(keystores.length, "key")}`;
     this.nodeConnection.taskManager?.otherTasksHandler(ref, task);
     if (slashingCheck) this.nodeConnection.taskManager?.otherTasksHandler(ref, "Checked slashing protection", true, slashingCheck);
     const results = [];
@@ -661,7 +664,7 @@ export class Validators {
     if (!keys.length) return { code: 1, info: "no valid keys" };
 
     const ref = StringUtils.createRandomString();
-    const task = `Importing ${keys.length} remote keys`;
+    const task = `Importing ${count(keys.length, "remote key")}`;
     this.nodeConnection.taskManager?.otherTasksHandler(ref, task);
     const results = [];
     let restarted = false;
@@ -956,7 +959,7 @@ export class Validators {
     if (!total) return { code: 0, results, partial, signEpoch: prep.signEpoch };
 
     const ref = StringUtils.createRandomString();
-    const task = `Exiting ${total} validators`;
+    const task = `Exiting ${count(total, "validator")}`;
     this.nodeConnection.taskManager?.otherTasksHandler(ref, task);
     try {
       for (let i = 0; i < total; i += EXIT_CHUNK) {
@@ -1045,7 +1048,7 @@ export class Validators {
     if (!total) return { code: 0, messages, failed, skipped };
 
     const ref = StringUtils.createRandomString();
-    const task = `Signing ${total} exit messages`;
+    const task = `Signing ${count(total, "exit message")}`;
     this.nodeConnection.taskManager?.otherTasksHandler(ref, task);
     try {
       for (let i = 0; i < total; i += EXIT_CHUNK) {
