@@ -724,6 +724,11 @@ ipcMain.handle("checkAndCreateMultiSetup", async () => {
   return await configManager.checkAndCreateMultiSetup();
 });
 
+// turns the plain database containers of older installs into database services
+ipcMain.handle("migrateDatabaseServices", async () => {
+  return await serviceManager.databases.migrate();
+});
+
 ipcMain.handle("checkConnectionQuality", async (event, args) => {
   return await nodeConnection.sshService.checkConnectionQuality(args);
 });

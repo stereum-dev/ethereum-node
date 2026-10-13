@@ -101,6 +101,7 @@ const getServices = computed(() => {
   return allServices.filter(
     (e) =>
       e.category === props.client.category &&
+      !e.attachedTo &&
       e.name !== excludedService &&
       !excludedOpServices.includes(e.name) &&
       !isObolDVTService(e.service)

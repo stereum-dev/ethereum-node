@@ -106,7 +106,8 @@ const determineCurrentNetwork = () => {
 // Computed
 const networkArchFilteredServices = computed(() => {
   return serviceStore.allServices.filter((service) => {
-    return networkFilter(service) && archFilter(service);
+    // databases come with their parent service
+    return !service.attachedTo && networkFilter(service) && archFilter(service);
   });
 });
 

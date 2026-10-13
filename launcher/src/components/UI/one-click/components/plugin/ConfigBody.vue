@@ -336,7 +336,7 @@ const checkPluginCategory = (element) => {
       break;
   }
 
-  filteredPluginsOnCategory.value = serviceStore.allServices.filter(filter);
+  filteredPluginsOnCategory.value = serviceStore.allServices.filter((item) => !item.attachedTo && filter(item));
 };
 
 const getInstallPath = async () => {

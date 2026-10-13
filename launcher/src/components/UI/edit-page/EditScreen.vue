@@ -786,6 +786,8 @@ const openNukeNodeModal = async () => {
 };
 
 const selectedServiceToRemove = (item) => {
+  // a database is deleted with its parent service
+  if (item.attachedTo) return;
   manageStore.isLineHidden = true;
   item.displayPluginMenu = false;
   const commonServiceExistance = setupStore.serverServices.includes(item.service);
