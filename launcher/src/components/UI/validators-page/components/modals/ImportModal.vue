@@ -141,7 +141,9 @@
               }}</span>
               <span class="text-gray-500">{{ t("validatorsPage.slashingSentLabel") }}</span>
               <span>{{
-                t("validatorsPage.slashingMinimal", { size: formatBytes(slashing.text.length), original: formatBytes(slashing.size) })
+                formatBytes(slashing.text.length) === formatBytes(slashing.size)
+                  ? t("validatorsPage.slashingMinimalSame", { size: formatBytes(slashing.text.length) })
+                  : t("validatorsPage.slashingMinimal", { size: formatBytes(slashing.text.length), original: formatBytes(slashing.size) })
               }}</span>
             </div>
             <details v-if="slashingCheck.ok && slashingCheck.missing.length" class="text-gray-400">
