@@ -5,7 +5,7 @@ import { validatorPorts } from "./ethereum-services/ServicePort.js";
 import { StringUtils } from "./StringUtils.js";
 import { parseKeystore, checkSlashingProtection, hasDoppelgangerProtection } from "@/share/keystores";
 import { minimalSlashingProtection, readSlashingProtection } from "@/share/slashingProtection";
-import { exitBlocker, beaconBlocker, checkSignedExit } from "@/share/exits";
+import { exitBlocker, beaconBlocker, checkSignedExit, prysmExitEpoch, PRYSM_EXIT_ISSUE } from "@/share/exits";
 import {
   SIGNER_PATH_KEYS,
   normalizeSignerUrl,
@@ -851,6 +851,20 @@ export class Validators {
 
       let signEpoch = null;
       let target = { prefix: "curl", base: states.base };
+      if (holder.role === "validator" && holder.service === "PrysmValidatorService") {
+        const client = await this.nodeConnection.readServiceConfiguration(serviceID);
+        const command = Array.isArray(client?.command) ? client.command : String(client?.command ?? "").split(/\s+/);
+        if (command.includes("--enable-beacon-rest-api")) {
+          signEpoch = prysmExitEpoch(spec);
+          if (signEpoch === null) {
+            return {
+              code: 1,
+              reason: "prysmExitDomain",
+              info: "Prysm's validator client cannot sign valid exits on this network (" + PRYSM_EXIT_ISSUE + ")",
+            };
+          }
+        }
+      }
       if (holder.role === "share") {
         // Charon only aggregates partial exits signed for the same epoch, and Obol tells operators to use Capella's
         signEpoch = spec.capellaForkEpoch;
@@ -1003,7 +1017,7 @@ export class Validators {
   }
 
   /**
-   * Signed exits to keep offline (validator holders only, epoch left to the client). The only path where
+   * Signed exits to keep offline (validator holders only, epoch left to the client except for Prysm). The only path where
    * signed messages leave the backend. Returns { code: 0, messages, failed: [{ pubkey, message }], skipped }.
    */
   async exportExitMessages(serviceID, pubkeys) {
@@ -1030,7 +1044,7 @@ export class Validators {
     try {
       for (let i = 0; i < total; i += EXIT_CHUNK) {
         const chunk = prep.exportable.slice(i, i + EXIT_CHUNK);
-        const result = await this.signExits(serviceID, chunk, indexByPubkey, null);
+        const result = await this.signExits(serviceID, chunk, indexByPubkey, prep.signEpoch);
         const chunkFailed = [];
         for (const pubkey of chunk) {
           if (result.signed.has(pubkey)) messages.push(result.signed.get(pubkey));
@@ -1743,12 +1757,14 @@ export class Validators {
     const genesis = await this.monitoring.queryBeaconApi(base, "/eth/v1/beacon/genesis");
     const genesisTime = genesis?.code ? NaN : parseInt(genesis?.data?.api_reponse?.data?.genesis_time);
     const capella = parseInt(data.CAPELLA_FORK_EPOCH);
+    const deneb = parseInt(data.DENEB_FORK_EPOCH);
     const spec = {
       slotsPerEpoch: parseInt(data.SLOTS_PER_EPOCH) || 32,
       secondsPerSlot: parseInt(data.SECONDS_PER_SLOT) || 12,
       // 256 on mainnet, hoodi, sepolia and gnosis
       shardCommitteePeriod: parseInt(data.SHARD_COMMITTEE_PERIOD) || 256,
       capellaForkEpoch: Number.isFinite(capella) ? capella : null,
+      denebForkEpoch: Number.isFinite(deneb) ? deneb : null,
       epochsPerSyncCommitteePeriod: parseInt(data.EPOCHS_PER_SYNC_COMMITTEE_PERIOD) || 256,
       genesisTime: Number.isFinite(genesisTime) ? genesisTime : null,
     };

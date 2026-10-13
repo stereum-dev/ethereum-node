@@ -1314,6 +1314,7 @@
       "dvtNotRunning": "The distributed validator client is not running.",
       "noHead": "The beacon node did not report its head.",
       "noCapella": "The beacon node did not report the Capella fork epoch.",
+      "prysmExitDomain": "Prysm's validator client cannot sign valid exits on this network: it signs with the wrong fork domain (Prysm issue #17691). Until Prysm fixes it, exit these keys from another validator client or sign the exit elsewhere.",
       "noExport": "Signed exits can only be exported from a validator client.",
       "wrongIndex": "Signed for another validator"
     },

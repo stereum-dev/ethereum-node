@@ -1,4 +1,12 @@
-import { exitBlocker, beaconBlocker, checkSignedExit, exitConfirmToken, exitMessagesFile, exitFileName } from "@/share/exits";
+import {
+  exitBlocker,
+  beaconBlocker,
+  checkSignedExit,
+  exitConfirmToken,
+  exitMessagesFile,
+  exitFileName,
+  prysmExitEpoch,
+} from "@/share/exits";
 
 const SIG = "0x" + "ab".repeat(96);
 const KEY = (n) => "0x" + String(n).padStart(96, "a");
@@ -89,4 +97,18 @@ test("one exit message is saved as an object, several as an array", () => {
 test("the export file is named by client, network and time", () => {
   const date = new Date("2026-10-08T12:00:00Z");
   expect(exitFileName("LighthouseValidatorService", "hoodi", date)).toEqual("exit-messages-lighthouse-hoodi-2026-10-08-12-00-00.json");
+});
+
+// Prysm over REST takes the domain from the fork at the requested epoch (prysm#17691)
+describe("prysmExitEpoch", () => {
+  test("the Capella fork epoch where Capella is the latest fork there", () => {
+    expect(prysmExitEpoch({ capellaForkEpoch: 194048, denebForkEpoch: 269568 })).toEqual(194048); // mainnet
+    expect(prysmExitEpoch({ capellaForkEpoch: 56832, denebForkEpoch: 132608 })).toEqual(56832); // sepolia
+  });
+
+  test("none where Deneb starts with Capella, or when the spec is incomplete", () => {
+    expect(prysmExitEpoch({ capellaForkEpoch: 0, denebForkEpoch: 0 })).toBeNull(); // hoodi
+    expect(prysmExitEpoch({ capellaForkEpoch: 194048, denebForkEpoch: null })).toBeNull();
+    expect(prysmExitEpoch({})).toBeNull();
+  });
 });

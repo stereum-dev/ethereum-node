@@ -43,6 +43,15 @@ const decimal = (value) => {
   return typeof text === "string" && DECIMAL.test(text) ? text : null;
 };
 
+// Prysm's validator client over the REST API signs exits with the domain of the fork at the requested epoch, not
+// Capella's as EIP-7044 requires (OffchainLabs/prysm#17691). Asking for the Capella fork epoch gets the Capella
+// domain, but only where Capella is the latest fork at that epoch: null where Deneb starts with it (Hoodi)
+export const PRYSM_EXIT_ISSUE = "https://github.com/OffchainLabs/prysm/issues/17691";
+export function prysmExitEpoch({ capellaForkEpoch, denebForkEpoch } = {}) {
+  if (!Number.isFinite(capellaForkEpoch) || !Number.isFinite(denebForkEpoch)) return null;
+  return capellaForkEpoch < denebForkEpoch ? capellaForkEpoch : null;
+}
+
 // keymanager answer -> normalized signed exit or null; only checked fields are kept, so nothing else reaches a command
 export function checkSignedExit(answer, expectedIndex) {
   const data = answer?.data;

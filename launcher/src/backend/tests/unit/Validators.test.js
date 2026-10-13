@@ -722,6 +722,7 @@ describe("chain spec", () => {
         SECONDS_PER_SLOT: "12",
         SHARD_COMMITTEE_PERIOD: "64",
         CAPELLA_FORK_EPOCH: "256",
+        DENEB_FORK_EPOCH: "512",
         EPOCHS_PER_SYNC_COMMITTEE_PERIOD: "512",
       }),
       ok({ genesis_time: "1742213400" })
@@ -731,6 +732,7 @@ describe("chain spec", () => {
       secondsPerSlot: 12,
       shardCommitteePeriod: 64,
       capellaForkEpoch: 256,
+      denebForkEpoch: 512,
       epochsPerSyncCommitteePeriod: 512,
       genesisTime: 1742213400,
     });
@@ -746,6 +748,7 @@ describe("chain spec", () => {
       secondsPerSlot: 12,
       shardCommitteePeriod: 256,
       capellaForkEpoch: null,
+      denebForkEpoch: null,
       epochsPerSyncCommitteePeriod: 256,
       genesisTime: 5,
     });
@@ -817,13 +820,16 @@ describe("exits", () => {
     syncing = synced,
     dvs = [],
     node = fakeNode(),
+    service = "LighthouseValidatorService",
+    command = [],
+    spec = { capellaForkEpoch: 50 },
   } = {}) => {
     const taskManager = { otherTasksHandler: jest.fn() };
     const monitoring = {
       nodeConnection: {
         sshService: { exec: node.exec },
         taskManager,
-        readServiceConfiguration: jest.fn().mockResolvedValue({ id: "lh", service: "LighthouseValidatorService" }),
+        readServiceConfiguration: jest.fn().mockResolvedValue({ id: "lh", service, command }),
         ensureCurlImage: jest.fn().mockResolvedValue("8.11.0"),
       },
       validatorAccountManager: {
@@ -834,7 +840,7 @@ describe("exits", () => {
     };
     const v = new Validators(monitoring);
     v.getValidatorHolders = jest.fn().mockResolvedValue([
-      { id: "lh", role, state, dvtVia: role === "share" ? "charon" : undefined },
+      { id: "lh", role, state, service, dvtVia: role === "share" ? "charon" : undefined },
       { id: "charon", role: "distributed", state: "running" },
     ]);
     v.listHolderKeys = jest.fn().mockResolvedValue({ code: 0, keys: listed.map((pubkey) => ({ pubkey, remote: false })) });
@@ -847,9 +853,50 @@ describe("exits", () => {
       slotsPerEpoch: 32,
       secondsPerSlot: 12,
     });
-    v.getSpec = jest.fn().mockResolvedValue({ slotsPerEpoch: 32, secondsPerSlot: 12, shardCommitteePeriod: 256, capellaForkEpoch: 50 });
+    v.getSpec = jest.fn().mockResolvedValue({ slotsPerEpoch: 32, secondsPerSlot: 12, shardCommitteePeriod: 256, ...spec });
     return { v, exec: node.exec, received: node.received, taskManager };
   };
+
+  // Prysm over REST signs with the fork at the requested epoch instead of Capella's (prysm#17691)
+  describe("Prysm's exit domain", () => {
+    const prysm = (extra) =>
+      exiter({
+        listed: [key(1)],
+        byPubkey: { [key(1)]: stateOf(1) },
+        service: "PrysmValidatorService",
+        command: ["--enable-beacon-rest-api", "--beacon-rest-api-provider=http://stereum-bn:3500"],
+        ...extra,
+      });
+    const signUrls = (exec) =>
+      exec.mock.calls
+        .map((c) => c[0])
+        .join("\n")
+        // the signing requests only, not the beacon node's pool/voluntary_exits
+        .match(/\/voluntary_exit(\?epoch=\d+)?(?=")/g);
+
+    test("on a network where Capella comes before Deneb it signs at the Capella epoch, in-app and for export", async () => {
+      const { v, exec } = prysm({ spec: { capellaForkEpoch: 194048, denebForkEpoch: 269568 } });
+      expect((await v.prepareExit("lh", [key(1)])).signEpoch).toEqual(194048);
+      await v.exitKeys("lh", [key(1)]);
+      await v.exportExitMessages("lh", [key(1)]);
+      expect(signUrls(exec)).toEqual(["/voluntary_exit?epoch=194048", "/voluntary_exit?epoch=194048"]);
+    });
+
+    test("where Deneb starts with Capella (Hoodi) the exit is blocked before anything is signed", async () => {
+      const { v, exec } = prysm({ spec: { capellaForkEpoch: 0, denebForkEpoch: 0 } });
+      expect(await v.prepareExit("lh", [key(1)])).toMatchObject({ code: 1, reason: "prysmExitDomain" });
+      expect((await v.exitKeys("lh", [key(1)])).reason).toEqual("prysmExitDomain");
+      expect((await v.exportExitMessages("lh", [key(1)])).reason).toEqual("prysmExitDomain");
+      expect(exec).not.toHaveBeenCalled();
+    });
+
+    test("Prysm over gRPC and other clients keep the epoch to themselves", async () => {
+      const grpc = prysm({ command: ["--beacon-rpc-provider=stereum-bn:4000"], spec: { capellaForkEpoch: 0, denebForkEpoch: 0 } });
+      expect((await grpc.v.prepareExit("lh", [key(1)])).signEpoch).toBeNull();
+      const lighthouse = exiter({ listed: [key(1)], byPubkey: { [key(1)]: stateOf(1) }, spec: { capellaForkEpoch: 0, denebForkEpoch: 0 } });
+      expect((await lighthouse.v.prepareExit("lh", [key(1)])).signEpoch).toBeNull();
+    });
+  });
 
   describe("preflight", () => {
     test("keys are sorted into eligible, too young and exited", async () => {
