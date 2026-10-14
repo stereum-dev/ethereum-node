@@ -152,10 +152,15 @@ const loginHandler = async (authCode) => {
     } else {
       serverStore.connectingProcess = true;
       serverStore.isServerAnimationActive = true;
-      await ControlService.logout();
-      // serverStore.selectedServerToConnect
-      await ControlService.stopShell();
-      await login(loginAbortController.signal, authCode);
+      serverStore.switchingNode = true;
+      try {
+        await ControlService.logout();
+        // serverStore.selectedServerToConnect
+        await ControlService.stopShell();
+        await login(loginAbortController.signal, authCode);
+      } finally {
+        serverStore.switchingNode = false;
+      }
 
       serverStore.isOTPVerifying = false;
       setTimeout(() => {

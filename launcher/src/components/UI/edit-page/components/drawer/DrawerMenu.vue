@@ -77,7 +77,9 @@ const getServerServices = computed(() => {
 });
 
 onMounted(() => {
-  allServices.value = serviceStore.allServices.filter((e) => e.category === "service").map((e) => ({ ...e, isDuplicated: false }));
+  allServices.value = serviceStore.allServices
+    .filter((e) => e.category === "service" && !e.attachedTo)
+    .map((e) => ({ ...e, isDuplicated: false }));
 });
 
 // Methods

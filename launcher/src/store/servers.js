@@ -12,6 +12,8 @@ export const useServers = defineStore("servers", {
 
       connectingAnimActive: false,
       connectingProcess: false,
+      // set while one node is logged out and the next logged in, so the gap is not taken for a lost connection
+      switchingNode: false,
       isOTPVerifying: false,
       errorMsgExists: false,
       error: "",

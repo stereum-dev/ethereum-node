@@ -6,6 +6,7 @@ import { useFooter } from "@/store/theFooter";
 import { useDeepClone } from "@/composables/utils";
 import { useMultiSetups } from "@/composables/multiSetups";
 import { useSetups } from "@/store/setups";
+import { useServers } from "@/store/servers";
 import { usePingQuality } from "@/composables/pingQuality";
 
 // A config the backend could not read has no catalog entry to inherit a name,
@@ -88,7 +89,17 @@ export async function useFrontendServices() {
       try {
         services = await ControlService.refreshServiceInfos();
         await loadSetups();
-        setups = getAllSetups();
+        // fresh objects every 2s: carry over the UI state (open setup menu, marked for removal), or the menu closes on each tick
+        const previous = new Map((setupStore.editSetups.length ? setupStore.editSetups : setupStore.allSetups).map((s) => [s.setupId, s]));
+        setups = getAllSetups().map((setup) => {
+          const old = previous.get(setup.setupId);
+          if (!old) return setup;
+          return {
+            ...setup,
+            isActive: !!old.isActive,
+            ...(old.isRemoveProcessing !== undefined && { isRemoveProcessing: old.isRemoveProcessing }),
+          };
+        });
         setupStore.allSetups = setups;
         setupStore.editSetups = setups;
       } catch (error) {
@@ -120,14 +131,7 @@ export async function useFrontendServices() {
               console.error(`No catalog entry for ${service.service}, skipping it`);
               return null;
             }
-            if (oldService?.config?.keys) {
-              oldService.config = {
-                ...service?.config,
-                keys: oldService?.config?.keys,
-              };
-            } else {
-              oldService.config = service?.config;
-            }
+            oldService.config = service?.config;
             oldService.state = service.state;
             if (
               (oldService.service === "TekuBeaconService" || oldService.service === "NimbusBeaconService") &&
@@ -229,6 +233,8 @@ export async function useFrontendServices() {
 async function useConnectionCheck() {
   const nodeHeaderStore = useNodeHeader();
   const footerStore = useFooter();
+  // switching nodes logs the old one out first; that gap is intended and must not open the reconnect modal
+  if (useServers().switchingNode) return false;
 
   if (!nodeHeaderStore.updating && nodeHeaderStore.refresh) {
     let connected = await ControlService.checkConnection();

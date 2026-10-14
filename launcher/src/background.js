@@ -8,6 +8,7 @@ import { ServiceManager } from "./backend/ServiceManager.js";
 import { ValidatorAccountManager } from "./backend/ValidatorAccountManager.js";
 import { TaskManager } from "./backend/TaskManager.js";
 import { Monitoring } from "./backend/Monitoring.js";
+import { Validators } from "./backend/Validators.js";
 import { StereumUpdater } from "./StereumUpdater.js";
 import { ConfigManager } from "./backend/ConfigManager.js";
 import { AuthenticationService } from "./backend/AuthenticationService.js";
@@ -17,7 +18,7 @@ import { ProtocolHandler } from "./backend/CustomUrlProtocol.js";
 import path from "path";
 import { readFileSync, existsSync, mkdirSync, renameSync, readdir, rmSync } from "fs";
 import url from "url";
-import { checkSigningKeys, getSigningKeysWithQueueInfo } from "./backend/web3/CSM.js";
+import { checkSigningKeys } from "./backend/web3/CSM.js";
 // Use Electron's runtime packaged flag rather than process.env.NODE_ENV: after the
 // electron-vite migration NODE_ENV is no longer statically inlined into the main
 // bundle, so it is undefined in packaged builds (which wrongly made isDevelopment true).
@@ -26,6 +27,7 @@ const nodeConnection = new NodeConnection();
 const storageService = new StorageService();
 const taskManager = new TaskManager(nodeConnection);
 const monitoring = new Monitoring(nodeConnection);
+const validators = new Validators(monitoring);
 const oneClickInstall = new OneClickInstall();
 const serviceManager = new ServiceManager(nodeConnection);
 const validatorAccountManager = new ValidatorAccountManager(nodeConnection, serviceManager);
@@ -134,6 +136,7 @@ ipcMain.handle("closeTunnels", async () => {
 });
 
 ipcMain.handle("logout", async () => {
+  validators.reset();
   await monitoring.logout();
   return await nodeConnection.logout();
 });
@@ -289,21 +292,6 @@ ipcMain.handle("writeServiceYAML", async (event, args) => {
   return await nodeConnection.writeServiceYAML(args);
 });
 
-ipcMain.handle("importKey", async (event, args) => {
-  app.showExitPrompt = true;
-  const returnValue = await validatorAccountManager.importKey(args);
-  app.showExitPrompt = false;
-  return returnValue;
-});
-
-ipcMain.handle("deleteValidators", async (event, args) => {
-  return await validatorAccountManager.deleteValidators(args.serviceID, args.keys, args.picked);
-});
-
-ipcMain.handle("listValidators", async (event, args) => {
-  return await validatorAccountManager.listValidators(args);
-});
-
 ipcMain.handle("listServices", async () => {
   return await nodeConnection.listServices();
 });
@@ -401,22 +389,6 @@ ipcMain.handle("refreshServiceInfos", async () => {
   return await monitoring.refreshServiceInfos();
 });
 
-ipcMain.handle("getFeeRecipient", async (event, args) => {
-  return await validatorAccountManager.getFeeRecipient(args.serviceID, args.pubkey);
-});
-
-ipcMain.handle("setFeeRecipient", async (event, args) => {
-  return await validatorAccountManager.setFeeRecipient(args.serviceID, args.pubkey, args.address);
-});
-
-ipcMain.handle("deleteFeeRecipient", async (event, args) => {
-  return await validatorAccountManager.deleteFeeRecipient(args.serviceID, args.pubkey);
-});
-
-ipcMain.handle("setGraffitis", async (event, args) => {
-  return await validatorAccountManager.setGraffitis(args.id, args.graffiti);
-});
-
 ipcMain.handle("chooseServiceAction", async (event, args) => {
   return await serviceManager.chooseServiceAction(args.action, args.service, args.data);
 });
@@ -432,10 +404,6 @@ ipcMain.handle("getStereumSettings", async () => {
 
 ipcMain.handle("setStereumSettings", async (event, args) => {
   return await nodeConnection.setStereumSettings(args);
-});
-
-ipcMain.handle("writeKeys", async (event, args) => {
-  return await validatorAccountManager.writeKeys(args);
 });
 
 ipcMain.handle("readKeys", async () => {
@@ -497,51 +465,12 @@ ipcMain.handle("getValidatorStats", async (event, args) => {
   return await monitoring.getValidatorStats(args);
 });
 
-ipcMain.handle("getValidatorState", async (event, args) => {
-  return await monitoring.getValidatorState(args);
-});
-
-ipcMain.handle("checkActiveValidators", async (event, args) => {
-  return await validatorAccountManager.checkActiveValidators(
-    args.files,
-    args.passwordFiles,
-    args.password,
-    args.serviceID,
-    args.slashingDB,
-    args.isRemote
-  );
-});
-
-ipcMain.handle("exitValidatorAccount", async (event, args) => {
-  return await monitoring.exitValidatorAccount(args.pubkey, args.serviceID);
-});
-
-ipcMain.handle("getExitValidatorMessage", async (event, args) => {
-  return await validatorAccountManager.getExitValidatorMessage(args.pubkey, args.serviceID);
-});
-
 ipcMain.handle("exportConfig", async () => {
   return await serviceManager.exportConfig();
 });
 
 ipcMain.handle("importConfig", async (event, args) => {
   return await serviceManager.importConfig(args.configServices, args.removedServices, args.checkPointSync);
-});
-
-ipcMain.handle("importRemoteKeys", async (event, args) => {
-  return await validatorAccountManager.importRemoteKeys(args.serviceID, args.pubkeys, args.url);
-});
-
-ipcMain.handle("listRemoteKeys", async (event, args) => {
-  return await validatorAccountManager.listRemoteKeys(args);
-});
-
-ipcMain.handle("deleteRemoteKeys", async (event, args) => {
-  return await validatorAccountManager.deleteRemoteKeys(args.serviceID, args.pubkeys);
-});
-
-ipcMain.handle("checkRemoteKeys", async (event, args) => {
-  return await validatorAccountManager.checkRemoteKeys(args.url, args.serviceID);
 });
 
 ipcMain.handle("getCurrentEpochSlot", async (event, args) => {
@@ -611,26 +540,6 @@ ipcMain.handle("removeBeaconchainMonitoring", async (event, args) => {
 
 ipcMain.handle("dumpDockerLogs", async () => {
   return await nodeConnection.dumpDockerLogs();
-});
-
-ipcMain.handle("getCurrentEpochandSlot", async () => {
-  return await monitoring.getCurrentEpochandSlot();
-});
-
-ipcMain.handle("getValidatorDuties", async (event, args) => {
-  return await monitoring.getValidatorDuties(args);
-});
-
-ipcMain.handle("getAttestationRewards", async (event, args) => {
-  return await monitoring.getAttestationRewards(args);
-});
-
-ipcMain.handle("getBlockRewards", async (event, args) => {
-  return await monitoring.getBlockRewards(args);
-});
-
-ipcMain.handle("getSyncCommitteeRewards", async (event, args) => {
-  return await monitoring.getSyncCommitteeRewards(args.validators, args.slot);
 });
 
 ipcMain.handle("createObolENR", async (event, args) => {
@@ -719,6 +628,11 @@ ipcMain.handle("fetchGitHubTesters", async (event, args) => {
 
 ipcMain.handle("checkAndCreateMultiSetup", async () => {
   return await configManager.checkAndCreateMultiSetup();
+});
+
+// turns the plain database containers of older installs into database services
+ipcMain.handle("migrateDatabaseServices", async () => {
+  return await serviceManager.databases.migrate();
 });
 
 ipcMain.handle("checkConnectionQuality", async (event, args) => {
@@ -852,16 +766,89 @@ ipcMain.handle("getCSMQueue", async (event, args) => {
   return await checkSigningKeys(args.keysArray, monitoring);
 });
 
-ipcMain.handle("getSigningKeysWithQueueInfo", async () => {
-  return await getSigningKeysWithQueueInfo(monitoring);
+// validators page (staking page rebuild)
+ipcMain.handle("getValidatorHolders", async () => {
+  return await validators.getValidatorHolders();
 });
 
-ipcMain.handle("getObolClusterInformation", async (event, args) => {
-  return await monitoring.getObolClusterInformation(args.serviceID);
+ipcMain.handle("listHolderKeys", async (event, args) => {
+  return await validators.listHolderKeys(args.serviceID, { report: true });
 });
 
-ipcMain.handle("getSSVClusterInformation", async (event, args) => {
-  return await monitoring.getSSVClusterInformation(args.serviceID);
+ipcMain.handle("getHolderValidatorStates", async (event, args) => {
+  return await validators.getValidatorStates(args.pubkeys, args.serviceID);
+});
+
+ipcMain.handle("getKeyFeeRecipient", async (event, args) => {
+  return await validators.getFeeRecipient(args.serviceID, args.pubkey);
+});
+
+ipcMain.handle("getKeyGraffiti", async (event, args) => {
+  return await validators.getGraffiti(args.serviceID, args.pubkey);
+});
+
+ipcMain.handle("readKeySettings", async (event, args) => {
+  return await validators.readKeySettings(args.serviceID, args.pubkeys, args.setting);
+});
+
+ipcMain.handle("setKeySetting", async (event, args) => {
+  return await validators.setKeySetting(args.serviceID, args.pubkeys, args.setting, args.value);
+});
+
+ipcMain.handle("removeKeys", async (event, args) => {
+  return await validators.removeKeys(args.serviceID, { local: args.local, remote: args.remote });
+});
+
+ipcMain.handle("prepareKeyImport", async (event, args) => {
+  return await validators.prepareImport(args.serviceID, args.pubkeys, { remoteUrl: args.remoteUrl });
+});
+
+ipcMain.handle("importValidatorKeys", async (event, args) => {
+  return await validators.importKeys(args.serviceID, args.keystores, args.passwords, args.slashingProtection, (progress) => {
+    if (!event.sender.isDestroyed()) event.sender.send("importProgress", progress);
+  });
+});
+
+ipcMain.handle("writeKeyEntries", async (event, args) => {
+  return await validators.writeKeyEntries(args.patch);
+});
+
+ipcMain.handle("listSignerKeys", async (event, args) => {
+  return await validators.listSignerKeys({ signerId: args.signerId, url: args.url });
+});
+
+ipcMain.handle("importValidatorRemoteKeys", async (event, args) => {
+  return await validators.importRemoteKeys(args.serviceID, args.pubkeys, args.url);
+});
+
+ipcMain.handle("prepareKeyExit", async (event, args) => {
+  const result = await validators.prepareExit(args.serviceID, args.pubkeys);
+  delete result.target; // target stays in the backend
+  return result;
+});
+
+ipcMain.handle("exitValidatorKeys", async (event, args) => {
+  return await validators.exitKeys(args.serviceID, args.pubkeys);
+});
+
+ipcMain.handle("exportExitMessages", async (event, args) => {
+  return await validators.exportExitMessages(args.serviceID, args.pubkeys);
+});
+
+ipcMain.handle("getHolderDuties", async (event, args) => {
+  return await validators.getDuties(args.serviceID, args.indices);
+});
+
+ipcMain.handle("getHolderRewards", async (event, args) => {
+  return await validators.getRewards(args.serviceID, args.request);
+});
+
+ipcMain.handle("getHolderClusterStats", async (event, args) => {
+  return await validators.getClusterStats(args.serviceID);
+});
+
+ipcMain.handle("getCsmKeys", async (event, args) => {
+  return await validators.getCsmKeys(args?.force);
 });
 
 ipcMain.handle("fetchSsvnomsMetrics", async () => {

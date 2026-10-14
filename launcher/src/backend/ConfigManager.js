@@ -302,10 +302,37 @@ export class ConfigManager {
 
         await this.writeMultiSetup(setupsObj);
       } else {
-        console.log(`Service ${serviceID} not found in setup ${setupsObj[setupID].name}`);
+        console.log(`Service ${serviceID} not found in setup ${setupsObj[setupID]?.name ?? setupID}`);
       }
     } catch (error) {
       console.error(`Failed to delete service from multiSetup: ${error}`);
+    }
+  }
+
+  /**
+   * The id of the setup that lists a service, or null.
+   *
+   * @param {string} serviceID - The ID of the service.
+   */
+  async findSetupOf(serviceID) {
+    const setupsObj = yaml.load((await this.readMultiSetup()) || "") || {};
+    return Object.keys(setupsObj).find((id) => setupsObj[id]?.services?.includes(serviceID)) ?? null;
+  }
+
+  /**
+   * Removes a service from every setup that lists it.
+   *
+   * @param {string} serviceID - The ID of the service.
+   */
+  async removeServiceFromAllSetups(serviceID) {
+    try {
+      const setupsObj = yaml.load((await this.readMultiSetup()) || "") || {};
+      const holding = Object.values(setupsObj).filter((setup) => setup?.services?.includes(serviceID));
+      if (!holding.length) return;
+      holding.forEach((setup) => (setup.services = setup.services.filter((id) => id !== serviceID)));
+      await this.writeMultiSetup(setupsObj);
+    } catch (error) {
+      log.error(`Failed to remove ${serviceID} from the setups: ${error}`);
     }
   }
 

@@ -33,14 +33,14 @@
 <script setup>
 import i18n from "@/includes/i18n";
 import { useSetups } from "@/store/setups";
-import { useStakingStore } from "@/store/theStaking";
+import { useValidatorTotals } from "@/composables/validatorTotals";
 import { computed } from "vue";
 import ServiceLine from "../fragments/ServiceLine.vue";
 
 const t = i18n.global.t;
 
 const setupStore = useSetups();
-const stakingStore = useStakingStore();
+const { csmQueued } = useValidatorTotals();
 
 const props = defineProps({
   csmBox: {
@@ -50,6 +50,6 @@ const props = defineProps({
 });
 
 const dvtInQueueWithRelatedValidatorCount = computed(() => {
-  return stakingStore.keys.filter((key) => key.status == "inQueue").length;
+  return csmQueued.value;
 });
 </script>

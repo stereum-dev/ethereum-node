@@ -89,9 +89,7 @@
 import { ref, computed, watch, onMounted } from "vue";
 import { useControlStore } from "@/store/theControl";
 import { useSetups } from "@/store/setups";
-import { useStakingStore } from "@/store/theStaking";
-import { useServices } from "@/store/services";
-import { countOnChainKeys } from "@/composables/validators";
+import { useValidatorTotals } from "@/composables/validatorTotals";
 
 import DropdownOption from "../fragments/DropdownOption.vue";
 import ServiceArrow from "../fragments/ServiceArrow.vue";
@@ -101,8 +99,7 @@ import NoData from "./NoData.vue";
 
 const controlStore = useControlStore();
 const setupStore = useSetups();
-const stakingStore = useStakingStore();
-const serviceStore = useServices();
+const { validatorCount } = useValidatorTotals();
 
 const isOpen = ref(false);
 const currentIndex = ref(0);
@@ -237,7 +234,8 @@ const allValidatorPairs = computed(() => {
           )
         : [];
 
-      if (relatedPairs.length === 0) {
+      // a Web3Signer only signs and never has a client pair
+      if (relatedPairs.length === 0 && validator.service !== "Web3SignerService") {
         console.warn(`No related pairs found for validator ${validator.service} in network ${network}`);
       }
 
@@ -349,9 +347,7 @@ watch(
   { immediate: true }
 );
 
-const formattedValidatorNo = computed(() =>
-  countOnChainKeys(stakingStore.keys, serviceStore.installedServices).toString().padStart(3, "0")
-);
+const formattedValidatorNo = computed(() => validatorCount.value.toString().padStart(3, "0"));
 
 const toggleDropdown = () => {
   isOpen.value = !isOpen.value;

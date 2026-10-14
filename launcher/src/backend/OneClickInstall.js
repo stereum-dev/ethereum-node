@@ -637,7 +637,7 @@ export class OneClickInstall {
   async writeConfig() {
     const configs = this.getConfigurations();
     if (configs[0] !== undefined) {
-      this.configManager.createMultiSetupYaml(configs, this.network);
+      await this.configManager.createMultiSetupYaml(configs, this.network);
       const updatedConfigs = this.resolveUniquePorts(configs);
 
       await Promise.all(

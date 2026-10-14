@@ -53,10 +53,10 @@ import { useFooter } from "@/store/theFooter";
 import { useNodeStore } from "@/store/theNode";
 import { saveAs } from "file-saver";
 import JSZip from "jszip";
-import { onMounted, onUnmounted, ref, watchEffect } from "vue";
+import { computed, onMounted, onUnmounted, ref, watch, watchEffect } from "vue";
 import { useRefreshNodeStats } from "../../../composables/monitoring";
 import { useMultiSetups } from "../../../composables/multiSetups";
-import { useListKeys } from "../../../composables/validators";
+import { useValidatorsStore } from "@/store/validators";
 import NetworkStatus from "../../layers/NetworkStatus.vue";
 import AlertSection from "./sections/AlertSection.vue";
 import ExpertWindow from "./sections/ExpertWindow.vue";
@@ -82,7 +82,6 @@ const isLogsPageActive = ref(false);
 let polling = null;
 let pollingVitals = null;
 let pollingNodeStats = null;
-let pollingListingKeys = null;
 let pollingPings = null;
 
 //*****************  Watchers *****************
@@ -112,14 +111,12 @@ onMounted(async () => {
   polling = setInterval(updateServiceLogs, 10000); // refresh logs
   pollingVitals = setInterval(updateServerVitals, 1000); // refresh server vitals
   pollingNodeStats = setInterval(updateNodeStats, 1000); // refresh server vitals
-  pollingListingKeys = setInterval(checkForListingKeys, 1000); // check for validators which need validator listing
 });
 
 onUnmounted(() => {
   clearInterval(polling);
   clearInterval(pollingVitals);
   clearInterval(pollingNodeStats);
-  clearInterval(pollingListingKeys);
   clearInterval(pollingPings);
   setupStore.isConfigViewActive = false;
   setupStore.selectedSetup = null;
@@ -165,20 +162,26 @@ const alarmToggle = () => {
   footerStore.cursorLocation = "";
 };
 
-const checkForListingKeys = async () => {
-  //is true when there is at least one validator service running without keys
-  if (
-    serviceStore.installedServices &&
-    serviceStore.installedServices.length > 0 &&
-    serviceStore.installedServices.some(
-      (s) => s.category === "validator" && s.state === "running" && (!s.config.keys || !s.config.keys.length > 0)
-    )
-  ) {
-    clearInterval(pollingListingKeys);
-    console.log("Listing keys node screen");
-    useListKeys();
-  }
-};
+// the key counts on the client cards: each running client is listed once, again when the running clients change
+const validatorsStore = useValidatorsStore();
+const runningValidators = computed(() =>
+  serviceStore.installedServices
+    .filter((s) => s.category === "validator" && s.state === "running")
+    .map((s) => s.config?.serviceID)
+    .sort()
+    .join(",")
+);
+watch(
+  runningValidators,
+  async (ids) => {
+    if (!ids) return;
+    await validatorsStore.loadHolders();
+    for (const holder of validatorsStore.holders) {
+      if (holder.state === "running" && !validatorsStore.keysByHolder[holder.id]?.loadedAt) validatorsStore.loadKeys(holder.id);
+    }
+  },
+  { immediate: true }
+);
 
 const updateConnectionStats = async () => {
   const stats = await ControlService.getConnectionStats();

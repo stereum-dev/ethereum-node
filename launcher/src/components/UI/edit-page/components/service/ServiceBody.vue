@@ -41,7 +41,9 @@
           >
             <img class="w-5 z-10" src="/img/icon/edit-node-icons/service-connecting.png" alt="" @mousedown.prevent.stop />
           </div>
+          <!-- a database is deleted with its parent service -->
           <div
+            v-if="!item.attachedTo"
             class="w-8 h-8 col-start-2 col-span-1 self-center justify-self-center flex justify-center items-center border border-gray-500 bg-gray-700 hover:bg-black rounded-md cursor-pointer p-1 transform active:scale-75 duration-200"
             :class="{
               'border-red-500': item.displayTooltip,

@@ -418,6 +418,71 @@ const switchMocks = (configs) => {
   return { NodeConnection, writeServiceConfiguration, runPlaybook };
 };
 
+// the dependents were written without awaiting, so deleting the previous client right after read their old
+// config and removed the new beacon node with the old one (a Lodestar validator client lost --beaconNodes)
+test("switchServices has rewritten the dependents before it returns", async () => {
+  const sm = new ServiceManager({ readServiceConfiguration: jest.fn(), writeServiceConfiguration: jest.fn() });
+  const previous = {
+    id: "old-bn",
+    service: "LodestarBeaconService",
+    dependencies: { executionClients: [], mevboost: [], consensusClients: [] },
+  };
+  const vc = {
+    id: "vc",
+    service: "LodestarValidatorService",
+    dependencies: { consensusClients: [{ id: "old-bn" }], executionClients: [] },
+  };
+  const fresh = { id: "new-bn", service: "GrandineBeaconService" };
+  sm.configManager = { deleteServiceFromSetup: jest.fn().mockResolvedValue() };
+  sm.readServiceConfigurations = jest.fn().mockResolvedValueOnce([previous, vc]).mockResolvedValueOnce([previous, vc, fresh]);
+  sm.addServices = jest.fn().mockResolvedValue();
+  sm.addDependencies = jest.fn((service) => ({ buildConfiguration: () => ({ id: service.id }) }));
+  let written = false;
+  sm.nodeConnection.writeServiceConfiguration = jest.fn(() => new Promise((resolve) => setTimeout(() => resolve((written = true)), 20)));
+
+  await sm.switchServices({
+    id: "old-bn",
+    setupId: "setup",
+    service: { service: "LodestarBeaconService", category: "consensus", config: { serviceID: "old-bn" } },
+    data: { itemToInstall: { service: "GrandineBeaconService" }, data: {} },
+  });
+
+  expect(sm.addDependencies).toHaveBeenCalledWith(vc, [{ id: "old-bn" }, fresh]);
+  expect(written).toBe(true);
+  // the replaced client's ports are free for its successor
+  expect(sm.addServices).toHaveBeenCalledWith(expect.anything(), expect.anything(), ["old-bn"]);
+});
+
+// a switched-in Lighthouse got 9001/9002/9003 because the replaced Grandine still held 9000, while it announced 9000
+test("addServices keeps the default ports when the service holding them is being replaced", async () => {
+  const { writeServiceConfiguration } = switchMocks([]);
+  const sm = new ServiceManager(new (require("../../NodeConnection").NodeConnection)());
+  const grandine = {
+    id: "old-bn",
+    service: "GrandineBeaconService",
+    ports: [
+      { destinationPort: 9000, servicePortProtocol: "tcp" },
+      { destinationPort: 9000, servicePortProtocol: "udp" },
+      { destinationPort: 9001, servicePortProtocol: "udp" },
+    ],
+  };
+  const task = () => [
+    {
+      service: { service: "LighthouseBeaconService", category: "consensus", config: {} },
+      data: { network: "hoodi", installDir: "/opt/stereum", executionClients: [], consensusClients: [] },
+      setupId: "setup",
+    },
+  ];
+  const hostPorts = () => writeServiceConfiguration.mock.calls.at(-1)[0].ports.filter((p) => p.startsWith("0.0.0.0"));
+
+  await sm.addServices(task(), [grandine], ["old-bn"]);
+  expect(hostPorts()).toEqual(["0.0.0.0:9000:9000/tcp", "0.0.0.0:9000:9000/udp", "0.0.0.0:9001:9001/udp"]);
+
+  await sm.addServices(task(), [grandine]);
+  // the ports A got after switching Grandine for Lighthouse
+  expect(hostPorts()).toEqual(["0.0.0.0:9001:9000/tcp", "0.0.0.0:9002:9000/udp", "0.0.0.0:9003:9001/udp"]);
+});
+
 test("switchServices swaps charon for pluto in place", async () => {
   const config = charonConfig("charon-id");
   const vc = validatorConfig("vc-id", "charon-id");

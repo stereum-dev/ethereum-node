@@ -3,7 +3,8 @@
     class="w-[130px] h-[120px] col-span-1 row-span-1 items-center border rounded-md mx-auto relative grid grid-cols-2 grid-rows-12 cursor-pointer"
     :class="getDynamicClasses(props.setup)"
     @click="props.setup.isActive = true"
-    @mouseleave="props.setup.isActive = false"
+    @mouseenter="keepMenu"
+    @mouseleave="hideMenu"
   >
     <div
       class="w-full h-full col-start-1 col-span-full row-start-1 row-span-2 text-2xs text-center font-semibold capitalize overflow-hidden whitespace-nowrap truncate p-1 rounded-t-[0.28rem]"
@@ -27,7 +28,7 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, onBeforeUnmount } from "vue";
 import { useSetups } from "../../../../../../store/setups";
 import SetupLayout from "./SetupLayout.vue";
 import SetupMenu from "./SetupMenu.vue";
@@ -58,6 +59,15 @@ const bgColor = computed(() => setupStore.getColor(props.setup.color, "backgroun
 //Lifecycle Hooks
 
 //Methods
+// the menu closes a moment after the pointer leaves the card, so a brief slip past its edge does not close it
+let hideTimer = null;
+const keepMenu = () => clearTimeout(hideTimer);
+const hideMenu = () => {
+  clearTimeout(hideTimer);
+  hideTimer = setTimeout(() => (props.setup.isActive = false), 400);
+};
+onBeforeUnmount(() => clearTimeout(hideTimer));
+
 const deleteSetup = (item) => {
   emit("deleteSetup", item);
 };
@@ -83,9 +93,9 @@ const openConfigs = (item) => {
   transition: all 0.5s cubic-bezier(1, 0.5, 0.8, 1);
 }
 
+/* fade only: a sliding menu moved its icons under a resting pointer */
 .slide-fade-enter-from,
 .slide-fade-leave-to {
-  transform: translateX(50px);
   opacity: 0;
 }
 </style>

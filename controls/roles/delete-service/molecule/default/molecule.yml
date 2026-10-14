@@ -1,0 +1,25 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: molecule_hetznercloud
+platforms:
+  - name: "delete-service--default--ubuntu-26.04"
+    hostname: ubuntu
+    server_type: cpx21
+    image: ubuntu-26.04
+    location: hil
+provisioner:
+  name: ansible
+  env:
+    ANSIBLE_PIPELINING: "True"
+    ANSIBLE_ROLES_PATH: "${MOLECULE_PROJECT_DIRECTORY}/..:./roles:~/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles"
+scenario:
+  test_sequence:
+    - destroy
+    - create
+    - prepare
+    - converge
+    - verify
+    - destroy
+#EOF

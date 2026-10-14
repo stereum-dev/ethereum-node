@@ -1,9 +1,10 @@
 <template>
-  <div class="col-start-3 col-end-14 grid grid-cols-7 items-center gap-x-2">
+  <div class="col-start-3 col-end-14 grid items-center gap-x-2" :class="tabs.length > 3 ? 'grid-cols-9' : 'grid-cols-7'">
     <SingleTab v-for="tab in tabs" :key="tab.page" :tab="tab" />
     <router-link
       to="/shell"
-      class="w-full h-full col-start-7 col-span-1 flex justify-center items-center"
+      class="w-full h-full col-span-1 flex justify-center items-center"
+      :class="tabs.length > 3 ? 'col-start-9' : 'col-start-7'"
       @mouseenter="footerStore.cursorLocation = `${title}`"
       @mouseleave="footerStore.cursorLocation = ''"
     >

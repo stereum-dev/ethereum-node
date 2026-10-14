@@ -44,7 +44,6 @@
     <SupportModal v-if="headerStore.supportModalIsActive" @close-window="closeMenuWindow" />
     <NotifModal v-if="headerStore.notificationModalIsActive" @close-window="closeMenuWindow" />
     <TutorialGuide v-if="headerStore.isTutorialActive" />
-    <StakeGuide v-if="headerStore.stakeGuideActive" />
   </div>
 </template>
 
@@ -58,7 +57,6 @@ import ReconnectModal from "../UI/base-header/components/modals/ReconnectModal.v
 import SupportModal from "../UI/base-header/components/modals/SupportModal.vue";
 import UpdatePanel from "../UI/base-header/components/modals/UpdatePanel.vue";
 import HeaderScreen from "../UI/base-header/HeaderScreen.vue";
-import StakeGuide from "../UI/guide-page/StakeGuide.vue";
 import TutorialGuide from "../UI/guide-page/TutorialGuide.vue";
 import MultiServerScreen from "../UI/server-management/MultiServerScreen.vue";
 import GrafanaModal from "../UI/services-modal/GrafanaModal.vue";

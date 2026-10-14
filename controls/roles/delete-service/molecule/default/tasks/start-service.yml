@@ -1,0 +1,9 @@
+---
+- name: Merge the Stereum settings
+  ansible.builtin.set_fact:
+    stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+
+- name: Include manage-service
+  ansible.builtin.include_role:
+    name: "manage-service"
+#EOF

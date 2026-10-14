@@ -248,9 +248,11 @@ async function getSigningKeysWithQueueInfo(monitoring) {
 
     // Check if the Node Operator is active
     const isActive = await isNodeOperatorActive(contract, nodeOperatorId);
+    // null is a failed call; an inactive operator has nothing to show, which is not a failure
+    if (isActive === null) return null;
     if (!isActive) {
       log.info("Node Operator is not active.");
-      return null;
+      return [];
     }
 
     // Retrieve enqueued count
@@ -263,9 +265,10 @@ async function getSigningKeysWithQueueInfo(monitoring) {
 
     // Retrieve the number of non-withdrawn keys
     const numberOfNoneWithdrawnKeys = await getNoneWithdrawnKeys(contract, nodeOperatorId);
-    if (numberOfNoneWithdrawnKeys === null || numberOfNoneWithdrawnKeys <= 0) {
+    if (numberOfNoneWithdrawnKeys === null) return null;
+    if (numberOfNoneWithdrawnKeys <= 0) {
       log.info("No non-withdrawn keys available.");
-      return null;
+      return [];
     }
 
     // Retrieve the signing keys

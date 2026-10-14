@@ -97,6 +97,8 @@ export const useServerLogin = () => {
 
       const res = await ControlService.checkStereumInstallation();
       const routePath = res ? "/node" : "/welcome";
+      // runs in the background and reports in the task panel; a no-op once migrated
+      if (res) ControlService.migrateDatabaseServices().catch((err) => console.error("Database migration failed:", err));
 
       if (serverStore.connectingProcess) {
         try {

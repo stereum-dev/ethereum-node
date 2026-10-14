@@ -21,14 +21,14 @@
 <script setup>
 import { useServices } from "@/store/services.js";
 import { useSetups } from "@/store/setups.js";
-import { useStakingStore } from "@/store/theStaking.js";
+import { useValidatorTotals } from "@/composables/validatorTotals";
 import { computed } from "vue";
 
 const serviceStore = useServices();
-const stakingStore = useStakingStore();
+const { keyCount } = useValidatorTotals();
 const setupStore = useSetups();
 
 const dvtWithRelatedValidatorCount = computed(() => {
-  return stakingStore.keys.length;
+  return keyCount.value;
 });
 </script>

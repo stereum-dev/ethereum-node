@@ -43,6 +43,8 @@ import { OpNodeBeaconService } from "./ethereum-services/OpNodeBeaconService";
 import { L2GethService } from "./ethereum-services/L2GethService";
 import { SSVNOMService } from "./ethereum-services/SSVNOMService";
 import { EthrexService } from "./ethereum-services/EthrexService";
+import { PostgresService, DATABASE_SERVICES } from "./ethereum-services/PostgresService";
+import { DatabaseServices } from "./DatabaseServices";
 import { isObolDVTService } from "@/share/ObolDVTServices";
 
 import YAML from "yaml";
@@ -102,6 +104,8 @@ const SERVICE_CLASSES = {
   GrandineBeaconService,
   SSVNOMService,
   EthrexService,
+  SlashingDBService: PostgresService,
+  CachingDBService: PostgresService,
 };
 
 // A dependency whose own config is broken cannot be built into a service. This
@@ -131,6 +135,7 @@ export class ServiceManager {
   constructor(nodeConnection) {
     this.nodeConnection = nodeConnection;
     this.configManager = new ConfigManager(this.nodeConnection);
+    this.databases = new DatabaseServices(this);
     this.watchSSVDKGLock = false;
     this.lastKnownOperatorIdCheckUnixTime = 0;
   }
@@ -913,8 +918,11 @@ export class ServiceManager {
 
   async deleteService(task, _tasks, services, ssvConfigs) {
     let serviceToDelete = services.find((service) => service.id === task.service.config.serviceID);
+    // services deleted in the same run need no rewritten config, writing one would race their deletion
+    const deletedIds = (_tasks ?? []).map((t) => t.service?.config?.serviceID).filter(Boolean);
     let dependents = [];
     services.forEach((service) => {
+      if (service.id !== serviceToDelete.id && deletedIds.includes(service.id)) return;
       for (const dependency in service.dependencies) {
         service.dependencies[dependency].forEach((s) => {
           if (s.id === serviceToDelete.id) dependents.push(service);
@@ -928,13 +936,8 @@ export class ServiceManager {
       }
       await this.writeServiceConfigurationKeepingAutoupdate(service);
     }
-    if (serviceToDelete.service === "Web3SignerService") {
-      await this.nodeConnection.sshService.exec(
-        `docker stop slashingdb-${serviceToDelete.id} && docker rm slashingdb-${serviceToDelete.id}`
-      );
-    }
-    if (serviceToDelete.service === "KeysAPIService") {
-      await this.nodeConnection.sshService.exec(`docker stop cachingDB-${serviceToDelete.id} && docker rm cachingDB-${serviceToDelete.id}`);
+    if (Object.values(DATABASE_SERVICES).some((d) => d.parent === serviceToDelete.service)) {
+      await this.databases.deleteFor(serviceToDelete, deletedIds);
     }
     await this.nodeConnection.runPlaybook("Delete Service", {
       stereum_role: "delete-service",
@@ -993,7 +996,8 @@ export class ServiceManager {
         setupId: switchTask.setupId,
       });
 
-      await this.addServices(installTask, services);
+      // the previous client is deleted right after, so the replacement keeps its ports instead of shifted ones
+      await this.addServices(installTask, services, [switchTask.service.config.serviceID]);
     } catch (err) {
       log.error("Installing Services Failed:", err);
     }
@@ -1001,7 +1005,8 @@ export class ServiceManager {
     let newServices = await this.readServiceConfigurations();
     let newService = newServices.filter(({ id: id1 }) => !services.some(({ id: id2 }) => id2 === id1));
     if (switchTask.service.category != "validator") {
-      servicesBelow.forEach((service) => {
+      // awaited: the caller deletes the previous client next and must read these configs, not the old ones
+      for (const service of servicesBelow) {
         let newDependencies = [];
         if (service.service === "OpNodeBeaconService") {
           service.dependencies.consensusClients.forEach((dependency) => {
@@ -1020,11 +1025,11 @@ export class ServiceManager {
         newDependencies.push(newService[0]);
         try {
           let updatedDep = this.addDependencies(service, newDependencies);
-          this.nodeConnection.writeServiceConfiguration(updatedDep.buildConfiguration());
+          await this.nodeConnection.writeServiceConfiguration(updatedDep.buildConfiguration());
         } catch (err) {
           log.error("Dependencies Update Failed:", err);
         }
-      });
+      }
     }
   }
 
@@ -1461,70 +1466,27 @@ export class ServiceManager {
     }
   }
 
-  async createCachingDB(keyAPI) {
-    try {
-      const dbPass = StringUtils.createRandomString();
-      const dbUser = "postgres";
-      const dbName = "node_operator_keys_service_db";
-      await this.nodeConnection.sshService.exec(
-        `docker run --restart=unless-stopped --name=cachingDB-${keyAPI.id} --network=stereum -d -e POSTGRES_PASSWORD=${dbPass} -e POSTGRES_USER=${dbUser} -e POSTGRES_DB=${dbName} postgres`
-      );
-      keyAPI.env.DB_NAME = dbName;
-      keyAPI.env.DB_USER = dbUser;
-      keyAPI.env.DB_PASSWORD = dbPass;
-
-      keyAPI.env.DB_HOST = `cachingDB-${keyAPI.id}`;
-    } catch (err) {
-      log.error("Creating CachingDB failed: ", err);
-      await this.nodeConnection.sshService.exec(`docker stop cachingDB-${keyAPI.id} && docker rm cachingDB-${keyAPI.id}`);
-    }
-  }
-
+  // Each Keys API gets its cache database, see DatabaseServices
   async initKeysAPI(services) {
     for (const service of services) {
-      await this.createCachingDB(service);
-      await this.nodeConnection.writeServiceConfiguration(service.buildConfiguration());
-    }
-  }
-
-  async createSlashingDB(web3signer, workingDir) {
-    try {
-      const dbPass = StringUtils.createRandomString();
-      const dbUser = "postgres";
-      const dbName = "web3signer";
-      await this.nodeConnection.sshService.exec(
-        `docker run --restart=unless-stopped --name=slashingdb-${web3signer.id} --network=stereum -v ${workingDir}/postgresql:/opt/app/schemas -d -e POSTGRES_PASSWORD=${dbPass} -e POSTGRES_USER=${dbUser} -e POSTGRES_DB=${dbName} postgres`
-      );
-      const schemas = await this.nodeConnection.sshService.exec(`sleep 10s && ls -1 ${workingDir}/postgresql`);
-      for (const schema of schemas.stdout.split("\n").filter((s) => s)) {
-        log.info("loading " + schema + " schema...");
-        const result = await this.nodeConnection.sshService.exec(
-          `docker exec -u 0 -w /opt/app/schemas slashingdb-${web3signer.id} psql --echo-all --host=localhost --port=5432 --dbname=web3signer --username=postgres -f ${schema}`
-        );
-        log.info(`\nstdout: ${result.stdout}\nstderr: ${result.stderr}\n`);
+      try {
+        await this.databases.initKeysAPI(service);
+        await this.nodeConnection.writeServiceConfiguration(service.buildConfiguration());
+      } catch (err) {
+        log.error("Creating the Keys API database failed: ", err);
       }
-      web3signer.command.push(
-        "--slashing-protection-enabled=true",
-        `--slashing-protection-db-url=jdbc:postgresql://slashingdb-${web3signer.id}/${dbName}`,
-        `--slashing-protection-db-username=${dbUser}`,
-        `--slashing-protection-db-password=${dbPass}`,
-        "--slashing-protection-pruning-enabled=true"
-      );
-    } catch (err) {
-      log.error("Creating SlashingDB failed: ", err);
-      await this.nodeConnection.sshService.exec(`docker stop slashingdb-${web3signer.id} && docker rm slashingdb-${web3signer.id}`);
     }
   }
 
+  // Each Web3Signer gets its slashing protection database, see DatabaseServices
   async initWeb3Signer(services) {
     for (const service of services) {
-      await this.manageServiceState(service.id, "started");
-      const workingDir = this.getWorkingDir(service);
-      await this.nodeConnection.sshService.exec("docker cp stereum-" + service.id + ":/opt/web3signer/migrations/postgresql " + workingDir);
-      await this.manageServiceState(service.id, "stopped");
-      service.command = service.command.filter((c) => c != "--slashing-protection-enabled=false");
-      await this.createSlashingDB(service, workingDir);
-      await this.nodeConnection.writeServiceConfiguration(service.buildConfiguration());
+      try {
+        await this.databases.initWeb3Signer(service);
+        await this.nodeConnection.writeServiceConfiguration(service.buildConfiguration());
+      } catch (err) {
+        log.error("Creating the Web3Signer slashing protection database failed: ", err);
+      }
     }
   }
 
@@ -1616,7 +1578,8 @@ export class ServiceManager {
     }
   }
 
-  async addServices(tasks, services) {
+  // freedIds: services about to be replaced (switch), their host ports count as free
+  async addServices(tasks, services, freedIds = []) {
     let newServices = [];
     let setupAndServiceIds = {};
     let ELInstalls = tasks.filter((t) => t.service.category === "execution");
@@ -1689,6 +1652,7 @@ export class ServiceManager {
     });
 
     let allPorts = services
+      .filter((s) => !freedIds.includes(s.id))
       .map((s) => s.ports)
       .flat(1)
       .map((p) => p.destinationPort + "/" + p.servicePortProtocol);

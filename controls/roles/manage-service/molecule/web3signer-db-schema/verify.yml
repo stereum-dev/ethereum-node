@@ -1,0 +1,95 @@
+---
+- name: Verify
+  hosts: all
+  vars_files:
+    - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    web3signer_service: 3d9b6e1a-7c2f-4a5e-8b1d-0f4c6a2e9d7b
+    db_service: 6a1f3c2e-0d4b-4c8e-9b7a-5e2f1d3c4b5a
+    backups: "/opt/stereum/web3signer-{{ web3signer_service }}/db-backups"
+
+  tasks:
+    - name: Read the schema version and the signed data
+      ansible.builtin.command: >
+        docker exec stereum-{{ db_service }} psql -At -U postgres -d web3signer
+        -c "select version from database_version"
+        -c "select (select count(*) from validators), (select count(*) from signed_attestations), (select count(*) from signed_blocks)"
+      register: db_state
+      changed_when: false
+
+    - name: Check that the schema was upgraded and no signed data was lost
+      ansible.builtin.assert:
+        that:
+          - db_state.stdout_lines[0] == "12"
+          - db_state.stdout_lines[1] == "2|3|1"
+
+    - name: Find the backup
+      ansible.builtin.find:
+        paths: "{{ backups }}"
+        patterns: "slashing-protection-v11-*.dump"
+      register: backup_files
+
+    - name: Check the backup
+      ansible.builtin.assert:
+        that:
+          - backup_files.files | length == 1
+          - backup_files.files[0].mode == "0600"
+          - backup_files.files[0].size > 0
+
+    - name: Wait for Web3Signer
+      ansible.builtin.command: >
+        docker run --rm --network=stereum curlimages/curl:{{ stereum_static.defaults.versions.curl }}
+        -s -o /dev/null -w '%{http_code}' http://stereum-{{ web3signer_service }}:9000/upcheck
+      register: upcheck
+      until: upcheck.stdout == "200"
+      retries: 30
+      delay: 5
+      changed_when: false
+
+    - name: Read Web3Signer's log
+      ansible.builtin.command: docker logs stereum-{{ web3signer_service }}
+      register: web3signer_logs
+      changed_when: false
+
+    - name: Check that Web3Signer accepted the database
+      ansible.builtin.assert:
+        that: "'does not match expected version' not in (web3signer_logs.stdout + web3signer_logs.stderr)"
+
+    # an up-to-date database is left alone
+    - name: Restart Web3Signer
+      vars:
+        stereum_args:
+          manage_service:
+            save: false
+            state: restarted
+            configuration:
+              id: "{{ web3signer_service }}"
+      block:
+        - name: Merge the Stereum settings
+          ansible.builtin.set_fact:
+            stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+
+        - name: Include manage-service
+          ansible.builtin.include_role:
+            name: "manage-service"
+
+    - name: Find the backups after the restart
+      ansible.builtin.find:
+        paths: "{{ backups }}"
+        patterns: "*.dump"
+      register: backup_files_after
+
+    - name: Wait for Web3Signer after the restart
+      ansible.builtin.command: >
+        docker run --rm --network=stereum curlimages/curl:{{ stereum_static.defaults.versions.curl }}
+        -s -o /dev/null -w '%{http_code}' http://stereum-{{ web3signer_service }}:9000/upcheck
+      register: upcheck_after
+      until: upcheck_after.stdout == "200"
+      retries: 30
+      delay: 5
+      changed_when: false
+
+    - name: Check that the restart changed nothing
+      ansible.builtin.assert:
+        that: backup_files_after.files | length == 1
+#EOF

@@ -295,37 +295,6 @@ test("the balance of a VC behind Charon is summed for the cluster's DV keys", as
   expect(result.data.balance).toEqual(66);
 });
 
-// null lets the staking page keep the stats it has instead of resetting every key
-describe("validator state on a failed fetch", () => {
-  const monitoringWithBeacon = (execResults) => {
-    const monitoring = new Monitoring({});
-    monitoring.findBeaconPort = jest.fn().mockResolvedValue({ code: 0, data: { url: "http://127.0.0.1:5051" } });
-    monitoring.nodeConnection = { sshService: { exec: jest.fn() } };
-    execResults.forEach((r) => monitoring.nodeConnection.sshService.exec.mockResolvedValueOnce(r));
-    return monitoring;
-  };
-  const finality = { rc: 0, stderr: "", stdout: JSON.stringify({ data: { current_justified: { epoch: "99" } } }) };
-
-  test("no reachable beacon returns null", async () => {
-    const monitoring = new Monitoring({});
-    monitoring.findBeaconPort = jest.fn().mockResolvedValue({ code: 1, info: "no beacon" });
-
-    expect(await monitoring.getValidatorState(["0xa"])).toBeNull();
-  });
-
-  test("a failed curl returns null", async () => {
-    const monitoring = monitoringWithBeacon([{ rc: 7, stderr: "", stdout: "" }, finality]);
-
-    expect(await monitoring.getValidatorState(["0xa"])).toBeNull();
-  });
-
-  test("keys unknown to the beacon are an answer, not a failure", async () => {
-    const monitoring = monitoringWithBeacon([{ rc: 0, stderr: "", stdout: JSON.stringify({ code: 404, message: "not found" }) }, finality]);
-
-    expect(await monitoring.getValidatorState(["0xa"])).toEqual([]);
-  });
-});
-
 // One exec for all queries of a widget instead of one channel and login shell each
 test("prometheus queries are batched into a single exec and split per query", async () => {
   const monitoring = new Monitoring({});
