@@ -8,7 +8,7 @@
       <KeyLabel v-if="pubkeys.length === 1" :pubkey="pubkeys[0]" />
       <div v-else class="flex items-center gap-2 rounded-lg bg-[#0D0D12] border border-[#ffffff16] px-3 py-2 text-xs">
         <img src="/img/icon/node-page-icons/validator-key-icon.png" class="w-4 h-4" alt="" />
-        {{ t("validatorsPage.appliesTo", { count: pubkeys.length }) }}
+        {{ t("validatorsPage.appliesTo", { count: pubkeys.length }, pubkeys.length) }}
       </div>
     </template>
 
@@ -43,7 +43,9 @@
       </div>
     </div>
 
-    <p v-if="!renaming && movingCount" class="text-xs text-amber-300">{{ t("validatorsPage.groupMoveNote", { count: movingCount }) }}</p>
+    <p v-if="!renaming && movingCount" class="text-xs text-amber-300">
+      {{ t("validatorsPage.groupMoveNote", { count: movingCount }, movingCount) }}
+    </p>
     <p v-if="failure" class="text-xs text-red-400 break-all">{{ t("validatorsPage.writeKeysError") }}: {{ failure }}</p>
 
     <template #footer>

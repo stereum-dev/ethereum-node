@@ -7,7 +7,7 @@
       >
         <div class="flex items-center gap-2 px-4 py-3 border-b border-[#4b8585]/50">
           <span v-if="icon" class="w-8 h-8 rounded-full bg-[#0D0D12] border border-[#4b8585] flex items-center justify-center">
-            <img :src="icon" class="w-5 h-5 rounded-xs" alt="" />
+            <img :src="icon" class="w-5 h-5 rounded-xs" :class="iconClass" alt="" />
           </span>
           <span class="grow text-sm font-bold uppercase tracking-wide">{{ title }}</span>
           <button class="w-7 h-7 rounded-full text-sm text-gray-400 hover:text-white hover:bg-[#336666]" @click="$emit('close')">✕</button>
@@ -29,6 +29,7 @@ import { onBeforeUnmount, onMounted } from "vue";
 defineProps({
   title: { type: String, required: true },
   icon: { type: String, default: null },
+  iconClass: { type: String, default: "" },
   wide: { type: Boolean, default: false },
 });
 const emit = defineEmits(["close"]);

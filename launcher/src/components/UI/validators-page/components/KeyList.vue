@@ -40,6 +40,7 @@
       <ActionButton
         v-if="canImportRemote"
         icon="/img/icon/staking-page-icons/remote-key-icon.svg"
+        icon-class="invert brightness-90"
         :label="t('validatorsPage.remoteImport.short')"
         :title="remoteImportBlock ?? t('validatorsPage.remoteImport.button')"
         :disabled="!!remoteImportBlock"

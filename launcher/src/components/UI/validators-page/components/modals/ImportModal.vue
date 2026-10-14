@@ -1,5 +1,10 @@
 <template>
-  <ValidatorModal :title="t('validatorsPage.importTitle')" icon="/img/icon/staking-page-icons/validator-import.svg" wide @close="close">
+  <ValidatorModal
+    :title="t('validatorsPage.importTitle', keystores.length)"
+    icon="/img/icon/staking-page-icons/validator-import.svg"
+    wide
+    @close="close"
+  >
     <!-- 1: files -->
     <template v-if="step === 'files'">
       <!-- the drop zone shrinks to one line once files are in, so the summary and the list stay in view -->
@@ -85,8 +90,9 @@
       <div v-if="!check" class="flex items-center gap-2 text-sm text-gray-300">
         <img src="/animation/loading/turning-circle.gif" class="w-6 h-6" alt="" />{{ t("validatorsPage.importChecking") }}
       </div>
+      <!-- a refused check (e.g. Prysm in remote signer mode) has nothing else to show -->
+      <p v-else-if="check.info" class="text-xs text-red-400">{{ check.info }}</p>
       <template v-else>
-        <p v-if="check.info" class="text-xs text-red-400">{{ check.info }}</p>
         <div class="flex flex-wrap gap-2">
           <span v-for="chip in checkChips" :key="chip.label" class="px-3 py-1 rounded-full text-xs font-semibold border border-[#4b8585]">
             {{ chip.label }}: {{ chip.count }}
@@ -98,7 +104,7 @@
           v-if="check.live?.length"
           class="rounded-lg border border-red-500 bg-red-900/25 px-3 py-2 text-xs text-red-200 flex flex-col gap-2"
         >
-          <span class="font-bold">{{ t("validatorsPage.importLive", { count: check.live.length }) }}</span>
+          <span class="font-bold">{{ t("validatorsPage.importLive", { count: check.live.length }, check.live.length) }}</span>
           <span class="max-h-20 overflow-y-auto flex flex-col text-2xs">
             <span v-for="key in check.live" :key="key" class="break-all">{{ key }}</span>
           </span>
@@ -128,10 +134,14 @@
             <div class="grid grid-cols-[auto_1fr] gap-x-3 gap-y-0.5 text-gray-300">
               <span class="text-gray-500">{{ t("validatorsPage.slashingCoversLabel") }}</span>
               <span :class="slashingCheck.missing.length ? 'text-amber-300' : 'text-green-500'">{{
-                t("validatorsPage.slashingCovers", {
-                  covered: keystores.length - slashingCheck.missing.length,
-                  total: keystores.length,
-                })
+                t(
+                  "validatorsPage.slashingCovers",
+                  {
+                    covered: keystores.length - slashingCheck.missing.length,
+                    total: keystores.length,
+                  },
+                  keystores.length
+                )
               }}</span>
               <span class="text-gray-500">{{ t("validatorsPage.slashingContentsLabel") }}</span>
               <span>{{ slashingContents }}</span>
@@ -171,7 +181,7 @@
     <!-- 3: importing -->
     <ImportAnimation
       v-else-if="step === 'importing'"
-      :label="t('validatorsPage.importing', { count: keystores.length })"
+      :label="t('validatorsPage.importing', { count: keystores.length }, keystores.length)"
       :detail="progressText"
     />
 

@@ -5,7 +5,7 @@
     :disabled="disabled"
     @click="$emit('click')"
   >
-    <img v-if="icon" :src="icon" class="w-4 h-4 rounded-xs" alt="" />
+    <img v-if="icon" :src="icon" class="w-4 h-4 rounded-xs" :class="iconClass" alt="" />
     {{ label }}
   </button>
 </template>
@@ -14,6 +14,7 @@
 defineProps({
   label: { type: String, required: true },
   icon: { type: String, default: null },
+  iconClass: { type: String, default: "" },
   primary: { type: Boolean, default: false },
   disabled: { type: Boolean, default: false },
 });

@@ -1,5 +1,9 @@
 <template>
-  <ValidatorModal :title="t('validatorsPage.removeTitle')" icon="/img/icon/staking-page-icons/option-remove.png" @close="close">
+  <ValidatorModal
+    :title="t('validatorsPage.removeTitle', pubkeys.length)"
+    icon="/img/icon/staking-page-icons/option-remove.png"
+    @close="close"
+  >
     <template v-if="step === 'confirm'">
       <KeyLabel v-if="pubkeys.length === 1" :pubkey="pubkeys[0]" />
       <div v-else class="flex items-center gap-2 rounded-lg bg-[#0D0D12] border border-[#ffffff16] px-3 py-2 text-xs">
@@ -10,7 +14,9 @@
         <span>{{ t("validatorsPage.removeWarning") }}</span>
         <span v-if="localKeys.length">{{ t("validatorsPage.removeSlashingNote") }}</span>
         <span v-if="remoteKeys.length">{{ t("validatorsPage.removeRemoteNote") }}</span>
-        <span v-if="csmCount" class="text-amber-400 font-semibold">{{ t("validatorsPage.csm.removeWarning", { count: csmCount }) }}</span>
+        <span v-if="csmCount" class="text-amber-400 font-semibold">{{
+          t("validatorsPage.csm.removeWarning", { count: csmCount }, csmCount)
+        }}</span>
       </div>
       <label v-if="pubkeys.length > 1" class="flex flex-col gap-1 text-xs">
         {{ t("validatorsPage.removeTypeCount", { count: pubkeys.length }) }}
@@ -24,7 +30,7 @@
 
     <div v-else-if="step === 'removing'" class="flex items-center gap-2 text-sm text-gray-300">
       <img src="/animation/loading/turning-circle.gif" class="w-6 h-6" alt="" />{{
-        t("validatorsPage.removing", { count: pubkeys.length })
+        t("validatorsPage.removing", { count: pubkeys.length }, pubkeys.length)
       }}
     </div>
 

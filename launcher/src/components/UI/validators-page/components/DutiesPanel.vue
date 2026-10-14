@@ -211,11 +211,11 @@ const cards = computed(() => {
       icon: ICONS + "sync-committee.png",
       value: d
         ? d.sync.current.length
-          ? t("validatorsPage.duties.syncNow", { count: d.sync.current.length })
+          ? t("validatorsPage.duties.syncNow", { count: d.sync.current.length }, d.sync.current.length)
           : t("validatorsPage.duties.syncNone")
         : "-",
       color: d?.sync.current.length ? "text-[#74fa65]" : "text-gray-300",
-      sub: d ? t("validatorsPage.duties.syncNext", { epoch: d.sync.nextPeriodStart, count: d.sync.next.length }) : "",
+      sub: d ? t("validatorsPage.duties.syncNext", { epoch: d.sync.nextPeriodStart, count: d.sync.next.length }, d.sync.next.length) : "",
     },
     {
       id: "attestation",

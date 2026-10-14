@@ -7,7 +7,7 @@
       <dd class="text-right py-1 border-b border-[#ffffff10] font-semibold break-all">{{ name }}</dd>
       <dt class="text-[#7fb3b3] py-1 border-b border-[#ffffff10]">{{ t("validatorsPage.col.key") }}</dt>
       <dd class="text-right py-1 border-b border-[#ffffff10] font-semibold">
-        {{ t("validatorsPage.groupKeys", { count: group?.count ?? 0 }) }}
+        {{ t("validatorsPage.groupKeys", { count: group?.count ?? 0 }, group?.count ?? 0) }}
       </dd>
       <dt class="text-[#7fb3b3] py-1 border-b border-[#ffffff10]">{{ t("validatorsPage.col.balance") }}</dt>
       <dd class="text-right py-1 border-b border-[#ffffff10] font-semibold text-amber-300">

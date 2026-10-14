@@ -1,7 +1,8 @@
 <template>
   <ValidatorModal
-    :title="t('validatorsPage.remoteImport.title')"
+    :title="t('validatorsPage.remoteImport.title', titleCount)"
     icon="/img/icon/staking-page-icons/remote-key-icon.svg"
+    icon-class="invert brightness-90"
     wide
     @close="close"
   >
@@ -114,7 +115,7 @@
             <ActionButton :label="t('validatorsPage.remoteImport.add')" :disabled="!manualInput.trim()" @click="addManual" />
           </div>
           <span v-if="invalidCount" class="text-2xs text-red-400">{{
-            t("validatorsPage.remoteImport.invalidKeys", { count: invalidCount })
+            t("validatorsPage.remoteImport.invalidKeys", { count: invalidCount }, invalidCount)
           }}</span>
         </div>
       </template>
@@ -125,14 +126,15 @@
       <div v-if="!check" class="flex items-center gap-2 text-sm text-gray-300">
         <img src="/animation/loading/turning-circle.gif" class="w-6 h-6" alt="" />{{ t("validatorsPage.importChecking") }}
       </div>
+      <!-- a refused check has nothing else to show -->
+      <p v-else-if="check.info" class="text-xs text-red-400">{{ check.info }}</p>
       <template v-else>
-        <p v-if="check.info" class="text-xs text-red-400">{{ check.info }}</p>
         <div class="flex flex-wrap gap-2">
           <span v-for="chip in checkChips" :key="chip.label" class="px-3 py-1 rounded-full text-xs font-semibold border border-[#4b8585]">
             {{ chip.label }}: {{ chip.count }}
           </span>
         </div>
-        <p v-if="!check.info && !check.statesKnown" class="text-xs text-amber-300">{{ t("validatorsPage.importNoStates") }}</p>
+        <p v-if="!check.statesKnown" class="text-xs text-amber-300">{{ t("validatorsPage.importNoStates") }}</p>
 
         <div
           v-if="check.remoteSigner?.mode === 'blocked'"
@@ -146,7 +148,7 @@
         >
           <span>{{ t(`validatorsPage.remoteImport.${switchClient}Switch`, { url: checkedUrl }) }}</span>
           <span v-if="check.remoteSigner.kept">{{
-            t("validatorsPage.remoteImport.prysmSwitchKept", { count: check.remoteSigner.kept })
+            t("validatorsPage.remoteImport.prysmSwitchKept", { count: check.remoteSigner.kept }, check.remoteSigner.kept)
           }}</span>
           <label class="flex items-start gap-2 cursor-pointer">
             <input v-model="switchAccepted" type="checkbox" class="mt-0.5" />{{
@@ -159,7 +161,7 @@
           v-if="check.live?.length"
           class="rounded-lg border border-red-500 bg-red-900/25 px-3 py-2 text-xs text-red-200 flex flex-col gap-2"
         >
-          <span class="font-bold">{{ t("validatorsPage.importLive", { count: check.live.length }) }}</span>
+          <span class="font-bold">{{ t("validatorsPage.importLive", { count: check.live.length }, check.live.length) }}</span>
           <span class="max-h-20 overflow-y-auto flex flex-col text-2xs">
             <span v-for="key in check.live" :key="key" class="break-all">{{ key }}</span>
           </span>
@@ -172,7 +174,13 @@
           v-if="elsewhereSelected.length"
           class="rounded-lg border border-amber-500 bg-amber-900/20 px-3 py-2 text-xs text-amber-200 flex flex-col gap-2"
         >
-          <span>{{ t("validatorsPage.remoteImport.elsewhere", { count: elsewhereSelected.length, clients: elsewhereClients }) }}</span>
+          <span>{{
+            t(
+              "validatorsPage.remoteImport.elsewhere",
+              { count: elsewhereSelected.length, clients: elsewhereClients },
+              elsewhereSelected.length
+            )
+          }}</span>
           <label class="flex items-start gap-2 cursor-pointer">
             <input v-model="elsewhereAccepted" type="checkbox" class="mt-0.5" />{{ t("validatorsPage.remoteImport.elsewhereAccept") }}
           </label>
@@ -192,7 +200,7 @@
         </div>
 
         <p v-if="notOnSigner.length" class="text-xs text-amber-300">
-          {{ t("validatorsPage.remoteImport.notOnSigner", { count: notOnSigner.length }) }}
+          {{ t("validatorsPage.remoteImport.notOnSigner", { count: notOnSigner.length }, notOnSigner.length) }}
         </p>
         <p v-if="allUnknown" class="text-xs text-amber-300">
           {{ t("validatorsPage.remoteImport.allUnknown", { network: holder?.network }) }}
@@ -203,7 +211,7 @@
 
     <!-- 3: importing -->
     <div v-else-if="step === 'importing'" class="flex flex-col items-center gap-1 text-sm text-gray-300">
-      <ImportAnimation :label="t('validatorsPage.remoteImport.importing', { count: importCount })" />
+      <ImportAnimation :label="t('validatorsPage.remoteImport.importing', { count: importCount }, importCount)" />
       <span v-if="check?.remoteSigner?.mode === 'switch'" class="text-xs text-[#7fb3b3]">{{
         t(`validatorsPage.remoteImport.${switchClient}Restarting`)
       }}</span>
@@ -357,6 +365,8 @@ const rows = computed(() => {
     }));
 });
 const selectedKeys = computed(() => allKeys.value.filter((k) => selection.value[k]));
+// "Import remote key" once a single key is picked
+const titleCount = computed(() => (step.value === "source" ? selectedKeys.value.length : checkedKeys.value.length));
 const selectable = computed(() => rows.value.filter((row) => !row.here));
 const allChecked = computed(() => selectable.value.length > 0 && selectable.value.every((row) => selection.value[row.pubkey]));
 const toggleAll = () => {

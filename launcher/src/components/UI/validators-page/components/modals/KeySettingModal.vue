@@ -3,7 +3,7 @@
     <KeyLabel v-if="single" :pubkey="pubkeys[0]" />
     <div v-else class="flex items-center gap-2 rounded-lg bg-[#0D0D12] border border-[#ffffff16] px-3 py-2 text-xs">
       <img src="/img/icon/node-page-icons/validator-key-icon.png" class="w-4 h-4" alt="" />
-      {{ t("validatorsPage.appliesTo", { count: pubkeys.length }) }}
+      {{ t("validatorsPage.appliesTo", { count: pubkeys.length }, pubkeys.length) }}
     </div>
 
     <div v-if="single" class="flex flex-col gap-1">
@@ -65,7 +65,7 @@
     <p v-else-if="csmKeys.length" class="text-xs text-amber-300">
       {{
         targets.length
-          ? t("validatorsPage.csm.feeRecipientSkipped", { count: csmKeys.length })
+          ? t("validatorsPage.csm.feeRecipientSkipped", { count: csmKeys.length }, csmKeys.length)
           : t("validatorsPage.csm.feeRecipientBlocked")
       }}
     </p>
@@ -73,7 +73,7 @@
     <div v-if="result" class="text-xs" :class="result.failed?.length || result.info ? 'text-amber-300' : 'text-green-400'">
       <template v-if="result.info">{{ result.info }}</template>
       <template v-else>
-        {{ t("validatorsPage.appliedCount", { ok: result.ok.length, total: targets.length }) }}
+        {{ t("validatorsPage.appliedCount", { ok: result.ok.length, total: targets.length }, targets.length) }}
         <span v-if="result.failed.length">{{ t("validatorsPage.failedCount", { count: result.failed.length }) }}</span>
       </template>
     </div>

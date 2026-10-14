@@ -27,7 +27,7 @@
         <button class="flex items-center gap-2 grow min-w-0 h-full text-left" :title="group.name" @click="choose(group.id)">
           <img src="/img/icon/staking-page-icons/group-circle-icon.png" class="w-4 h-4 shrink-0" alt="" />
           <span class="grow truncate font-semibold">{{ group.name }}</span>
-          <span class="shrink-0 text-gray-400">{{ t("validatorsPage.groupKeys", { count: group.count }) }}</span>
+          <span class="shrink-0 text-gray-400">{{ t("validatorsPage.groupKeys", { count: group.count }, group.count) }}</span>
           <span class="shrink-0 text-amber-300">{{ hasStats ? formatEth(group.balance, 2) : "n/a" }}</span>
         </button>
         <IconButton

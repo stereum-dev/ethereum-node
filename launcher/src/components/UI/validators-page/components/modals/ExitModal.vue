@@ -1,5 +1,10 @@
 <template>
-  <ValidatorModal :title="t('validatorsPage.exitTitle')" icon="/img/icon/staking-page-icons/option-withdraw.png" wide @close="close">
+  <ValidatorModal
+    :title="t('validatorsPage.exitTitle', pubkeys.length)"
+    icon="/img/icon/staking-page-icons/option-withdraw.png"
+    wide
+    @close="close"
+  >
     <div v-if="step === 'checking'" class="flex items-center gap-2 text-sm text-gray-300">
       <img src="/animation/loading/turning-circle.gif" class="w-6 h-6" alt="" />{{ t("validatorsPage.exitChecking") }}
     </div>
@@ -10,9 +15,11 @@
         <KeyLabel v-if="pubkeys.length === 1" :pubkey="pubkeys[0]" />
         <div v-else class="flex items-center gap-2 rounded-lg bg-[#0D0D12] border border-[#ffffff16] px-3 py-2 text-xs">
           <img src="/img/icon/node-page-icons/validator-key-icon.png" class="w-4 h-4" alt="" />
-          <span class="grow">{{ t("validatorsPage.exitCount", { eligible: prep.eligible.length, total: pubkeys.length }) }}</span>
+          <span class="grow">{{
+            t("validatorsPage.exitCount", { eligible: prep.eligible.length, total: pubkeys.length }, pubkeys.length)
+          }}</span>
           <span v-if="wholeClient" class="text-[#7fb3b3] font-semibold">{{
-            t("validatorsPage.exitWholeClient", { count: pubkeys.length, client: clientName })
+            t("validatorsPage.exitWholeClient", { count: pubkeys.length, client: clientName }, pubkeys.length)
           }}</span>
         </div>
 
@@ -35,7 +42,9 @@
 
         <div class="rounded-lg border border-amber-500/60 bg-amber-900/20 px-3 py-2 text-xs text-amber-200 flex flex-col gap-1">
           <span>{{ t("validatorsPage.exitWarning") }}</span>
-          <span v-if="prep.blsCredentials.length">{{ t("validatorsPage.exitBlsNote", { count: prep.blsCredentials.length }) }}</span>
+          <span v-if="prep.blsCredentials.length">{{
+            t("validatorsPage.exitBlsNote", { count: prep.blsCredentials.length }, prep.blsCredentials.length)
+          }}</span>
           <template v-if="prep.role === 'share'">
             <span>{{ t("validatorsPage.exitShareNote", { client: dvtClientName }) }}</span>
             <span>{{ t("validatorsPage.exitShareEpoch", { epoch: prep.signEpoch }) }}</span>
@@ -59,8 +68,8 @@
     <div v-else-if="step === 'exiting' || step === 'exporting'" class="flex items-center gap-2 text-sm text-gray-300">
       <img src="/animation/loading/turning-circle.gif" class="w-6 h-6" alt="" />{{
         step === "exiting"
-          ? t("validatorsPage.exiting", { count: prep.eligible.length })
-          : t("validatorsPage.exitExporting", { count: prep.exportable.length })
+          ? t("validatorsPage.exiting", { count: prep.eligible.length }, prep.eligible.length)
+          : t("validatorsPage.exitExporting", { count: prep.exportable.length }, prep.exportable.length)
       }}
     </div>
 
