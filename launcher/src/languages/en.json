@@ -1218,6 +1218,7 @@
     "slashingMissing": "{n} key is not in the file | {n} keys are not in the file",
     "slashingNeverSigned": "{n} key is on chain without slashing protection. I confirm it has never signed anywhere else. | {n} keys are on chain without slashing protection. I confirm they have never signed anywhere else.",
     "slashingNeverSignedUnknown": "{n} key may be on chain without slashing protection. I confirm it has never signed anywhere else. | {n} keys may be on chain without slashing protection. I confirm they have never signed anywhere else.",
+    "importTekuSavesLater": "Teku only saves these keys once its doppelganger check has passed (about 2 to 3 epochs). Restarting Teku before that drops them, they then have to be imported again.",
     "importDoppelganger": "Doppelganger protection is on: the client watches the network for a few epochs before the new keys start validating. Some clients, like Teku, only list the keys once that check has passed.",
     "importConfirm": "Import {count}",
     "importing": "Importing {count} key | Importing {count} keys",

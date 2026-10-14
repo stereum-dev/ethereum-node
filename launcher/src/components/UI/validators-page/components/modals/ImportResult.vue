@@ -46,6 +46,7 @@
 
     <p v-if="notOnChain" class="text-xs text-gray-400">{{ t("validatorsPage.importDone.notOnChain", notOnChain) }}</p>
     <p v-if="doppelganger && counts.imported" class="text-xs text-[#7fb3b3]">{{ t("validatorsPage.importDoppelganger") }}</p>
+    <p v-if="tekuSavesLater && counts.imported" class="text-xs text-amber-300">{{ t("validatorsPage.importTekuSavesLater") }}</p>
   </div>
 </template>
 
@@ -62,6 +63,7 @@ const props = defineProps({
   results: { type: Array, default: () => [] },
   info: { type: String, default: null },
   doppelganger: { type: Boolean, default: false },
+  tekuSavesLater: { type: Boolean, default: false },
   // { pubkey: { index, status } } from the import check; null hides the chain columns
   onChain: { type: Object, default: null },
 });

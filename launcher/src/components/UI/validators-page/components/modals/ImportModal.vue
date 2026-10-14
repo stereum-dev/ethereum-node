@@ -175,6 +175,7 @@
         </div>
 
         <p v-if="check.doppelganger" class="text-xs text-[#7fb3b3]">{{ t("validatorsPage.importDoppelganger") }}</p>
+        <p v-if="tekuSavesLater" class="text-xs text-amber-300">{{ t("validatorsPage.importTekuSavesLater") }}</p>
       </template>
     </template>
 
@@ -191,6 +192,7 @@
       :results="result.results ?? []"
       :info="result.info ?? null"
       :doppelganger="!!check?.doppelganger"
+      :teku-saves-later="tekuSavesLater"
       :on-chain="check?.statesKnown ? (check.onChain ?? {}) : null"
     />
 
@@ -233,6 +235,10 @@ const emit = defineEmits(["close"]);
 const t = i18n.global.t;
 const validatorsStore = useValidatorsStore();
 const holderId = validatorsStore.selectedHolderId;
+// with doppelganger detection Teku answers "imported" but writes the keystores only after its check
+const tekuSavesLater = computed(
+  () => !!check.value?.doppelganger && validatorsStore.holders.find((h) => h.id === holderId)?.service === "TekuValidatorService"
+);
 
 const step = ref("files");
 const dragging = ref(false);
