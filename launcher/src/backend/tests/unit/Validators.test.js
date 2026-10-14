@@ -562,6 +562,22 @@ describe("key removal", () => {
     expect(result.slashingProtection).toBeNull();
   });
 
+  // Lodestar's first DELETE leaves an active key loaded (removeSigner returns early), a second one removes it
+  test("Lodestar gets a second delete for the keys it reported deleted", async () => {
+    const v = remover([
+      { status: 200, body: { data: [{ status: "deleted" }, { status: "not_found" }], slashing_protection: interchange([key(1)]) } },
+      { status: 200, body: { data: [{ status: "deleted" }], slashing_protection: interchange([key(1)]) } },
+    ]);
+    v.monitoring.getServiceInfos = jest.fn().mockResolvedValue([{ service: "LodestarValidatorService", config: { serviceID: "lode" } }]);
+
+    const result = await v.removeKeys("lode", { local: [key(1), key(2)] });
+
+    expect(v.keymanagerRequest.mock.calls.map((c) => c[1].body.pubkeys)).toEqual([[key(1), key(2)], [key(1)]]);
+    expect(result.results).toEqual({ [key(1)]: "deleted", [key(2)]: "not_found" });
+    expect(JSON.parse(result.slashingProtection).data).toHaveLength(1);
+    expect(v.taskManager.otherTasksHandler.mock.calls.map((c) => c[1])).toContain("Lodestar: deleted again");
+  });
+
   test("remote keys are removed separately and nothing invalid is sent", async () => {
     const v = remover([{ status: 200, body: { data: [{ status: "deleted" }] } }]);
     const result = await v.removeKeys("lh", { remote: [key(2), "0xnope"] });

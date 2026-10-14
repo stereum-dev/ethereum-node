@@ -420,6 +420,10 @@ export class Validators {
     const results = {};
     let interchange = null;
     try {
+      // Lodestar (up to at least 1.50) keeps an active key loaded after its first DELETE: removeSigner()
+      // returns early once the key's index is dropped. A second DELETE right away removes it.
+      const infos = (await this.monitoring.getServiceInfos?.()) ?? [];
+      const lodestar = infos.find((i) => i.config?.serviceID === serviceID)?.service === "LodestarValidatorService";
       const lines = [];
       const isFailure = (r) => String(r.status).startsWith("error");
       for (const [keys, path, kind] of [
@@ -453,6 +457,20 @@ export class Validators {
             Array.isArray(body?.data) && !chunkLines.some(isFailure),
             Validators.keyLines(chunkLines) + "\n\n" + Validators.answerText(shown)
           );
+          const deleted = chunk.filter((key) => results[key] === "deleted");
+          if (lodestar && deleted.length) {
+            const again = await this.keymanagerRequest(serviceID, { method: "DELETE", path, body: { pubkeys: deleted } });
+            const againShown = again.body?.slashing_protection
+              ? { ...again, body: { ...again.body, slashing_protection: "(already saved)" } }
+              : again;
+            this.nodeConnection.taskManager?.otherTasksHandler(
+              ref,
+              "Lodestar: deleted again",
+              Array.isArray(again.body?.data),
+              "Lodestar keeps active keys loaded after the first delete, so they are deleted a second time.\n\n" +
+                Validators.answerText(againShown)
+            );
+          }
         }
       }
 
