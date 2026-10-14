@@ -21,7 +21,7 @@
                 <span>{{ formattedBalance }}</span>
               </div>
               <div class="top-icon" @mouseenter="cursorLocation = `${currentNetwork?.name}`" @mouseleave="cursorLocation = ''">
-                <img :src="setSelectedCurrency" alt="coin-icon" />
+                <img v-if="setSelectedCurrency" :src="setSelectedCurrency" alt="coin-icon" />
               </div>
             </div>
             <div class="side-bottom">
@@ -97,7 +97,8 @@ export default {
     },
 
     setSelectedCurrency() {
-      switch (this.relatedValidatorPairs?.network) {
+      // the server view has no selected pair, the node's network applies then
+      switch (this.relatedValidatorPairs?.network ?? this.currentNetwork?.network) {
         case "gnosis":
           return "/img/icon/control-page-icons/network-currency-icons/network-currency-icons-gnosis-mainnet.png";
         case "sepolia":
