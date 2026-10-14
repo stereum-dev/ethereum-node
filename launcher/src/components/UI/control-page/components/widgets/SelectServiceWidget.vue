@@ -234,7 +234,8 @@ const allValidatorPairs = computed(() => {
           )
         : [];
 
-      if (relatedPairs.length === 0) {
+      // a Web3Signer only signs and never has a client pair
+      if (relatedPairs.length === 0 && validator.service !== "Web3SignerService") {
         console.warn(`No related pairs found for validator ${validator.service} in network ${network}`);
       }
 
