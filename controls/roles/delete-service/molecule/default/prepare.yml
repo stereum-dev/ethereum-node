@@ -62,7 +62,7 @@
               user: "2000"
               network: hoodi
               volumes: "{{ item.volumes }}"
-      ansible.builtin.include_tasks: start-service.yml
+      ansible.builtin.include_tasks: tasks/start-service.yml
       loop: "{{ services }}"
 
     - name: Start the node exporter
@@ -82,7 +82,7 @@
               user: "2000"
               network: hoodi
               volumes: ["/:/host:ro,rslave"]
-      ansible.builtin.include_tasks: start-service.yml
+      ansible.builtin.include_tasks: tasks/start-service.yml
 
     - name: Write a file into each service's data
       ansible.builtin.copy:
