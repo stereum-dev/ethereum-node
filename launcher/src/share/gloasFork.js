@@ -30,10 +30,13 @@ export const GLOAS_MIN_VERSIONS = {
     GrandineBeaconService: "3.0.0-rc.0",
     Web3SignerService: "26.9.0",
     CharonService: null,
+    SSVNetworkService: "2.5.0",
   },
   hoodi: {
     LodestarBeaconService: "1.50.0",
     LodestarValidatorService: "1.50.0",
+    CharonService: null,
+    SSVNetworkService: "2.5.0",
   },
 };
 
