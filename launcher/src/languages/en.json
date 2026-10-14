@@ -1136,6 +1136,8 @@
     "clientStopped": "This client is not running. Keys cannot be listed, imported, removed, exited or changed until it is started again. The list shows the last known keys.",
     "clientStoppedAction": "{action} (client not running)",
     "statesError": "Stats could not be updated, showing the last known",
+    "showPubkeys": "Show public keys",
+    "showAliases": "Show aliases",
     "statesUnavailable": "No stats available",
     "shareNote": "DVT key shares of {client}",
     "sourceConfigured": "Stats from {base}",

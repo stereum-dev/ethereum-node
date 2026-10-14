@@ -31,6 +31,16 @@ function syncCommitteeOf(duties, epoch) {
 
 // State of the validators page. Keys live here per holder and never on installedServices,
 // so the 2s service refresh in the header cannot replace or drop them.
+// a per-viewer convenience, so browser storage; it may be unavailable, the list then shows aliases
+const SHOW_PUBKEYS = "validatorsPage.showPubkeys";
+const readShowPubkeys = () => {
+  try {
+    return localStorage.getItem(SHOW_PUBKEYS) === "true";
+  } catch {
+    return false;
+  }
+};
+
 export const useValidatorsStore = defineStore("validators", {
   state: () => ({
     holders: [],
@@ -46,6 +56,8 @@ export const useValidatorsStore = defineStore("validators", {
     groupFilter: "all",
     search: "",
     statusFilter: "all",
+    // the key list shows public keys instead of aliases
+    showPubkeys: readShowPubkeys(),
     selectedPubkey: null,
     // pubkey -> { address, loading, error } of the key opened in the fee recipient modal
     feeRecipients: {},
@@ -120,6 +132,15 @@ export const useValidatorsStore = defineStore("validators", {
         entry.error = String(err?.message || err);
       } finally {
         entry.loading = false;
+      }
+    },
+
+    toggleShowPubkeys() {
+      this.showPubkeys = !this.showPubkeys;
+      try {
+        localStorage.setItem(SHOW_PUBKEYS, String(this.showPubkeys));
+      } catch {
+        // not remembered, the toggle still works for this session
       }
     },
 

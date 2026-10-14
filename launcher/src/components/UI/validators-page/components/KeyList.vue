@@ -47,6 +47,11 @@
         @click="validatorsStore.modal = { type: 'remoteImport', pubkeys: [] }"
       />
       <IconButton
+        :icon="`/img/icon/staking-page-icons/${validatorsStore.showPubkeys ? 'hide' : 'display-name'}.png`"
+        :label="t(validatorsStore.showPubkeys ? 'validatorsPage.showAliases' : 'validatorsPage.showPubkeys')"
+        @click="validatorsStore.toggleShowPubkeys()"
+      />
+      <IconButton
         icon="/img/icon/staking-page-icons/copy.png"
         :label="copyLabel('list')"
         :disabled="!rows.length"
@@ -183,7 +188,9 @@
               <img :src="keyIcon(item)" class="w-4 h-4" :class="{ 'invert brightness-90': item.remote }" alt="" />
             </span>
             <span class="flex items-center gap-1.5 min-w-0">
-              <span class="min-w-0 truncate font-semibold" :title="item.pubkey">{{ item.alias || shortPubkey(item.pubkey) }}</span>
+              <span class="min-w-0 truncate font-semibold" :title="item.pubkey">{{
+                (!validatorsStore.showPubkeys && item.alias) || shortPubkey(item.pubkey)
+              }}</span>
               <span
                 v-if="item.group && validatorsStore.groupFilter !== item.group.id"
                 class="min-w-0 max-w-[56px] shrink-[4] truncate rounded-full px-1.5 h-4 leading-4 text-2xs bg-[#224141] border border-[#4b8585] text-[#7fb3b3]"
