@@ -1,0 +1,14 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: Delete the services
+      ansible.builtin.include_role:
+        name: "delete-service"
+      vars:
+        service: "{{ item }}"
+      loop:
+        - 0b7e4c2a-5d1f-4e8a-9c3b-6f2a1d0e7b4c
+        - 9d3a6e1f-2c4b-4f7a-8e5d-1b0c3a2f6e9d
+        - 2e6d9b4a-8f1c-4d3e-a7b5-0c9e2f1a4d6b
+#EOF

@@ -1,0 +1,103 @@
+---
+# MEV-Boost services sharing one image (with volumes, without volumes, one to keep) and a node exporter mounting /
+- name: Prepare
+  hosts: all
+  vars_files:
+    - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    services:
+      - id: 0b7e4c2a-5d1f-4e8a-9c3b-6f2a1d0e7b4c
+        volumes:
+          [
+            "/opt/stereum/mevboost-0b7e4c2a-5d1f-4e8a-9c3b-6f2a1d0e7b4c/data:/data",
+          ]
+      - id: 9d3a6e1f-2c4b-4f7a-8e5d-1b0c3a2f6e9d
+        volumes: []
+      - id: 5c1f8a3e-7b2d-4a6c-9f0e-3d4b2a1c8e7f
+        volumes:
+          [
+            "/opt/stereum/mevboost-5c1f8a3e-7b2d-4a6c-9f0e-3d4b2a1c8e7f/data:/data",
+          ]
+    exporter_service: 2e6d9b4a-8f1c-4d3e-a7b5-0c9e2f1a4d6b
+
+  tasks:
+    - name: Install python for Ansible (Ubuntu)
+      ansible.builtin.apt:
+        update_cache: true
+        name: pip
+      become: true
+      changed_when: false
+      when: ansible_facts['distribution'] == "Ubuntu"
+
+    - name: Set up Stereum
+      ansible.builtin.include_role:
+        name: "setup"
+
+    - name: Configure the firewall
+      ansible.builtin.include_role:
+        name: "configure-firewall"
+
+    - name: Start the MEV-Boost services
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: FlashbotsMevBoostService
+              id: "{{ item.id }}"
+              image: "flashbots/mev-boost:1.12"
+              entrypoint:
+                [
+                  "/app/mev-boost",
+                  "-addr",
+                  "0.0.0.0:18550",
+                  "-hoodi",
+                  "-relays",
+                  "{{ stereum_static.defaults.relay.goerli }}",
+                ]
+              env: {}
+              command: []
+              ports: []
+              user: "2000"
+              network: hoodi
+              volumes: "{{ item.volumes }}"
+      ansible.builtin.include_tasks: start-service.yml
+      loop: "{{ services }}"
+
+    - name: Start the node exporter
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: PrometheusNodeExporterService
+              id: "{{ exporter_service }}"
+              image: "prom/node-exporter:v1.12.1"
+              entrypoint: ["/bin/node_exporter"]
+              env: {}
+              command: ["--path.rootfs=/host"]
+              ports: []
+              user: "2000"
+              network: hoodi
+              volumes: ["/:/host:ro,rslave"]
+      ansible.builtin.include_tasks: start-service.yml
+
+    - name: Write a file into each service's data
+      ansible.builtin.copy:
+        dest: "{{ item.volumes[0] | split(':') | first }}/file"
+        content: "data"
+        mode: "0644"
+      loop: "{{ services | selectattr('volumes') }}"
+
+    - name: Read the running containers
+      ansible.builtin.command: docker ps --format '{{ "{{" }} .Names {{ "}}" }}'
+      register: running
+      changed_when: false
+
+    - name: Check that all services run
+      ansible.builtin.assert:
+        that: "'stereum-' + item in running.stdout_lines"
+      loop: "{{ (services | map(attribute='id')) + [exporter_service] }}"
+#EOF

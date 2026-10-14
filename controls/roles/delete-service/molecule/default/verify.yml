@@ -1,0 +1,65 @@
+---
+- name: Verify
+  hosts: all
+  vars:
+    deleted:
+      - 0b7e4c2a-5d1f-4e8a-9c3b-6f2a1d0e7b4c
+      - 9d3a6e1f-2c4b-4f7a-8e5d-1b0c3a2f6e9d
+      - 2e6d9b4a-8f1c-4d3e-a7b5-0c9e2f1a4d6b
+    kept: 5c1f8a3e-7b2d-4a6c-9f0e-3d4b2a1c8e7f
+
+  tasks:
+    - name: Read all containers
+      ansible.builtin.command: docker ps -a --format '{{ "{{" }} .Names {{ "}}" }} {{ "{{" }} .State {{ "}}" }}'
+      register: containers
+      changed_when: false
+
+    - name: Check that the deleted containers are gone and the kept one runs
+      ansible.builtin.assert:
+        that:
+          - containers.stdout is not search(deleted | join('|'))
+          - "'stereum-' + kept + ' running' in containers.stdout_lines"
+
+    - name: Read the service configurations
+      ansible.builtin.find:
+        paths: /etc/stereum/services
+        patterns: "*.yaml"
+      register: configs
+
+    - name: Check that only the kept configuration is left
+      ansible.builtin.assert:
+        that: configs.files | map(attribute='path') | list == ['/etc/stereum/services/' + kept + '.yaml']
+
+    - name: Read the service data folders
+      ansible.builtin.stat:
+        path: "/opt/stereum/mevboost-{{ item }}/data/file"
+      register: data
+      loop:
+        - 0b7e4c2a-5d1f-4e8a-9c3b-6f2a1d0e7b4c
+        - "{{ kept }}"
+
+    - name: Check that the deleted service's data is gone and the kept one's is not
+      ansible.builtin.assert:
+        that:
+          - not data.results[0].stat.exists
+          - data.results[1].stat.exists
+
+    - name: Read the folders the node exporter mounted
+      ansible.builtin.stat:
+        path: "{{ item }}"
+      register: host_folders
+      loop: ["/etc/stereum/stereum.yaml", "/opt/stereum"]
+
+    - name: Check that the node exporter's mount of / was left alone
+      ansible.builtin.assert:
+        that: host_folders.results | map(attribute='stat.exists') | min
+
+    - name: Read the images
+      ansible.builtin.command: docker images --format '{{ "{{" }} .Repository {{ "}}" }}'
+      register: images
+      changed_when: false
+
+    - name: Check that the node exporter's image is gone
+      ansible.builtin.assert:
+        that: "'prom/node-exporter' not in images.stdout_lines"
+#EOF
