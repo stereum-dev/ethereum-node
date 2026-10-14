@@ -449,6 +449,38 @@ test("switchServices has rewritten the dependents before it returns", async () =
 
   expect(sm.addDependencies).toHaveBeenCalledWith(vc, [{ id: "old-bn" }, fresh]);
   expect(written).toBe(true);
+  // the replaced client's ports are free for its successor
+  expect(sm.addServices).toHaveBeenCalledWith(expect.anything(), expect.anything(), ["old-bn"]);
+});
+
+// a switched-in Lighthouse got 9001/9002/9003 because the replaced Grandine still held 9000, while it announced 9000
+test("addServices keeps the default ports when the service holding them is being replaced", async () => {
+  const { writeServiceConfiguration } = switchMocks([]);
+  const sm = new ServiceManager(new (require("../../NodeConnection").NodeConnection)());
+  const grandine = {
+    id: "old-bn",
+    service: "GrandineBeaconService",
+    ports: [
+      { destinationPort: 9000, servicePortProtocol: "tcp" },
+      { destinationPort: 9000, servicePortProtocol: "udp" },
+      { destinationPort: 9001, servicePortProtocol: "udp" },
+    ],
+  };
+  const task = () => [
+    {
+      service: { service: "LighthouseBeaconService", category: "consensus", config: {} },
+      data: { network: "hoodi", installDir: "/opt/stereum", executionClients: [], consensusClients: [] },
+      setupId: "setup",
+    },
+  ];
+  const hostPorts = () => writeServiceConfiguration.mock.calls.at(-1)[0].ports.filter((p) => p.startsWith("0.0.0.0"));
+
+  await sm.addServices(task(), [grandine], ["old-bn"]);
+  expect(hostPorts()).toEqual(["0.0.0.0:9000:9000/tcp", "0.0.0.0:9000:9000/udp", "0.0.0.0:9001:9001/udp"]);
+
+  await sm.addServices(task(), [grandine]);
+  // the ports A got after switching Grandine for Lighthouse
+  expect(hostPorts()).toEqual(["0.0.0.0:9001:9000/tcp", "0.0.0.0:9002:9000/udp", "0.0.0.0:9003:9001/udp"]);
 });
 
 test("switchServices swaps charon for pluto in place", async () => {

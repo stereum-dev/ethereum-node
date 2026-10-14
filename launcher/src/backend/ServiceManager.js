@@ -996,7 +996,8 @@ export class ServiceManager {
         setupId: switchTask.setupId,
       });
 
-      await this.addServices(installTask, services);
+      // the previous client is deleted right after, so the replacement keeps its ports instead of shifted ones
+      await this.addServices(installTask, services, [switchTask.service.config.serviceID]);
     } catch (err) {
       log.error("Installing Services Failed:", err);
     }
@@ -1577,7 +1578,8 @@ export class ServiceManager {
     }
   }
 
-  async addServices(tasks, services) {
+  // freedIds: services about to be replaced (switch), their host ports count as free
+  async addServices(tasks, services, freedIds = []) {
     let newServices = [];
     let setupAndServiceIds = {};
     let ELInstalls = tasks.filter((t) => t.service.category === "execution");
@@ -1650,6 +1652,7 @@ export class ServiceManager {
     });
 
     let allPorts = services
+      .filter((s) => !freedIds.includes(s.id))
       .map((s) => s.ports)
       .flat(1)
       .map((p) => p.destinationPort + "/" + p.servicePortProtocol);
