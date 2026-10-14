@@ -517,7 +517,7 @@
     "clientService": "CLIENT / SERVICE",
     "csm": "csm operator monitoring",
     "brokenConfig": "config unreadable",
-    "gloasSoon": "GLAMSTERDAM IN {n} DAY | GLAMSTERDAM IN {n} DAYS",
+    "gloasSoon": "GLAMSTERDAM IN LESS THAN A DAY | GLAMSTERDAM IN {n} DAY | GLAMSTERDAM IN {n} DAYS",
     "gloasPassed": "GLAMSTERDAM: CLIENT TOO OLD",
     "gloasUpdate": "> update",
     "gloasNeeds": "needs",

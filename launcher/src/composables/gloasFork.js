@@ -18,7 +18,8 @@ export function useGloasAlerts() {
       const list = outdated
         .map((o) => `${o.name} ${o.version} (${o.minimum ? `${t("nodeAlert.gloasNeeds")} ${o.minimum}` : t("nodeAlert.gloasNoRelease")})`)
         .join(", ");
-      const days = Math.max(1, Math.ceil((forkTime - now.value) / 86400));
+      // whole days left, 0 in the last day
+      const days = Math.max(0, Math.floor((forkTime - now.value) / 86400));
       return {
         network,
         level: forked ? "red" : "yellow",
