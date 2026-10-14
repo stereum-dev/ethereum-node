@@ -400,6 +400,7 @@ jobs:
             { role: "manage-service", test: "start-multiple" },
             { role: "manage-service", test: "start-stop" },
             { role: "manage-service", test: "write-start" },
+            { role: "manage-service", test: "web3signer-db-schema" },
             # {role: "manage-service", test: "ssv-lighthouse"},
             # {role: "manage-service", test: "ssv-lodestar"},
             # {role: "manage-service", test: "ssv-nimbus"},

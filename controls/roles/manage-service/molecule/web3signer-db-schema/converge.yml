@@ -1,0 +1,53 @@
+---
+# Starting a Web3Signer release with schema 12 on the version 11 database has to upgrade it first
+- name: Converge
+  hosts: all
+  vars_files:
+    - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    web3signer_service: 3d9b6e1a-7c2f-4a5e-8b1d-0f4c6a2e9d7b
+    db_service: 6a1f3c2e-0d4b-4c8e-9b7a-5e2f1d3c4b5a
+
+  tasks:
+    - name: Start Web3Signer
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: Web3SignerService
+              id: "{{ web3signer_service }}"
+              image: "consensys/web3signer:26.9.0"
+              entrypoint: ["/opt/web3signer/bin/web3signer"]
+              env: {}
+              command:
+                - --key-store-path=/opt/web3signer/keys
+                - --data-path=/opt/web3signer/data
+                - --logging=INFO
+                - --http-listen-host=0.0.0.0
+                - --http-listen-port=9000
+                - --http-host-allowlist=*
+                - eth2
+                - --network=hoodi
+                - --key-manager-api-enabled=true
+                - --slashing-protection-enabled=true
+                - "--slashing-protection-db-url=jdbc:postgresql://stereum-{{ db_service }}/web3signer"
+                - --slashing-protection-db-username=postgres
+                - --slashing-protection-db-password=molecule
+                - --slashing-protection-pruning-enabled=true
+              ports: []
+              user: "2000"
+              network: hoodi
+              volumes:
+                - "/opt/stereum/web3signer-{{ web3signer_service }}/data:/opt/web3signer/data"
+                - "/opt/stereum/web3signer-{{ web3signer_service }}/keys:/opt/web3signer/keys"
+      block:
+        - name: Merge the Stereum settings
+          ansible.builtin.set_fact:
+            stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+
+        - name: Include manage-service
+          ansible.builtin.include_role:
+            name: "manage-service"
+#EOF

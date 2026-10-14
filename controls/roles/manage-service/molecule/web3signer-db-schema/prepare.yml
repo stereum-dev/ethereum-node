@@ -1,0 +1,93 @@
+---
+# A Web3Signer slashing protection database as an older release left it: schema version 11, with signed data
+- name: Prepare
+  hosts: all
+  vars_files:
+    - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    db_service: 6a1f3c2e-0d4b-4c8e-9b7a-5e2f1d3c4b5a
+    web3signer_image: "consensys/web3signer:26.9.0"
+
+  tasks:
+    - name: Install python for Ansible (Ubuntu)
+      ansible.builtin.apt:
+        update_cache: true
+        name: pip
+      become: true
+      changed_when: false
+      when: ansible_facts['distribution'] == "Ubuntu"
+
+    - name: Set up Stereum
+      ansible.builtin.include_role:
+        name: "setup"
+
+    - name: Configure the firewall
+      ansible.builtin.include_role:
+        name: "configure-firewall"
+
+    - name: Start the slashing protection database
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: SlashingDBService
+              id: "{{ db_service }}"
+              image: "postgres:18"
+              command: ["postgres"]
+              entrypoint: ["docker-entrypoint.sh"]
+              env:
+                POSTGRES_USER: postgres
+                POSTGRES_PASSWORD: molecule
+                POSTGRES_DB: web3signer
+              ports: []
+              user: "999"
+              network: hoodi
+              volumes:
+                - "/opt/stereum/slashingdb-{{ db_service }}/data:/var/lib/postgresql"
+      block:
+        - name: Merge the Stereum settings
+          ansible.builtin.set_fact:
+            stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+
+        - name: Include manage-service
+          ansible.builtin.include_role:
+            name: "manage-service"
+
+    - name: Wait for the database
+      ansible.builtin.command: docker exec stereum-{{ db_service }} pg_isready -q -h 127.0.0.1 -U postgres
+      register: db_ready
+      until: db_ready.rc == 0
+      retries: 30
+      delay: 2
+      changed_when: false
+
+    - name: Load the schema up to version 11 and some signed data
+      ansible.builtin.shell: |
+        set -eo pipefail
+        dir=$(mktemp -d)
+        cid=$(docker create {{ web3signer_image }})
+        docker cp "$cid":/opt/web3signer/migrations/postgresql/. "$dir"/
+        docker rm "$cid" >/dev/null
+        for f in $(ls "$dir" | sort | head -11); do
+          docker exec -i stereum-{{ db_service }} psql -q -v ON_ERROR_STOP=1 -U postgres -d web3signer < "$dir/$f"
+        done
+        rm -rf "$dir"
+        docker exec stereum-{{ db_service }} psql -q -v ON_ERROR_STOP=1 -U postgres -d web3signer \
+          -c "insert into validators (id, public_key) values (1, decode(repeat('ab', 48), 'hex')), (2, decode(repeat('cd', 48), 'hex'))" \
+          -c "insert into signed_attestations (validator_id, source_epoch, target_epoch) values (1, 100, 101), (1, 101, 102), (2, 100, 101)" \
+          -c "insert into signed_blocks (validator_id, slot) values (1, 3200)"
+      args:
+        executable: /bin/bash
+      changed_when: true
+
+    - name: Read the schema version
+      ansible.builtin.command: docker exec stereum-{{ db_service }} psql -At -U postgres -d web3signer -c "select version from database_version"
+      register: db_version
+      changed_when: false
+
+    - name: Check the schema version
+      ansible.builtin.assert:
+        that: db_version.stdout | trim == "11"
+#EOF

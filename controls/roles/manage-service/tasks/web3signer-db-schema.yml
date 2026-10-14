@@ -1,0 +1,158 @@
+---
+# Web3Signer exits at startup unless its slashing protection database has the schema version its release
+# expects, and it never migrates the database itself. Before it starts, the migrations of the release about
+# to run that the database lacks are applied, each in one transaction, after a pg_dump backup.
+# A failure is reported and leaves the database as it was; Web3Signer then refuses to start on its own.
+- name: Upgrade Web3Signer's slashing protection database
+  block:
+    - name: Read the slashing protection database settings
+      ansible.builtin.set_fact:
+        w3s_db_url: "{{ stereum_service_configuration.command | select('match', '^--slashing-protection-db-url=jdbc:postgresql://') | first | regex_replace('^--slashing-protection-db-url=jdbc:postgresql://', '') }}"
+        w3s_db_user: "{{ (stereum_service_configuration.command | select('match', '^--slashing-protection-db-username=') | first | default('--slashing-protection-db-username=postgres')).split('=', 1) | last }}"
+        w3s_image: "{{ stereum_service_configuration.image }}"
+        w3s_working_dir: "{{ stereum_service_configuration.volumes | map('split', ':') | map('first') | select('search', stereum_service_configuration.id) | first | split(stereum_service_configuration.id) | first }}{{ stereum_service_configuration.id }}"
+
+    # the host is the database's container name on the stereum network
+    - name: Split the database url
+      ansible.builtin.set_fact:
+        w3s_db_host: "{{ w3s_db_url.split('/') | first | split(':') | first }}"
+        w3s_db_name: "{{ w3s_db_url.split('/', 1) | last | split('?') | first }}"
+
+    # everything below goes into shell commands
+    - name: Check the database settings
+      ansible.builtin.assert:
+        that:
+          - w3s_db_host is match('^[A-Za-z0-9][A-Za-z0-9_.-]*$')
+          - w3s_db_name is match('^[A-Za-z0-9_]+$')
+          - w3s_db_user is match('^[A-Za-z0-9_]+$')
+          - w3s_working_dir is match('^/[A-Za-z0-9_./-]+$')
+        quiet: true
+
+    - name: Check that the database is running
+      ansible.builtin.command: docker inspect -f '{{ '{{' }}.State.Running{{ '}}' }}' {{ w3s_db_host }}
+      register: w3s_db_running
+      changed_when: false
+      failed_when: false
+
+    - name: Upgrade the running database
+      when: w3s_db_running.stdout | trim == "true"
+      block:
+        - name: Wait for the database
+          ansible.builtin.command: docker exec {{ w3s_db_host }} pg_isready -q -h 127.0.0.1 -U {{ w3s_db_user }}
+          register: w3s_db_ready
+          until: w3s_db_ready.rc == 0
+          retries: 30
+          delay: 2
+          changed_when: false
+
+        - name: Read the database's schema version
+          ansible.builtin.command: docker exec {{ w3s_db_host }} psql -At -v ON_ERROR_STOP=1 -U {{ w3s_db_user }} -d {{ w3s_db_name }} -c "select version from database_version where id = 1"
+          register: w3s_db_version
+          changed_when: false
+
+        - name: Pull the Web3Signer image
+          community.docker.docker_image_pull:
+            name: "{{ w3s_image }}"
+            pull: not_present
+
+        - name: Copy the migrations of this release
+          ansible.builtin.shell: |
+            set -e
+            dir=$(mktemp -d)
+            cid=$(docker create {{ w3s_image }})
+            trap 'docker rm -f "$cid" >/dev/null 2>&1' EXIT
+            docker cp "$cid":/opt/web3signer/migrations/postgresql/. "$dir"/
+            echo "$dir"
+          args:
+            executable: /bin/bash
+          register: w3s_migrations_dir
+          changed_when: false
+
+        - name: List the migrations
+          ansible.builtin.find:
+            paths: "{{ w3s_migrations_dir.stdout | trim }}"
+            patterns: "V*__*.sql"
+          register: w3s_migration_files
+
+        # V00012__add_highwatermark_metadata.sql has version 12
+        - name: Note the database's version and the release's last migration
+          ansible.builtin.set_fact:
+            w3s_current_version: "{{ w3s_db_version.stdout | trim | int }}"
+            w3s_target_version: "{{ w3s_migration_files.files | map(attribute='path') | map('basename') | sort | last | split('__') | first | regex_replace('^V', '') | int }}"
+            w3s_pending: []
+
+        - name: Pick the migrations above the database's version
+          ansible.builtin.set_fact:
+            w3s_pending: "{{ w3s_pending + [item] }}"
+          loop: "{{ w3s_migration_files.files | map(attribute='path') | map('basename') | sort | list }}"
+          when: (item.split('__')[0][1:] | int) > (w3s_current_version | int)
+
+        - name: Apply the missing migrations
+          when: w3s_pending | length > 0
+          block:
+            # nothing may sign while the schema changes
+            - name: Stop Web3Signer
+              ansible.builtin.command: docker stop -t 60 stereum-{{ stereum_service_configuration.id }}
+              register: w3s_stop
+              changed_when: w3s_stop.rc == 0
+              failed_when: false
+
+            - name: Create the backup folder
+              ansible.builtin.file:
+                path: "{{ w3s_working_dir }}/db-backups"
+                state: directory
+                mode: 0700
+
+            - name: Back up the database
+              ansible.builtin.shell: >
+                umask 077 &&
+                docker exec {{ w3s_db_host }} pg_dump -Fc -U {{ w3s_db_user }} -d {{ w3s_db_name }}
+                > {{ w3s_working_dir }}/db-backups/slashing-protection-v{{ w3s_current_version }}-$(date -u +%Y%m%dT%H%M%S).dump
+              args:
+                executable: /bin/bash
+              changed_when: true
+
+            - name: Apply each migration in one transaction
+              ansible.builtin.shell: >
+                docker exec -i {{ w3s_db_host }} psql -q -v ON_ERROR_STOP=1 --single-transaction
+                -U {{ w3s_db_user }} -d {{ w3s_db_name }} < {{ w3s_migrations_dir.stdout | trim }}/{{ item }}
+              args:
+                executable: /bin/bash
+              loop: "{{ w3s_pending }}"
+              changed_when: true
+
+            - name: Read the new schema version
+              ansible.builtin.command: docker exec {{ w3s_db_host }} psql -At -v ON_ERROR_STOP=1 -U {{ w3s_db_user }} -d {{ w3s_db_name }} -c "select version from database_version where id = 1"
+              register: w3s_db_new_version
+              changed_when: false
+
+            - name: Check the new schema version
+              ansible.builtin.assert:
+                that: w3s_db_new_version.stdout | trim | int == w3s_target_version | int
+                fail_msg: "schema version is {{ w3s_db_new_version.stdout | trim }} after the migrations, {{ w3s_target_version }} expected"
+                quiet: true
+
+        - name: Report the schema version
+          ansible.builtin.debug:
+            msg: "Web3Signer {{ w3s_image }}: slashing protection schema {{ w3s_current_version }} -> {{ w3s_target_version }}, applied {{ w3s_pending | join(', ') if w3s_pending else 'nothing' }}"
+
+    - name: Report a database that is not running
+      ansible.builtin.debug:
+        msg: "{{ w3s_db_host }} is not running, its schema is checked at the next start"
+      when: w3s_db_running.stdout | trim != "true"
+
+  rescue:
+    - name: Report the failed upgrade
+      ansible.builtin.debug:
+        msg: "Upgrading the slashing protection database of {{ stereum_service_configuration.id }} failed: {{ w3s_error | trim }}"
+      vars:
+        # a failed migration loop carries the psql error in its failed item
+        w3s_error: "{{ (ansible_failed_result.results | default([]) | selectattr('failed', 'defined') | selectattr('failed') | map(attribute='item') | first | default('') ~ ': ' ~ ansible_failed_result.results | default([]) | selectattr('failed', 'defined') | selectattr('failed') | map(attribute='stderr') | first | default('')) if ansible_failed_result.results is defined else (ansible_failed_result.stderr | default(ansible_failed_result.msg) | default('unknown error')) }}"
+
+  always:
+    - name: Remove the copied migrations
+      ansible.builtin.file:
+        path: "{{ w3s_migrations_dir.stdout | trim }}"
+        state: absent
+      when: w3s_migrations_dir.stdout | default('') | trim | length > 0
+# EOF
