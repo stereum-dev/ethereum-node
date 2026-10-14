@@ -108,6 +108,18 @@ const SERVICE_CLASSES = {
   CachingDBService: PostgresService,
 };
 
+// the flag that has a validator client ask its beacon node for builder blocks; set while one of its beacon nodes uses MEV-Boost
+const VALIDATOR_BUILDER_FLAGS = {
+  LighthouseValidatorService: { flag: "--builder-proposals", match: /^--builder-proposals(=.*)?$/ },
+  PrysmValidatorService: { flag: "--enable-builder=true", match: /^--enable-builder(=.*)?$/ },
+  TekuValidatorService: {
+    flag: "--validators-builder-registration-default-enabled=true",
+    match: /^--validators-builder-registration-default-enabled(=.*)?$/,
+  },
+  NimbusValidatorService: { flag: "--payload-builder", match: /^--payload-builder(=.*)?$/ },
+  LodestarValidatorService: { flag: "--builder", match: /^--builder(=.*)?$/ },
+};
+
 // A dependency whose own config is broken cannot be built into a service. This
 // stands in for it, carrying what the dependent recorded, so that writing the
 // dependent's config back keeps the pairing instead of silently losing it.
@@ -404,6 +416,7 @@ export class ServiceManager {
 
   async modifyServices(tasks, services, newInstallTasks) {
     let modifiedServices = [];
+    const builderBeaconIds = [];
 
     for (let task of tasks) {
       let ssvConfig;
@@ -430,7 +443,9 @@ export class ServiceManager {
         dependenciesToRemove.forEach((dependency) => {
           modifiedServices.push(this.removeDependencies(dependency, service));
         });
+        builderBeaconIds.push(...dependenciesToRemove.map((d) => d.id), ...dependencies.filter(Boolean).map((d) => d.id));
       }
+      if (VALIDATOR_BUILDER_FLAGS[service.service]) builderBeaconIds.push(...dependencies.filter(Boolean).map((d) => d.id));
 
       if (service.service === "SSVNetworkService") {
         let result = await this.nodeConnection.readSSVNetworkConfig(service.id);
@@ -462,6 +477,10 @@ export class ServiceManager {
         }
       });
     }
+
+    this.syncValidatorBuilderFlags(services, services, builderBeaconIds).forEach((validator) => {
+      if (!modifiedServices.some((s) => s.id === validator.id)) modifiedServices.push(validator);
+    });
 
     await Promise.all(
       modifiedServices.map(async (service) => {
@@ -830,6 +849,34 @@ export class ServiceManager {
     this.nodeConnection.writeSSVNetworkConfig(service.id, YAML.stringify(ssvConfig));
   }
 
+  /**
+   * Adds or removes the builder flag of the validator clients on the given beacon nodes,
+   * so it is set exactly while one of their beacon nodes uses MEV-Boost.
+   * @param {Array} validators - services to check
+   * @param {Array} beacons - services to look the beacon nodes up in, first match wins
+   * @param {Array} beaconIds - beacon nodes whose MEV-Boost connection changed
+   * @returns {Array} the validator clients that changed
+   */
+  syncValidatorBuilderFlags(validators, beacons, beaconIds) {
+    const changed = [];
+    for (const validator of validators) {
+      const builder = VALIDATOR_BUILDER_FLAGS[validator.service];
+      const connected = validator.dependencies?.consensusClients ?? [];
+      if (!builder || !connected.some((b) => beaconIds.includes(b.id))) continue;
+      const nodes = connected.map((b) => beacons.find((s) => s.id === b.id) ?? b);
+      // a DVT cluster or an external beacon node decides about builders on its own
+      if (nodes.some((b) => isObolDVTService(b.service) || b.service?.includes("External"))) continue;
+      const usesMevBoost = nodes.some((b) => b.dependencies?.mevboost?.length > 0);
+      const isString = typeof validator.command === "string";
+      let command = isString ? validator.command.replaceAll(/\n/gm, "").replaceAll(/\s\s+/gm, " ").split(" ") : validator.command;
+      if (usesMevBoost === command.some((c) => builder.match.test(c))) continue;
+      command = usesMevBoost ? command.concat([builder.flag]) : command.filter((c) => !builder.match.test(c));
+      validator.command = isString ? command.join(" ").trim() : command;
+      changed.push(validator);
+    }
+    return changed;
+  }
+
   removeDependencies(service, serviceToDelete) {
     //update command
     service.command = this.removeCommandConnection(
@@ -935,6 +982,15 @@ export class ServiceManager {
         this.removeSSVNetworkConnection(service, serviceToDelete, ssvConfigs);
       }
       await this.writeServiceConfigurationKeepingAutoupdate(service);
+    }
+    if (serviceToDelete.service === "FlashbotsMevBoostService") {
+      const remaining = services.filter((s) => !deletedIds.includes(s.id));
+      const validators = this.syncValidatorBuilderFlags(
+        remaining,
+        remaining,
+        dependents.map((s) => s.id)
+      );
+      for (const validator of validators) await this.writeServiceConfigurationKeepingAutoupdate(validator);
     }
     if (Object.values(DATABASE_SERVICES).some((d) => d.parent === serviceToDelete.service)) {
       await this.databases.deleteFor(serviceToDelete, deletedIds);
@@ -1707,6 +1763,14 @@ export class ServiceManager {
         service.buildConfiguration(),
         setupAndServiceIds[service.id] ? setupAndServiceIds[service.id] : tasks[0].setupId
       );
+    }
+    // validator clients that are already installed keep their keystores and version, so they are written on their own
+    const mevBoostBeaconIds = PInstalls.filter((t) => t.service.service === "FlashbotsMevBoostService").flatMap((t) =>
+      t.data.consensusClients.map((c) => c.id)
+    );
+    const installedValidators = services.filter((s) => !newServices.some((n) => n.id === s.id));
+    for (const validator of this.syncValidatorBuilderFlags(installedValidators, newServices.concat(services), mevBoostBeaconIds)) {
+      await this.writeServiceConfigurationKeepingAutoupdate(validator);
     }
 
     await this.createKeystores(
