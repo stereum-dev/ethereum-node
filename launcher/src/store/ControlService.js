@@ -216,18 +216,6 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("writeServiceYAML", args);
   }
 
-  async importKey(args) {
-    return await this.promiseIpc.send("importKey", args);
-  }
-
-  async deleteValidators(args) {
-    return await this.promiseIpc.send("deleteValidators", args);
-  }
-
-  async listValidators(args) {
-    return await this.promiseIpc.send("listValidators", args);
-  }
-
   async listServices() {
     return await this.promiseIpc.send("listServices");
   }
@@ -312,22 +300,6 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("refreshServiceInfos"); // insert existing operator keys
   }
 
-  async getFeeRecipient(args) {
-    return await this.promiseIpc.send("getFeeRecipient", args); //
-  }
-
-  async setFeeRecipient(args) {
-    return await this.promiseIpc.send("setFeeRecipient", args); //
-  }
-
-  async deleteFeeRecipient(args) {
-    return await this.promiseIpc.send("deleteFeeRecipient", args); //
-  }
-
-  async setGraffitis(args) {
-    return await this.promiseIpc.send("setGraffitis", args);
-  }
-
   async chooseServiceAction(args) {
     return await this.promiseIpc.send("chooseServiceAction", args);
   }
@@ -344,20 +316,12 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("setStereumSettings", args);
   }
 
-  async writeKeys(args) {
-    return await this.promiseIpc.send("writeKeys", args);
-  }
-
   async readKeys() {
     return await this.promiseIpc.send("readKeys");
   }
 
   async getValidatorStats(args) {
     return await this.promiseIpc.send("getValidatorStats", args);
-  }
-
-  async getValidatorState(args) {
-    return await this.promiseIpc.send("getValidatorState", args);
   }
 
   async prepareStereumNode(args) {
@@ -406,62 +370,6 @@ class ControlService extends EventEmitter {
 
   async getCPUTemperature() {
     return await this.promiseIpc.send("getCPUTemperature");
-  }
-
-  async importRemoteKeys(args) {
-    return await this.promiseIpc.send("importRemoteKeys", args);
-  }
-
-  async listRemoteKeys(args) {
-    return await this.promiseIpc.send("listRemoteKeys", args);
-  }
-
-  async deleteRemoteKeys(args) {
-    return await this.promiseIpc.send("deleteRemoteKeys", args);
-  }
-
-  async checkRemoteKeys(args) {
-    return await this.promiseIpc.send("checkRemoteKeys", args);
-  }
-
-  async checkActiveValidators(args) {
-    //resolve proxy
-    let files = [];
-    let passwordFiles = [];
-    if (args.isRemote) {
-      files = args.files;
-    } else {
-      args.files.forEach((file) => {
-        files.push({ name: file.name, path: this.webUtils.getPathForFile(file) });
-      });
-    }
-    if (args.passwordFiles && Array.isArray(args.passwordFiles)) {
-      args.passwordFiles.forEach((file) => {
-        passwordFiles.push({ name: file.name, path: this.webUtils.getPathForFile(file) });
-      });
-    }
-    return await this.promiseIpc.send("checkActiveValidators", {
-      files: files,
-      passwordFiles: passwordFiles,
-      password: args.password,
-      serviceID: args.serviceID,
-      slashingDB: args.slashingDB,
-      isRemote: args.isRemote,
-    });
-  }
-
-  async exitValidatorAccount(args) {
-    return await this.promiseIpc.send("exitValidatorAccount", {
-      pubkey: args.pubkey,
-      serviceID: args.serviceID,
-    });
-  }
-
-  async getExitValidatorMessage(args) {
-    return await this.promiseIpc.send("getExitValidatorMessage", {
-      pubkey: args.pubkey,
-      serviceID: args.serviceID,
-    });
   }
 
   async exportConfig() {
@@ -542,27 +450,8 @@ class ControlService extends EventEmitter {
   async dumpDockerLogs() {
     return await this.promiseIpc.send("dumpDockerLogs");
   }
-  async getCurrentEpochandSlot() {
-    return await this.promiseIpc.send("getCurrentEpochandSlot");
-  }
-  async getValidatorDuties(args) {
-    return await this.promiseIpc.send("getValidatorDuties", args);
-  }
-
-  async getAttestationRewards(args) {
-    return await this.promiseIpc.send("getAttestationRewards", args);
-  }
-
-  async getBlockRewards(args) {
-    return await this.promiseIpc.send("getBlockRewards", args);
-  }
-
   async copyExecutionJWT(args) {
     return await this.promiseIpc.send("copyExecutionJWT", args);
-  }
-
-  async getSyncCommitteeRewards(validators, slot) {
-    return await this.promiseIpc.send("getSyncCommitteeRewards", { validators, slot });
   }
 
   async createObolENR(privateKey) {
@@ -757,14 +646,6 @@ class ControlService extends EventEmitter {
     return this.promiseIpc.send("getCSMQueue", { keysArray });
   }
 
-  async getSigningKeysWithQueueInfo() {
-    return this.promiseIpc.send("getSigningKeysWithQueueInfo");
-  }
-
-  async getObolClusterInformation(serviceID) {
-    return this.promiseIpc.send("getObolClusterInformation", { serviceID });
-  }
-
   async getValidatorHolders() {
     return this.promiseIpc.send("getValidatorHolders");
   }
@@ -850,10 +731,6 @@ class ControlService extends EventEmitter {
 
   async getCsmKeys(force = false) {
     return this.promiseIpc.send("getCsmKeys", { force });
-  }
-
-  async getSSVClusterInformation(serviceID) {
-    return this.promiseIpc.send("getSSVClusterInformation", { serviceID });
   }
 
   async fetchSsvnomsMetrics() {

@@ -1886,23 +1886,6 @@ describe("keys file", () => {
     expect(first.code).toEqual(0);
     expect(Object.keys(second.aliases)).toEqual([key(1), key(2)]);
   });
-
-  test("the old keys writer waits in the same queue", async () => {
-    const { ValidatorAccountManager } = require("../../ValidatorAccountManager");
-    const order = [];
-    const { v } = validatorsWith("");
-    const vam = new ValidatorAccountManager(v.nodeConnection, {});
-    vam.writeKeysNow = jest.fn(async () => {
-      order.push("old start");
-      await new Promise((r) => setTimeout(r, 5));
-      order.push("old end");
-    });
-    v.readKeyEntries = jest.fn(async () => (order.push("new"), {}));
-
-    await Promise.all([vam.writeKeys([key(1)]), v.writeKeyEntries({ [key(2)]: { keyName: "two" } })]);
-
-    expect(order).toEqual(["old start", "old end", "new"]);
-  });
 });
 
 describe("duties and rewards", () => {

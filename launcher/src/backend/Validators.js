@@ -1207,7 +1207,7 @@ export class Validators {
         return { code: 1, info: String(err?.message || err) };
       }
     };
-    // the queue lives on the connection, so ValidatorAccountManager.writeKeys waits in it too
+    // one queue per connection, so read-modify-writes of keys.yaml never interleave
     const queue = this.nodeConnection;
     queue.keysWrite = (queue.keysWrite ?? Promise.resolve()).then(run, run);
     return queue.keysWrite;
