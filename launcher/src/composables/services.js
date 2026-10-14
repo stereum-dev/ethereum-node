@@ -131,14 +131,7 @@ export async function useFrontendServices() {
               console.error(`No catalog entry for ${service.service}, skipping it`);
               return null;
             }
-            if (oldService?.config?.keys) {
-              oldService.config = {
-                ...service?.config,
-                keys: oldService?.config?.keys,
-              };
-            } else {
-              oldService.config = service?.config;
-            }
+            oldService.config = service?.config;
             oldService.state = service.state;
             if (
               (oldService.service === "TekuBeaconService" || oldService.service === "NimbusBeaconService") &&

@@ -30,7 +30,7 @@
 <script setup>
 import { computed } from "vue";
 import { useSetups } from "@/store/setups";
-import { useStakingStore } from "@/store/theStaking";
+import { useValidatorTotals } from "@/composables/validatorTotals";
 import { useFooter } from "@/store/theFooter";
 import i18n from "@/includes/i18n";
 import ValidatorItem from "../fragments/ValidatorItem.vue";
@@ -40,16 +40,11 @@ const t = i18n.global.t;
 
 const footerStore = useFooter();
 const setupStore = useSetups();
-const stakingStore = useStakingStore();
+const { keyCountOf } = useValidatorTotals();
 
 const relatedValidators = computed(() => setupStore.relatedValidators || []);
 
-const getKeyCount = (validator) => {
-  if (!validator || stakingStore.keys.length === 0) {
-    return 0;
-  }
-  return stakingStore.keys.filter((key) => key.validatorID === validator.config.serviceID).length;
-};
+const getKeyCount = (validator) => (validator ? keyCountOf(validator.config.serviceID) : 0);
 
 const setCursor = (info) => {
   footerStore.cursorLocation = info;

@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
 import ControlService from "@/store/ControlService";
-import { useServices } from "@/store/services";
 import { statusBucket } from "@/share/validatorStatus";
 import { normalizeAliases, groupPatch, renameGroupPatch, ungroupPatch, groupMembers } from "@/share/keyGroups";
 import { activeIndices, mergeRewardHistory } from "@/share/validatorDuties";
@@ -121,7 +120,6 @@ export const useValidatorsStore = defineStore("validators", {
         const result = await ControlService.listHolderKeys(holderId);
         if (result?.code === 0) {
           entry.keys = result.keys;
-          this.syncNodePageKeys(holderId, result.keys);
           entry.walletMissing = !!result.walletMissing;
           entry.error = null;
           entry.loadedAt = Date.now();
@@ -142,14 +140,6 @@ export const useValidatorsStore = defineStore("validators", {
       } catch {
         // not remembered, the toggle still works for this session
       }
-    },
-
-    // The node page counts keys from its own cache, which it only fills while empty; keep it in step
-    syncNodePageKeys(holderId, keys) {
-      const role = this.holders.find((h) => h.id === holderId)?.role;
-      if (role !== "validator" && role !== "signer") return;
-      const service = useServices().installedServices.find((s) => s.config?.serviceID === holderId);
-      if (service) service.config.keys = keys.map((k) => ({ key: k.pubkey, isRemote: !!k.remote, dvt: false }));
     },
 
     // Merge fields into /etc/stereum/keys.yaml; the backend answers with the whole file, so no second read

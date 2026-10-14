@@ -34,7 +34,5 @@ const tabs = ref([
   { page: "Node", path: "/node", relativePath: "/edit" },
   { page: "Control", path: "/control" },
   { page: "Staking", path: "/staking" },
-  // staking page rebuild, only in dev builds until it replaces the staking page
-  ...(import.meta.env.DEV ? [{ page: "Validators", path: "/validators" }] : []),
 ]);
 </script>

@@ -15,7 +15,6 @@ import ControlPanel from "../pages/TheControl.vue";
 import NodePage from "../pages/NodePage.vue";
 import NodeEdit from "../pages/NodeEdit.vue";
 import StakingPage from "../pages/StakingPage.vue";
-import ValidatorsPage from "../pages/ValidatorsPage.vue";
 import TerminalPage from "../pages/TerminalPage.vue";
 import SettingPage from "../pages/SettingPage.vue";
 import CreditPage from "../pages/CreditPage.vue";
@@ -155,8 +154,6 @@ const routes = [
     name: "StakingPage",
     component: StakingPage,
   },
-  // staking page rebuild, only in dev builds until it replaces the staking page
-  ...(import.meta.env.DEV ? [{ path: "/validators", name: "ValidatorsPage", component: ValidatorsPage }] : []),
   {
     path: "/shell",
     name: "TerminalPage",

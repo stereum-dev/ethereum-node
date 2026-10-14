@@ -1,6 +1,6 @@
 <template>
-  <StakingScreen />
+  <ValidatorsScreen />
 </template>
 <script setup>
-import StakingScreen from "../components/UI/staking-page/StakingScreen.vue";
+import ValidatorsScreen from "../components/UI/validators-page/ValidatorsScreen.vue";
 </script>

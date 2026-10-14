@@ -54,6 +54,7 @@ import { useControlStore } from "@/store/theControl";
 import { useDeepClone } from "@/composables/utils";
 import { ref } from "vue";
 import { useFooter } from "@/store/theFooter";
+import { useValidatorsStore } from "@/store/validators";
 import i18n from "@/includes/i18n";
 import { useSetups } from "../../../../../../store/setups";
 
@@ -70,6 +71,7 @@ const props = defineProps({
 });
 
 const serviceStore = useServices();
+const validatorsStore = useValidatorsStore();
 const controlStore = useControlStore();
 const setupStore = useSetups();
 
@@ -179,9 +181,7 @@ const clientStatus = computed(() => {
   return "w-5 h-[16px] bg-red-600 border border-red-600 rounded-r-full";
 });
 
-const getKeyNumbers = computed(() => {
-  return props.client?.config?.keys?.length ? props.client.config.keys.length : 0;
-});
+const getKeyNumbers = computed(() => validatorsStore.keysByHolder[props.client?.config?.serviceID]?.keys?.length ?? 0);
 
 const getConnectedMevboost = computed(() => {
   let connectedMevboost;

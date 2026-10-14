@@ -40,7 +40,7 @@
   </div>
 </template>
 <script>
-import { useStakingStore } from "@/store/theStaking";
+import { useValidatorTotals } from "@/composables/validatorTotals";
 import { useNodeManage } from "@/store/nodeManage";
 import { mapWritableState, mapState } from "pinia";
 import { useFooter } from "@/store/theFooter";
@@ -48,11 +48,14 @@ import { useControlStore } from "@/store/theControl";
 import NoData from "./NoData.vue";
 import { useSetups } from "@/store/setups";
 import { useServices } from "@/store/services";
-import { countOnChainKeys } from "@/composables/validators";
 
 export default {
   components: {
     NoData,
+  },
+  setup() {
+    const { validatorCount, totalBalance } = useValidatorTotals();
+    return { validatorCount, totalBalance };
   },
   data() {
     return {
@@ -64,10 +67,6 @@ export default {
   },
 
   computed: {
-    ...mapState(useStakingStore, {
-      totalBalance: "totalBalance",
-      keys: "keys",
-    }),
     ...mapWritableState(useControlStore, {
       noDataFlag: "noDataFlag",
     }),
@@ -88,9 +87,6 @@ export default {
     }),
     formattedBalance() {
       return this.totalBalance.toFixed(5);
-    },
-    validatorCount() {
-      return countOnChainKeys(this.keys, this.installedServices);
     },
     formattedValidatorNo() {
       return this.validatorCount.toString().padStart(3, "0");

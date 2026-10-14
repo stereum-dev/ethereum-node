@@ -10,7 +10,6 @@ import i18n from "./includes/i18n";
 import BaseLayout from "./components/base/BaseLayout.vue";
 import InstallationLayout from "../src/components/base/InstallationLayout.vue";
 import TaskManager from "./components/UI/task-manager/TaskManager.vue";
-import StakingCustomModal from "./components/UI/staking-page/components/modals/StakingCustomModal.vue";
 
 const app = createApp(App);
 const pinia = createPinia();
@@ -18,7 +17,6 @@ const pinia = createPinia();
 app.component("BaseLayout", BaseLayout);
 app.component("InstallationLayout", InstallationLayout);
 app.component("TaskManager", TaskManager);
-app.component("StakingCustomModal", StakingCustomModal);
 
 app.use(VueApexCharts);
 app.use(router);

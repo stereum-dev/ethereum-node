@@ -141,7 +141,7 @@ import { useNodeManage } from "@/store/nodeManage";
 import { useServers } from "@/store/servers";
 import { useServices } from "@/store/services";
 import { useFooter } from "@/store/theFooter";
-import { useStakingStore } from "@/store/theStaking";
+import { useValidatorsStore } from "@/store/validators";
 import { computed, onMounted, onUnmounted, ref, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 import { useMultiSetups } from "../../../composables/multiSetups";
@@ -175,7 +175,7 @@ const footerStore = useFooter();
 const serviceStore = useServices();
 const manageStore = useNodeManage();
 const headerStore = useNodeHeader();
-const stakingStore = useStakingStore();
+const validatorsStore = useValidatorsStore();
 const serverStore = useServers();
 const genesisStore = useGenesis();
 
@@ -869,8 +869,8 @@ const destroyNode = async () => {
     console.error(e);
   } finally {
     headerStore.refresh = true;
-    stakingStore.forceRefresh = true;
-    stakingStore.keys = [];
+    // a nuked node has no keys, the next visit lists them again
+    validatorsStore.$reset();
     serviceStore.versions = {};
     headerStore.runningServices = [];
     serviceStore.runningServices = [];
