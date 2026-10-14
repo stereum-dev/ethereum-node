@@ -16,6 +16,7 @@ import {
   withTekuSignerFlag,
 } from "@/share/remoteKeys";
 import { ServiceVolume } from "./ethereum-services/ServiceVolume.js";
+import { normalizeBeaconUrl } from "./BeaconEndpoints.js";
 import { GROUP_ID } from "@/share/keyGroups";
 import { csmQueueMap } from "@/share/validatorStatus";
 import { chainClock, nextPeriodStart, attestationSummary, syncSummary } from "@/share/validatorDuties";
@@ -1576,6 +1577,10 @@ export class Validators {
       const byId = (id) => infos.find((i) => i.config?.serviceID === id);
       let dep = (byId(serviceID)?.config?.dependencies?.consensusClients || [])[0];
       if (dep && isObolDVTService(dep.service)) dep = (byId(dep.id)?.config?.dependencies?.consensusClients || [])[0];
+      // a client on an external beacon node gets its stats from there, not from some local beacon node
+      const external =
+        dep && byId(dep.id)?.service === "ExternalConsensusService" ? normalizeBeaconUrl(byId(dep.id).config?.env?.link) : null;
+      if (external) return { code: 0, data: { url: external, source: "configured" } };
       if (dep) {
         const status = await this.monitoring.getBeaconStatus();
         const own = status.code ? null : status.data.find((d) => d.sid === dep.id);

@@ -469,6 +469,25 @@ describe("per-key settings", () => {
   });
 });
 
+describe("holder beacon node", () => {
+  // stats for a client on an external beacon node came from a local one before
+  test("a client on an external consensus client gets its stats from the external URL", async () => {
+    const infos = [
+      {
+        service: "NimbusValidatorService",
+        config: { serviceID: "nim", dependencies: { consensusClients: [{ service: "ExternalConsensusService", id: "ext" }] } },
+      },
+      { service: "ExternalConsensusService", config: { serviceID: "ext", env: { link: "https://beacon.example.org/" } } },
+      { service: "GrandineBeaconService", config: { serviceID: "grandine" } },
+    ];
+    const monitoring = { getServiceInfos: jest.fn().mockResolvedValue(infos), getBeaconStatus: jest.fn(), findBeaconPort: jest.fn() };
+    const v = new Validators(monitoring);
+
+    expect(await v.findHolderBeacon("nim")).toEqual({ code: 0, data: { url: "https://beacon.example.org", source: "configured" } });
+    expect(monitoring.findBeaconPort).not.toHaveBeenCalled();
+  });
+});
+
 describe("key removal", () => {
   const interchange = (keys) => JSON.stringify({ metadata: { interchange_format_version: "5" }, data: keys.map((pubkey) => ({ pubkey })) });
   const remover = (answers) => {
