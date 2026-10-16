@@ -29,6 +29,7 @@
     <MevboostModal v-if="headerStore.showMevboostWindow" @close-window="closeServiceBrowser" />
     <ObolModal v-if="headerStore.showObolCharonWindow" @close-window="closeServiceBrowser" />
     <SsvDkg v-if="headerStore.showSsvDkgWindow" @close-window="closeServiceBrowser" />
+    <BuildersModal v-if="headerStore.showBuildersWindow" @close="closeServiceBrowser" />
     <UpdatePanel
       v-if="headerStore.displayUpdatePanel"
       ref="UpdatePanelCompRef"
@@ -64,6 +65,7 @@ import MevboostModal from "../UI/services-modal/MevboostModal.vue";
 import ObolModal from "../UI/services-modal/ObolModal.vue";
 import PrometheusModal from "../UI/services-modal/PrometheusModal.vue";
 import SsvDkg from "../UI/services-modal/SsvDkg.vue";
+import BuildersModal from "../UI/builders/BuildersModal.vue";
 import SsvModal from "../UI/services-modal/SsvModal.vue";
 import TaskManager from "../UI/task-manager/TaskManager.vue";
 import LoaderAnime from "../UI/edit-page/components/loader-anime/LoaderAnime.vue";

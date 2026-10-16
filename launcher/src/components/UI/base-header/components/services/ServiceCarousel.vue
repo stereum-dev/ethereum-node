@@ -8,12 +8,17 @@
   >
     <swiper-slide v-for="(slide, index) in slides" :key="index" :virtual-index="index">
       <div
-        class="w-full flex justify-center items-center cursor-pointer border border-transparent hover:border-gray-100 transition-all duration-300 ease-in-out rounded-md"
+        class="relative w-full flex justify-center items-center cursor-pointer border border-transparent hover:border-gray-100 transition-all duration-300 ease-in-out rounded-md"
         @click="handleModal(slide)"
         @mouseenter="footerStore.cursorLocation = `${slide.name}`"
         @mouseleave="footerStore.cursorLocation = ''"
       >
         <img class="w-full h-full z-0" :src="slide.sIcon" alt="Service Icon" />
+        <span
+          v-if="slide.marker"
+          class="absolute top-0 right-0 w-2.5 h-2.5 rounded-full border border-[#0D0D12] pointer-events-none"
+          :class="slide.marker === 'red' ? 'bg-red-500' : 'bg-amber-400'"
+        />
       </div>
     </swiper-slide>
   </swiper>

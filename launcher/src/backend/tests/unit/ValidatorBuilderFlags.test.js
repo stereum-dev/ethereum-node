@@ -130,3 +130,13 @@ test("a command stored as a string keeps its form and loses only the builder fla
   expect(vc.command).not.toMatch(/--payload-builder/);
   expect(vc.command).toMatch(/--beacon-node=/);
 });
+
+test("Nimbus keeps --payload-builder for its Glamsterdam builder URL when MEV-Boost goes", () => {
+  const { sm, beacon, mevboost } = setup();
+  const vc = stored(NimbusValidatorService.buildByUserInput("hoodi", [], "/opt/stereum/vc", [beacon]));
+  vc.command = [...vc.command, "--payload-builder-url=https://hoodi.titanrelay.xyz"];
+  sm.removeDependencies(beacon, mevboost);
+
+  expect(sm.syncValidatorBuilderFlags([vc], [beacon], [beacon.id])).toHaveLength(0);
+  expect(vc.command).toContain("--payload-builder");
+});

@@ -17,6 +17,7 @@ export const useNodeHeader = defineStore("nodeHeader", {
       showMevboostWindow: false,
       showObolCharonWindow: false,
       showSsvDkgWindow: false,
+      showBuildersWindow: false,
       //Service Modals end
 
       //Menu Modals begin
@@ -104,6 +105,9 @@ export const useNodeHeader = defineStore("nodeHeader", {
         case "SSVDKGService":
           this.showSsvDkgWindow = true;
           break;
+        case "Builders":
+          this.showBuildersWindow = true;
+          break;
         case null:
           this.showGrafanaWindow = false;
           this.showSsvWindow = false;
@@ -111,6 +115,7 @@ export const useNodeHeader = defineStore("nodeHeader", {
           this.showMevboostWindow = false;
           this.showObolCharonWindow = false;
           this.showSsvDkgWindow = false;
+          this.showBuildersWindow = false;
           this.displayUpdatePanel = false;
           this.logoutModalIsActive = false;
           break;

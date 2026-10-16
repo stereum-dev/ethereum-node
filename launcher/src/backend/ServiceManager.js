@@ -45,6 +45,7 @@ import { SSVNOMService } from "./ethereum-services/SSVNOMService";
 import { EthrexService } from "./ethereum-services/EthrexService";
 import { PostgresService, DATABASE_SERVICES } from "./ethereum-services/PostgresService";
 import { DatabaseServices } from "./DatabaseServices";
+import { BuilderSettings } from "./BuilderSettings";
 import { isObolDVTService } from "@/share/ObolDVTServices";
 
 import YAML from "yaml";
@@ -148,6 +149,7 @@ export class ServiceManager {
     this.nodeConnection = nodeConnection;
     this.configManager = new ConfigManager(this.nodeConnection);
     this.databases = new DatabaseServices(this);
+    this.builders = new BuilderSettings(this);
     this.watchSSVDKGLock = false;
     this.lastKnownOperatorIdCheckUnixTime = 0;
   }
@@ -870,6 +872,8 @@ export class ServiceManager {
       const isString = typeof validator.command === "string";
       let command = isString ? validator.command.replaceAll(/\n/gm, "").replaceAll(/\s\s+/gm, " ").split(" ") : validator.command;
       if (usesMevBoost === command.some((c) => builder.match.test(c))) continue;
+      // Nimbus' --payload-builder also carries its Glamsterdam builder URL
+      if (!usesMevBoost && command.some((c) => String(c).startsWith("--payload-builder-url="))) continue;
       command = usesMevBoost ? command.concat([builder.flag]) : command.filter((c) => !builder.match.test(c));
       validator.command = isString ? command.join(" ").trim() : command;
       changed.push(validator);

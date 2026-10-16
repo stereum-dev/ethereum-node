@@ -293,6 +293,29 @@
           </div>
         </template>
 
+        <!-- setups with MEV-Boost and no builder settings for Glamsterdam yet -->
+        <template v-for="builders in builderAlerts" :key="builders.setupId">
+          <div
+            v-if="!alertShowState.includes(builders.level)"
+            :class="`alert-message_${builders.level} pointer`"
+            @mouseenter="cursorLocation = builders.hover"
+            @mouseleave="cursorLocation = ''"
+            @click="openBuilders(builders.setupId)"
+          >
+            <div class="icon-box">
+              <img src="/img/icon/service-icons/Other/Builders-s.png" alt="builders" />
+            </div>
+            <div class="message">
+              <div class="main-message" :class="{ 'text-gray-900': builders.level === 'yellow' }">
+                <span>{{ builders.title }}</span>
+              </div>
+              <div class="val-message" :class="{ 'text-gray-900': builders.level === 'yellow' }">
+                <span>{{ builders.detail }}</span>
+              </div>
+            </div>
+          </div>
+        </template>
+
         <div
           v-if="stereumUpdate.current !== stereumUpdate.version && !alertShowState.includes('green')"
           class="alert-message_green"

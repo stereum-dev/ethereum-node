@@ -9,12 +9,43 @@ import { isObolDVTService, OBOL_DVT_SERVICES } from "@/share/ObolDVTServices";
 import ServiceCarousel from "./ServiceCarousel.vue";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useSetups } from "@/store/setups";
-import { computed } from "vue";
+import { computed, onBeforeUnmount, watch } from "vue";
+import { useBuilders } from "@/store/builders";
+import { BUILDER_CLIENTS } from "@/share/builders";
+import { gloasForkTime } from "@/share/gloasFork";
 
 const headerStore = useNodeHeader();
 const setupsStore = useSetups();
+const buildersStore = useBuilders();
 
-const slides = computed(() => {
+// only inside a setup whose network has Glamsterdam scheduled and that runs a builder-capable validator client
+const showBuilders = computed(() => {
+  const setup = setupsStore.selectedSetup;
+  return !!setup?.setupId && gloasForkTime(setup.network) !== null && (setup.services ?? []).some((s) => BUILDER_CLIENTS[s.service]);
+});
+let buildersTimer = null;
+watch(
+  showBuilders,
+  (show) => {
+    clearInterval(buildersTimer);
+    buildersTimer = null;
+    if (!show) return;
+    buildersStore.load();
+    buildersTimer = setInterval(() => buildersStore.load(), 5 * 60 * 1000);
+  },
+  { immediate: true }
+);
+onBeforeUnmount(() => clearInterval(buildersTimer));
+const buildersSlide = computed(() => ({
+  service: "Builders",
+  name: "Builders",
+  sIcon: "/img/icon/service-icons/Other/Builders-s.png",
+  marker: buildersStore.markerOf(setupsStore.selectedSetup?.setupId),
+}));
+
+const slides = computed(() => (showBuilders.value ? [buildersSlide.value, ...serviceSlides.value] : serviceSlides.value));
+
+const serviceSlides = computed(() => {
   const services = headerStore.runningServices;
   const selectedSetup = setupsStore.selectedSetup;
 
