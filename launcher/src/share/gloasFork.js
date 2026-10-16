@@ -33,6 +33,10 @@ export const GLOAS_MIN_VERSIONS = {
     SSVNetworkService: "2.5.0",
   },
   hoodi: {
+    TekuBeaconService: "26.10.1",
+    TekuValidatorService: "26.10.1",
+    NimbusBeaconService: "26.10.1",
+    NimbusValidatorService: "26.10.1",
     LodestarBeaconService: "1.50.0",
     LodestarValidatorService: "1.50.0",
     CharonService: null,

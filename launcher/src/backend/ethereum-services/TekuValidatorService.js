@@ -28,7 +28,7 @@ export class TekuValidatorService extends NodeService {
       service.id, // id
       1, // configVersion
       image, // image
-      "26.8.0", // imageVersion
+      "26.10.1", // imageVersion
       [
         "vc",
         `--beacon-node-api-endpoint=${beaconNodes}`,

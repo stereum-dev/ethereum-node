@@ -69,7 +69,7 @@ test("the result says when the fork has passed", () => {
 test("networks without a schedule, unchecked services and unknown tags are skipped", () => {
   const result = gloasReadiness(
     [
-      service("TekuBeaconService", "hoodi", "26.8.1"),
+      service("PrysmBeaconService", "hoodi", "v7.2.1"),
       service("TekuBeaconService", "mainnet", "26.8.1"),
       service("MetricsExporterService", "sepolia", "v1.0.0"),
       service("GethService", "sepolia", "latest"),
@@ -87,12 +87,14 @@ test("a service without a compatible release is always listed", () => {
   expect(sepolia.outdated).toEqual([{ name: "Obol Charon", service: "CharonService", version: "v1.11.0", minimum: null }]);
 });
 
-test("on hoodi only lodestar is checked so far", () => {
+test("on hoodi only clients with a release for its fork are checked so far", () => {
   const result = gloasReadiness(
     [
       service("LodestarBeaconService", "hoodi", "v1.49.0", "Lodestar"),
       service("LodestarValidatorService", "hoodi", "v1.50.0", "Lodestar VC"),
       service("TekuBeaconService", "hoodi", "26.10.0", "Teku"),
+      service("NimbusBeaconService", "hoodi", "multiarch-v26.10.1", "Nimbus"),
+      service("PrysmBeaconService", "hoodi", "v7.2.1", "Prysm"),
     ],
     HOODI_FORK - 86400
   );
@@ -102,7 +104,10 @@ test("on hoodi only lodestar is checked so far", () => {
       network: "hoodi",
       forkTime: HOODI_FORK,
       forked: false,
-      outdated: [{ name: "Lodestar", service: "LodestarBeaconService", version: "v1.49.0", minimum: "1.50.0" }],
+      outdated: [
+        { name: "Lodestar", service: "LodestarBeaconService", version: "v1.49.0", minimum: "1.50.0" },
+        { name: "Teku", service: "TekuBeaconService", version: "26.10.0", minimum: "26.10.1" },
+      ],
     },
   ]);
 });
