@@ -54,14 +54,14 @@
         <label class="flex items-start gap-2 text-xs cursor-pointer">
           <input v-model="accepted" type="checkbox" class="mt-0.5" />{{ t("validatorsPage.exitAccept") }}
         </label>
-        <label v-if="prep.eligible.length" class="flex flex-col gap-1 text-xs">
-          {{ t("validatorsPage.exitTypeToConfirm", { token }) }}
-          <input
-            v-model.trim="typed"
-            class="h-9 w-40 rounded-full bg-[#0D0D12] border border-[#4b8585] px-4 text-sm outline-hidden focus:border-red-400"
-            @keydown.enter="exit"
-          />
-        </label>
+        <TypeToConfirm
+          v-if="prep.eligible.length"
+          v-model="typed"
+          keypath="validatorsPage.exitTypeToConfirm"
+          param="token"
+          :token="token"
+          @enter="exit"
+        />
       </template>
     </template>
 
@@ -146,6 +146,7 @@ import ValidatorModal from "../ValidatorModal.vue";
 import ActionButton from "../ActionButton.vue";
 import VirtualList from "../VirtualList.vue";
 import KeyLabel from "./KeyLabel.vue";
+import TypeToConfirm from "./TypeToConfirm.vue";
 import { useValidatorsStore } from "@/store/validators";
 import { useServices } from "@/store/services";
 import { shortPubkey } from "@/share/validatorStatus";
