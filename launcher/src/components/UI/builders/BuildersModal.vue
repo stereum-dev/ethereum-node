@@ -52,7 +52,7 @@
         </button>
       </div>
 
-      <div class="min-h-[22rem] flex flex-col">
+      <div class="min-h-[22rem] shrink-0 flex flex-col">
         <BuilderRelays
           v-if="activeTab === 'relays'"
           v-model="editing"
@@ -256,7 +256,9 @@ const openReminder = () => {
     lines.push({ text: t("builders.reminder.outOfSync", { clients: names(outOfSync) }) });
   }
   const configured = (current.saved ? current.builders.relays?.length : draft.value.relays.length) > 0;
-  const outdated = configured ? current.clients.filter((c) => c.support.reason === "update") : [];
+  // only worth a reminder while some client can take the settings; the fork alert covers the rest
+  const settable = current.clients.some((c) => c.support.apply);
+  const outdated = configured && settable ? current.clients.filter((c) => c.support.reason === "update") : [];
   if (outdated.length) lines.push({ level: "red", text: t("builders.reminder.update", { clients: names(outdated) }) });
   if (lines.length) reminder.value = { kind: canApply ? "apply" : "outdated", lines, canApply };
 };
