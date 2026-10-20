@@ -18,14 +18,14 @@
           t("validatorsPage.csm.removeWarning", { count: csmCount }, csmCount)
         }}</span>
       </div>
-      <label v-if="pubkeys.length > 1" class="flex flex-col gap-1 text-xs">
-        {{ t("validatorsPage.removeTypeCount", { count: pubkeys.length }) }}
-        <input
-          v-model.trim="typed"
-          class="h-9 w-32 rounded-full bg-[#0D0D12] border border-[#4b8585] px-4 text-sm outline-hidden focus:border-red-400"
-          @keydown.enter="remove"
-        />
-      </label>
+      <TypeToConfirm
+        v-if="pubkeys.length > 1"
+        v-model="typed"
+        keypath="validatorsPage.removeTypeCount"
+        param="count"
+        :token="String(pubkeys.length)"
+        @enter="remove"
+      />
     </template>
 
     <div v-else-if="step === 'removing'" class="flex items-center gap-2 text-sm text-gray-300">
@@ -79,6 +79,7 @@ import { saveAs } from "file-saver";
 import ValidatorModal from "../ValidatorModal.vue";
 import ActionButton from "../ActionButton.vue";
 import KeyLabel from "./KeyLabel.vue";
+import TypeToConfirm from "./TypeToConfirm.vue";
 import { useValidatorsStore } from "@/store/validators";
 import i18n from "@/includes/i18n";
 

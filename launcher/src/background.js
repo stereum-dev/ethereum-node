@@ -631,6 +631,18 @@ ipcMain.handle("checkAndCreateMultiSetup", async () => {
 });
 
 // turns the plain database containers of older installs into database services
+ipcMain.handle("getBuilderSettings", async () => {
+  return await serviceManager.builders.getBuilderSettings();
+});
+
+ipcMain.handle("setBuilderSettings", async (event, args) => {
+  return await serviceManager.builders.setBuilderSettings(args);
+});
+
+ipcMain.handle("probeBuilders", async (event, args) => {
+  return await serviceManager.builders.probeBuilders(args);
+});
+
 ipcMain.handle("migrateDatabaseServices", async () => {
   return await serviceManager.databases.migrate();
 });

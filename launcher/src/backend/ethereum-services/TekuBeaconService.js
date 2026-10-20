@@ -38,7 +38,7 @@ export class TekuBeaconService extends NodeService {
       service.id, // id
       2, // configVersion
       image, // image
-      "26.8.0", // imageVersion
+      "26.10.1", // imageVersion
       [
         `--network=${network}`,
         "--p2p-enabled=true",

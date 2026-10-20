@@ -270,6 +270,52 @@
           </div>
         </template>
 
+        <!-- clients too old for a scheduled Glamsterdam fork -->
+        <template v-for="gloas in gloasAlerts" :key="gloas.network">
+          <div
+            v-if="!alertShowState.includes(gloas.level)"
+            :class="`alert-message_${gloas.level} pointer`"
+            @mouseenter="cursorLocation = gloas.hover"
+            @mouseleave="cursorLocation = ''"
+            @click="showUpdate"
+          >
+            <div class="icon-box">
+              <img :src="`/img/icon/node-alert-icons/alert-general-${gloas.level}.png`" alt="glamsterdam" />
+            </div>
+            <div class="message">
+              <div class="main-message" :class="{ 'text-gray-900': gloas.level === 'yellow' }">
+                <span>{{ gloas.title }}</span>
+              </div>
+              <div class="val-message" :class="{ 'text-gray-900': gloas.level === 'yellow' }">
+                <span>{{ gloas.detail }}</span>
+              </div>
+            </div>
+          </div>
+        </template>
+
+        <!-- setups with MEV-Boost and no builder settings for Glamsterdam yet -->
+        <template v-for="builders in builderAlerts" :key="builders.setupId">
+          <div
+            v-if="!alertShowState.includes(builders.level)"
+            :class="`alert-message_${builders.level} pointer`"
+            @mouseenter="cursorLocation = builders.hover"
+            @mouseleave="cursorLocation = ''"
+            @click="openBuilders(builders.setupId)"
+          >
+            <div class="icon-box">
+              <img src="/img/icon/service-icons/Other/Builders-s.png" alt="builders" />
+            </div>
+            <div class="message">
+              <div class="main-message" :class="{ 'text-gray-900': builders.level === 'yellow' }">
+                <span>{{ builders.title }}</span>
+              </div>
+              <div class="val-message" :class="{ 'text-gray-900': builders.level === 'yellow' }">
+                <span>{{ builders.detail }}</span>
+              </div>
+            </div>
+          </div>
+        </template>
+
         <div
           v-if="stereumUpdate.current !== stereumUpdate.version && !alertShowState.includes('green')"
           class="alert-message_green"
@@ -324,7 +370,11 @@ import { useNodeHeader } from "@/store/nodeHeader";
 import { useServices } from "@/store/services";
 import { useFooter } from "@/store/theFooter";
 import { useSetups } from "@/store/setups";
+import { useGloasAlerts } from "@/composables/gloasFork";
 export default {
+  setup() {
+    return useGloasAlerts();
+  },
   data() {
     return {
       storageWarning: false,

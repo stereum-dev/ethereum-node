@@ -516,7 +516,18 @@
     "stats": "STATUS: OPEN",
     "clientService": "CLIENT / SERVICE",
     "csm": "csm operator monitoring",
-    "brokenConfig": "config unreadable"
+    "brokenConfig": "config unreadable",
+    "gloasSoon": "GLAMSTERDAM IN LESS THAN A DAY | GLAMSTERDAM IN {n} DAY | GLAMSTERDAM IN {n} DAYS",
+    "gloasPassed": "GLAMSTERDAM: CLIENT TOO OLD",
+    "gloasUpdate": "> update",
+    "gloasNeeds": "needs",
+    "gloasNoRelease": "no compatible release yet",
+    "gloasHover": "Glamsterdam forks on {network} on {date}. Update before then: {list}",
+    "gloasHoverPassed": "{network} forked to Glamsterdam on {date}. These clients no longer follow the chain: {list}",
+    "buildersTitle": "MEV-BOOST: SET BUILDERS",
+    "buildersDetail": "> {setup}",
+    "buildersHover": "From Glamsterdam on {network} ({date}) the validator clients of {setup} ask the relays themselves, MEV-Boost is no longer used. Click to open Builders and take over its relays.",
+    "buildersHoverPassed": "{network} forked to Glamsterdam on {date}. {setup} builds its blocks locally until you set its builders. Click to open Builders."
   },
   "resyncModal": {
     "message": "YOUR CLIENT Stores blockchain data ON YOUR SERVER SO YOUR NODE CAN serve the network. this is necessary for your node TO PICK up its ATTESTATION DUTY in STAKING. BY USING THIS OPTION YOU ARE DELETING YOUR CLIENTS's CURRENT BLOCKCHAIN DATA & USE THE SELECTED OPTION AS A SOURCE TO SYNCHRONIZE YOUR NODE ANEW.",
@@ -1060,6 +1071,134 @@
     "servceCount": "{count} Monitoring services {isAre} running.",
     "inque": "The number of keys in the queueis {number}.",
     "nodeStatus": "Node Status"
+  },
+  "builders": {
+    "title": "Builders",
+    "icon": "Builders",
+    "loading": "Loading builder settings",
+    "noSetups": "This setup has no validator client that can use builders",
+    "setup": "Setup",
+    "intro": "From Glamsterdam on, the validator clients ask the relays for blocks themselves instead of going through MEV-Boost. Each validator client has its own settings.",
+    "migrationMissing": "No builder address on {network} yet: {relays}. They can be added once they serve one.",
+    "gets": "Gets",
+    "noFlags": "No builder settings: local blocks and p2p bids only",
+    "relays": "Relays",
+    "readyOn": "ready for ePBS on {network}",
+    "notYet": "not on {network} yet",
+    "probe": {
+      "notListed": "answers ePBS, not in Stereum's list yet",
+      "noRoute": "doesn't answer ePBS now",
+      "unreachable": "not reachable from the server",
+      "title": {
+        "ready": "Answers the ePBS builder API (HTTP {status}), checked from the server",
+        "no": "Doesn't know the ePBS builder API (HTTP {status}), checked from the server",
+        "unreachable": "No answer from the server's side (HTTP {status})"
+      }
+    },
+    "custom": "Custom",
+    "removeRelay": "Remove relay",
+    "customPlaceholder": "https://builder.example",
+    "add": "Add",
+    "nimbusRelay": "Relay for Nimbus (it takes one)",
+    "blockChoice": "Block choice",
+    "boostDefault": "Client default",
+    "boostLocal": "Prefer local",
+    "boostProfit": "Most profit",
+    "boostCustom": "Custom",
+    "boostHint": {
+      "default": "Each client's own choice: Lodestar and Teku take a bid only when it pays about 11% more than the local block, the others whenever it pays more.",
+      "local": "Always build the block locally, never take a bid.",
+      "profit": "Take the bid whenever it pays more than the local block.",
+      "custom": "A bid counts at this percent of its value against the local block: 100 = equal, 90 = the bid needs about 11% more, 0 = always local."
+    },
+    "minBid": "Minimum bid",
+    "maxPayment": "Max trusted payment",
+    "maxPaymentHint": "A builder pays through the protocol, which is enforced, and can promise more inside its block, which is not. 0: only the enforced payment counts. Above 0: promised payments count too, up to this amount.",
+    "trustedWarning": "If the builder does not publish its block, the promised payment and the block's reward are lost, and the builder cannot be penalized for it. Lodestar needs --allowDangerousTrustedPayments for this, Stereum adds it.",
+    "authHint": "Hex agreed with the relay. Empty: the relay's host name, which all relays accept.",
+    "noRelays": "No relays chosen",
+    "status": {
+      "apply": "Set on save",
+      "applyRestart": "Set on save, restarts",
+      "update": "Needs {client} {minimum} or newer for the fork",
+      "noRelease": "No release for this fork yet",
+      "afterFork": "Set after the fork: its beacon node has no MEV-Boost",
+      "dvt": "Managed by the DVT cluster",
+      "notScheduled": "No Glamsterdam on {network} yet",
+      "outOfSync": "Saved settings not on it yet: save again"
+    },
+    "note": {
+      "single-relay": "Nimbus takes one relay",
+      "auth-ignored": "This client ignores auth data and always uses the host name",
+      "no-limits": "Nimbus before 26.10.1 has no minimum bid and counts every promised payment"
+    },
+    "cancel": "Cancel",
+    "save": "Save & apply",
+    "source": {
+      "mevBoost": "Not saved yet. Taken over from this setup's MEV-Boost: its relays that already serve Glamsterdam, its minimum bid and the block choice the validator clients use now.",
+      "local": "Not saved yet. This setup has no MEV-Boost, so its validator clients build their blocks themselves. Choose relays to take blocks from builders after the fork, or keep none.",
+      "saved": "Saved for this setup."
+    },
+    "fromMevBoost": "Take over from MEV-Boost again",
+    "tab": {
+      "relays": "Relays",
+      "bids": "Bids",
+      "calc": "Calculator",
+      "expert": "Expert"
+    },
+    "noRelaysHint": "Without relays the validator clients still get bids that builders send over the network, and build the block themselves when those pay less.",
+    "trustedZeroNote": "Relay bids count only what the protocol pays. Their promised payments are ignored until you set a max trusted payment (Bids).",
+    "authData": "Auth data per relay",
+    "minBidHint": "Bids that pay less are ignored and the block is built locally. 0 = no minimum.",
+    "calc": {
+      "title": "Try it out: one bid against the local block",
+      "local": "Local block worth",
+      "paid": "Bid, paid by the protocol",
+      "promised": "Bid, promised in the block",
+      "uses": "With this client's Bids settings: block choice {boost}%, minimum bid {minBid} ETH, max trusted payment {max} ETH.",
+      "promisedHint": "Only relays' bids can carry promised payments, and they count up to the max trusted payment (Bids).",
+      "counts": "counts {counted} ETH at {boost}%",
+      "builderBlock": "Builder block",
+      "localBlock": "Local block",
+      "noClients": "No validator client uses these settings.",
+      "footnote": "The same goes for bids builders send over the network. If the local block is not ready in time, most clients take the bid anyway.",
+      "why": {
+        "below-min": "The bid counts {counted} ETH, less than the minimum bid of {minBid} ETH.",
+        "boost-zero": "Prefer local: the bid is never taken.",
+        "higher": "{boost}% of {counted} = {boosted} ETH beats the local block's {local} ETH.",
+        "lower": "{boost}% of {counted} = {boosted} ETH does not beat the local block's {local} ETH. A bid needs more than about {needed} ETH."
+      }
+    },
+    "reminder": {
+      "apply": {
+        "title": "Apply builder settings",
+        "text": "The builder settings of this setup are not applied yet. After the Glamsterdam fork MEV-Boost is no longer used, so the validator clients only get builder blocks with these settings."
+      },
+      "update": "{clients} need an update first and are skipped until then.",
+      "close": {
+        "title": "Changes not applied",
+        "text": "Your changes to the builder settings are not saved and applied yet."
+      },
+      "taken": "Taken over from MEV-Boost: {relays}. Check them and save.",
+      "noneTaken": "None of MEV-Boost's relays serves Glamsterdam yet. Saving keeps the validator clients on local blocks and bids from the network.",
+      "outOfSync": "The saved settings are not on {clients} yet.",
+      "review": "Review first",
+      "ok": "OK",
+      "discard": "Discard",
+      "keepEditing": "Keep editing",
+      "outdated": {
+        "title": "Validator clients to update",
+        "text": "These settings cannot reach every validator client yet."
+      },
+      "restart": {
+        "title": "Restart validator clients?",
+        "text": "The new settings only take effect when a validator client restarts. While it restarts it misses a few duties."
+      },
+      "restarts": "Restarts: {clients}. Without a restart they keep running with their old settings until their next restart, for example after an update.",
+      "withRestart": "Save and restart",
+      "withoutRestart": "Save without restart"
+    },
+    "useForAll": "Use for all clients"
   },
   "validatorsPage": {
     "clients": "Validator clients",

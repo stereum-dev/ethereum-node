@@ -104,6 +104,8 @@ export const useNodeManage = defineStore("nodeManage", {
             "https://0x8c4ed5e24fe5c6ae21018437bde147693f68cda427cd1122cf20819c30eda7ed74f72dece09bb313f2a1855595ab677d@global.titanrelay.xyz",
           hoodi:
             "https://0xaa58208899c6105603b74396734a6263cc7d947f444f396a90f7b7d3e65d102aec7e5e5291b27e08d02c50a050825c2f@hoodi.titanrelay.xyz",
+          // builder (ePBS) addresses after Glamsterdam, only where the relay serves them (checked 2026-10-14)
+          epbs: { hoodi: "https://hoodi.titanrelay.xyz", sepolia: "https://sepolia.titanrelay.xyz" },
           id: 10,
           isSelected: false,
           isRemoved: false,
@@ -130,6 +132,25 @@ export const useNodeManage = defineStore("nodeManage", {
           isSelected: false,
           isRemoved: false,
           freeCensorship: false,
+        },
+        // testnet builders of client developers, ePBS only (checked 2026-10-20)
+        {
+          icon: "/img/icon/network-icons/ethereum-testnet-icon.png",
+          name: "nflaig Builder",
+          epbs: { hoodi: "https://builder-hoodi.nflaig.dev", sepolia: "https://builder-sepolia.nflaig.dev" },
+          id: 13,
+          isSelected: false,
+          isRemoved: false,
+          freeCensorship: true,
+        },
+        {
+          icon: "/img/icon/network-icons/ethereum-testnet-icon.png",
+          name: "pk910 Builder",
+          epbs: { hoodi: "https://builder-hoodi.pk910.de" },
+          id: 14,
+          isSelected: false,
+          isRemoved: false,
+          freeCensorship: true,
         },
       ],
 
