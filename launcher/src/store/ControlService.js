@@ -642,6 +642,10 @@ class ControlService extends EventEmitter {
     return this.promiseIpc.send("getNewLauncherVersion");
   }
 
+  async getLauncherUpdateMode() {
+    return this.promiseIpc.send("getLauncherUpdateMode");
+  }
+
   async getSubnetSubs() {
     return this.promiseIpc.send("getSubnetSubs");
   }

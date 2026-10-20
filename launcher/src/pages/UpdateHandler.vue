@@ -15,14 +15,19 @@
     <div class="update-text h-1/6 w-full flex justify-center items-center text-2xl text-gray-50 font-semibold">
       <span>{{ `${updateState.message}${updateState.MBps ? "" + updateState.MBps.toFixed(2) + " MBps" : ""}` }}</span>
     </div>
-    <UpdateModal v-if="updateModel" :version="serviceStore?.launcherVersion" @update="runUpdate" @close-window="closeUpdateModal" />
+    <UpdateModal
+      v-if="updateModel"
+      :version="updateState.version"
+      :manual="updateMode.manual"
+      @update="runUpdate"
+      @close-window="closeUpdateModal"
+    />
   </div>
 </template>
 <script setup>
 import UpdateModal from "../components/UI/server-management/components/modals/UpdateModal.vue";
 import ControlService from "@/store/ControlService";
 import { ref, onMounted, onUnmounted } from "vue";
-import { useServices } from "@/store/services";
 import i18n from "@/includes/i18n";
 const t = i18n.global.t;
 
@@ -34,12 +39,16 @@ const updateState = ref({
   version: "-",
 });
 
-const serviceStore = useServices();
 const updateModel = ref(true);
+// manual: this system can't update in place, so the update opens the release page
+const updateMode = ref({ manual: false, url: "" });
 
 onMounted(() => {
   ControlService.getNewLauncherVersion().then((version) => {
     updateState.value.version = version;
+  });
+  ControlService.getLauncherUpdateMode().then((mode) => {
+    if (mode) updateMode.value = mode;
   });
   ControlService.addListener("UpdateEvents", updateHandler);
 });

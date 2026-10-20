@@ -1,5 +1,8 @@
 import { autoUpdater } from "electron-updater";
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, shell } from "electron";
+
+// unsigned macOS and Windows builds can't replace themselves, so the user downloads the release
+export const RELEASES_URL = "https://github.com/stereum-dev/ethereum-node/releases/latest";
 
 export class StereumUpdater {
   constructor(logger, createWindow) {
@@ -9,6 +12,7 @@ export class StereumUpdater {
     this.createWindow = createWindow;
     this.newVersion = null;
     this.dryRun = false;
+    this.manual = process.platform === "darwin" || process.platform === "win32";
   }
 
   checkForUpdates() {
@@ -18,6 +22,11 @@ export class StereumUpdater {
 
   getNewLauncherVersion() {
     return this.newVersion;
+  }
+
+  // how the update window offers the update: in place, or as a download from the release page
+  getUpdateMode() {
+    return { manual: this.manual, url: RELEASES_URL };
   }
 
   initUpdater() {
@@ -73,6 +82,11 @@ export class StereumUpdater {
   }
 
   async downloadUpdate() {
+    if (this.manual) {
+      this.logger.info(`Opening ${RELEASES_URL} to download ${this.newVersion}.`);
+      await shell.openExternal(RELEASES_URL);
+      return this.ignoreUpdate();
+    }
     this.dryRun ? this.runDebugDownload() : this.updater.downloadUpdate();
     this.logger.info("Downloading update...");
   }

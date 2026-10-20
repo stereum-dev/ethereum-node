@@ -8,19 +8,21 @@
     @close-window="closeWindow"
   >
     <template #content>
-      <div class="update-content-parent w-full h-full grid grid-cols-24 grid-rows-12 items-center">
-        <span class="col-start-5 col-end-21 row-start-2 row-end-4 text-md text-center text-gray-300">{{ t("updateModal.updateQ") }}</span>
-        <div
-          class="btn-modal col-start-3 col-end-10 row-start-8 row-span-4 h-full rounded-2xl px-2 font-semibold text-xl text-gray-700 bg-[#70E763] flex items-center justify-center uppercase cursor-pointer"
-          @click="submitUpdate"
-        >
-          <span>{{ t("updateModal.acc") }}</span>
-        </div>
-        <div
-          class="btn-modal col-start-16 col-end-23 row-start-8 row-span-4 h-full rounded-2xl px-2 font-semibold text-xl text-gray-100 bg-[#EB5353] flex items-center justify-center uppercase cursor-pointer"
-          @click="closeWindow"
-        >
-          <span>{{ t("updateModal.deny") }}</span>
+      <div class="update-content-parent w-full flex flex-col items-center gap-10 py-6">
+        <span class="w-2/3 text-md text-center text-gray-300">{{ manual ? t("updateModal.manualQ") : t("updateModal.updateQ") }}</span>
+        <div class="w-full flex justify-around">
+          <div
+            class="btn-modal w-[30%] h-12 rounded-2xl px-2 font-semibold text-xl text-gray-700 bg-[#70E763] flex items-center justify-center uppercase cursor-pointer"
+            @click="submitUpdate"
+          >
+            <span>{{ manual ? t("updateModal.download") : t("updateModal.acc") }}</span>
+          </div>
+          <div
+            class="btn-modal w-[30%] h-12 rounded-2xl px-2 font-semibold text-xl text-gray-100 bg-[#EB5353] flex items-center justify-center uppercase cursor-pointer"
+            @click="closeWindow"
+          >
+            <span>{{ manual ? t("updateModal.later") : t("updateModal.deny") }}</span>
+          </div>
         </div>
       </div>
     </template>
@@ -33,6 +35,8 @@ import i18n from "@/includes/i18n";
 const t = i18n.global.t;
 defineProps({
   version: String,
+  // the update is downloaded from the release page instead of installed in place
+  manual: { type: Boolean, default: false },
 });
 
 const emit = defineEmits(["update", "close-window"]);

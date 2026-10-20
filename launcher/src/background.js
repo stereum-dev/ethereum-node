@@ -766,6 +766,10 @@ ipcMain.handle("getNewLauncherVersion", async () => {
   return stereumUpdater.getNewLauncherVersion();
 });
 
+ipcMain.handle("getLauncherUpdateMode", async () => {
+  return stereumUpdater.getUpdateMode();
+});
+
 ipcMain.handle("deleteSlasherVolume", async (event, args) => {
   return await serviceManager.deleteSlasherVolume(args);
 });
