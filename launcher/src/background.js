@@ -639,6 +639,10 @@ ipcMain.handle("setBuilderSettings", async (event, args) => {
   return await serviceManager.builders.setBuilderSettings(args);
 });
 
+ipcMain.handle("probeBuilders", async (event, args) => {
+  return await serviceManager.builders.probeBuilders(args);
+});
+
 ipcMain.handle("migrateDatabaseServices", async () => {
   return await serviceManager.databases.migrate();
 });

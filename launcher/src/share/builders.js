@@ -36,6 +36,11 @@ export const BUILDER_CLIENTS = {
 export const NIMBUS_BID_LIMITS = "26.10.1";
 const nimbusLimits = (version) => [0, 1].includes(compareVersions(version, NIMBUS_BID_LIMITS));
 
+/** whether a client caps promised payments by the max trusted payment (older Nimbus counts them all) */
+export function capsTrustedPayments(service, version) {
+  return service !== "NimbusValidatorService" || nimbusLimits(version);
+}
+
 // clients that take no auth_data of their own: they always sign the URL's hostname
 export const HOSTNAME_AUTH_ONLY = ["TekuValidatorService", "NimbusValidatorService"];
 
@@ -71,30 +76,42 @@ export function normalizeAuthData(authData) {
   return /^0x([0-9a-fA-F]{2})+$/.test(value) ? value.toLowerCase() : null;
 }
 
-/** settings as they are stored: relays with a clean name, the builder URL and their auth data */
-export function cleanBuilderSettings(settings) {
-  const clean = (s) => ({
-    ...s,
-    relays: (s.relays ?? [])
+// one client's settings as they are stored: relays with a clean name, the builder URL and their auth data
+function cleanClientSettings(settings) {
+  const rest = { ...DEFAULT_BUILDER_SETTINGS, ...(settings ?? {}) };
+  delete rest.own;
+  return {
+    ...rest,
+    relays: (rest.relays ?? [])
       .map((r) => ({
         name: String(r.name ?? "").replace(/[^\w .()-]/g, ""),
         url: builderUrl(r.url),
         authData: normalizeAuthData(r.authData) || "",
       }))
       .filter((r) => r.url),
-    nimbusRelay: builderUrl(s.nimbusRelay) ?? "",
-  });
-  return {
-    ...clean(settings),
-    clients: Object.fromEntries(Object.entries(settings.clients ?? {}).map(([id, c]) => [id, c?.own ? clean(c) : { own: false }])),
+    nimbusRelay: builderUrl(rest.nimbusRelay) ?? "",
   };
 }
 
-/** settings of one validator client: its own ones if it has them, otherwise the setup's */
-export function effectiveBuilderSettings(builders, serviceID) {
-  const own = builders?.clients?.[serviceID];
-  const source = own?.own ? own : builders;
-  return { ...DEFAULT_BUILDER_SETTINGS, ...(source ?? {}), own: !!own?.own };
+/** settings as they are stored: one entry per validator client */
+export function cleanBuilderSettings(builders) {
+  return {
+    route: builders?.route ?? DEFAULT_BUILDER_SETTINGS.route,
+    clients: Object.fromEntries(Object.entries(builders?.clients ?? {}).map(([id, c]) => [id, cleanClientSettings(c)])),
+  };
+}
+
+/**
+ * The settings of one validator client. Setups saved before settings were per client keep
+ * the setup's settings at the top, with "own: true" for clients that had their own.
+ */
+export function clientBuilderSettings(builders, serviceID) {
+  const entry = builders?.clients?.[serviceID];
+  const source = entry && entry.own !== false && Array.isArray(entry.relays) ? entry : Array.isArray(builders?.relays) ? builders : {};
+  const settings = { ...DEFAULT_BUILDER_SETTINGS, ...source };
+  delete settings.own;
+  delete settings.clients;
+  return settings;
 }
 
 /**
@@ -123,7 +140,7 @@ export function builderSupport({ service, version, network, usesMevBoost, now = 
   if (!BUILDER_CLIENTS[service]) return { apply: false, reason: "unsupported", minimum: null };
   const forkTime = gloasForkTime(network);
   if (forkTime === null) return { apply: false, reason: "not-scheduled", minimum: null };
-  // a release that follows the network's fork knows the builder flags; older ones would not start with them
+  // only a release that follows the network's fork keeps proposing after it, so older ones are asked to update first
   const minimum = GLOAS_MIN_VERSIONS[network]?.[service] ?? null;
   if (minimum === null || compareVersions(version, minimum) === -1) return { apply: false, reason: "update", minimum };
   // before the fork Prysm's --builder-urls and Nimbus' --payload-builder also send registrations, which a beacon node without MEV-Boost refuses
@@ -162,8 +179,10 @@ export function builderConfiguration(service, settings, version) {
       if (relays.length) flags.push(`--builder.urls=${relays.map(withAuth).join(",")}`);
       if (minBid !== "0") flags.push(`--builder.minBid=${minBid}`);
       if (maxPayment !== "0") flags.push(`--builder.maxExecutionPayment=${maxPayment}`, "--allowDangerousTrustedPayments");
-      // Lodestar only applies a boost factor with the maxprofit selection
-      if (boost !== null) flags.push("--builder.selection=maxprofit", `--builder.boostFactor=${boost}`);
+      // Lodestar names its choices: executionalways builds locally unless that fails, maxprofit applies the boost factor (default 100)
+      if (boost === "0") flags.push("--builder.selection=executionalways");
+      else if (boost === "100") flags.push("--builder.selection=maxprofit");
+      else if (boost !== null) flags.push("--builder.selection=maxprofit", `--builder.boostFactor=${boost}`);
       break;
     case "PrysmValidatorService":
       if (relays.length) flags.push(`--builder-urls=${relays.map(withAuth).join(",")}`);
@@ -208,22 +227,24 @@ export function builderConfiguration(service, settings, version) {
 }
 
 /**
- * The command with Stereum's builder flags replaced. Nimbus needs --payload-builder for its builder URL.
+ * The command with Stereum's builder flags replaced. Nimbus needs --payload-builder for its builder URL,
+ * and keeps it without one only while its beacon node uses MEV-Boost.
  * @param {Array<string>|string} command
  * @returns {Array<string>|string} in the form it came in
  */
-export function applyBuilderFlags(service, command, flags) {
+export function applyBuilderFlags(service, command, flags, usesMevBoost = true) {
   const isString = typeof command === "string";
   let list = isString ? command.replaceAll(/\n/gm, "").replaceAll(/\s\s+/gm, " ").split(" ") : [...command];
   const owned = BUILDER_CLIENTS[service]?.owned ?? [];
-  list = list.filter((c) => !owned.some((pattern) => pattern.test(c))).concat(flags);
-  if (
-    service === "NimbusValidatorService" &&
-    flags.some((f) => f.startsWith("--payload-builder-url=")) &&
-    !list.some((c) => /^--payload-builder(=true)?$/.test(c))
-  ) {
-    list.push("--payload-builder");
+  list = list.filter((c) => !owned.some((pattern) => pattern.test(c)));
+  if (service === "NimbusValidatorService") {
+    const enabled = (c) => /^--payload-builder(=true)?$/.test(c);
+    const hasUrl = flags.some((f) => f.startsWith("--payload-builder-url="));
+    // before the builder flags, so a second apply gives the same command
+    if (hasUrl && !list.some(enabled)) list.push("--payload-builder");
+    else if (!hasUrl && !usesMevBoost) list = list.filter((c) => !enabled(c));
   }
+  list = list.concat(flags);
   return isString ? list.join(" ").trim() : list;
 }
 
@@ -232,6 +253,33 @@ export function mergeLighthouseBuilderFile(existing, file) {
   const merged = { ...file };
   if (existing?.validator_configs && Object.keys(existing.validator_configs).length) merged.validator_configs = existing.validator_configs;
   return merged;
+}
+
+// Lighthouse's builder file with its defaults filled in, to compare what it means rather than how it is written
+function lighthouseFileMeaning(file) {
+  // no file yet: Lighthouse starts with its defaults
+  file = file ?? {};
+  return {
+    min_bid: Number(file.min_bid ?? 0),
+    builder_boost_factor: Number(file.builder_boost_factor ?? 100),
+    builders: (file.builders ?? []).map((b) => ({
+      enabled: b.enabled !== false,
+      url: String(b.url ?? ""),
+      auth_data: b.auth_data ?? null,
+      builder_pubkeys: b.builder_pubkeys ?? [],
+      max_execution_payment: Number(b.max_execution_payment ?? 0),
+      min_bid: b.min_bid ?? null,
+      builder_boost_factor: b.builder_boost_factor ?? null,
+    })),
+    validator_configs: file.validator_configs ?? {},
+  };
+}
+
+/** whether Lighthouse's builder file already holds Stereum's part */
+export function lighthouseFileInSync(existing, file) {
+  return (
+    JSON.stringify(lighthouseFileMeaning(mergeLighthouseBuilderFile(existing, file))) === JSON.stringify(lighthouseFileMeaning(existing))
+  );
 }
 
 // the boost factor a client uses when none is set
@@ -314,4 +362,19 @@ export function currentBoost(service, command, beaconCommand) {
     default:
       return null;
   }
+}
+
+// a Gloas bid request with zero values: an ePBS builder rejects it as invalid, others don't know the route
+export const EPBS_PROBE_PATH = `/eth/v1/builder/execution_payload_bid/0/0x${"0".repeat(64)}/0x${"0".repeat(64)}/0x${"0".repeat(96)}`;
+
+/**
+ * What a builder's answer to the ePBS probe means.
+ * @param {number} status - HTTP status, 0 when curl got none
+ * @returns {"ready"|"no"|"unreachable"}
+ */
+export function epbsProbeResult(status) {
+  const code = Number(status);
+  if ((code >= 200 && code < 300) || [400, 401, 415, 422].includes(code)) return "ready";
+  if (code === 404 || code === 405) return "no";
+  return "unreachable";
 }

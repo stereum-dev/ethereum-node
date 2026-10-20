@@ -133,6 +133,25 @@ export const useNodeManage = defineStore("nodeManage", {
           isRemoved: false,
           freeCensorship: false,
         },
+        // testnet builders of client developers, ePBS only (checked 2026-10-20)
+        {
+          icon: "/img/icon/network-icons/ethereum-testnet-icon.png",
+          name: "nflaig Builder",
+          epbs: { hoodi: "https://builder-hoodi.nflaig.dev", sepolia: "https://builder-sepolia.nflaig.dev" },
+          id: 13,
+          isSelected: false,
+          isRemoved: false,
+          freeCensorship: true,
+        },
+        {
+          icon: "/img/icon/network-icons/ethereum-testnet-icon.png",
+          name: "pk910 Builder",
+          epbs: { hoodi: "https://builder-hoodi.pk910.de" },
+          id: 14,
+          isSelected: false,
+          isRemoved: false,
+          freeCensorship: true,
+        },
       ],
 
       selectedItemToRemove: [],

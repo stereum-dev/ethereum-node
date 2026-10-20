@@ -2,7 +2,7 @@ import {
   ethToGwei,
   builderUrl,
   normalizeAuthData,
-  effectiveBuilderSettings,
+  clientBuilderSettings,
   validateBuilderSettings,
   builderSupport,
   builderConfiguration,
@@ -12,6 +12,9 @@ import {
   DEFAULT_BUILDER_SETTINGS,
   bidOutcome,
   mevBoostMinBid,
+  lighthouseFileInSync,
+  capsTrustedPayments,
+  epbsProbeResult,
   currentBoost,
 } from "@/share/builders";
 import { gloasForkTime } from "@/share/gloasFork";
@@ -49,12 +52,17 @@ test("auth data is hex or empty", () => {
   expect(normalizeAuthData("relay.example")).toBeNull();
 });
 
-test("a validator client uses the setup's settings unless it has its own", () => {
-  const builders = { ...settings(), clients: { vc1: { own: true, relays: [], boostFactor: 0 }, vc2: { own: false, relays: [] } } };
-  expect(effectiveBuilderSettings(builders, "vc1")).toMatchObject({ own: true, relays: [], boostFactor: 0 });
-  expect(effectiveBuilderSettings(builders, "vc2").relays).toHaveLength(2);
-  expect(effectiveBuilderSettings(builders, "vc3").own).toBe(false);
-  expect(effectiveBuilderSettings(undefined, "vc3")).toMatchObject({ relays: [], minBid: "0" });
+test("each validator client has its own settings, and setups saved with a setup default keep working", () => {
+  const perClient = { route: "direct", clients: { vc1: { ...settings(), boostFactor: 0 } } };
+  expect(clientBuilderSettings(perClient, "vc1")).toMatchObject({ relays: [TITAN, OTHER], boostFactor: 0 });
+  expect(clientBuilderSettings(perClient, "vc2")).toMatchObject({ relays: [], minBid: "0" });
+  // the earlier layout: the setup's settings at the top, "own" for a client with its own
+  const legacy = { ...settings(), clients: { vc1: { own: true, relays: [], boostFactor: 0 }, vc2: { own: false } } };
+  expect(clientBuilderSettings(legacy, "vc1")).toMatchObject({ relays: [], boostFactor: 0 });
+  expect(clientBuilderSettings(legacy, "vc2").relays).toHaveLength(2);
+  expect(clientBuilderSettings(legacy, "vc3").relays).toHaveLength(2);
+  expect(clientBuilderSettings(legacy, "vc1")).not.toHaveProperty("own");
+  expect(clientBuilderSettings(undefined, "vc3")).toMatchObject({ relays: [], minBid: "0" });
 });
 
 test("validation names every bad value", () => {
@@ -139,11 +147,16 @@ test("applying replaces Stereum's builder flags and keeps everything else", () =
 });
 
 test("Nimbus gets --payload-builder with its builder URL", () => {
-  expect(applyBuilderFlags("NimbusValidatorService", ["--network=hoodi"], ["--payload-builder-url=https://r.example"])).toEqual([
+  const first = applyBuilderFlags("NimbusValidatorService", ["--network=hoodi"], ["--payload-builder-url=https://r.example"], false);
+  expect(first).toEqual(["--network=hoodi", "--payload-builder", "--payload-builder-url=https://r.example"]);
+  // a second save sees the client in sync
+  expect(applyBuilderFlags("NimbusValidatorService", first, ["--payload-builder-url=https://r.example"], false)).toEqual(first);
+  // without a builder URL it keeps --payload-builder only for MEV-Boost
+  expect(applyBuilderFlags("NimbusValidatorService", first, ["--builder-boost-factor=0"], false)).toEqual([
     "--network=hoodi",
-    "--payload-builder-url=https://r.example",
-    "--payload-builder",
+    "--builder-boost-factor=0",
   ]);
+  expect(applyBuilderFlags("NimbusValidatorService", first, [], true)).toEqual(["--network=hoodi", "--payload-builder"]);
   expect(applyBuilderFlags("NimbusValidatorService", ["--payload-builder=true"], ["--payload-builder-url=https://r.example"])).toEqual([
     "--payload-builder=true",
     "--payload-builder-url=https://r.example",
@@ -174,10 +187,9 @@ test("builder settings are only written to releases that follow the network's fo
     reason: "update",
     minimum: "26.10.1",
   });
-  // no Hoodi release of Prysm yet
   expect(builderSupport({ service: "PrysmValidatorService", version: "v7.2.1", network: "hoodi", now: before })).toMatchObject({
     reason: "update",
-    minimum: null,
+    minimum: "7.3.0-rc.1",
   });
   expect(builderSupport({ service: "LodestarValidatorService", version: "v1.50.0", network: "mainnet", now: before })).toMatchObject({
     reason: "not-scheduled",
@@ -204,16 +216,22 @@ test("stored settings carry only clean names, builder URLs and auth data, and no
   expect(builderUrl("https://relay.example/$(id)")).toBeNull();
   expect(builderUrl("https://relay.example/`id`")).toBeNull();
   const cleaned = cleanBuilderSettings({
-    ...settings(),
-    relays: [
-      { name: "Titan $x", url: TITAN.url },
-      { name: "Bad", url: "https://x/$(id)" },
-    ],
-    clients: { vc1: { own: true, relays: [OTHER] }, vc2: { own: false, relays: [TITAN] } },
+    clients: {
+      vc1: {
+        ...settings(),
+        own: true,
+        relays: [
+          { name: "Titan $x", url: TITAN.url },
+          { name: "Bad", url: "https://x/$(id)" },
+        ],
+      },
+      vc2: { relays: [OTHER] },
+    },
   });
-  expect(cleaned.relays).toEqual([{ name: "Titan x", url: "https://hoodi.titanrelay.xyz", authData: "" }]);
-  expect(cleaned.clients.vc1.relays).toEqual([{ name: "Other", url: "https://relay.example", authData: "0x0123" }]);
-  expect(cleaned.clients.vc2).toEqual({ own: false });
+  expect(cleaned.route).toBe("direct");
+  expect(cleaned.clients.vc1.relays).toEqual([{ name: "Titan x", url: "https://hoodi.titanrelay.xyz", authData: "" }]);
+  expect(cleaned.clients.vc1).not.toHaveProperty("own");
+  expect(cleaned.clients.vc2).toMatchObject({ relays: [{ name: "Other", url: "https://relay.example", authData: "0x0123" }], minBid: "0" });
 });
 
 test("the calculator follows each client: its default boost, the minimum bid and the capped promised payment", () => {
@@ -273,4 +291,75 @@ test("Nimbus from 26.10.1 gets the minimum bid and an explicit max trusted payme
   const promised = { local: "0.05", paid: "0.03", promised: "0.04" };
   expect(bidOutcome("NimbusValidatorService", DEFAULT_BUILDER_SETTINGS, promised, "multiarch-v26.10.1").winner).toBe("local");
   expect(bidOutcome("NimbusValidatorService", DEFAULT_BUILDER_SETTINGS, promised, "latest").winner).toBe("builder");
+});
+
+test("Lodestar gets a selection by name for local and most profit, and the boost factor only for other values", () => {
+  const lodestar = (boostFactor) =>
+    builderConfiguration("LodestarValidatorService", settings({ relays: [TITAN], boostFactor })).flags.slice(1);
+  expect(lodestar(null)).toEqual([]);
+  expect(lodestar(0)).toEqual(["--builder.selection=executionalways"]);
+  expect(lodestar(100)).toEqual(["--builder.selection=maxprofit"]);
+  expect(lodestar(80)).toEqual(["--builder.selection=maxprofit", "--builder.boostFactor=80"]);
+  // switching from most profit to local replaces the selection
+  const command = [
+    "--network=hoodi",
+    "--builder.urls=https://hoodi.titanrelay.xyz",
+    "--builder.selection=maxprofit",
+    "--builder.boostFactor=100",
+  ];
+  const flags = builderConfiguration("LodestarValidatorService", settings({ relays: [TITAN], boostFactor: 0 })).flags;
+  expect(applyBuilderFlags("LodestarValidatorService", command, flags)).toEqual([
+    "--network=hoodi",
+    "--builder.urls=https://hoodi.titanrelay.xyz",
+    "--builder.selection=executionalways",
+  ]);
+  expect(currentBoost("LodestarValidatorService", ["--builder.selection=executionalways"])).toBe(0);
+  expect(currentBoost("LodestarValidatorService", ["--builder.selection=maxprofit"])).toBe(100);
+});
+
+test("the other clients take the block choice as a boost factor that each save replaces or removes", () => {
+  const apply = (service, command, boostFactor) =>
+    applyBuilderFlags(
+      service,
+      command,
+      builderConfiguration(service, settings({ relays: [TITAN], boostFactor }), "multiarch-v26.10.1").flags
+    );
+  for (const [service, flag] of [
+    ["PrysmValidatorService", "--builder-boost-factor"],
+    ["TekuValidatorService", "--Xbuilder-boost-factor"],
+    ["NimbusValidatorService", "--builder-boost-factor"],
+  ]) {
+    const profit = apply(service, ["--network=hoodi"], 100);
+    const local = apply(service, profit, 0);
+    const back = apply(service, local, null);
+    expect(profit.filter((c) => c.startsWith(flag))).toEqual([`${flag}=100`]);
+    expect(local.filter((c) => c.startsWith(flag))).toEqual([`${flag}=0`]);
+    expect(back.filter((c) => c.startsWith(flag))).toEqual([]);
+  }
+  const file = (boostFactor) => builderConfiguration("LighthouseValidatorService", settings({ relays: [TITAN], boostFactor })).file;
+  expect(mergeLighthouseBuilderFile(file(100), file(0)).builder_boost_factor).toBe(0);
+  expect(mergeLighthouseBuilderFile(file(0), file(null))).not.toHaveProperty("builder_boost_factor");
+});
+
+test("an ePBS builder rejects the empty bid request, others don't know the route", () => {
+  expect([200, 204, 400, 401, 415, 422].map(epbsProbeResult)).toEqual(Array(6).fill("ready"));
+  expect([404, 405].map(epbsProbeResult)).toEqual(["no", "no"]);
+  expect([0, 403, 500, 502, "x"].map(epbsProbeResult)).toEqual(Array(5).fill("unreachable"));
+});
+
+test("Lighthouse's builder file is compared by what it means, with its defaults filled in", () => {
+  const own = { min_bid: 0, builder_boost_factor: 100, builders: [] };
+  const empty = builderConfiguration("LighthouseValidatorService", settings({ relays: [] })).file;
+  expect(lighthouseFileInSync(own, empty)).toBe(true);
+  expect(lighthouseFileInSync(null, empty)).toBe(true);
+  const titan = builderConfiguration("LighthouseValidatorService", settings({ relays: [{ url: "https://hoodi.titanrelay.xyz" }] })).file;
+  expect(lighthouseFileInSync(own, titan)).toBe(false);
+  expect(lighthouseFileInSync({ ...titan, builder_boost_factor: 100, validator_configs: { "0xab": {} } }, titan)).toBe(true);
+  expect(lighthouseFileInSync({ ...titan, builder_boost_factor: 90 }, titan)).toBe(false);
+});
+
+test("only Nimbus before 26.10.1 counts every promised payment", () => {
+  expect(capsTrustedPayments("LodestarValidatorService", "v1.50.0")).toBe(true);
+  expect(capsTrustedPayments("NimbusValidatorService", "multiarch-v26.10.1")).toBe(true);
+  expect(capsTrustedPayments("NimbusValidatorService", "multiarch-v26.10.0")).toBe(false);
 });

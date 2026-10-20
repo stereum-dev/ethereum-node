@@ -45,21 +45,23 @@ function setup({ lodestarVersion = "v1.50.0", running = ["lodestar"], beaconMev 
   return { bs: new BuilderSettings(serviceManager), serviceManager, services, subtasks, multisetup: () => multisetup };
 }
 
-const builders = {
+const titan = {
   relays: [{ name: "Titan", url: "https://0xaa@hoodi.titanrelay.xyz" }],
   minBid: "0",
   maxExecutionPayment: "0",
   boostFactor: null,
 };
+const builders = { clients: Object.fromEntries(["lodestar", "teku", "prysm", "dvt"].map((id) => [id, titan])) };
 
 // one day before the Hoodi fork, with a Prysm release for it
+const prysmMinimum = GLOAS_MIN_VERSIONS.hoodi.PrysmValidatorService;
 beforeAll(() => {
   jest.useFakeTimers().setSystemTime((gloasForkTime("hoodi") - 86400) * 1000);
   GLOAS_MIN_VERSIONS.hoodi.PrysmValidatorService = "7.2.1";
 });
 afterAll(() => {
   jest.useRealTimers();
-  delete GLOAS_MIN_VERSIONS.hoodi.PrysmValidatorService;
+  GLOAS_MIN_VERSIONS.hoodi.PrysmValidatorService = prysmMinimum;
 });
 
 test("saving writes the setup's settings and the flags of the clients that can take them, and restarts the running ones", async () => {
@@ -68,7 +70,9 @@ test("saving writes the setup's settings and the flags of the clients that can t
   const result = await bs.setBuilderSettings({ setupId: SETUP, builders });
 
   expect(result.code).toBe(0);
-  expect(multisetup()[SETUP].builders.relays).toEqual([{ name: "Titan", url: "https://hoodi.titanrelay.xyz", authData: "" }]);
+  expect(multisetup()[SETUP].builders.clients.lodestar.relays).toEqual([
+    { name: "Titan", url: "https://hoodi.titanrelay.xyz", authData: "" },
+  ]);
   expect(services[1].command).toEqual(["--network=hoodi", "--builder", "--builder.urls=https://hoodi.titanrelay.xyz"]);
   expect(serviceManager.writeServiceConfigurationKeepingAutoupdate).toHaveBeenCalledTimes(1);
   expect(serviceManager.manageServiceState).toHaveBeenCalledWith("lodestar", "restarted");
@@ -84,14 +88,7 @@ test("saving writes the setup's settings and the flags of the clients that can t
     ])
   );
   expect(subtasks.map((s) => s.name)).toEqual(
-    expect.arrayContaining([
-      "Saved setup settings",
-      "Lodestar: flags",
-      "Lodestar: restarted",
-      "Teku: update",
-      "Prysm: after-fork",
-      "Result",
-    ])
+    expect.arrayContaining(["Saved settings", "Lodestar: flags", "Lodestar: restarted", "Teku: update", "Prysm: after-fork", "Result"])
   );
   expect(subtasks.every((s) => s.name.length <= 28)).toBe(true);
 });
@@ -120,7 +117,7 @@ test("a stopped client gets its flags but stays stopped, and Prysm takes them ea
 
 test("bad settings are refused before anything is written", async () => {
   const { bs, serviceManager } = setup();
-  const result = await bs.setBuilderSettings({ setupId: SETUP, builders: { ...builders, minBid: "abc" } });
+  const result = await bs.setBuilderSettings({ setupId: SETUP, builders: { clients: { lodestar: { ...titan, minBid: "abc" } } } });
   expect(result).toEqual({ code: 1, info: "invalid minimum bid" });
   expect(serviceManager.configManager.writeMultiSetup).not.toHaveBeenCalled();
 });
@@ -146,4 +143,91 @@ test("the dialog gets the setup's relays from MEV-Boost and what each client wou
     ["prysm", "after-fork"],
     ["dvt", "dvt"],
   ]);
+});
+
+test("each client gets its own settings, and a client no longer in the setup is dropped", async () => {
+  const { bs, services, multisetup } = setup({ beaconMev: [{ id: "mev" }] });
+
+  await bs.setBuilderSettings({
+    setupId: SETUP,
+    builders: { clients: { lodestar: titan, prysm: { ...titan, relays: [] }, gone: titan } },
+  });
+
+  expect(services[1].command).toContain("--builder.urls=https://hoodi.titanrelay.xyz");
+  expect(services[3].command.some((c) => c.startsWith("--builder-urls"))).toBe(false);
+  expect(Object.keys(multisetup()[SETUP].builders.clients)).toEqual(["lodestar", "prysm"]);
+});
+
+test("a setup saved with a setup default is read as settings per client", async () => {
+  const { bs, services } = setup();
+  bs.serviceManager.configManager.readMultiSetup = jest.fn(() =>
+    Promise.resolve(
+      YAML.stringify({
+        [SETUP]: {
+          name: "ethSetup1",
+          network: "hoodi",
+          services: services.map((s) => s.id),
+          builders: {
+            ...titan,
+            relays: [{ name: "Titan", url: "https://hoodi.titanrelay.xyz", authData: "" }],
+            clients: { teku: { own: true, relays: [] } },
+          },
+        },
+      })
+    )
+  );
+
+  const [entry] = await bs.getBuilderSettings();
+
+  expect(entry.saved).toBe(true);
+  expect(entry.builders.clients.lodestar.relays).toHaveLength(1);
+  expect(entry.builders.clients.teku.relays).toEqual([]);
+});
+
+test("without restart the flags are written and the running clients keep running until their next restart", async () => {
+  const { bs, serviceManager, services, subtasks } = setup();
+
+  const result = await bs.setBuilderSettings({ setupId: SETUP, builders, restart: false });
+
+  expect(services[1].command).toContain("--builder.urls=https://hoodi.titanrelay.xyz");
+  expect(serviceManager.manageServiceState).not.toHaveBeenCalled();
+  expect(result.results).toEqual(expect.arrayContaining([{ id: "lodestar", applied: true, changed: true, restarted: false }]));
+  expect(subtasks.map((s) => s.name)).toContain("Lodestar: not restarted");
+});
+
+test("the ePBS check asks every builder once from the server and reports each answer", async () => {
+  const { bs, serviceManager, subtasks } = setup();
+  const answers = { "hoodi.titanrelay.xyz": "bad request\n400", "relay-hoodi.ultrasound.money": "\n404", "down.example": "\n000" };
+  serviceManager.nodeConnection.sshService.exec.mockImplementation((cmd) => {
+    const host = Object.keys(answers).find((h) => cmd.includes(h));
+    return Promise.resolve({ rc: 0, stdout: answers[host], stderr: "" });
+  });
+
+  const result = await bs.probeBuilders({
+    urls: [
+      "https://0xaa@hoodi.titanrelay.xyz",
+      "https://hoodi.titanrelay.xyz/",
+      "https://relay-hoodi.ultrasound.money",
+      "https://down.example",
+      "not a url",
+    ],
+  });
+
+  expect(result).toEqual([
+    { url: "https://hoodi.titanrelay.xyz", status: 400, result: "ready" },
+    { url: "https://relay-hoodi.ultrasound.money", status: 404, result: "no" },
+    { url: "https://down.example", status: 0, result: "unreachable" },
+  ]);
+  expect(serviceManager.nodeConnection.sshService.exec).toHaveBeenCalledTimes(3);
+  expect(serviceManager.nodeConnection.sshService.exec.mock.calls[0][0]).toContain(
+    "-X POST -H 'Content-Type: application/json' -H 'Eth-Consensus-Version: gloas'"
+  );
+  expect(subtasks.map((s) => [s.name, s.ok])).toEqual([
+    ["hoodi.titanrelay.xyz", true],
+    ["relay-hoodi.ultrasound.money", true],
+    ["down.example", false],
+    ["Result", true],
+  ]);
+  expect(subtasks[0].data).toContain("HTTP 400: ready\nbad request");
+  expect(subtasks[3].data).toBe("1 of 3 answer ePBS");
 });

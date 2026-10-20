@@ -69,7 +69,7 @@ test("the result says when the fork has passed", () => {
 test("networks without a schedule, unchecked services and unknown tags are skipped", () => {
   const result = gloasReadiness(
     [
-      service("PrysmBeaconService", "hoodi", "v7.2.1"),
+      service("FlashbotsMevBoostService", "hoodi", "1.12"),
       service("TekuBeaconService", "mainnet", "26.8.1"),
       service("MetricsExporterService", "sepolia", "v1.0.0"),
       service("GethService", "sepolia", "latest"),
@@ -87,7 +87,7 @@ test("a service without a compatible release is always listed", () => {
   expect(sepolia.outdated).toEqual([{ name: "Obol Charon", service: "CharonService", version: "v1.11.0", minimum: null }]);
 });
 
-test("on hoodi only clients with a release for its fork are checked so far", () => {
+test("on hoodi every client is checked, also those without a release for its fork", () => {
   const result = gloasReadiness(
     [
       service("LodestarBeaconService", "hoodi", "v1.49.0", "Lodestar"),
@@ -95,6 +95,10 @@ test("on hoodi only clients with a release for its fork are checked so far", () 
       service("TekuBeaconService", "hoodi", "26.10.0", "Teku"),
       service("NimbusBeaconService", "hoodi", "multiarch-v26.10.1", "Nimbus"),
       service("PrysmBeaconService", "hoodi", "v7.2.1", "Prysm"),
+      service("BesuService", "hoodi", "26.9.0", "Besu"),
+      service("GethService", "hoodi", "v1.17.8", "Geth"),
+      service("EthrexService", "hoodi", "30.0.0-rc.2", "Ethrex"),
+      service("EthrexService", "hoodi", "29.0.1", "Ethrex old"),
     ],
     HOODI_FORK - 86400
   );
@@ -107,6 +111,10 @@ test("on hoodi only clients with a release for its fork are checked so far", () 
       outdated: [
         { name: "Lodestar", service: "LodestarBeaconService", version: "v1.49.0", minimum: "1.50.0" },
         { name: "Teku", service: "TekuBeaconService", version: "26.10.0", minimum: "26.10.1" },
+        { name: "Prysm", service: "PrysmBeaconService", version: "v7.2.1", minimum: "7.3.0-rc.1" },
+        { name: "Besu", service: "BesuService", version: "26.9.0", minimum: "26.10.0" },
+        { name: "Geth", service: "GethService", version: "v1.17.8", minimum: null },
+        { name: "Ethrex old", service: "EthrexService", version: "29.0.1", minimum: "30.0.0-rc.1" },
       ],
     },
   ]);

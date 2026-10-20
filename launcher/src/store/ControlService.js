@@ -312,6 +312,10 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("setBuilderSettings", args);
   }
 
+  async probeBuilders(args) {
+    return await this.promiseIpc.send("probeBuilders", args);
+  }
+
   async handleServiceChanges(args) {
     return await this.promiseIpc.send("handleServiceChanges", args);
   }

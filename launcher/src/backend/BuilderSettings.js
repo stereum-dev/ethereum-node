@@ -5,16 +5,19 @@ import { StringUtils } from "./StringUtils.js";
 import { isObolDVTService } from "@/share/ObolDVTServices";
 import {
   BUILDER_CLIENTS,
-  DEFAULT_BUILDER_SETTINGS,
-  effectiveBuilderSettings,
+  clientBuilderSettings,
   validateBuilderSettings,
   cleanBuilderSettings,
   builderSupport,
   builderConfiguration,
   applyBuilderFlags,
   mergeLighthouseBuilderFile,
+  lighthouseFileInSync,
   mevBoostMinBid,
   currentBoost,
+  builderUrl,
+  EPBS_PROBE_PATH,
+  epbsProbeResult,
 } from "@/share/builders";
 
 const SHORT_NAMES = {
@@ -43,8 +46,8 @@ function skipReason({ support, version }, network) {
 }
 
 /**
- * Builder settings (Glamsterdam / ePBS) per setup, stored as "builders" in the setup's entry of
- * multisetup.yaml, and written to the setup's validator clients as flags (Lighthouse: a file).
+ * Builder settings (Glamsterdam / ePBS) per validator client, stored as "builders" in the setup's entry of
+ * multisetup.yaml, and written to the validator clients as flags (Lighthouse: a file).
  */
 export class BuilderSettings {
   constructor(serviceManager) {
@@ -111,7 +114,11 @@ export class BuilderSettings {
     for (const [setupId, setup] of Object.entries(setups)) {
       const validators = this.validatorsOf(setup, services, running);
       if (!validators.length) continue;
-      const builders = { ...DEFAULT_BUILDER_SETTINGS, ...(setup.builders ?? {}) };
+      // one entry per client, also for setups saved with the setup's settings at the top
+      const builders = {
+        route: setup.builders?.route ?? "direct",
+        clients: Object.fromEntries(validators.map((v) => [v.service.id, clientBuilderSettings(setup.builders, v.service.id)])),
+      };
       const mevBoost = services.find((s) => (setup.services ?? []).includes(s.id) && s.service === "FlashbotsMevBoostService");
       const relaysAt = mevBoost?.entrypoint?.indexOf("-relays") ?? -1;
       const mevBoostRelays =
@@ -140,7 +147,7 @@ export class BuilderSettings {
   }
 
   async describe({ service, dvt, usesMevBoost, beaconCommand, running }, builders, network) {
-    const settings = effectiveBuilderSettings(builders, service.id);
+    const settings = clientBuilderSettings(builders, service.id);
     const support = dvt
       ? { apply: false, reason: "dvt", minimum: null }
       : builderSupport({ service: service.service, version: service.imageVersion, network, usesMevBoost });
@@ -150,9 +157,10 @@ export class BuilderSettings {
       if (file) {
         const path = this.lighthouseFilePath(service);
         const current = path ? await this.readLighthouseFile(path) : null;
-        inSync = JSON.stringify(mergeLighthouseBuilderFile(current, file)) === JSON.stringify(current ?? null);
+        inSync = lighthouseFileInSync(current, file);
       } else {
-        inSync = JSON.stringify(applyBuilderFlags(service.service, service.command, flags)) === JSON.stringify(service.command);
+        inSync =
+          JSON.stringify(applyBuilderFlags(service.service, service.command, flags, usesMevBoost)) === JSON.stringify(service.command);
       }
     }
     return {
@@ -163,7 +171,6 @@ export class BuilderSettings {
       usesMevBoost,
       // the boost it is set to before the fork, for the first settings
       currentBoost: currentBoost(service.service, service.command, beaconCommand),
-      own: settings.own,
       support,
       flags,
       file,
@@ -173,14 +180,13 @@ export class BuilderSettings {
   }
 
   /**
-   * Saves a setup's builder settings and writes them to its validator clients; running ones are restarted.
-   * @param {Object} args - { setupId, builders }
+   * Saves the builder settings of a setup's validator clients and writes them. Running ones are restarted
+   * unless restart is false: then the settings take effect at their next restart.
+   * @param {Object} args - { setupId, builders: { clients: { <service id>: settings } }, restart }
    * @returns {{ code: number, info?: string, results?: Array }} code 0 = saved
    */
-  async setBuilderSettings({ setupId, builders } = {}) {
-    const problems = [builders, ...Object.values(builders?.clients ?? {}).filter((c) => c?.own)].flatMap((s) =>
-      validateBuilderSettings(s ?? {})
-    );
+  async setBuilderSettings({ setupId, builders, restart = true } = {}) {
+    const problems = [...new Set(Object.values(builders?.clients ?? {}).flatMap((s) => validateBuilderSettings(s ?? {})))];
     if (problems.length) return { code: 1, info: problems.join(", ") };
 
     const ref = StringUtils.createRandomString();
@@ -196,14 +202,11 @@ export class BuilderSettings {
       tm?.otherTasksHandler(ref, `Set builders (${validators.length})`);
 
       const cleaned = cleanBuilderSettings(builders);
-      setup.builders = {
-        ...DEFAULT_BUILDER_SETTINGS,
-        ...cleaned,
-        // a client that was removed from the setup takes its own settings with it
-        clients: Object.fromEntries(Object.entries(cleaned.clients ?? {}).filter(([id]) => validators.some((v) => v.service.id === id))),
-      };
+      // a client that was removed from the setup takes its settings with it
+      const ids = new Set(validators.map((v) => v.service.id));
+      setup.builders = { route: cleaned.route, clients: Object.fromEntries(Object.entries(cleaned.clients).filter(([id]) => ids.has(id))) };
       await this.serviceManager.configManager.writeMultiSetup(setups);
-      subtask("Saved setup settings", true, YAML.stringify(setup.builders));
+      subtask("Saved settings", true, YAML.stringify(setup.builders));
 
       for (const v of validators) {
         const name = SHORT_NAMES[v.service.service];
@@ -214,7 +217,7 @@ export class BuilderSettings {
           continue;
         }
         if (entry.inSync) {
-          subtask(`${name}: unchanged`, true, entry.flags.join("\n"));
+          subtask(`${name}: unchanged`, true, entry.file ? YAML.stringify(entry.file) : entry.flags.join("\n") || "no builder flags");
           results.push({ id: v.service.id, applied: true, changed: false });
           continue;
         }
@@ -230,15 +233,17 @@ export class BuilderSettings {
             if (SSHService.checkExecError(write)) throw new Error(SSHService.extractExecError(write));
             subtask(`${name}: builder file`, true, YAML.stringify(merged));
           } else {
-            v.service.command = applyBuilderFlags(v.service.service, v.service.command, entry.flags);
+            v.service.command = applyBuilderFlags(v.service.service, v.service.command, entry.flags, v.usesMevBoost);
             await this.serviceManager.writeServiceConfigurationKeepingAutoupdate(v.service);
             subtask(`${name}: flags`, true, entry.flags.join("\n") || "no builder flags");
           }
-          if (v.running) {
+          if (v.running && restart) {
             await this.serviceManager.manageServiceState(v.service.id, "restarted");
-            subtask(`${name}: restarted`, true);
+            subtask(`${name}: restarted`, true, "restarted to load the new settings");
+          } else if (v.running) {
+            subtask(`${name}: not restarted`, true, "takes effect at its next restart");
           }
-          results.push({ id: v.service.id, applied: true, changed: true, restarted: v.running });
+          results.push({ id: v.service.id, applied: true, changed: true, restarted: v.running && restart });
         } catch (err) {
           log.error(`Writing the builder settings of ${v.service.id} failed:`, err);
           subtask(`${name}: failed`, false, err?.message ?? String(err));
@@ -253,6 +258,51 @@ export class BuilderSettings {
       log.error("Setting the builder settings failed:", err);
       subtask("Result", false, err?.message ?? String(err));
       return { code: 1, info: err?.message ?? String(err) };
+    } finally {
+      tm?.otherTasksHandler(ref);
+    }
+  }
+
+  /**
+   * Asks builders from the server whether they serve the ePBS (Gloas) builder API.
+   * @param {Object} args - { urls: [builder url] }
+   * @returns {Array<{ url: string, status: number, result: "ready"|"no"|"unreachable" }>}
+   */
+  async probeBuilders({ urls = [] } = {}) {
+    const list = [...new Set(urls.map((u) => builderUrl(u)).filter(Boolean))];
+    if (!list.length) return [];
+    const ref = StringUtils.createRandomString();
+    const tm = this.nodeConnection.taskManager;
+    tm?.otherTasksHandler(ref, `Check relays (${list.length})`);
+    try {
+      const results = await Promise.all(
+        list.map(async (url) => {
+          const request = `${url}${EPBS_PROBE_PATH}`;
+          const exec = await this.nodeConnection.sshService
+            .exec(
+              `curl -s -m 5 -X POST -H 'Content-Type: application/json' -H 'Eth-Consensus-Version: gloas' -d '{}' -w '\\n%{http_code}' ${StringUtils.escapeStringForShell(request)} || true`
+            )
+            .catch((err) => ({ stdout: "", stderr: err?.message ?? String(err) }));
+          const lines = String(exec?.stdout ?? "").split("\n");
+          const status = Number(lines.pop()) || 0;
+          const result = epbsProbeResult(status);
+          const answer = (lines.join("\n").trim() || String(exec?.stderr ?? "").trim()).slice(0, 500);
+          tm?.otherTasksHandler(
+            ref,
+            new URL(url).host,
+            result !== "unreachable",
+            `POST ${request}\nHTTP ${status || "none"}: ${result}\n${answer}`
+          );
+          return { url, status, result };
+        })
+      );
+      const ready = results.filter((r) => r.result === "ready").length;
+      tm?.otherTasksHandler(ref, "Result", true, `${ready} of ${results.length} answer ePBS`);
+      return results;
+    } catch (err) {
+      log.error("Checking the builders failed:", err);
+      tm?.otherTasksHandler(ref, "Result", false, err?.message ?? String(err));
+      return [];
     } finally {
       tm?.otherTasksHandler(ref);
     }

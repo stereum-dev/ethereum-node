@@ -1078,17 +1078,23 @@
     "loading": "Loading builder settings",
     "noSetups": "This setup has no validator client that can use builders",
     "setup": "Setup",
-    "intro": "From Glamsterdam on, the validator clients ask the relays for blocks themselves instead of going through MEV-Boost. These settings apply to all validator clients of the setup unless one has its own.",
+    "intro": "From Glamsterdam on, the validator clients ask the relays for blocks themselves instead of going through MEV-Boost. Each validator client has its own settings.",
     "migrationMissing": "No builder address on {network} yet: {relays}. They can be added once they serve one.",
-    "setupDefault": "Setup default",
-    "useDefault": "Use setup default",
-    "ownSettings": "Own settings",
-    "ownShort": "own",
     "gets": "Gets",
     "noFlags": "No builder settings: local blocks and p2p bids only",
     "relays": "Relays",
     "readyOn": "ready for ePBS on {network}",
     "notYet": "not on {network} yet",
+    "probe": {
+      "notListed": "answers ePBS, not in Stereum's list yet",
+      "noRoute": "doesn't answer ePBS now",
+      "unreachable": "not reachable from the server",
+      "title": {
+        "ready": "Answers the ePBS builder API (HTTP {status}), checked from the server",
+        "no": "Doesn't know the ePBS builder API (HTTP {status}), checked from the server",
+        "unreachable": "No answer from the server's side (HTTP {status})"
+      }
+    },
     "custom": "Custom",
     "removeRelay": "Remove relay",
     "customPlaceholder": "https://builder.example",
@@ -1126,7 +1132,6 @@
       "auth-ignored": "This client ignores auth data and always uses the host name",
       "no-limits": "Nimbus before 26.10.1 has no minimum bid and counts every promised payment"
     },
-    "applied": "Set on {ok} of {total} validator client | Set on {ok} of {total} validator clients",
     "cancel": "Cancel",
     "save": "Save & apply",
     "source": {
@@ -1135,16 +1140,14 @@
       "saved": "Saved for this setup."
     },
     "fromMevBoost": "Take over from MEV-Boost again",
-    "settingsFor": "Settings for",
     "tab": {
       "relays": "Relays",
       "bids": "Bids",
-      "clients": "Clients",
+      "calc": "Calculator",
       "expert": "Expert"
     },
     "noRelaysHint": "Without relays the validator clients still get bids that builders send over the network, and build the block themselves when those pay less.",
-    "clientsHint": "Each validator client uses the setup's settings unless you give it its own. \"Gets\" shows what Save writes for it.",
-    "editOwn": "Edit its settings",
+    "trustedZeroNote": "Relay bids count only what the protocol pays. Their promised payments are ignored until you set a max trusted payment (Bids).",
     "authData": "Auth data per relay",
     "minBidHint": "Bids that pay less are ignored and the block is built locally. 0 = no minimum.",
     "calc": {
@@ -1152,7 +1155,8 @@
       "local": "Local block worth",
       "paid": "Bid, paid by the protocol",
       "promised": "Bid, promised in the block",
-      "promisedHint": "Only relays' bids can carry promised payments, and they count up to the max trusted payment (Expert).",
+      "uses": "With this client's Bids settings: block choice {boost}%, minimum bid {minBid} ETH, max trusted payment {max} ETH.",
+      "promisedHint": "Only relays' bids can carry promised payments, and they count up to the max trusted payment (Bids).",
       "counts": "counts {counted} ETH at {boost}%",
       "builderBlock": "Builder block",
       "localBlock": "Local block",
@@ -1185,8 +1189,16 @@
       "outdated": {
         "title": "Validator clients to update",
         "text": "These settings cannot reach every validator client yet."
-      }
-    }
+      },
+      "restart": {
+        "title": "Restart validator clients?",
+        "text": "The new settings only take effect when a validator client restarts. While it restarts it misses a few duties."
+      },
+      "restarts": "Restarts: {clients}. Without a restart they keep running with their old settings until their next restart, for example after an update.",
+      "withRestart": "Save and restart",
+      "withoutRestart": "Save without restart"
+    },
+    "useForAll": "Use for all clients"
   },
   "validatorsPage": {
     "clients": "Validator clients",
