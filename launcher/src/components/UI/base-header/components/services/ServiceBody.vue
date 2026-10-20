@@ -20,7 +20,9 @@ const buildersStore = useBuilders();
 
 // only inside a setup whose network has Glamsterdam scheduled and that runs a builder-capable validator client
 const showBuilders = computed(() => {
-  const setup = setupsStore.selectedSetup;
+  // the opened setup is a copy from when it was opened, its services may have loaded only since
+  const selected = setupsStore.selectedSetup;
+  const setup = setupsStore.allSetups.find((s) => s.setupId === selected?.setupId) ?? selected;
   return !!setup?.setupId && gloasForkTime(setup.network) !== null && (setup.services ?? []).some((s) => BUILDER_CLIENTS[s.service]);
 });
 let buildersTimer = null;
