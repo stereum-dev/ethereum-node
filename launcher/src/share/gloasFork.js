@@ -38,7 +38,7 @@ export const GLOAS_MIN_VERSIONS = {
     NethermindService: "2.2.0",
     BesuService: "26.10.0",
     ErigonService: "3.8.0",
-    RethService: null,
+    RethService: "2.8.0",
     EthrexService: "30.0.0-rc.1",
     LighthouseBeaconService: "8.3.0",
     LighthouseValidatorService: "8.3.0",
@@ -52,7 +52,7 @@ export const GLOAS_MIN_VERSIONS = {
     LodestarValidatorService: "1.50.0",
     GrandineBeaconService: "3.0.0-rc.1",
     Web3SignerService: "26.10.0-RC1",
-    CharonService: null,
+    CharonService: "2.0.0-rc1",
     SSVNetworkService: "2.5.0",
   },
 };
