@@ -31,10 +31,11 @@ export const GLOAS_MIN_VERSIONS = {
     GrandineBeaconService: "3.0.0-rc.0",
     Web3SignerService: "26.9.0",
     CharonService: null,
+    PlutoService: null,
     SSVNetworkService: "2.5.0",
   },
   hoodi: {
-    GethService: null,
+    GethService: "1.17.9",
     NethermindService: "2.2.0",
     BesuService: "26.10.0",
     ErigonService: "3.8.0",
@@ -52,7 +53,8 @@ export const GLOAS_MIN_VERSIONS = {
     LodestarValidatorService: "1.50.0",
     GrandineBeaconService: "3.0.0-rc.1",
     Web3SignerService: "26.10.0-RC1",
-    CharonService: "2.0.0-rc1",
+    CharonService: "2.0.0-rc2",
+    PlutoService: null,
     SSVNetworkService: "2.5.0",
   },
 };

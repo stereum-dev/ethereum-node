@@ -1,0 +1,63 @@
+---
+# A validator client of an Obol cluster takes its proposer settings (fee recipients, gas limits, builders)
+# from the proposer-config.json Charon writes, as every node of the cluster has to sign identical ones.
+# Rendered on every start, so changes to that file apply on the next start of the validator client.
+- name: Read the configs of the validator client's beacon nodes
+  ansible.builtin.slurp:
+    src: "/etc/stereum/services/{{ item.id }}.yaml"
+  loop: "{{ stereum_service_configuration.dependencies.consensusClients | default([]) }}"
+  register: obol_beacon_configs
+  failed_when: false
+  become: true
+
+- name: Find the cluster's Charon
+  ansible.builtin.set_fact:
+    obol_charon: >-
+      {{ obol_beacon_configs.results | selectattr('content', 'defined') | map(attribute='content') | map('b64decode') | map('from_yaml')
+         | selectattr('service', 'equalto', 'CharonService') | first | default(None) }}
+
+- name: Render the proposer settings from Charon's proposer config
+  when: obol_charon is mapping
+  block:
+    - name: Build the proposer config's path
+      ansible.builtin.set_fact:
+        obol_proposer_config_path: >-
+          {{ (obol_charon.volumes | select('search', ':/opt/charon$') | first | split(':') | first) ~ '/.charon/vc-config/proposer-config.json' }}
+
+    - name: Check for Charon's proposer config
+      ansible.builtin.stat:
+        path: "{{ obol_proposer_config_path }}"
+      register: obol_proposer_config
+      become: true
+
+    - name: Render the validator client's proposer settings
+      obol_vc_config:
+        service: "{{ stereum_service_configuration.service }}"
+        command: "{{ stereum_service_configuration.command | default([]) }}"
+        volumes: "{{ stereum_service_configuration.volumes | default([]) }}"
+        proposer_config_path: "{{ obol_proposer_config_path }}"
+        builder_api: "{{ '--builder-api' in (obol_charon.command | default([])) }}"
+      register: obol_render
+      when: obol_proposer_config.stat.exists
+      become: true
+
+    - name: Compare the rendered flags
+      ansible.builtin.set_fact:
+        obol_command: "{{ obol_render.command }}"
+        obol_command_changed: "{{ obol_render.command != (stereum_service_configuration.command | default([])) }}"
+      when: obol_render is not skipped
+
+    - name: Take the rendered flags
+      ansible.builtin.set_fact:
+        stereum_service_configuration: "{{ stereum_service_configuration | combine({'command': obol_command}) }}"
+      when: obol_render is not skipped and obol_command_changed
+
+    - name: Save the rendered flags
+      ansible.builtin.copy:
+        content: "{{ stereum_service_configuration | to_nice_yaml }}"
+        dest: "{{ stereum_service_config_path }}"
+        owner: "root"
+        group: "root"
+        mode: "0644"
+      when: obol_render is not skipped and obol_command_changed
+      become: true

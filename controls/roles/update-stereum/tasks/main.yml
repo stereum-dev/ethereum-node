@@ -22,12 +22,13 @@
   set_fact:
     update_data: "{{ update_data_test | default(update_data_download) }}"
 
+# settings.updates.node_version in stereum.yaml (e.g. "main") follows that branch instead of the releases
 - name: Checkout commit of latest version
   git:
     repo: https://github.com/stereum-dev/ethereum-node.git
     remote: ethereum-node
     dest: "{{ stereum.settings.controls_install_path }}/ansible"
-    version: "{{ (update_data.json['stereum'] | last)['commit'] }}"
+    version: "{{ stereum.settings.updates.node_version | default((update_data.json['stereum'] | last)['commit'], true) }}"
     force: true
   when: stereum.override_gitcommit is undefined
 

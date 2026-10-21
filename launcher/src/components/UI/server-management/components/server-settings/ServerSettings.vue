@@ -1,15 +1,15 @@
 <template>
   <div
-    class="w-full h-full col-start-1 col-span-full row-start-1 row-span-full bg-[#1b1b1d] rounded-md grid grid-cols-12 grid-rows-12 p-2 space-y-2 divide-y divide-gray-500"
+    class="w-full h-full col-start-1 col-span-full row-start-1 row-span-full bg-[#1b1b1d] rounded-md flex flex-col p-2 divide-y divide-gray-500 overflow-y-auto"
   >
-    <div class="col-start-1 col-span-full row-start-1 row-span-2 p-1 grid grid-cols-12 grid-rows-2">
-      <div class="col-start-1 col-span-full row-start-1 row-span-1 text-xs font-bold uppercase text-[#336666]">
+    <div class="p-1 pb-2 flex flex-col gap-2">
+      <div class="text-xs font-bold uppercase text-[#336666]">
         {{ t("serverSetting.nodeServerTtl") }}
       </div>
-      <div class="col-start-1 col-span-full row-start-2 row-span-1 rounded-xs px-1 grid grid-cols-12 items-center">
-        <span class="col-start-1 col-end-11 text-left text-gray-200 text-xs"> {{ t("serverSetting.auto") }}</span>
+      <div class="rounded-xs px-1 flex items-center">
+        <span class="flex-1 text-left text-gray-200 text-xs"> {{ t("serverSetting.auto") }}</span>
         <label
-          class="h-full col-start-11 col-span-full items-center relative cursor-pointer p-[2px]"
+          class="w-[4.5rem] h-8 items-center relative cursor-pointer p-[2px]"
           @mouseenter="footerStore.cursorLocation = t('serverSetting.tgl')"
           @mouseleave="footerStore.cursorLocation = ''"
         >
@@ -20,29 +20,29 @@
           >
             <div
               class="bg-white w-5 h-5 rounded-full shadow-md transform transition-transform duration-300 ease-in-out"
-              :class="{ 'translate-x-8': isAutoUpdateEnabled }"
+              :class="{ 'translate-x-10': isAutoUpdateEnabled }"
             ></div>
             <span class="text-xs text-white font-semibold uppercase" :class="onOff">{{ isAutoUpdateEnabled ? "ON" : "OFF" }}</span>
           </div>
         </label>
       </div>
     </div>
-    <div v-if="isAutoUpdateEnabled" class="col-start-1 col-span-full row-start-3 row-span-8 p-1 grid grid-cols-12 grid-rows-7 gap-y-3">
-      <div class="col-start-1 col-span-10 row-start-1 row-span-1 text-xs font-bold uppercase text-[#336666]">
-        Set your update time and date
-      </div>
-      <div
-        class="col-start-12 col-span-1 row-start-1 row-span-1 flex items-center justify-center p-1 w-8 h-full bg-black rounded-md cursor-pointer hover:scale-110 active:scale-95 transition-all duration-300 ease-in-out"
-        @click="activeEdit"
-      >
-        <img src="/img/icon/service-setting-icons/edit.png" alt="Edit" class="w-6 h-6" />
+    <div v-if="isAutoUpdateEnabled" class="p-1 py-3 flex flex-col gap-3">
+      <div class="flex items-center">
+        <div class="flex-1 text-xs font-bold uppercase text-[#336666]">Set your update time and date</div>
+        <div
+          class="flex items-center justify-center p-1 w-8 h-8 bg-black rounded-md cursor-pointer hover:scale-110 active:scale-95 transition-all duration-300 ease-in-out"
+          @click="activeEdit"
+        >
+          <img src="/img/icon/service-setting-icons/edit.png" alt="Edit" class="w-6 h-6" />
+        </div>
       </div>
 
-      <div v-if="inputMsg" class="col-start-1 col-span-full row-start-2 row-span-1 text-xs text-red-500 bg-[#2a2a2c] p-2 rounded-md">
+      <div v-if="inputMsg" class="text-xs text-red-500 bg-[#2a2a2c] p-2 rounded-md">
         {{ inputMsg }}
       </div>
 
-      <div class="col-start-1 col-span-full row-start-3 row-span-1 grid grid-cols-12 gap-2 items-center">
+      <div class="grid grid-cols-12 gap-2 items-center">
         <div class="col-span-4 text-xs text-gray-300">Days:</div>
         <div class="col-span-8">
           <input
@@ -57,8 +57,7 @@
           />
         </div>
       </div>
-
-      <div class="col-start-1 col-span-full row-start-4 row-span-1 grid grid-cols-12 gap-2 items-center">
+      <div class="grid grid-cols-12 gap-2 items-center">
         <div class="col-span-4 text-xs text-gray-300">Hours:</div>
         <div class="col-span-8">
           <input
@@ -67,14 +66,13 @@
             min="0"
             max="23"
             class="w-full h-7 bg-[#2a2a2c] text-white border border-gray-700 rounded-md p-2 text-sm focus:border-[#336666] focus:outline-hidden transition-colors"
-            placeholder="0-23"
             :class="!isEditActive ? 'cursor-not-allowed opacity-50' : ''"
             :disabled="!isEditActive"
+            placeholder="0-23"
           />
         </div>
       </div>
-
-      <div class="col-start-1 col-span-full row-start-5 row-span-1 grid grid-cols-12 gap-2 items-center">
+      <div class="grid grid-cols-12 gap-2 items-center">
         <div class="col-span-4 text-xs text-gray-300">Minutes:</div>
         <div class="col-span-8">
           <input
@@ -83,21 +81,45 @@
             min="0"
             max="59"
             class="w-full h-7 bg-[#2a2a2c] text-white border border-gray-700 rounded-md p-2 text-sm focus:border-[#336666] focus:outline-hidden transition-colors"
-            placeholder="0-59"
             :class="!isEditActive ? 'cursor-not-allowed opacity-50' : ''"
             :disabled="!isEditActive"
+            placeholder="0-59"
           />
         </div>
       </div>
 
       <button
-        class="col-start-1 col-span-full row-start-7 row-span-1 bg-linear-to-r from-[#336666] to-[#4a8080] hover:from-[#4a8080] hover:to-[#336666] text-xs uppercase text-white font-medium py-1 px-4 rounded-md transition-all duration-300 ease-in-out transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+        class="bg-linear-to-r from-[#336666] to-[#4a8080] hover:from-[#4a8080] hover:to-[#336666] text-xs uppercase text-white font-medium py-1 px-4 rounded-md transition-all duration-300 ease-in-out transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
         :class="!areInputsValid ? 'cursor-not-allowed opacity-50 pointer-events-none' : ''"
         :disabled="!areInputsValid"
         @click="confirmChanges"
       >
         Confirm
       </button>
+    </div>
+    <div class="p-1 pt-3 flex flex-col gap-2">
+      <div class="text-xs font-bold uppercase text-[#336666]">{{ t("serverSetting.nodeVersion") }}</div>
+      <div class="flex items-center gap-2 px-1">
+        <span class="flex-1 text-left text-gray-200 text-xs">{{ t("serverSetting.nodeVersionFollow") }}</span>
+        <button
+          v-for="option in nodeVersionOptions"
+          :key="option.value"
+          class="px-3 py-1 rounded-full text-xs font-semibold border transition-colors"
+          :class="
+            nodeVersion === option.value
+              ? 'bg-[#336666] border-[#4b8585] text-white'
+              : 'bg-[#1d2023] border-[#4b8585]/40 text-gray-300 hover:border-[#4b8585]'
+          "
+          :disabled="savingNodeVersion"
+          @click="setNodeVersion(option.value)"
+        >
+          {{ option.label }}
+        </button>
+      </div>
+      <div v-if="nodeVersion" class="text-2xs text-amber-300 border border-amber-500/60 bg-amber-900/20 rounded-md px-2 py-1">
+        {{ t("serverSetting.nodeVersionBranchNote", { ref: nodeVersion }) }}
+      </div>
+      <div v-else class="text-2xs text-[#7fb3b3] px-1">{{ t("serverSetting.nodeVersionReleaseNote") }}</div>
     </div>
   </div>
 </template>
@@ -120,6 +142,18 @@ const minuteInput = ref(Math.floor(Math.random() * 60));
 const isChangesConfirmed = ref(false);
 const inputMsg = ref("");
 const isEditActive = ref(false);
+// the git ref the node's Ansible checkout follows instead of the releases, "" for the releases
+const nodeVersion = ref("");
+const savingNodeVersion = ref(false);
+const nodeVersionOptions = computed(() => {
+  const options = [
+    { value: "", label: t("serverSetting.nodeVersionReleases") },
+    { value: "main", label: "main" },
+  ];
+  // a ref set by hand in stereum.yaml
+  if (nodeVersion.value && nodeVersion.value !== "main") options.push({ value: nodeVersion.value, label: nodeVersion.value });
+  return options;
+});
 
 const areInputsValid = computed(() => {
   if (intervalDayInput.value === null || hourInput.value === null || minuteInput.value === null) {
@@ -191,6 +225,25 @@ const updateSettings = async () => {
   await ControlService.setStereumSettings(toRaw(settings));
 };
 
+const setNodeVersion = async (value) => {
+  if (value === nodeVersion.value) return;
+  savingNodeVersion.value = true;
+  try {
+    const settings = await ControlService.getStereumSettings();
+    const updates = settings.stereum.settings.updates;
+    if (value) updates.node_version = value;
+    else delete updates.node_version;
+    await ControlService.setStereumSettings(toRaw(settings));
+    nodeVersion.value = value;
+    // the Stereum update offered follows the new target
+    await useUpdateCheck();
+  } catch (error) {
+    console.error("Error setting the node version:", error);
+  } finally {
+    savingNodeVersion.value = false;
+  }
+};
+
 const updateConfigFile = async () => {
   try {
     const config = await ControlService.readConfig();
@@ -203,6 +256,8 @@ const updateConfigFile = async () => {
 
 const getSettings = async () => {
   let settings = await ControlService.getStereumSettings();
+  const ref = settings.stereum?.settings?.updates?.node_version;
+  nodeVersion.value = ref ? String(ref) : "";
   if (settings.stereum?.settings.updates.unattended.install) {
     isAutoUpdateEnabled.value = true;
 

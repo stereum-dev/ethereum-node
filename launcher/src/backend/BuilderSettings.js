@@ -19,6 +19,15 @@ import {
   EPBS_PROBE_PATH,
   epbsProbeResult,
 } from "@/share/builders";
+import {
+  PROPOSER_CONFIG_PATH,
+  charonBuilderFlags,
+  applyCharonBuilderFlags,
+  withBuilderSection,
+  settingsFromProposerConfig,
+  clusterSettingsProblems,
+} from "@/share/obolBuilders";
+import { GLOAS_MIN_VERSIONS, compareVersions, gloasForkTime } from "@/share/gloasFork";
 
 const SHORT_NAMES = {
   LodestarValidatorService: "Lodestar",
@@ -26,7 +35,10 @@ const SHORT_NAMES = {
   TekuValidatorService: "Teku",
   NimbusValidatorService: "Nimbus",
   LighthouseValidatorService: "Lighthouse",
+  CharonService: "Charon",
+  PlutoService: "Pluto",
 };
+
 const LIGHTHOUSE_DATA = "/opt/app/validator";
 
 // why a client was left out, for the task panel
@@ -38,8 +50,12 @@ function skipReason({ support, version }, network) {
         : `no release for the ${network} fork yet, runs ${version}`;
     case "after-fork":
       return "set after the fork, its beacon node has no MEV-Boost";
-    case "dvt":
-      return "behind a DVT cluster";
+    case "dvt-update":
+      return support.minimum
+        ? `its cluster needs ${support.minimum} for the ${network} fork`
+        : `its cluster's middleware has no release for the ${network} fork yet`;
+    case "dvt-pending":
+      return "Charon has not written its proposer config yet, start Charon 2.0 first";
     default:
       return `no Glamsterdam on ${network} yet`;
   }
@@ -67,9 +83,11 @@ export class BuilderSettings {
       .filter((s) => ids.has(s.id) && BUILDER_CLIENTS[s.service])
       .map((s) => {
         const connected = (s.dependencies?.consensusClients ?? []).map((c) => services.find((x) => x.id === c.id) ?? c);
+        const middleware = connected.find((c) => isObolDVTService(c.service)) ?? null;
         return {
           service: s,
-          dvt: connected.some((c) => isObolDVTService(c.service)),
+          dvt: !!middleware,
+          clusterId: middleware?.id ?? null,
           usesMevBoost: connected.some((c) => c.dependencies?.mevboost?.length > 0),
           beaconCommand: connected.find((c) => c.command)?.command ?? null,
           running: running.has(s.id),
@@ -80,6 +98,114 @@ export class BuilderSettings {
   lighthouseFilePath(service) {
     const dir = service.volumes.find((v) => v.servicePath === LIGHTHOUSE_DATA)?.destinationPath;
     return dir ? `${dir}/${BUILDER_CLIENTS.LighthouseValidatorService.file}` : null;
+  }
+
+  // the Obol middlewares (Charon, Pluto) the setup's validator clients sign through
+  clustersOf(validators, services, running) {
+    const ids = [...new Set(validators.filter((v) => v.clusterId).map((v) => v.clusterId))];
+    return ids
+      .map((id) => services.find((s) => s.id === id))
+      .filter(Boolean)
+      .map((service) => ({
+        service,
+        running: running.has(service.id),
+        vcs: validators.filter((v) => v.clusterId === service.id).map((v) => v.service.id),
+      }));
+  }
+
+  // a path inside a container on the host, through the volume that holds it
+  hostPath(service, containerPath) {
+    const volume = (service.volumes ?? [])
+      .filter((v) => containerPath === v.servicePath || containerPath.startsWith(`${v.servicePath}/`))
+      .sort((a, b) => b.servicePath.length - a.servicePath.length)[0];
+    return volume ? `${volume.destinationPath}${containerPath.slice(volume.servicePath.length)}` : null;
+  }
+
+  async readFile(path) {
+    if (!path) return null;
+    const result = await this.nodeConnection.sshService.exec(`cat ${StringUtils.escapeStringForShell(path)} 2>/dev/null || true`);
+    return result?.stdout ?? "";
+  }
+
+  async writeFile(path, content) {
+    const dir = StringUtils.escapeStringForShell(path.replace(/\/[^/]+$/, ""));
+    const write = await this.nodeConnection.sshService.exec(
+      `mkdir -p ${dir} && echo ${StringUtils.escapeStringForShell(content)} > ${StringUtils.escapeStringForShell(path)}`
+    );
+    if (SSHService.checkExecError(write)) throw new Error(SSHService.extractExecError(write));
+  }
+
+  proposerConfigPath(middleware) {
+    return this.hostPath(middleware, `/opt/charon/${PROPOSER_CONFIG_PATH}`);
+  }
+
+  async readProposerConfig(middleware) {
+    try {
+      const raw = await this.readFile(this.proposerConfigPath(middleware));
+      return raw?.trim() ? JSON.parse(raw) : null;
+    } catch {
+      return null;
+    }
+  }
+
+  // whether a middleware runs a release that follows the network's fork
+  middlewareSupport(service, network) {
+    if (gloasForkTime(network) === null) return { apply: false, reason: "not-scheduled", minimum: null };
+    const minimum = GLOAS_MIN_VERSIONS[network]?.[service.service] ?? null;
+    // an unknown tag (like "latest") does not count as ready
+    if (minimum === null || ![0, 1].includes(compareVersions(service.imageVersion, minimum)))
+      return { apply: false, reason: "update", minimum };
+    return { apply: true, reason: null, minimum };
+  }
+
+  /**
+   * An Obol cluster as the dialog shows it. Its builders live in the proposer config Charon writes, which all
+   * validator clients of the cluster read; Charon's builder flags have to match that file.
+   */
+  async describeCluster({ service, running, vcs }, builders, network) {
+    const support = this.middlewareSupport(service, network);
+    const proposerConfig = await this.readProposerConfig(service);
+    // what the file holds is the cluster's setting, also when it was changed outside the dialog
+    const current = proposerConfig ? settingsFromProposerConfig(proposerConfig) : null;
+    const flags = charonBuilderFlags(current ?? clientBuilderSettings(builders, service.id));
+    const inSync =
+      support.apply && proposerConfig
+        ? JSON.stringify(applyCharonBuilderFlags(service.command ?? [], flags)) === JSON.stringify(service.command ?? [])
+        : null;
+    return {
+      id: service.id,
+      service: service.service,
+      version: service.imageVersion,
+      running,
+      vcs,
+      support,
+      hasProposerConfig: !!proposerConfig,
+      // fee recipients and gas limits for the preview of what its validator clients get
+      proposerConfig,
+      builderApi: (service.command ?? []).includes("--builder-api"),
+      current,
+      flags,
+      inSync,
+    };
+  }
+
+  /**
+   * Whether a cluster's validator client runs with Charon's current proposer config: Stereum renders it into
+   * its settings on every start (manage-service), so it has it when it started after the file last changed.
+   * @returns {boolean|null} null when it doesn't run
+   */
+  async startedAfterProposerConfig(vc, middleware) {
+    const path = this.proposerConfigPath(middleware);
+    if (!path) return null;
+    const result = await this.nodeConnection.sshService.exec(
+      `stat -c %Y ${StringUtils.escapeStringForShell(path)} 2>/dev/null; docker inspect -f '{{.State.Running}} {{.State.StartedAt}}' stereum-${vc.id} 2>/dev/null`
+    );
+    const [mtime, state] = String(result?.stdout ?? "")
+      .trim()
+      .split("\n");
+    const [running, startedAt] = String(state ?? "").split(" ");
+    if (running !== "true" || !startedAt) return null;
+    return Date.parse(startedAt) / 1000 >= Number(mtime);
   }
 
   async readLighthouseFile(path) {
@@ -115,10 +241,27 @@ export class BuilderSettings {
       const validators = this.validatorsOf(setup, services, running);
       if (!validators.length) continue;
       // one entry per client, also for setups saved with the setup's settings at the top
+      const clusterList = this.clustersOf(validators, services, running);
       const builders = {
         route: setup.builders?.route ?? "direct",
-        clients: Object.fromEntries(validators.map((v) => [v.service.id, clientBuilderSettings(setup.builders, v.service.id)])),
+        clients: Object.fromEntries(
+          [...validators.map((v) => v.service.id), ...clusterList.map((c) => c.service.id)].map((id) => [
+            id,
+            clientBuilderSettings(setup.builders, id),
+          ])
+        ),
       };
+      const clusters = [];
+      const clusterState = {};
+      for (const c of clusterList) {
+        const described = await this.describeCluster(c, builders, setup.network);
+        clusters.push(described);
+        clusterState[c.service.id] = {
+          middleware: c.service,
+          support: described.support,
+          proposerConfig: await this.readProposerConfig(c.service),
+        };
+      }
       const mevBoost = services.find((s) => (setup.services ?? []).includes(s.id) && s.service === "FlashbotsMevBoostService");
       const relaysAt = mevBoost?.entrypoint?.indexOf("-relays") ?? -1;
       const mevBoostRelays =
@@ -129,7 +272,7 @@ export class BuilderSettings {
           : [];
       const clients = [];
       for (const v of validators) {
-        clients.push(await this.describe(v, builders, setup.network));
+        clients.push(await this.describe(v, builders, setup.network, clusterState));
       }
       result.push({
         setupId,
@@ -141,16 +284,51 @@ export class BuilderSettings {
         mevBoostRelays,
         mevBoostMinBid: mevBoost ? mevBoostMinBid(mevBoost.entrypoint) : "0",
         clients,
+        clusters,
       });
     }
     return result;
   }
 
-  async describe({ service, dvt, usesMevBoost, beaconCommand, running }, builders, network) {
+  async describe({ service, dvt, clusterId, usesMevBoost, beaconCommand, running }, builders, network, clusters = {}) {
+    const own = builderSupport({ service: service.service, version: service.imageVersion, network, usesMevBoost });
+    const base = {
+      id: service.id,
+      service: service.service,
+      version: service.imageVersion,
+      running,
+      usesMevBoost,
+      clusterId,
+      // the boost it is set to before the fork, for the first settings
+      currentBoost: currentBoost(service.service, service.command, beaconCommand),
+      notes: [],
+    };
+    if (dvt) {
+      // its builders are the cluster's: Stereum renders its settings from the middleware's proposer config
+      const cluster = clusters[clusterId];
+      let support = own;
+      if (own.apply || own.reason === "after-fork") support = { apply: true, reason: null, minimum: own.minimum };
+      if (support.apply && !cluster?.support?.apply)
+        support = {
+          apply: false,
+          reason: "dvt-update",
+          minimum: cluster?.support?.minimum ?? null,
+          middleware: cluster?.middleware?.service,
+        };
+      else if (support.apply && !cluster.proposerConfig) support = { apply: false, reason: "dvt-pending", minimum: null };
+      if (!support.apply) return { ...base, support, flags: [], file: null, files: [], inSync: null };
+      // Stereum renders its settings from Charon's proposer config on every start
+      return {
+        ...base,
+        support,
+        flags: [],
+        file: null,
+        files: [],
+        inSync: await this.startedAfterProposerConfig(service, cluster.middleware),
+      };
+    }
     const settings = clientBuilderSettings(builders, service.id);
-    const support = dvt
-      ? { apply: false, reason: "dvt", minimum: null }
-      : builderSupport({ service: service.service, version: service.imageVersion, network, usesMevBoost });
+    const support = own;
     const { flags, file, notes } = builderConfiguration(service.service, settings, service.imageVersion);
     let inSync = null;
     if (support.apply) {
@@ -163,20 +341,7 @@ export class BuilderSettings {
           JSON.stringify(applyBuilderFlags(service.service, service.command, flags, usesMevBoost)) === JSON.stringify(service.command);
       }
     }
-    return {
-      id: service.id,
-      service: service.service,
-      version: service.imageVersion,
-      running,
-      usesMevBoost,
-      // the boost it is set to before the fork, for the first settings
-      currentBoost: currentBoost(service.service, service.command, beaconCommand),
-      support,
-      flags,
-      file,
-      notes,
-      inSync,
-    };
+    return { ...base, support, flags, file, files: [], notes, inSync };
   }
 
   /**
@@ -186,7 +351,7 @@ export class BuilderSettings {
    * @returns {{ code: number, info?: string, results?: Array }} code 0 = saved
    */
   async setBuilderSettings({ setupId, builders, restart = true } = {}) {
-    const problems = [...new Set(Object.values(builders?.clients ?? {}).flatMap((s) => validateBuilderSettings(s ?? {})))];
+    let problems = [...new Set(Object.values(builders?.clients ?? {}).flatMap((s) => validateBuilderSettings(s ?? {})))];
     if (problems.length) return { code: 1, info: problems.join(", ") };
 
     const ref = StringUtils.createRandomString();
@@ -199,18 +364,42 @@ export class BuilderSettings {
       if (!setup) return { code: 1, info: "setup not found" };
       const [services, running] = await Promise.all([this.serviceManager.readServiceConfigurations(), this.runningIds()]);
       const validators = this.validatorsOf(setup, services, running);
+      const clusterList = this.clustersOf(validators, services, running);
+      problems = [...new Set(clusterList.flatMap((c) => clusterSettingsProblems(builders?.clients?.[c.service.id] ?? {})))];
+      if (problems.length) return { code: 1, info: problems.join(", ") };
       tm?.otherTasksHandler(ref, `Set builders (${validators.length})`);
 
       const cleaned = cleanBuilderSettings(builders);
       // a client that was removed from the setup takes its settings with it
-      const ids = new Set(validators.map((v) => v.service.id));
+      const ids = new Set([...validators.map((v) => v.service.id), ...clusterList.map((c) => c.service.id)]);
       setup.builders = { route: cleaned.route, clients: Object.fromEntries(Object.entries(cleaned.clients).filter(([id]) => ids.has(id))) };
       await this.serviceManager.configManager.writeMultiSetup(setups);
       subtask("Saved settings", true, YAML.stringify(setup.builders));
 
+      // the clusters first: their validator clients render their settings from the middleware's proposer config
+      const clusterState = {};
+      for (const c of clusterList) {
+        clusterState[c.service.id] = await this.applyCluster(c, setup, restart, subtask, results);
+      }
+
       for (const v of validators) {
         const name = SHORT_NAMES[v.service.service];
-        const entry = await this.describe(v, setup.builders, setup.network);
+        const entry = await this.describe(v, setup.builders, setup.network, clusterState);
+        // a cluster's validator client renders Charon's proposer config itself when it starts
+        if (v.dvt && entry.support.apply) {
+          if (entry.inSync === true) {
+            subtask(`${name}: unchanged`, true, "runs with Charon's current proposer config");
+            results.push({ id: v.service.id, applied: true, changed: false });
+          } else if (v.running && restart) {
+            await this.serviceManager.manageServiceState(v.service.id, "restarted");
+            subtask(`${name}: restarted`, true, "restarted to load Charon's proposer config");
+            results.push({ id: v.service.id, applied: true, changed: true, restarted: true });
+          } else {
+            subtask(`${name}: not restarted`, true, "takes Charon's proposer config at its next start");
+            results.push({ id: v.service.id, applied: true, changed: true, restarted: false });
+          }
+          continue;
+        }
         if (!entry.support.apply) {
           subtask(`${name}: ${entry.support.reason}`, true, skipReason(entry, setup.network));
           results.push({ id: v.service.id, applied: false, reason: entry.support.reason });
@@ -250,9 +439,10 @@ export class BuilderSettings {
           results.push({ id: v.service.id, applied: false, reason: "failed", error: err?.message ?? String(err) });
         }
       }
-      const applied = results.filter((r) => r.applied).length;
+      const vcs = results.filter((r) => !r.cluster);
+      const applied = vcs.filter((r) => r.applied).length;
       const failed = results.filter((r) => r.reason === "failed").length;
-      subtask("Result", failed === 0, `${applied} of ${results.length} validator clients set${failed ? `, ${failed} failed` : ""}`);
+      subtask("Result", failed === 0, `${applied} of ${vcs.length} validator clients set${failed ? `, ${failed} failed` : ""}`);
       return { code: failed ? 2 : 0, results };
     } catch (err) {
       log.error("Setting the builder settings failed:", err);
@@ -260,6 +450,60 @@ export class BuilderSettings {
       return { code: 1, info: err?.message ?? String(err) };
     } finally {
       tm?.otherTasksHandler(ref);
+    }
+  }
+
+  /**
+   * Writes a cluster's builder settings to its middleware: Charon's flags, and the builder section of the
+   * proposer config it wrote once and never changes itself. Charon restarts for new flags only.
+   * @returns {{ middleware, support, proposerConfig }} for the cluster's validator clients
+   */
+  async applyCluster({ service, running }, setup, restart, subtask, results) {
+    const name = SHORT_NAMES[service.service] ?? service.service;
+    const support = this.middlewareSupport(service, setup.network);
+    if (!support.apply) {
+      subtask(
+        `${name}: update`,
+        true,
+        support.minimum ? `needs ${support.minimum} for the ${setup.network} fork` : `no release for the ${setup.network} fork yet`
+      );
+      results.push({ id: service.id, cluster: true, applied: false, reason: "update" });
+      return { middleware: service, support, proposerConfig: null };
+    }
+    const settings = clientBuilderSettings(setup.builders, service.id);
+    try {
+      const flags = charonBuilderFlags(settings);
+      const command = applyCharonBuilderFlags(service.command, flags);
+      const flagsChanged = JSON.stringify(command) !== JSON.stringify(service.command);
+      if (flagsChanged) {
+        service.command = command;
+        await this.serviceManager.writeServiceConfigurationKeepingAutoupdate(service);
+      }
+      subtask(`${name}: ${flagsChanged ? "flags" : "flags unchanged"}`, true, flags.join("\n") || "no builder flags");
+      let proposerConfig = await this.readProposerConfig(service);
+      if (proposerConfig) {
+        const next = withBuilderSection(proposerConfig, settings);
+        if (JSON.stringify(next) !== JSON.stringify(proposerConfig)) {
+          await this.writeFile(this.proposerConfigPath(service), JSON.stringify(next));
+          proposerConfig = next;
+          subtask(`${name}: proposer config`, true, JSON.stringify(next.default_config.builder ?? null, null, 2));
+        }
+      } else {
+        subtask(`${name}: no proposer config`, true, "Charon writes it on its next start, then save again for its validator clients");
+      }
+      if (flagsChanged && running && restart) {
+        await this.serviceManager.manageServiceState(service.id, "restarted");
+        subtask(`${name}: restarted`, true, "restarted to load the new builder flags");
+      } else if (flagsChanged && running) {
+        subtask(`${name}: not restarted`, true, "takes effect at its next restart");
+      }
+      results.push({ id: service.id, cluster: true, applied: true, changed: flagsChanged });
+      return { middleware: service, support, proposerConfig };
+    } catch (err) {
+      log.error(`Writing the builder settings of ${service.id} failed:`, err);
+      subtask(`${name}: failed`, false, err?.message ?? String(err));
+      results.push({ id: service.id, cluster: true, applied: false, reason: "failed", error: err?.message ?? String(err) });
+      return { middleware: service, support: { apply: false, reason: "failed" }, proposerConfig: null };
     }
   }
 

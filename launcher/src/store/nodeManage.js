@@ -59,6 +59,8 @@ export const useNodeManage = defineStore("nodeManage", {
           name: "BloXroute REGULATED",
           mainnet:
             "https://0xb0b07cd0abef743db4260b0ed50619cf6ad4d82064cb4fbec9d3ec530f7c5e6793d9f286c4e082c0244ffb9f2658fe88@bloxroute.regulated.blxrbdn.com",
+          hoodi:
+            "https://0x821f2a65afb70e7f2e820a925a9b4c80a159620582c1766b1b09729fec178b11ea22abb3a51f07b288be815a1a2ff516@bloxroute.hoodi.blxrbdn.com",
           id: 4,
           isSelected: false,
           isRemoved: false,
@@ -71,6 +73,8 @@ export const useNodeManage = defineStore("nodeManage", {
             "https://0xa1559ace749633b997cb3fdacffb890aeebdb0f5a3b6aaa7eeeaf1a38af0a8fe88b9e4b1f61f236d2e64d95733327a62@relay.ultrasound.money",
           hoodi:
             "https://0xb1559beef7b5ba3127485bbbb090362d9f497ba64e177ee2c8e7db74746306efad687f2cf8574e38d70067d40ef136dc@relay-hoodi.ultrasound.money",
+          // builder (ePBS) address after Glamsterdam (checked 2026-10-21)
+          epbs: { hoodi: "https://relay-hoodi.ultrasound.money" },
           id: 7,
           isSelected: false,
           isRemoved: false,
@@ -128,6 +132,8 @@ export const useNodeManage = defineStore("nodeManage", {
             "https://0xa1559ace749633b997cb3fdacffb890aeebdb0f5a3b6aaa7eeeaf1a38af0a8fe88b9e4b1f61f236d2e64d95733327a62@relay-filtered.ultrasound.money",
           hoodi:
             "https://0xb1559beef7b5ba3127485bbbb090362d9f497ba64e177ee2c8e7db74746306efad687f2cf8574e38d70067d40ef136dc@relay-filtered-hoodi.ultrasound.money",
+          // builder (ePBS) address after Glamsterdam (checked 2026-10-21)
+          epbs: { hoodi: "https://relay-filtered-hoodi.ultrasound.money" },
           id: 12,
           isSelected: false,
           isRemoved: false,

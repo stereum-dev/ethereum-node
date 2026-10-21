@@ -1,0 +1,85 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  vars:
+    lighthouse_service: 7b2e4f80-1c3d-4e5f-9a6b-8c7d6e5f4a30
+    lodestar_service: 9e8d7c6b-5a4f-4e3d-8c2b-1a0f9e8d7c60
+    solo_vc_service: 5c4b3a29-1807-4f6e-9d5c-4b3a2918f7e0
+  tasks:
+  - name: Read the validator clients' configurations
+    slurp:
+      src: "/etc/stereum/services/{{ item }}.yaml"
+    loop: ["{{ lighthouse_service }}", "{{ lodestar_service }}", "{{ solo_vc_service }}"]
+    register: configs
+    become: yes
+  - set_fact:
+      lighthouse_command: "{{ (configs.results[0].content | b64decode | from_yaml).command }}"
+      lodestar_command: "{{ (configs.results[1].content | b64decode | from_yaml).command }}"
+      solo_command: "{{ (configs.results[2].content | b64decode | from_yaml).command }}"
+  - debug:
+      msg: "{{ [lighthouse_command, lodestar_command, solo_command] }}"
+
+  # lighthouse: flags for the default, builders and per-key settings in its files
+  - slurp:
+      src: /opt/stereum/lighthouse-vc/validator/validators/builder_definitions.yml
+    register: lighthouse_builders
+    become: yes
+  - slurp:
+      src: /opt/stereum/lighthouse-vc/validator/validators/validator_definitions.yml
+    register: lighthouse_definitions
+    become: yes
+  - shell: docker inspect -f '{{ '{{' }}join .Args " "{{ '}}' }}' stereum-{{ lighthouse_service }}
+    register: lighthouse_args
+    changed_when: false
+    become: yes
+  - assert:
+      that:
+      - "'--suggested-fee-recipient=0x1111111111111111111111111111111111111111' in lighthouse_command"
+      - "'--suggested-fee-recipient=0x000000000000000000000000000000000000dEaD' not in lighthouse_command"
+      - "'--gas-limit=200000000' in lighthouse_command"
+      - "'--distributed' in lighthouse_command"
+      - "'--distributed' in lighthouse_args.stdout"
+      - "(lighthouse_builders.content | b64decode | from_yaml).min_bid == 10000000"
+      - "(lighthouse_builders.content | b64decode | from_yaml).builder_boost_factor == 90"
+      - "(lighthouse_builders.content | b64decode | from_yaml).builders | map(attribute='url') | list == ['https://hoodi.titanrelay.xyz', 'https://builder-hoodi.nflaig.dev']"
+      - "(lighthouse_definitions.content | b64decode).find('suggested_fee_recipient: \"0x2222222222222222222222222222222222222222\"') != -1"
+
+  # lodestar: everything in its proposer settings file
+  - slurp:
+      src: /opt/stereum/lodestar-vc/validator/proposer-settings.yml
+    register: lodestar_settings
+    become: yes
+  - set_fact:
+      lodestar_file: "{{ lodestar_settings.content | b64decode | from_json }}"
+  - assert:
+      that:
+      - "'--proposerSettingsFile=/opt/app/validator/proposer-settings.yml' in lodestar_command"
+      - "'--distributed' in lodestar_command"
+      - "'--payloadLocal=true' in lodestar_command"
+      - "'--suggestedFeeRecipient=0x000000000000000000000000000000000000dEaD' not in lodestar_command"
+      - "lodestar_file.default_config.fee_recipient == '0x1111111111111111111111111111111111111111'"
+      - "lodestar_file.default_config.builder.boost_factor == '90'"
+      - "lodestar_file.default_config.builder.builders | length == 2"
+      - "lodestar_file.proposer_config | length == 1"
+
+  # a validator client outside a cluster keeps its own settings
+  # lighthouse writes an empty builder file itself on start
+  - slurp:
+      src: /opt/stereum/lighthouse-solo/validator/validators/builder_definitions.yml
+    register: solo_builders
+    become: yes
+  - assert:
+      that:
+      - "'--suggested-fee-recipient=0x000000000000000000000000000000000000dEaD' in solo_command"
+      - "'--distributed' not in solo_command"
+      - "(solo_builders.content | b64decode | from_yaml).builders == []"
+
+  - shell: docker ps
+    register: stereum_docker_ps
+    changed_when: false
+    become: yes
+  - assert:
+      that:
+      - stereum_docker_ps.stdout.find("stereum-" ~ lighthouse_service) != -1
+      - stereum_docker_ps.stdout.find("stereum-" ~ lodestar_service) != -1

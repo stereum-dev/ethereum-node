@@ -1,6 +1,9 @@
 <template>
   <ValidatorModal :title="t('builders.title')" icon="/img/icon/service-icons/Other/Builders.png" wide fill @close="requestClose">
-    <span v-if="store.loading && !store.setups.length" class="flex items-center gap-2 text-xs text-gray-400">
+    <span
+      v-if="(store.loading && !store.setups.length) || (setup?.clients.length && !draft)"
+      class="flex items-center gap-2 text-xs text-gray-400"
+    >
       <img src="/animation/loading/turning-circle.gif" class="w-4 h-4" alt="" />{{ t("builders.loading") }}
     </span>
     <p v-else-if="store.error" class="text-xs text-red-400 break-all">{{ store.error }}</p>
@@ -11,22 +14,26 @@
         <span class="text-2xs font-semibold uppercase text-[#7fb3b3]">{{ t("builders.setup") }}</span>
         <span class="font-semibold">{{ setup.name }}</span>
         <span class="text-2xs text-gray-400">{{ setup.network }}</span>
+        <span
+          class="w-4 h-4 rounded-full border border-[#4b8585] text-2xs text-[#7fb3b3] flex items-center justify-center cursor-help"
+          :title="t('builders.intro')"
+          >?</span
+        >
+        <span class="grow" />
+        <ActionButton v-if="setup.saved && setup.mevBoost" :label="t('builders.fromMevBoost')" @click="fromMevBoost" />
       </div>
-      <p class="text-xs text-[#7fb3b3]">{{ t("builders.intro") }}</p>
+      <!-- where the settings come from, until the first save or after a takeover, so the lists keep their room -->
       <div
-        v-if="!setup.saved || setup.mevBoost"
-        class="rounded-lg border border-[#4b8585] bg-[#224141] px-3 py-2 text-xs flex flex-col gap-1"
+        v-if="!setup.saved || missing.length"
+        class="rounded-lg border border-[#4b8585] bg-[#224141] px-3 py-1.5 text-2xs flex flex-col gap-0.5"
       >
-        <div class="flex items-center gap-2">
-          <span class="grow">{{ sourceText }}</span>
-          <ActionButton v-if="setup.saved && setup.mevBoost" :label="t('builders.fromMevBoost')" @click="fromMevBoost" />
-        </div>
+        <span v-if="!setup.saved">{{ sourceText }}</span>
         <span v-if="missing.length" class="text-amber-300">{{
           t("builders.migrationMissing", { relays: missing.join(", "), network: setup.network })
         }}</span>
       </div>
 
-      <div class="flex flex-wrap gap-2">
+      <div class="flex flex-wrap items-center gap-2 text-xs">
         <button
           v-for="c in setup.clients"
           :key="c.id"
@@ -37,14 +44,14 @@
           {{ shortName(c.service) }}
           <span v-if="clientStatus(c, setup).dot" class="w-2 h-2 rounded-full" :class="clientStatus(c, setup).dot" />
         </button>
-      </div>
-
-      <div class="flex items-center gap-2 text-xs">
         <span class="text-2xs text-gray-400">{{ client.version }}</span>
         <span class="grow" :class="clientStatus(client, setup).text">{{ clientStatus(client, setup).label }}</span>
-        <ActionButton v-if="setup.clients.length > 1" :label="t('builders.useForAll')" @click="useForAll" />
+        <ActionButton v-if="ownTargets.length" :label="t('builders.useForAll')" @click="useForAll" />
       </div>
-      <p v-for="note in notes" :key="note" class="text-xs text-amber-300">{{ t(`builders.note.${note}`) }}</p>
+      <p v-if="cluster" class="rounded-lg border border-[#4b8585] bg-[#224141] px-3 py-1.5 text-2xs text-[#7fb3b3]">
+        {{ t("builders.cluster", { middleware: shortName(cluster.service) }) }}
+      </p>
+      <p v-for="note in notes" :key="note" class="text-2xs text-amber-300">{{ t(`builders.note.${note}`) }}</p>
 
       <div class="flex border-b border-[#4b8585]">
         <button
@@ -68,7 +75,7 @@
           :nimbus="client.service === 'NimbusValidatorService'"
           :caps-trusted="capsTrustedPayments(client.service, client.version)"
         />
-        <BuilderBids v-else-if="activeTab === 'bids'" v-model="editing" class="flex-1 min-h-0 overflow-y-auto pr-1" />
+        <BuilderBids v-else-if="activeTab === 'bids'" v-model="editing" :cluster="!!cluster" class="flex-1 min-h-0 overflow-y-auto pr-1" />
         <BuilderCalculator
           v-else-if="activeTab === 'calc'"
           class="flex-1 min-h-0 overflow-y-auto pr-1"
@@ -77,7 +84,7 @@
           :amounts="amounts"
         />
         <div v-else class="flex-1 min-h-0 overflow-y-auto pr-1 flex flex-col gap-3">
-          <BuilderExpert v-model="editing" />
+          <BuilderExpert v-model="editing" :cluster="!!cluster" />
           <div class="flex flex-col gap-1">
             <span class="text-2xs font-semibold uppercase text-[#7fb3b3]">{{ t("builders.gets") }}</span>
             <pre class="rounded-lg bg-[#0D0D12] border border-[#ffffff16] px-3 py-2 text-2xs whitespace-pre-wrap break-all select-text">{{
@@ -138,7 +145,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, reactive, ref, watch } from "vue";
+import { computed, nextTick, onMounted, reactive, ref, watch } from "vue";
 import YAML from "yaml";
 import ValidatorModal from "@/components/UI/validators-page/components/ValidatorModal.vue";
 import ActionButton from "@/components/UI/validators-page/components/ActionButton.vue";
@@ -149,7 +156,8 @@ import BuilderExpert from "./BuilderExpert.vue";
 import { clientStatus, shortName } from "./clientInfo";
 import { useBuilders } from "@/store/builders";
 import { useSetups } from "@/store/setups";
-import { builderConfiguration, capsTrustedPayments, validateBuilderSettings } from "@/share/builders";
+import { builderConfiguration, builderUrl, capsTrustedPayments, validateBuilderSettings } from "@/share/builders";
+import { charonBuilderFlags, clusterSettingsProblems, dvtConfiguration, withBuilderSection } from "@/share/obolBuilders";
 import i18n from "@/includes/i18n";
 
 const emit = defineEmits(["close"]);
@@ -171,7 +179,16 @@ const amounts = reactive({ local: "0.05", paid: "0.054", promised: "0" });
 
 // the settings as saved (or, before the first save, as first shown), to tell unapplied edits
 const baseline = ref("");
-const startWith = (fromSetup) => {
+let starting = 0;
+// the draft being built, for the reminder on opening
+let started = Promise.resolve();
+const startWith = async (fromSetup) => {
+  const run = ++starting;
+  // relays from MEV-Boost come over once the live check knows which of them answer ePBS
+  if (fromSetup && setup.value.mevBoostRelays.length) {
+    await store.probe(setup.value.mevBoostRelays.map((url) => builderUrl(url)));
+    if (run !== starting || !setup.value) return;
+  }
   const start = store.draftFor(setup.value, fromSetup);
   draft.value = start.builders;
   missing.value = start.missing;
@@ -184,7 +201,7 @@ watch(
   setupKey,
   (key) => {
     if (!key) return;
-    startWith(!setup.value.saved);
+    started = startWith(!setup.value.saved);
     clientId.value = setup.value.clients[0]?.id ?? null;
     activeTab.value = "relays";
   },
@@ -193,25 +210,42 @@ watch(
 const fromMevBoost = () => startWith(true);
 
 const sourceText = computed(() => {
-  if (setup.value.saved) return t("builders.source.saved");
   if (setup.value.mevBoost) return t("builders.source.mevBoost");
   return t("builders.source.local");
 });
 
 const client = computed(() => setup.value?.clients.find((c) => c.id === clientId.value));
-// the settings of the selected client, which the tabs edit
+// a client behind an Obol cluster takes the cluster's builders: the tabs edit those
+const cluster = computed(() => (client.value?.clusterId ? setup.value.clusters?.find((c) => c.id === client.value.clusterId) : null));
+const editId = computed(() => (cluster.value && draft.value?.clients[cluster.value.id] ? cluster.value.id : clientId.value));
+// the settings of the selected client (or its cluster), which the tabs edit
 const editing = computed({
-  get: () => draft.value.clients[clientId.value],
-  set: (value) => (draft.value.clients[clientId.value] = value),
+  get: () => draft.value.clients[editId.value],
+  set: (value) => (draft.value.clients[editId.value] = value),
 });
+// the clients with settings of their own, which "use for all" copies to; a cluster's are agreed with its other operators
+const ownTargets = computed(() => setup.value.clients.filter((c) => !c.clusterId && c.id !== editId.value));
 const useForAll = () => {
   const settings = JSON.stringify(editing.value);
-  for (const c of setup.value.clients) draft.value.clients[c.id] = JSON.parse(settings);
+  for (const c of ownTargets.value) draft.value.clients[c.id] = JSON.parse(settings);
 };
 
 const configuration = computed(() => builderConfiguration(client.value.service, editing.value, client.value.version));
-const notes = computed(() => configuration.value.notes);
+const notes = computed(() => (cluster.value ? configuration.value.notes.filter((n) => n !== "auth-ignored") : configuration.value.notes));
 const preview = computed(() => {
+  if (cluster.value) {
+    const lines = [`${shortName(cluster.value.service)}`, ...charonBuilderFlags(editing.value)];
+    if (cluster.value.proposerConfig) {
+      const rendered = dvtConfiguration(client.value.service, withBuilderSection(cluster.value.proposerConfig, editing.value), {
+        builderApi: cluster.value.builderApi,
+        version: client.value.version,
+      });
+      lines.push("", shortName(client.value.service), ...rendered.flags);
+      for (const f of rendered.files) lines.push(`${f.dir}/${f.name}`);
+      if (rendered.lighthouseFile) lines.push("validators/builder_definitions.yml", YAML.stringify(rendered.lighthouseFile));
+    }
+    return lines.join("\n");
+  }
   const { flags, file } = configuration.value;
   if (file) return `validators/builder_definitions.yml\n${YAML.stringify(file)}`;
   return flags.length ? flags.join("\n") : t("builders.noFlags");
@@ -226,17 +260,36 @@ const tabs = computed(() => [
 
 const problems = computed(() => {
   if (!draft.value) return [];
-  return [...new Set(Object.values(draft.value.clients).flatMap((s) => validateBuilderSettings(s)))];
+  const clusterIds = new Set((setup.value?.clusters ?? []).map((c) => c.id));
+  return [
+    ...new Set(
+      Object.entries(draft.value.clients).flatMap(([id, s]) => [
+        ...validateBuilderSettings(s),
+        ...(clusterIds.has(id) ? clusterSettingsProblems(s) : []),
+      ])
+    ),
+  ];
 });
 
 const canSave = computed(() => !!draft.value && problems.value.length === 0);
-// the running clients a save would restart: those whose flags or file would change
+// the running clients a save would restart: those whose flags or files would change, and a cluster's middleware for new flags
 const restarting = computed(() => {
   const saved = setup.value.saved ? setup.value.builders.clients : {};
   const gets = (c, settings) => JSON.stringify(builderConfiguration(c.service, settings ?? {}, c.version));
-  return setup.value.clients.filter(
-    (c) => c.support.apply && c.running && (c.inSync === false || gets(c, draft.value.clients[c.id]) !== gets(c, saved[c.id]))
+  // a cluster changes when its builders differ from Charon's flags and file; its validator clients restart to load them
+  const changedClusters = (setup.value.clusters ?? []).filter(
+    (c) =>
+      c.support.apply &&
+      (c.inSync === false || JSON.stringify(charonBuilderFlags(draft.value.clients[c.id] ?? {})) !== JSON.stringify(c.flags))
   );
+  const clusterIds = new Set(changedClusters.map((c) => c.id));
+  const clients = setup.value.clients.filter(
+    (c) =>
+      c.support.apply &&
+      c.running &&
+      (c.inSync === false || (c.clusterId ? clusterIds.has(c.clusterId) : gets(c, draft.value.clients[c.id]) !== gets(c, saved[c.id])))
+  );
+  return [...changedClusters.filter((c) => c.running), ...clients];
 });
 // the save runs on in the background and reports in the task manager, so the dialog closes
 const commit = (restart) => {
@@ -270,7 +323,10 @@ const openReminder = () => {
     if (missing.value.length)
       lines.push({ text: t("builders.migrationMissing", { relays: missing.value.join(", "), network: current.network }) });
   }
-  const outOfSync = current.saved ? current.clients.filter((c) => c.support.apply && c.inSync === false) : [];
+  const clusterOutOfSync = new Set((current.clusters ?? []).filter((c) => c.inSync === false).map((c) => c.id));
+  const outOfSync = current.saved
+    ? current.clients.filter((c) => c.support.apply && (c.inSync === false || clusterOutOfSync.has(c.clusterId)))
+    : [];
   if (outOfSync.length) {
     canApply = true;
     lines.push({ text: t("builders.reminder.outOfSync", { clients: names(outOfSync) }) });
@@ -301,6 +357,10 @@ const discard = () => {
 
 onMounted(async () => {
   await store.load();
+  await nextTick();
+  // start from what was just loaded: a cluster's builders may have changed in Charon's file meanwhile
+  if (setup.value?.clients.length) started = startWith(!setup.value.saved);
+  await started;
   openReminder();
 });
 </script>

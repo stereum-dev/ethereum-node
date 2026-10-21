@@ -1,0 +1,196 @@
+---
+- name: Prepare
+  hosts: all
+  roles:
+    - role: "../"
+  vars_files:
+    - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    charon_service: 3d1c9a52-8f61-4c27-b4a9-0c5e8a7f1d10
+    lighthouse_service: 7b2e4f80-1c3d-4e5f-9a6b-8c7d6e5f4a30
+    lodestar_service: 9e8d7c6b-5a4f-4e3d-8c2b-1a0f9e8d7c60
+    beacon_service: 1f2e3d4c-5b6a-4978-8695-a4b3c2d1e0f0
+    solo_vc_service: 5c4b3a29-1807-4f6e-9d5c-4b3a2918f7e0
+    pubkey: "0xb87f614580c8c94e9163afbc888815950c8430cc270cd541b8154a35728885a85563516d2d47fc63f562ac5f68a4ea8f"
+
+  tasks:
+    - name: Install python for Ansible (Ubuntu)
+      apt:
+        update_cache: yes
+        name: pip
+        state: present
+      become: true
+      changed_when: false
+      when: ansible_facts['distribution'] == "Ubuntu"
+
+    - include_role:
+        name: "setup"
+
+    - name: Create the data directories
+      file:
+        path: "{{ item }}"
+        state: directory
+        mode: 0755
+      loop:
+        - /opt/stereum/charon/data/.charon/vc-config
+        - /opt/stereum/lighthouse-vc/validator/validators
+        - /opt/stereum/lodestar-vc/validator
+      become: yes
+
+    # Charon only has to be configured: the validator clients read its config and proposer config
+    - name: Write service configuration charon
+      copy:
+        dest: "/etc/stereum/services/{{ charon_service }}.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: CharonService
+          id: {{ charon_service }}
+          image: obolnetwork/charon:v2.0.0-rc2
+          command:
+            - run
+            - --builder-api
+            - --builder-urls=https://hoodi.titanrelay.xyz,https://builder-hoodi.nflaig.dev
+            - --builder-boost-factor=90
+          entrypoint: []
+          env: {}
+          ports: []
+          volumes:
+            - /opt/stereum/charon/data:/opt/charon
+          user: "2000"
+          network: hoodi
+      become: yes
+
+    # as Charon writes it, with the builders it was started with
+    - name: Write Charon's proposer config
+      copy:
+        dest: /opt/stereum/charon/data/.charon/vc-config/proposer-config.json
+        mode: 0644
+        content: |
+          {"version": 1,
+           "proposer_config": {"{{ pubkey }}": {"fee_recipient": "0x2222222222222222222222222222222222222222"}},
+           "default_config": {"fee_recipient": "0x1111111111111111111111111111111111111111", "gas_limit": "200000000",
+             "builder": {"min_bid": "10000000", "builder_boost_factor": "90", "max_execution_payment": "0",
+               "builders": [{"url": "https://hoodi.titanrelay.xyz"}, {"url": "https://builder-hoodi.nflaig.dev"}]}}}
+      become: yes
+
+    - name: Write service configuration lighthouse validator (cluster)
+      copy:
+        dest: "/etc/stereum/services/{{ lighthouse_service }}.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: LighthouseValidatorService
+          id: {{ lighthouse_service }}
+          image: sigp/lighthouse:v8.3.0
+          command:
+            - lighthouse
+            - vc
+            - --network=hoodi
+            - --datadir=/opt/app/validator
+            - --beacon-nodes=http://stereum-{{ charon_service }}:3600
+            - --init-slashing-protection
+            - --suggested-fee-recipient=0x000000000000000000000000000000000000dEaD
+          entrypoint: []
+          env: {}
+          ports: []
+          volumes:
+            - /opt/stereum/lighthouse-vc/validator:/opt/app/validator
+          dependencies:
+            consensusClients:
+              - id: {{ charon_service }}
+                service: CharonService
+          user: "2000"
+          network: hoodi
+      become: yes
+
+    - name: Write lighthouse's validator definitions
+      copy:
+        dest: /opt/stereum/lighthouse-vc/validator/validators/validator_definitions.yml
+        mode: 0644
+        content: |
+          - enabled: false
+            voting_public_key: {{ pubkey }}
+            type: local_keystore
+      become: yes
+
+    - name: Write service configuration lodestar validator (cluster)
+      copy:
+        dest: "/etc/stereum/services/{{ lodestar_service }}.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: LodestarValidatorService
+          id: {{ lodestar_service }}
+          image: chainsafe/lodestar:v1.50.0
+          command:
+            - validator
+            - --network=hoodi
+            - --dataDir=/opt/app/validator
+            - --beaconNodes=http://stereum-{{ charon_service }}:3600
+            - --keymanager=true
+            - --keymanager.address=0.0.0.0
+            - --suggestedFeeRecipient=0x000000000000000000000000000000000000dEaD
+          entrypoint: ["node", "./packages/cli/bin/lodestar"]
+          env: {}
+          ports: []
+          volumes:
+            - /opt/stereum/lodestar-vc/validator:/opt/app/validator
+          dependencies:
+            consensusClients:
+              - id: {{ charon_service }}
+                service: CharonService
+          user: "2000"
+          network: hoodi
+      become: yes
+
+    - name: Write service configuration lighthouse beacon (not started)
+      copy:
+        dest: "/etc/stereum/services/{{ beacon_service }}.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: LighthouseBeaconService
+          id: {{ beacon_service }}
+          image: sigp/lighthouse:v8.3.0
+          command: [lighthouse, bn]
+          volumes:
+            - /opt/stereum/lighthouse-bn/beacon:/opt/app/beacon
+          user: "2000"
+          network: hoodi
+      become: yes
+
+    # outside a cluster nothing is rendered
+    - name: Write service configuration lighthouse validator (solo)
+      copy:
+        dest: "/etc/stereum/services/{{ solo_vc_service }}.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: LighthouseValidatorService
+          id: {{ solo_vc_service }}
+          image: sigp/lighthouse:v8.3.0
+          command:
+            - lighthouse
+            - vc
+            - --network=hoodi
+            - --datadir=/opt/app/validator
+            - --beacon-nodes=http://stereum-{{ beacon_service }}:5052
+            - --suggested-fee-recipient=0x000000000000000000000000000000000000dEaD
+          entrypoint: []
+          env: {}
+          ports: []
+          volumes:
+            - /opt/stereum/lighthouse-solo/validator:/opt/app/validator
+          dependencies:
+            consensusClients:
+              - id: {{ beacon_service }}
+                service: LighthouseBeaconService
+          user: "2000"
+          network: hoodi
+      become: yes

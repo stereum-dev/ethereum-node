@@ -401,6 +401,7 @@ jobs:
             { role: "manage-service", test: "start-stop" },
             { role: "manage-service", test: "write-start" },
             { role: "manage-service", test: "web3signer-db-schema" },
+            { role: "manage-service", test: "obol-proposer-config" },
             # {role: "manage-service", test: "ssv-lighthouse"},
             # {role: "manage-service", test: "ssv-lodestar"},
             # {role: "manage-service", test: "ssv-nimbus"},
@@ -667,6 +668,7 @@ jobs:
             { role: "update-stereum", test: "default" },
             { role: "update-stereum", test: "full" },
             { role: "update-stereum", test: "override" },
+            { role: "update-stereum", test: "node-version" },
           ]
       fail-fast: false
     concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}

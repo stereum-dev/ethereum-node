@@ -22,7 +22,14 @@ function setup({ lodestarVersion = "v1.50.0", running = ["lodestar"], beaconMev 
     service("dvt", "LodestarValidatorService", "v1.50.0", ["--builder.selection=builderalways"], {
       dependencies: { consensusClients: [{ id: "charon" }], executionClients: [], mevboost: [], otherServices: [] },
     }),
-    { id: "charon", service: "CharonService", dependencies: { mevboost: [], consensusClients: [] } },
+    {
+      id: "charon",
+      service: "CharonService",
+      imageVersion: "v1.11.1",
+      command: ["run", "--builder-api"],
+      volumes: [{ servicePath: "/opt/charon", destinationPath: "/opt/stereum/charon-charon" }],
+      dependencies: { mevboost: [], consensusClients: [] },
+    },
   ];
   let multisetup = { [SETUP]: { name: "ethSetup1", network: "hoodi", services: services.map((s) => s.id) } };
   const subtasks = [];
@@ -76,7 +83,7 @@ test("saving writes the setup's settings and the flags of the clients that can t
   expect(services[1].command).toEqual(["--network=hoodi", "--builder", "--builder.urls=https://hoodi.titanrelay.xyz"]);
   expect(serviceManager.writeServiceConfigurationKeepingAutoupdate).toHaveBeenCalledTimes(1);
   expect(serviceManager.manageServiceState).toHaveBeenCalledWith("lodestar", "restarted");
-  // Teku has no Hoodi release yet, Prysm waits for the fork without MEV-Boost, the DVT client is left alone
+  // Teku has no Hoodi release yet, Prysm waits for the fork without MEV-Boost, the DVT client waits for Charon 2.0
   expect(services[2].command).toEqual(["--network=hoodi"]);
   expect(services[3].command).toEqual(["--hoodi"]);
   expect(services[4].command).toEqual(["--builder.selection=builderalways"]);
@@ -84,11 +91,19 @@ test("saving writes the setup's settings and the flags of the clients that can t
     expect.arrayContaining([
       { id: "teku", applied: false, reason: "update" },
       { id: "prysm", applied: false, reason: "after-fork" },
-      { id: "dvt", applied: false, reason: "dvt" },
+      { id: "dvt", applied: false, reason: "dvt-update" },
     ])
   );
   expect(subtasks.map((s) => s.name)).toEqual(
-    expect.arrayContaining(["Saved settings", "Lodestar: flags", "Lodestar: restarted", "Teku: update", "Prysm: after-fork", "Result"])
+    expect.arrayContaining([
+      "Saved settings",
+      "Charon: update",
+      "Lodestar: flags",
+      "Lodestar: restarted",
+      "Teku: update",
+      "Prysm: after-fork",
+      "Result",
+    ])
   );
   expect(subtasks.every((s) => s.name.length <= 28)).toBe(true);
 });
@@ -141,7 +156,7 @@ test("the dialog gets the setup's relays from MEV-Boost and what each client wou
     ["lodestar", null],
     ["teku", "update"],
     ["prysm", "after-fork"],
-    ["dvt", "dvt"],
+    ["dvt", "dvt-update"],
   ]);
 });
 
@@ -230,4 +245,86 @@ test("the ePBS check asks every builder once from the server and reports each an
   ]);
   expect(subtasks[0].data).toContain("HTTP 400: ready\nbad request");
   expect(subtasks[3].data).toBe("1 of 3 answer ePBS");
+});
+
+test("a cluster's builders go to Charon and its proposer config, and its validator client restarts to render them", async () => {
+  const { bs, serviceManager, services, subtasks } = setup({ running: ["lodestar", "charon", "dvt"] });
+  const charon = services.find((s) => s.id === "charon");
+  charon.imageVersion = "v2.0.0-rc2";
+  const dvt = services.find((s) => s.id === "dvt");
+  const configPath = "/opt/stereum/charon-charon/.charon/vc-config/proposer-config.json";
+  const files = {
+    [configPath]: JSON.stringify({
+      version: 1,
+      proposer_config: {},
+      default_config: { fee_recipient: "0x1111111111111111111111111111111111111111", gas_limit: "200000000" },
+    }),
+  };
+  // the file's change time and when the validator client started, in seconds
+  const times = { mtime: 1000, started: 900 };
+  serviceManager.nodeConnection.sshService.exec.mockImplementation((cmd) => {
+    // paths and contents come double-quoted with ", $, ` and \\ escaped
+    const unescape = (text) => text.replace(/\\(["$`\\])/g, "$1");
+    if (cmd.startsWith("stat -c %Y"))
+      return Promise.resolve({ rc: 0, stdout: `${times.mtime}\ntrue ${new Date(times.started * 1000).toISOString()}\n`, stderr: "" });
+    const read = cmd.match(/^cat "([^"]+)"/);
+    if (read) return Promise.resolve({ rc: 0, stdout: files[read[1]] ?? "", stderr: "" });
+    const write = cmd.match(/echo "((?:[^"\\]|\\.)*)" > "([^"]+)"$/);
+    if (write) {
+      files[write[2]] = unescape(write[1]);
+      times.mtime = 2000;
+    }
+    return Promise.resolve({ rc: 0, stdout: "", stderr: "" });
+  });
+  const cluster = {
+    relays: [{ name: "Titan", url: "https://hoodi.titanrelay.xyz" }],
+    minBid: "0.01",
+    maxExecutionPayment: "0",
+    boostFactor: null,
+  };
+
+  const result = await bs.setBuilderSettings({ setupId: SETUP, builders: { clients: { ...builders.clients, charon: cluster } } });
+
+  expect(result.code).toBe(0);
+  expect(charon.command).toEqual(["run", "--builder-api", "--builder-urls=https://hoodi.titanrelay.xyz", "--builder-min-bid=10000000"]);
+  expect(JSON.parse(files[configPath]).default_config.builder).toEqual({
+    min_bid: "10000000",
+    builder_boost_factor: "100",
+    max_execution_payment: "0",
+    builders: [{ url: "https://hoodi.titanrelay.xyz" }],
+  });
+  // the validator client is left to manage-service, which renders the file into its settings on start
+  expect(dvt.command).toEqual(["--builder.selection=builderalways"]);
+  expect(serviceManager.manageServiceState).toHaveBeenCalledWith("charon", "restarted");
+  expect(serviceManager.manageServiceState).toHaveBeenCalledWith("dvt", "restarted");
+  expect(subtasks.map((s) => s.name)).toEqual(expect.arrayContaining(["Charon: flags", "Charon: proposer config", "Lodestar: restarted"]));
+  expect(subtasks.every((s) => s.name.length <= 28)).toBe(true);
+
+  // after its restart it runs with the file, and the dialog shows what the file holds
+  times.started = 3000;
+  const [entry] = await bs.getBuilderSettings();
+  expect(entry.clusters).toEqual([expect.objectContaining({ id: "charon", inSync: true, hasProposerConfig: true, vcs: ["dvt"] })]);
+  expect(entry.clusters[0].current).toMatchObject({ minBid: "0.01", relays: [{ url: "https://hoodi.titanrelay.xyz" }] });
+  expect(entry.clients.find((c) => c.id === "dvt")).toMatchObject({ support: { apply: true }, inSync: true });
+
+  // a builder changed in the file outside the dialog: Charon's flags differ, and the validator client hasn't loaded it
+  files[configPath] = JSON.stringify({
+    ...JSON.parse(files[configPath]),
+    default_config: {
+      ...JSON.parse(files[configPath]).default_config,
+      builder: { ...JSON.parse(files[configPath]).default_config.builder, min_bid: "0" },
+    },
+  });
+  times.mtime = 4000;
+  const [changed] = await bs.getBuilderSettings();
+  expect(changed.clusters[0]).toMatchObject({ inSync: false, current: { minBid: "0" } });
+  expect(changed.clients.find((c) => c.id === "dvt").inSync).toBe(false);
+});
+
+test("a cluster's validator client waits until Charon 2.0 wrote its proposer config", async () => {
+  const { bs, services } = setup();
+  services.find((s) => s.id === "charon").imageVersion = "v2.0.0-rc2";
+  const [entry] = await bs.getBuilderSettings();
+  expect(entry.clients.find((c) => c.id === "dvt").support.reason).toBe("dvt-pending");
+  expect(entry.clusters[0]).toMatchObject({ support: { apply: true }, hasProposerConfig: false });
 });

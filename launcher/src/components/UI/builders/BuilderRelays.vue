@@ -6,7 +6,8 @@
         <span class="text-2xs text-gray-400">{{ t("builders.readyOn", { network }) }}</span>
       </div>
       <!-- only the list scrolls, so the notes and the custom field stay in view -->
-      <div class="flex-1 min-h-[4rem] flex flex-col gap-1 overflow-y-auto rounded-lg bg-[#151618] p-1">
+      <!-- at least three rows; when the dialog is too short for that, the dialog scrolls instead -->
+      <div class="flex-1 min-h-[6.5rem] flex flex-col gap-1 overflow-y-auto rounded-lg bg-[#151618] p-1">
         <label
           v-for="relay in listed"
           :key="relay.name"
@@ -93,7 +94,7 @@ const listed = computed(() => {
   return nodeManage.relaysList
     .filter((r) => r[props.network] || r.epbs?.[props.network])
     .map((r) => {
-      const entry = epbsRelay(r, props.network);
+      const entry = epbsRelay(r, props.network, buildersStore.probes);
       // the address it is checked at: its ePBS one, else the one MEV-Boost uses
       const url = entry ? builderUrl(entry.url) : builderUrl(r[props.network]);
       return { name: r.name, entry, url, inMevBoost: inMevBoost.has(builderUrl(r[props.network])) };
@@ -123,12 +124,12 @@ const probeTitle = (url) => {
 const dotOf = (relay) => {
   const probe = probeOf(relay.url);
   if (relay.entry) return probe === "no" || probe === "unreachable" ? "bg-amber-400" : "bg-green-500";
-  return probe === "ready" ? "bg-amber-400" : "bg-gray-500";
+  return "bg-gray-500";
 };
 const textOf = (relay) => {
   const probe = probeOf(relay.url);
   if (relay.entry) return probe === "no" || probe === "unreachable" ? "text-amber-400" : "text-gray-400";
-  return probe === "ready" ? "text-amber-400" : "text-gray-500";
+  return "text-gray-500";
 };
 const labelOf = (relay) => {
   const probe = probeOf(relay.url);
@@ -137,7 +138,7 @@ const labelOf = (relay) => {
     if (probe === "unreachable") return t("builders.probe.unreachable");
     return host(relay.entry.url);
   }
-  return probe === "ready" ? t("builders.probe.notListed") : t("builders.notYet", { network: props.network });
+  return probe === "checking" ? t("builders.probe.checking") : t("builders.notYet", { network: props.network });
 };
 const customDot = (url) => {
   const probe = probeOf(url);

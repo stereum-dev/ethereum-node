@@ -1,0 +1,17 @@
+---
+- name: Converge
+  hosts: all
+  vars_files:
+  - ../../../../defaults/stereum_defaults.yaml
+
+  tasks:
+    - set_fact:
+        stereum:
+          settings:
+            controls_install_path: "/opt/stereum"
+            updates:
+              lane: stable
+              node_version: main
+    - name: "Include update-stereum"
+      include_role:
+        name: "update-stereum"

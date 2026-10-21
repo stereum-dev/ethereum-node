@@ -1040,7 +1040,12 @@
   "serverSetting": {
     "nodeServerTtl": "NODE & SERVER SETTINGS",
     "auto": "Automated Node Updates",
-    "tgl": "Toggle to enable or disable automated node updates"
+    "tgl": "Toggle to enable or disable automated node updates",
+    "nodeVersion": "Node version",
+    "nodeVersionFollow": "Stereum updates follow",
+    "nodeVersionReleases": "Releases",
+    "nodeVersionReleaseNote": "The node's scripts update to the latest Stereum release.",
+    "nodeVersionBranchNote": "The node's scripts update to the latest state of {ref}, which is unreleased and untested. This applies with the next Stereum update, automated ones included."
   },
   "twoFactor": {
     "setup": "agree to the terms and conditions",
@@ -1089,7 +1094,7 @@
     "readyOn": "ready for ePBS on {network}",
     "notYet": "not on {network} yet",
     "probe": {
-      "notListed": "answers ePBS, not in Stereum's list yet",
+      "checking": "checking…",
       "noRoute": "doesn't answer ePBS now",
       "unreachable": "not reachable from the server",
       "title": {
@@ -1126,7 +1131,11 @@
       "update": "Needs {client} {minimum} or newer for the fork",
       "noRelease": "No release for this fork yet",
       "afterFork": "Set after the fork: its beacon node has no MEV-Boost",
-      "dvt": "Managed by the DVT cluster",
+      "dvtNoRelease": "Its cluster's {client} has no release for this fork yet",
+      "dvtPending": "Waiting for Charon's proposer config: start Charon 2.0 once, then save",
+      "cluster": "Loads Charon's proposer config on every start. {set}",
+      "dvtRestart": "Restart to load Charon's current proposer config",
+      "charonFlags": "{middleware}'s builder flags differ from its proposer config: save to match them",
       "notScheduled": "No Glamsterdam on {network} yet",
       "outOfSync": "Saved settings not on it yet: save again"
     },
@@ -1139,10 +1148,11 @@
     "save": "Save & apply",
     "source": {
       "mevBoost": "Not saved yet. Taken over from this setup's MEV-Boost: its relays that already serve Glamsterdam, its minimum bid and the block choice the validator clients use now.",
-      "local": "Not saved yet. This setup has no MEV-Boost, so its validator clients build their blocks themselves. Choose relays to take blocks from builders after the fork, or keep none.",
-      "saved": "Saved for this setup."
+      "local": "Not saved yet. This setup has no MEV-Boost, so its validator clients build their blocks themselves. Choose relays to take blocks from builders after the fork, or keep none."
     },
     "fromMevBoost": "Take over from MEV-Boost again",
+    "cluster": "Obol cluster: these builders go to {middleware} and its proposer config, and Stereum renders that file into the validator client's settings on every start. Every operator of the cluster has to set exactly the same builders, so agree on them first.",
+    "clusterNoAuth": "{middleware} takes builder URLs only: each builder is authenticated with its host name.",
     "tab": {
       "relays": "Relays",
       "bids": "Bids",

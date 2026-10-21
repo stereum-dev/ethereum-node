@@ -63,15 +63,21 @@ import { ethToGwei } from "@/share/builders";
 import i18n from "@/includes/i18n";
 
 const settings = defineModel({ type: Object, required: true });
+const props = defineProps({
+  // an Obol cluster: Charon needs a block choice above 0%
+  cluster: { type: Boolean, default: false },
+});
 
 const t = i18n.global.t;
 
-const boostOptions = computed(() => [
-  { mode: "default", value: null, label: t("builders.boostDefault") },
-  { mode: "local", value: 0, label: t("builders.boostLocal") },
-  { mode: "profit", value: 100, label: t("builders.boostProfit") },
-  { mode: "custom", value: 90, label: t("builders.boostCustom") },
-]);
+const boostOptions = computed(() =>
+  [
+    { mode: "default", value: null, label: t("builders.boostDefault") },
+    { mode: "local", value: 0, label: t("builders.boostLocal") },
+    { mode: "profit", value: 100, label: t("builders.boostProfit") },
+    { mode: "custom", value: 90, label: t("builders.boostCustom") },
+  ].filter((o) => !props.cluster || o.mode !== "local")
+);
 const customBoost = ref(false);
 const boostMode = computed(() => {
   const value = settings.value.boostFactor;
