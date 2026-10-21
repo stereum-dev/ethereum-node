@@ -212,7 +212,16 @@ test("without restart the flags are written and the running clients keep running
 
 test("the ePBS check asks every builder once from the server and reports each answer", async () => {
   const { bs, serviceManager, subtasks } = setup();
-  const answers = { "hoodi.titanrelay.xyz": "bad request\n400", "relay-hoodi.ultrasound.money": "\n404", "down.example": "\n000" };
+  // the bid route's answer, then the control route's
+  const answers = {
+    "hoodi.titanrelay.xyz": "missing field `message`\n400\n--- control\n\n404",
+    "relay-hoodi.ultrasound.money": "\n404\n--- control\n\n404",
+    "down.example": "\n000\n--- control\n\n000",
+    // rejects every route alike
+    "catchall.example": "bad request\n400\n--- control\nbad request\n400",
+    // rejects unknown routes too, but differently
+    "relay-filtered-hoodi.ultrasound.money": "malformed body\n400\n--- control\nHeader of type `x-auth-token` was missing\n400",
+  };
   serviceManager.nodeConnection.sshService.exec.mockImplementation((cmd) => {
     const host = Object.keys(answers).find((h) => cmd.includes(h));
     return Promise.resolve({ rc: 0, stdout: answers[host], stderr: "" });
@@ -224,6 +233,8 @@ test("the ePBS check asks every builder once from the server and reports each an
       "https://hoodi.titanrelay.xyz/",
       "https://relay-hoodi.ultrasound.money",
       "https://down.example",
+      "https://catchall.example",
+      "https://relay-filtered-hoodi.ultrasound.money",
       "not a url",
     ],
   });
@@ -232,19 +243,27 @@ test("the ePBS check asks every builder once from the server and reports each an
     { url: "https://hoodi.titanrelay.xyz", status: 400, result: "ready" },
     { url: "https://relay-hoodi.ultrasound.money", status: 404, result: "no" },
     { url: "https://down.example", status: 0, result: "unreachable" },
+    { url: "https://catchall.example", status: 400, result: "no" },
+    { url: "https://relay-filtered-hoodi.ultrasound.money", status: 400, result: "ready" },
   ]);
-  expect(serviceManager.nodeConnection.sshService.exec).toHaveBeenCalledTimes(3);
-  expect(serviceManager.nodeConnection.sshService.exec.mock.calls[0][0]).toContain(
-    "-X POST -H 'Content-Type: application/json' -H 'Eth-Consensus-Version: gloas'"
+  expect(serviceManager.nodeConnection.sshService.exec).toHaveBeenCalledTimes(5);
+  const command = serviceManager.nodeConnection.sshService.exec.mock.calls[0][0];
+  expect(command).toContain(
+    `-X POST -H 'Content-Type: application/json' -H 'Eth-Consensus-Version: gloas' -H "Date-Milliseconds: $(date +%s%3N)" -H 'X-Timeout-Ms: 1000'`
   );
+  expect(command).toContain('"https://hoodi.titanrelay.xyz/eth/v1/builder/stereum_unknown_route"');
   expect(subtasks.map((s) => [s.name, s.ok])).toEqual([
     ["hoodi.titanrelay.xyz", true],
     ["relay-hoodi.ultrasound.money", true],
     ["down.example", false],
+    ["catchall.example", true],
+    ["relay-filtered-hoodi.ultrasound.money", true],
     ["Result", true],
   ]);
-  expect(subtasks[0].data).toContain("HTTP 400: ready\nbad request");
-  expect(subtasks[3].data).toBe("1 of 3 answer ePBS");
+  expect(subtasks[0].data).toContain(
+    "HTTP 400: ready\nmissing field `message`\nPOST https://hoodi.titanrelay.xyz/eth/v1/builder/stereum_unknown_route\nHTTP 404"
+  );
+  expect(subtasks[5].data).toBe("2 of 5 answer ePBS");
 });
 
 test("a cluster's builders go to Charon and its proposer config, and its validator client restarts to render them", async () => {

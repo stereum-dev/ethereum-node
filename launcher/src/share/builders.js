@@ -366,15 +366,22 @@ export function currentBoost(service, command, beaconCommand) {
 
 // a Gloas bid request with zero values: an ePBS builder rejects it as invalid, others don't know the route
 export const EPBS_PROBE_PATH = `/eth/v1/builder/execution_payload_bid/0/0x${"0".repeat(64)}/0x${"0".repeat(64)}/0x${"0".repeat(96)}`;
+// a route no builder has: tells a builder that knows the bid route from one that rejects every request
+export const EPBS_PROBE_CONTROL_PATH = "/eth/v1/builder/stereum_unknown_route";
 
 /**
  * What a builder's answer to the ePBS probe means.
  * @param {number} status - HTTP status, 0 when curl got none
+ * @param {Object} control - { status, same }: the answer to the control route, same when its body equals the probe's
  * @returns {"ready"|"no"|"unreachable"}
  */
-export function epbsProbeResult(status) {
+export function epbsProbeResult(status, control) {
   const code = Number(status);
-  if ((code >= 200 && code < 300) || [400, 401, 415, 422].includes(code)) return "ready";
+  if ((code >= 200 && code < 300) || [400, 401, 415, 422].includes(code)) {
+    // a builder that answers every route alike says nothing about the bid route
+    if (control && typeof control === "object" && Number(control.status) === code && control.same) return "no";
+    return "ready";
+  }
   if (code === 404 || code === 405) return "no";
   return "unreachable";
 }

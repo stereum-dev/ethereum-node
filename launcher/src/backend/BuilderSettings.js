@@ -17,6 +17,7 @@ import {
   currentBoost,
   builderUrl,
   EPBS_PROBE_PATH,
+  EPBS_PROBE_CONTROL_PATH,
   epbsProbeResult,
 } from "@/share/builders";
 import {
@@ -28,6 +29,9 @@ import {
   clusterSettingsProblems,
 } from "@/share/obolBuilders";
 import { GLOAS_MIN_VERSIONS, compareVersions, gloasForkTime } from "@/share/gloasFork";
+
+// separates the ePBS probe's two answers in one exec
+const CONTROL_MARK = "--- control";
 
 const SHORT_NAMES = {
   LodestarValidatorService: "Lodestar",
@@ -522,20 +526,29 @@ export class BuilderSettings {
       const results = await Promise.all(
         list.map(async (url) => {
           const request = `${url}${EPBS_PROBE_PATH}`;
+          const control = `${url}${EPBS_PROBE_CONTROL_PATH}`;
+          // with the builder API's timing headers a builder gets past its header checks to the bid itself
+          const curl = (target) =>
+            `curl -s -m 5 -X POST -H 'Content-Type: application/json' -H 'Eth-Consensus-Version: gloas' -H "Date-Milliseconds: $(date +%s%3N)" -H 'X-Timeout-Ms: 1000' -d '{}' -w '\\n%{http_code}' ${StringUtils.escapeStringForShell(target)} || true`;
           const exec = await this.nodeConnection.sshService
-            .exec(
-              `curl -s -m 5 -X POST -H 'Content-Type: application/json' -H 'Eth-Consensus-Version: gloas' -d '{}' -w '\\n%{http_code}' ${StringUtils.escapeStringForShell(request)} || true`
-            )
+            .exec(`${curl(request)}; echo; echo '${CONTROL_MARK}'; ${curl(control)}`)
             .catch((err) => ({ stdout: "", stderr: err?.message ?? String(err) }));
-          const lines = String(exec?.stdout ?? "").split("\n");
-          const status = Number(lines.pop()) || 0;
-          const result = epbsProbeResult(status);
-          const answer = (lines.join("\n").trim() || String(exec?.stderr ?? "").trim()).slice(0, 500);
+          const [probeOut, controlOut = ""] = String(exec?.stdout ?? "").split(`\n${CONTROL_MARK}\n`);
+          const parse = (out) => {
+            const lines = out.replace(/\n$/, "").split("\n");
+            const code = Number(lines.pop()) || 0;
+            return { status: code, body: lines.join("\n").trim() };
+          };
+          const probe = parse(probeOut);
+          const check = parse(controlOut);
+          const status = probe.status;
+          const result = epbsProbeResult(status, { status: check.status, same: check.body === probe.body });
+          const answer = (probe.body || String(exec?.stderr ?? "").trim()).slice(0, 500);
           tm?.otherTasksHandler(
             ref,
             new URL(url).host,
             result !== "unreachable",
-            `POST ${request}\nHTTP ${status || "none"}: ${result}\n${answer}`
+            `POST ${request}\nHTTP ${status || "none"}: ${result}\n${answer}\nPOST ${control}\nHTTP ${check.status || "none"}\n${check.body.slice(0, 200)}`
           );
           return { url, status, result };
         })
