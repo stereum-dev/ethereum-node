@@ -24,7 +24,8 @@ export function clientStatus(client, setup) {
       text: "text-red-400",
       dot: "bg-red-500",
     };
-  if (s.reason === "after-fork") return { label: t("builders.status.afterFork"), text: "text-amber-300", dot: "bg-amber-400" };
+  // nothing to do before the fork: these clients get their builders with the first save after it
+  if (s.reason === "after-fork") return { label: "", text: "", dot: null };
   if (s.reason === "dvt-update")
     return {
       label: s.minimum
@@ -48,7 +49,8 @@ export function clientStatus(client, setup) {
   const outOfSync = client.inSync === false && setup.saved;
   const set = client.running ? t("builders.status.applyRestart") : t("builders.status.apply");
   return {
-    label: outOfSync ? t("builders.status.outOfSync") : cluster ? t("builders.status.cluster", { set }) : set,
+    // a cluster in sync needs no line: the cluster note already says where its builders go
+    label: outOfSync ? t("builders.status.outOfSync") : cluster ? "" : set,
     text: outOfSync ? "text-amber-300" : "text-[#7fb3b3]",
     dot: outOfSync ? "bg-amber-400" : null,
   };
