@@ -1045,7 +1045,9 @@
     "nodeVersionFollow": "Stereum updates follow",
     "nodeVersionReleases": "Releases",
     "nodeVersionReleaseNote": "The node's scripts update to the latest Stereum release.",
-    "nodeVersionBranchNote": "The node's scripts update to the latest state of {ref}, which is unreleased and untested. This applies with the next Stereum update, automated ones included."
+    "nodeVersionBranchNote": "The node's scripts update to the latest state of {ref}, which is unreleased and untested. This applies with the next Stereum update, automated ones included.",
+    "nodeVersionSaving": "Switching to {ref} and checking for updates…",
+    "nodeVersionFailed": "Couldn't change the node version:"
   },
   "twoFactor": {
     "setup": "agree to the terms and conditions",

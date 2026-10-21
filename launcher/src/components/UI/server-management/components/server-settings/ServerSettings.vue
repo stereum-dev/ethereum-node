@@ -104,19 +104,29 @@
         <button
           v-for="option in nodeVersionOptions"
           :key="option.value"
-          class="px-3 py-1 rounded-full text-xs font-semibold border transition-colors"
-          :class="
+          class="px-3 py-1 rounded-full text-xs font-semibold border transition-colors flex items-center gap-1.5 disabled:cursor-not-allowed"
+          :class="[
             nodeVersion === option.value
               ? 'bg-[#336666] border-[#4b8585] text-white'
-              : 'bg-[#1d2023] border-[#4b8585]/40 text-gray-300 hover:border-[#4b8585]'
-          "
-          :disabled="savingNodeVersion"
+              : 'bg-[#1d2023] border-[#4b8585]/40 text-gray-300 hover:border-[#4b8585]',
+            savingNodeVersion !== null && savingNodeVersion !== option.value ? 'opacity-50' : '',
+            savingNodeVersion === option.value ? 'border-amber-400' : '',
+          ]"
+          :disabled="savingNodeVersion !== null"
           @click="setNodeVersion(option.value)"
         >
+          <img v-if="savingNodeVersion === option.value" src="/animation/loading/turning-circle.gif" alt="" class="w-3 h-3" />
           {{ option.label }}
         </button>
       </div>
-      <div v-if="nodeVersion" class="text-2xs text-amber-300 border border-amber-500/60 bg-amber-900/20 rounded-md px-2 py-1">
+      <div v-if="savingNodeVersion !== null" class="flex items-center gap-2 text-2xs text-amber-300 px-1">
+        <img src="/animation/loading/turning-circle.gif" alt="" class="w-3 h-3" />
+        {{ t("serverSetting.nodeVersionSaving", { ref: savingNodeVersion || t("serverSetting.nodeVersionReleases") }) }}
+      </div>
+      <div v-else-if="nodeVersionError" class="text-2xs text-red-400 border border-red-500 bg-red-900/20 rounded-md px-2 py-1">
+        {{ t("serverSetting.nodeVersionFailed") }} {{ nodeVersionError }}
+      </div>
+      <div v-else-if="nodeVersion" class="text-2xs text-amber-300 border border-amber-500/60 bg-amber-900/20 rounded-md px-2 py-1">
         {{ t("serverSetting.nodeVersionBranchNote", { ref: nodeVersion }) }}
       </div>
       <div v-else class="text-2xs text-[#7fb3b3] px-1">{{ t("serverSetting.nodeVersionReleaseNote") }}</div>
@@ -144,7 +154,9 @@ const inputMsg = ref("");
 const isEditActive = ref(false);
 // the git ref the node's Ansible checkout follows instead of the releases, "" for the releases
 const nodeVersion = ref("");
-const savingNodeVersion = ref(false);
+// the ref being saved, null when idle
+const savingNodeVersion = ref(null);
+const nodeVersionError = ref("");
 const nodeVersionOptions = computed(() => {
   const options = [
     { value: "", label: t("serverSetting.nodeVersionReleases") },
@@ -226,8 +238,9 @@ const updateSettings = async () => {
 };
 
 const setNodeVersion = async (value) => {
-  if (value === nodeVersion.value) return;
-  savingNodeVersion.value = true;
+  if (value === nodeVersion.value || savingNodeVersion.value !== null) return;
+  savingNodeVersion.value = value;
+  nodeVersionError.value = "";
   try {
     const settings = await ControlService.getStereumSettings();
     const updates = settings.stereum.settings.updates;
@@ -239,8 +252,9 @@ const setNodeVersion = async (value) => {
     await useUpdateCheck();
   } catch (error) {
     console.error("Error setting the node version:", error);
+    nodeVersionError.value = error?.message ?? String(error);
   } finally {
-    savingNodeVersion.value = false;
+    savingNodeVersion.value = null;
   }
 };
 
