@@ -3,7 +3,7 @@
     <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60" @mousedown.self="$emit('close')">
       <div
         class="max-w-[90vw] flex flex-col rounded-xl border border-[#4b8585] bg-linear-to-br from-[#1f2a2a] to-[#0D0D12] shadow-[0_0_24px_rgba(0,0,0,0.6)] text-gray-200"
-        :class="[wide ? 'w-[640px]' : 'w-[520px]', fill ? 'h-[min(92vh,48rem)]' : 'max-h-[85vh]']"
+        :class="[wide ? 'w-[640px]' : 'w-[520px]', fill ? 'h-[min(92vh,64rem)]' : 'max-h-[85vh]']"
       >
         <div class="flex items-center gap-2 px-4 py-3 border-b border-[#4b8585]/50">
           <span v-if="icon" class="w-8 h-8 rounded-full bg-[#0D0D12] border border-[#4b8585] flex items-center justify-center">

@@ -1089,7 +1089,7 @@
     "readyOn": "ready for ePBS on {network}",
     "notYet": "not on {network} yet",
     "probe": {
-      "notListed": "answers ePBS, not in Stereum's list yet",
+      "checking": "checking…",
       "noRoute": "doesn't answer ePBS now",
       "unreachable": "not reachable from the server",
       "title": {
@@ -1139,8 +1139,7 @@
     "save": "Save & apply",
     "source": {
       "mevBoost": "Not saved yet. Taken over from this setup's MEV-Boost: its relays that already serve Glamsterdam, its minimum bid and the block choice the validator clients use now.",
-      "local": "Not saved yet. This setup has no MEV-Boost, so its validator clients build their blocks themselves. Choose relays to take blocks from builders after the fork, or keep none.",
-      "saved": "Saved for this setup."
+      "local": "Not saved yet. This setup has no MEV-Boost, so its validator clients build their blocks themselves. Choose relays to take blocks from builders after the fork, or keep none."
     },
     "fromMevBoost": "Take over from MEV-Boost again",
     "tab": {

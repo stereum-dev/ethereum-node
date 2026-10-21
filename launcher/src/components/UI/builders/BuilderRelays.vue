@@ -93,7 +93,7 @@ const listed = computed(() => {
   return nodeManage.relaysList
     .filter((r) => r[props.network] || r.epbs?.[props.network])
     .map((r) => {
-      const entry = epbsRelay(r, props.network);
+      const entry = epbsRelay(r, props.network, buildersStore.probes);
       // the address it is checked at: its ePBS one, else the one MEV-Boost uses
       const url = entry ? builderUrl(entry.url) : builderUrl(r[props.network]);
       return { name: r.name, entry, url, inMevBoost: inMevBoost.has(builderUrl(r[props.network])) };
@@ -123,12 +123,12 @@ const probeTitle = (url) => {
 const dotOf = (relay) => {
   const probe = probeOf(relay.url);
   if (relay.entry) return probe === "no" || probe === "unreachable" ? "bg-amber-400" : "bg-green-500";
-  return probe === "ready" ? "bg-amber-400" : "bg-gray-500";
+  return "bg-gray-500";
 };
 const textOf = (relay) => {
   const probe = probeOf(relay.url);
   if (relay.entry) return probe === "no" || probe === "unreachable" ? "text-amber-400" : "text-gray-400";
-  return probe === "ready" ? "text-amber-400" : "text-gray-500";
+  return "text-gray-500";
 };
 const labelOf = (relay) => {
   const probe = probeOf(relay.url);
@@ -137,7 +137,7 @@ const labelOf = (relay) => {
     if (probe === "unreachable") return t("builders.probe.unreachable");
     return host(relay.entry.url);
   }
-  return probe === "ready" ? t("builders.probe.notListed") : t("builders.notYet", { network: props.network });
+  return probe === "checking" ? t("builders.probe.checking") : t("builders.notYet", { network: props.network });
 };
 const customDot = (url) => {
   const probe = probeOf(url);

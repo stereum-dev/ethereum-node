@@ -1,6 +1,9 @@
 <template>
   <ValidatorModal :title="t('builders.title')" icon="/img/icon/service-icons/Other/Builders.png" wide fill @close="requestClose">
-    <span v-if="store.loading && !store.setups.length" class="flex items-center gap-2 text-xs text-gray-400">
+    <span
+      v-if="(store.loading && !store.setups.length) || (setup?.clients.length && !draft)"
+      class="flex items-center gap-2 text-xs text-gray-400"
+    >
       <img src="/animation/loading/turning-circle.gif" class="w-4 h-4" alt="" />{{ t("builders.loading") }}
     </span>
     <p v-else-if="store.error" class="text-xs text-red-400 break-all">{{ store.error }}</p>
@@ -10,21 +13,17 @@
       <div class="flex items-center gap-2 text-xs">
         <span class="text-2xs font-semibold uppercase text-[#7fb3b3]">{{ t("builders.setup") }}</span>
         <span class="font-semibold">{{ setup.name }}</span>
-        <span class="text-2xs text-gray-400">{{ setup.network }}</span>
+        <span class="grow text-2xs text-gray-400">{{ setup.network }}</span>
+        <ActionButton v-if="setup.saved && setup.mevBoost" :label="t('builders.fromMevBoost')" @click="fromMevBoost" />
       </div>
-      <p class="text-xs text-[#7fb3b3]">{{ t("builders.intro") }}</p>
-      <div
-        v-if="!setup.saved || setup.mevBoost"
-        class="rounded-lg border border-[#4b8585] bg-[#224141] px-3 py-2 text-xs flex flex-col gap-1"
-      >
-        <div class="flex items-center gap-2">
-          <span class="grow">{{ sourceText }}</span>
-          <ActionButton v-if="setup.saved && setup.mevBoost" :label="t('builders.fromMevBoost')" @click="fromMevBoost" />
-        </div>
-        <span v-if="missing.length" class="text-amber-300">{{
-          t("builders.migrationMissing", { relays: missing.join(", "), network: setup.network })
-        }}</span>
-      </div>
+      <!-- the explanation and where the settings come from only until the first save, so the lists keep their room -->
+      <template v-if="!setup.saved">
+        <p class="text-2xs text-[#7fb3b3]">{{ t("builders.intro") }}</p>
+        <div class="rounded-lg border border-[#4b8585] bg-[#224141] px-3 py-1.5 text-2xs">{{ sourceText }}</div>
+      </template>
+      <span v-if="missing.length" class="text-2xs text-amber-300">{{
+        t("builders.migrationMissing", { relays: missing.join(", "), network: setup.network })
+      }}</span>
 
       <div class="flex flex-wrap gap-2">
         <button
@@ -44,7 +43,7 @@
         <span class="grow" :class="clientStatus(client, setup).text">{{ clientStatus(client, setup).label }}</span>
         <ActionButton v-if="setup.clients.length > 1" :label="t('builders.useForAll')" @click="useForAll" />
       </div>
-      <p v-for="note in notes" :key="note" class="text-xs text-amber-300">{{ t(`builders.note.${note}`) }}</p>
+      <p v-for="note in notes" :key="note" class="text-2xs text-amber-300">{{ t(`builders.note.${note}`) }}</p>
 
       <div class="flex border-b border-[#4b8585]">
         <button
@@ -138,7 +137,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, reactive, ref, watch } from "vue";
+import { computed, nextTick, onMounted, reactive, ref, watch } from "vue";
 import YAML from "yaml";
 import ValidatorModal from "@/components/UI/validators-page/components/ValidatorModal.vue";
 import ActionButton from "@/components/UI/validators-page/components/ActionButton.vue";
@@ -149,7 +148,7 @@ import BuilderExpert from "./BuilderExpert.vue";
 import { clientStatus, shortName } from "./clientInfo";
 import { useBuilders } from "@/store/builders";
 import { useSetups } from "@/store/setups";
-import { builderConfiguration, capsTrustedPayments, validateBuilderSettings } from "@/share/builders";
+import { builderConfiguration, builderUrl, capsTrustedPayments, validateBuilderSettings } from "@/share/builders";
 import i18n from "@/includes/i18n";
 
 const emit = defineEmits(["close"]);
@@ -171,7 +170,16 @@ const amounts = reactive({ local: "0.05", paid: "0.054", promised: "0" });
 
 // the settings as saved (or, before the first save, as first shown), to tell unapplied edits
 const baseline = ref("");
-const startWith = (fromSetup) => {
+let starting = 0;
+// the draft being built, for the reminder on opening
+let started = Promise.resolve();
+const startWith = async (fromSetup) => {
+  const run = ++starting;
+  // relays from MEV-Boost come over once the live check knows which of them answer ePBS
+  if (fromSetup && setup.value.mevBoostRelays.length) {
+    await store.probe(setup.value.mevBoostRelays.map((url) => builderUrl(url)));
+    if (run !== starting || !setup.value) return;
+  }
   const start = store.draftFor(setup.value, fromSetup);
   draft.value = start.builders;
   missing.value = start.missing;
@@ -184,7 +192,7 @@ watch(
   setupKey,
   (key) => {
     if (!key) return;
-    startWith(!setup.value.saved);
+    started = startWith(!setup.value.saved);
     clientId.value = setup.value.clients[0]?.id ?? null;
     activeTab.value = "relays";
   },
@@ -193,7 +201,6 @@ watch(
 const fromMevBoost = () => startWith(true);
 
 const sourceText = computed(() => {
-  if (setup.value.saved) return t("builders.source.saved");
   if (setup.value.mevBoost) return t("builders.source.mevBoost");
   return t("builders.source.local");
 });
@@ -301,6 +308,8 @@ const discard = () => {
 
 onMounted(async () => {
   await store.load();
+  await nextTick();
+  await started;
   openReminder();
 });
 </script>
