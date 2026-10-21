@@ -1,6 +1,7 @@
 <template>
   <div class="flex flex-col gap-3" :class="disabled ? 'opacity-50 pointer-events-none' : ''">
-    <div class="flex flex-col gap-1">
+    <p v-if="cluster" class="text-2xs text-[#7fb3b3]">{{ t("builders.clusterNoAuth", { middleware: "Charon" }) }}</p>
+    <div v-else class="flex flex-col gap-1">
       <span class="text-2xs font-semibold uppercase text-[#7fb3b3]">{{ t("builders.authData") }}</span>
       <p class="text-2xs text-[#7fb3b3]">{{ t("builders.authHint") }}</p>
       <div v-for="relay in settings.relays" :key="relay.url" class="flex items-center gap-2 text-xs">
@@ -23,7 +24,11 @@ import { relayHost } from "./relayHost";
 import i18n from "@/includes/i18n";
 
 const settings = defineModel({ type: Object, required: true });
-defineProps({ disabled: { type: Boolean, default: false } });
+defineProps({
+  disabled: { type: Boolean, default: false },
+  // an Obol cluster: Charon takes builder URLs only
+  cluster: { type: Boolean, default: false },
+});
 
 const t = i18n.global.t;
 </script>

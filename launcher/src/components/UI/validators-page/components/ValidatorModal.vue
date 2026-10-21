@@ -12,7 +12,7 @@
           <span class="grow text-sm font-bold uppercase tracking-wide">{{ title }}</span>
           <button class="w-7 h-7 rounded-full text-sm text-gray-400 hover:text-white hover:bg-[#336666]" @click="$emit('close')">✕</button>
         </div>
-        <div class="flex flex-col gap-3 px-4 py-4" :class="fill ? 'flex-1 min-h-0' : 'overflow-y-auto'">
+        <div class="flex flex-col gap-3 px-4 py-4" :class="fill ? 'flex-1 min-h-0 overflow-y-auto' : 'overflow-y-auto'">
           <slot />
         </div>
         <div v-if="$slots.footer" class="flex items-center justify-end gap-2 px-4 py-3 border-t border-[#ffffff10]">

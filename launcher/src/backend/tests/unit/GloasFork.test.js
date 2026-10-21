@@ -87,7 +87,7 @@ test("a service without a compatible release is always listed", () => {
   expect(sepolia.outdated).toEqual([{ name: "Obol Charon", service: "CharonService", version: "v1.11.0", minimum: null }]);
 });
 
-test("on hoodi every client is checked, also those without a release for its fork", () => {
+test("on hoodi every client is checked against the first release that follows its fork", () => {
   const result = gloasReadiness(
     [
       service("LodestarBeaconService", "hoodi", "v1.49.0", "Lodestar"),
@@ -100,7 +100,9 @@ test("on hoodi every client is checked, also those without a release for its for
       service("RethService", "hoodi", "v2.7.0", "Reth"),
       service("RethService", "hoodi", "v2.8.0", "Reth new"),
       service("CharonService", "hoodi", "v1.11.1", "Obol Charon"),
-      service("CharonService", "hoodi", "v2.0.0-rc1", "Obol Charon new"),
+      service("CharonService", "hoodi", "v2.0.0-rc2", "Obol Charon new"),
+      service("CharonService", "hoodi", "v2.0.0-rc1", "Obol Charon rc1"),
+      service("PlutoService", "hoodi", "v1.7.1", "Obol Pluto"),
       service("EthrexService", "hoodi", "30.0.0-rc.2", "Ethrex"),
       service("EthrexService", "hoodi", "29.0.1", "Ethrex old"),
     ],
@@ -117,9 +119,11 @@ test("on hoodi every client is checked, also those without a release for its for
         { name: "Teku", service: "TekuBeaconService", version: "26.10.0", minimum: "26.10.1" },
         { name: "Prysm", service: "PrysmBeaconService", version: "v7.2.1", minimum: "7.3.0-rc.1" },
         { name: "Besu", service: "BesuService", version: "26.9.0", minimum: "26.10.0" },
-        { name: "Geth", service: "GethService", version: "v1.17.8", minimum: null },
+        { name: "Geth", service: "GethService", version: "v1.17.8", minimum: "1.17.9" },
         { name: "Reth", service: "RethService", version: "v2.7.0", minimum: "2.8.0" },
-        { name: "Obol Charon", service: "CharonService", version: "v1.11.1", minimum: "2.0.0-rc1" },
+        { name: "Obol Charon", service: "CharonService", version: "v1.11.1", minimum: "2.0.0-rc2" },
+        { name: "Obol Charon rc1", service: "CharonService", version: "v2.0.0-rc1", minimum: "2.0.0-rc2" },
+        { name: "Obol Pluto", service: "PlutoService", version: "v1.7.1", minimum: null },
         { name: "Ethrex old", service: "EthrexService", version: "29.0.1", minimum: "30.0.0-rc.1" },
       ],
     },

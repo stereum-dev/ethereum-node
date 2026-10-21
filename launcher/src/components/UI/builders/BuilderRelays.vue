@@ -6,7 +6,8 @@
         <span class="text-2xs text-gray-400">{{ t("builders.readyOn", { network }) }}</span>
       </div>
       <!-- only the list scrolls, so the notes and the custom field stay in view -->
-      <div class="flex-1 min-h-[4rem] flex flex-col gap-1 overflow-y-auto rounded-lg bg-[#151618] p-1">
+      <!-- at least three rows; when the dialog is too short for that, the dialog scrolls instead -->
+      <div class="flex-1 min-h-[6.5rem] flex flex-col gap-1 overflow-y-auto rounded-lg bg-[#151618] p-1">
         <label
           v-for="relay in listed"
           :key="relay.name"

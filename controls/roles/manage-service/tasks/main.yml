@@ -169,6 +169,13 @@
         (stereum.manage_service.state == "started" or stereum.manage_service.state == "restarted") and
         (stereum_service_configuration.command | default([]) | select('match', '^--slashing-protection-db-url=jdbc:postgresql://') | length) > 0
 
+    - name: Render an Obol cluster validator client's proposer settings
+      ansible.builtin.include_tasks: obol-proposer-config.yml
+      when: >
+        stereum_service_configuration.service in ["LighthouseValidatorService", "LodestarValidatorService", "PrysmValidatorService",
+        "TekuValidatorService", "NimbusValidatorService"] and
+        (stereum.manage_service.state == "started" or stereum.manage_service.state == "restarted")
+
     - name: Start service
       community.docker.docker_container:
         command_handling: correct

@@ -34,9 +34,10 @@ export const useBuilders = defineStore("builders", {
       const configured = setup.saved
         ? Object.values(setup.builders.clients ?? {}).some((c) => c.relays?.length > 0)
         : setup.mevBoostRelays.length > 0;
-      if (configured && setup.clients.some((c) => c.support.reason === "update")) return "red";
+      if (configured && setup.clients.some((c) => ["update", "dvt-update"].includes(c.support.reason))) return "red";
       if (!setup.saved && setup.mevBoostRelays.length) return "amber";
       if (setup.saved && setup.clients.some((c) => c.support.apply && c.inSync === false)) return "amber";
+      if (setup.saved && (setup.clusters ?? []).some((c) => c.support.apply && c.inSync === false)) return "amber";
       return null;
     },
   },
@@ -92,7 +93,14 @@ export const useBuilders = defineStore("builders", {
      * @returns {{ builders: { route, clients }, missing: Array<string> }} missing: MEV-Boost relays without ePBS on this network yet
      */
     draftFor(setup, fromSetup = !setup.saved) {
-      if (!fromSetup) return { builders: JSON.parse(JSON.stringify(setup.builders)), missing: [] };
+      // a cluster's builders are what Charon's proposer config holds, also when changed outside the dialog
+      const fromFile = (builders) => {
+        for (const c of setup.clusters ?? [])
+          if (c.current)
+            builders.clients[c.id] = { ...JSON.parse(JSON.stringify(DEFAULT_BUILDER_SETTINGS)), ...JSON.parse(JSON.stringify(c.current)) };
+        return builders;
+      };
+      if (!fromSetup) return { builders: fromFile(JSON.parse(JSON.stringify(setup.builders))), missing: [] };
       const list = useNodeManage().relaysList;
       const relays = [];
       const missing = [];
@@ -102,18 +110,16 @@ export const useBuilders = defineStore("builders", {
         if (entry) relays.push(entry);
         else missing.push(known?.name ?? builderUrl(url) ?? url);
       }
-      const clients = Object.fromEntries(
-        setup.clients.map((c) => [
-          c.id,
-          {
-            ...JSON.parse(JSON.stringify(DEFAULT_BUILDER_SETTINGS)),
-            relays: JSON.parse(JSON.stringify(relays)),
-            minBid: setup.mevBoostMinBid ?? "0",
-            boostFactor: c.currentBoost ?? null,
-          },
-        ])
-      );
-      return { builders: { route: "direct", clients }, missing };
+      const fromMevBoost = (boostFactor) => ({
+        ...JSON.parse(JSON.stringify(DEFAULT_BUILDER_SETTINGS)),
+        relays: JSON.parse(JSON.stringify(relays)),
+        minBid: setup.mevBoostMinBid ?? "0",
+        boostFactor,
+      });
+      const clients = Object.fromEntries(setup.clients.map((c) => [c.id, fromMevBoost(c.currentBoost ?? null)]));
+      // a cluster without a proposer config yet starts like the setup's MEV-Boost (with Charon's own boost)
+      for (const c of setup.clusters ?? []) clients[c.id] = fromMevBoost(null);
+      return { builders: fromFile({ route: "direct", clients }), missing };
     },
   },
 });

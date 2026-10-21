@@ -1126,7 +1126,11 @@
       "update": "Needs {client} {minimum} or newer for the fork",
       "noRelease": "No release for this fork yet",
       "afterFork": "Set after the fork: its beacon node has no MEV-Boost",
-      "dvt": "Managed by the DVT cluster",
+      "dvtNoRelease": "Its cluster's {client} has no release for this fork yet",
+      "dvtPending": "Waiting for Charon's proposer config: start Charon 2.0 once, then save",
+      "cluster": "Loads Charon's proposer config on every start. {set}",
+      "dvtRestart": "Restart to load Charon's current proposer config",
+      "charonFlags": "{middleware}'s builder flags differ from its proposer config: save to match them",
       "notScheduled": "No Glamsterdam on {network} yet",
       "outOfSync": "Saved settings not on it yet: save again"
     },
@@ -1142,6 +1146,8 @@
       "local": "Not saved yet. This setup has no MEV-Boost, so its validator clients build their blocks themselves. Choose relays to take blocks from builders after the fork, or keep none."
     },
     "fromMevBoost": "Take over from MEV-Boost again",
+    "cluster": "Obol cluster: these builders go to {middleware} and its proposer config, and Stereum renders that file into the validator client's settings on every start. Every operator of the cluster has to set exactly the same builders, so agree on them first.",
+    "clusterNoAuth": "{middleware} takes builder URLs only: each builder is authenticated with its host name.",
     "tab": {
       "relays": "Relays",
       "bids": "Bids",

@@ -8,6 +8,8 @@ export const SHORT_NAMES = {
   TekuValidatorService: "Teku",
   NimbusValidatorService: "Nimbus",
   LighthouseValidatorService: "Lighthouse",
+  CharonService: "Charon",
+  PlutoService: "Pluto",
 };
 export const shortName = (service) => SHORT_NAMES[service] ?? service;
 
@@ -23,12 +25,30 @@ export function clientStatus(client, setup) {
       dot: "bg-red-500",
     };
   if (s.reason === "after-fork") return { label: t("builders.status.afterFork"), text: "text-amber-300", dot: "bg-amber-400" };
-  if (s.reason === "dvt") return { label: t("builders.status.dvt"), text: "text-gray-400", dot: null };
+  if (s.reason === "dvt-update")
+    return {
+      label: s.minimum
+        ? t("builders.status.update", { client: shortName(s.middleware ?? "CharonService"), minimum: s.minimum })
+        : t("builders.status.dvtNoRelease", { client: shortName(s.middleware ?? "PlutoService") }),
+      text: "text-red-400",
+      dot: "bg-red-500",
+    };
+  if (s.reason === "dvt-pending") return { label: t("builders.status.dvtPending"), text: "text-amber-300", dot: "bg-amber-400" };
   if (s.reason === "not-scheduled")
     return { label: t("builders.status.notScheduled", { network: setup.network }), text: "text-gray-400", dot: null };
+  const cluster = client.clusterId ? setup.clusters?.find((c) => c.id === client.clusterId) : null;
+  // a cluster's validator client loads Charon's proposer config when it starts
+  if (cluster?.inSync === false)
+    return {
+      label: t("builders.status.charonFlags", { middleware: shortName(cluster.service) }),
+      text: "text-amber-300",
+      dot: "bg-amber-400",
+    };
+  if (cluster && client.inSync === false) return { label: t("builders.status.dvtRestart"), text: "text-amber-300", dot: "bg-amber-400" };
   const outOfSync = client.inSync === false && setup.saved;
+  const set = client.running ? t("builders.status.applyRestart") : t("builders.status.apply");
   return {
-    label: outOfSync ? t("builders.status.outOfSync") : client.running ? t("builders.status.applyRestart") : t("builders.status.apply"),
+    label: outOfSync ? t("builders.status.outOfSync") : cluster ? t("builders.status.cluster", { set }) : set,
     text: outOfSync ? "text-amber-300" : "text-[#7fb3b3]",
     dot: outOfSync ? "bg-amber-400" : null,
   };

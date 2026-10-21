@@ -1,0 +1,30 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: molecule_hetznercloud
+platforms:
+  - name: "manage-service--obol-proposer-config--ubuntu-26.04"
+    server_type: cpx21
+    image: ubuntu-26.04
+    location: hil
+  # - name: "role-manage-service-centos-7"
+  #   server_type: cpx11
+  #   image: centos-7
+provisioner:
+  name: ansible
+  config_options:
+    ssh_connection:
+      ssh_args: -o ServerAliveInterval=30 -o ControlMaster=auto -o ControlPersist=60s
+  env:
+    ANSIBLE_PIPELINING: "True"
+    ANSIBLE_ROLES_PATH: "${MOLECULE_PROJECT_DIRECTORY}/..:./roles:~/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles"
+scenario:
+  test_sequence:
+    - destroy
+    - create
+    - prepare
+    - converge
+    - idempotence
+    - verify
+    - destroy
