@@ -1,0 +1,30 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: molecule_hetznercloud
+platforms:
+  - name: "update-stereum--node-version--ubuntu-26.04"
+    server_type: cpx11
+    image: ubuntu-26.04
+    location: hil
+#  - name: "update-stereum--default--centos-stream-8"
+#    server_type: cpx11
+#    image: centos-stream-8
+provisioner:
+  name: ansible
+  config_options:
+    ssh_connection:
+      ssh_args: -o ServerAliveInterval=30 -o ControlMaster=auto -o ControlPersist=60s
+  env:
+    ANSIBLE_PIPELINING: "True"
+    ANSIBLE_ROLES_PATH: "${MOLECULE_PROJECT_DIRECTORY}/..:./roles:~/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles"
+scenario:
+  test_sequence:
+    - destroy
+    - create
+    - prepare
+    - converge
+    #- idempotence
+    - verify
+    - destroy

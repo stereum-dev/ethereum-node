@@ -1040,7 +1040,12 @@
   "serverSetting": {
     "nodeServerTtl": "NODE & SERVER SETTINGS",
     "auto": "Automated Node Updates",
-    "tgl": "Toggle to enable or disable automated node updates"
+    "tgl": "Toggle to enable or disable automated node updates",
+    "nodeVersion": "Node version",
+    "nodeVersionFollow": "Stereum updates follow",
+    "nodeVersionReleases": "Releases",
+    "nodeVersionReleaseNote": "The node's scripts update to the latest Stereum release.",
+    "nodeVersionBranchNote": "The node's scripts update to the latest state of {ref}, which is unreleased and untested. This applies with the next Stereum update, automated ones included."
   },
   "twoFactor": {
     "setup": "agree to the terms and conditions",

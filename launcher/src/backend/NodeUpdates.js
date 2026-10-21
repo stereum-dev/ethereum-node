@@ -1,5 +1,6 @@
 import axios from "axios";
 import { SSHService } from "./SSHService";
+import { StringUtils } from "./StringUtils.js";
 const log = require("electron-log");
 
 export class NodeUpdates {
@@ -37,13 +38,36 @@ export class NodeUpdates {
    * @returns {Object} - updates available for services
    */
   async checkUpdates() {
-    if (!this.nodeConnection.settings?.stereum?.settings?.updates?.lane) {
-      await this.nodeConnection.findStereumSettings();
-    }
-    const lane = this.nodeConnection.settings?.stereum?.settings?.updates?.lane || "stable";
+    // read fresh: stereum.yaml may have been edited on the server
+    await this.nodeConnection.findStereumSettings().catch(() => {});
+    const updates = this.nodeConnection.settings?.stereum?.settings?.updates;
+    const lane = updates?.lane || "stable";
     let response = await axios.get(`https://stereum.net/downloads/updates${lane == "dev" ? ".dev" : ""}.json`);
     if (global.branch === "main") response.data.stereum.push({ name: "HEAD", commit: "main" });
+    else if (updates?.node_version) {
+      // the node follows a branch (e.g. main) instead of the releases
+      const ref = String(updates.node_version);
+      response.data.stereum.push({ name: ref, commit: await this.resolveNodeVersion(ref) });
+    }
     return response.data;
+  }
+
+  /**
+   * the commit a branch or tag of the node's Ansible repository points to, the ref itself if it is none
+   * @param {string} ref
+   * @returns {string}
+   */
+  async resolveNodeVersion(ref) {
+    try {
+      const result = await this.nodeConnection.sshService.exec(
+        `git ls-remote https://github.com/stereum-dev/ethereum-node.git ${StringUtils.escapeStringForShell(ref)}`
+      );
+      const commit = (result.stdout || "").split(/\s+/)[0];
+      if (/^[0-9a-f]{40}$/.test(commit)) return commit;
+    } catch (err) {
+      log.error("Couldn't resolve node version " + ref + ":", err);
+    }
+    return ref;
   }
 
   /**

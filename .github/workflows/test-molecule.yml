@@ -668,6 +668,7 @@ jobs:
             { role: "update-stereum", test: "default" },
             { role: "update-stereum", test: "full" },
             { role: "update-stereum", test: "override" },
+            { role: "update-stereum", test: "node-version" },
           ]
       fail-fast: false
     concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}

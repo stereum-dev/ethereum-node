@@ -1,0 +1,22 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  # node_version: main follows the branch, not the latest release in updates.json
+  - name: Get git hash
+    ansible.builtin.command: git rev-parse HEAD
+    args:
+      chdir: "/opt/stereum/ansible"
+    register: git_hash
+    changed_when: false
+  - name: Get the hash of main
+    ansible.builtin.command: git ls-remote https://github.com/stereum-dev/ethereum-node.git refs/heads/main
+    register: main_hash
+    changed_when: false
+  - debug:
+      msg: "{{ [git_hash.stdout, main_hash.stdout] }}"
+  - name: Check for main's git hash
+    assert:
+      that:
+        - git_hash.stdout == (main_hash.stdout.split() | first)
