@@ -30,3 +30,7 @@ yarn-error.log*
 # Molecule temp files
 stereum-pwd
 .venv
+
+# Python bytecode (Ansible modules, molecule)
+__pycache__/
+*.pyc

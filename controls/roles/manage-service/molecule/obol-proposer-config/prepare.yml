@@ -11,6 +11,7 @@
     lodestar_service: 9e8d7c6b-5a4f-4e3d-8c2b-1a0f9e8d7c60
     beacon_service: 1f2e3d4c-5b6a-4978-8695-a4b3c2d1e0f0
     solo_vc_service: 5c4b3a29-1807-4f6e-9d5c-4b3a2918f7e0
+    remote_vc_service: 8f7e6d5c-4b3a-4291-8807-f6e5d4c3b2a0
     pubkey: "0xb87f614580c8c94e9163afbc888815950c8430cc270cd541b8154a35728885a85563516d2d47fc63f562ac5f68a4ea8f"
 
   tasks:
@@ -35,6 +36,7 @@
         - /opt/stereum/charon/data/.charon/vc-config
         - /opt/stereum/lighthouse-vc/validator/validators
         - /opt/stereum/lodestar-vc/validator
+        - /opt/stereum/lighthouse-remote/validator/validators
       become: yes
 
     # Charon only has to be configured: the validator clients read its config and proposer config
@@ -191,6 +193,48 @@
             consensusClients:
               - id: {{ beacon_service }}
                 service: LighthouseBeaconService
+          user: "2000"
+          network: hoodi
+      become: yes
+
+    # Charon on another server: its URL is set in the validator client's command, and Stereum stores a copy of
+    # Charon's proposer config in the validator client's folder
+    - name: Write the copy of the remote Charon's proposer config
+      copy:
+        dest: /opt/stereum/lighthouse-remote/charon-proposer-config.json
+        mode: 0644
+        content: |
+          {"version": 1, "builder_api": true,
+           "proposer_config": {"{{ pubkey }}": {"fee_recipient": "0x3333333333333333333333333333333333333333"}},
+           "default_config": {"fee_recipient": "0x4444444444444444444444444444444444444444", "gas_limit": "60000000",
+             "builder": {"min_bid": "0", "builder_boost_factor": "100", "max_execution_payment": "0",
+               "builders": [{"url": "https://relay-hoodi.ultrasound.money"}]}}}
+      become: yes
+
+    - name: Write service configuration lighthouse validator (remote Charon)
+      copy:
+        dest: "/etc/stereum/services/{{ remote_vc_service }}.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: LighthouseValidatorService
+          id: {{ remote_vc_service }}
+          image: sigp/lighthouse:v8.3.0
+          command:
+            - lighthouse
+            - vc
+            - --network=hoodi
+            - --datadir=/opt/app/validator
+            - --beacon-nodes=http://charon.example:3600
+            - --suggested-fee-recipient=0x000000000000000000000000000000000000dEaD
+          entrypoint: []
+          env: {}
+          ports: []
+          volumes:
+            - /opt/stereum/lighthouse-remote/validator:/opt/app/validator
+          dependencies:
+            consensusClients: []
           user: "2000"
           network: hoodi
       become: yes

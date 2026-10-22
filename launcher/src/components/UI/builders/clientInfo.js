@@ -35,6 +35,7 @@ export function clientStatus(client, setup) {
       dot: "bg-red-500",
     };
   if (s.reason === "dvt-pending") return { label: t("builders.status.dvtPending"), text: "text-amber-300", dot: "bg-amber-400" };
+  if (s.reason === "remote-pending") return { label: t("builders.status.remotePending"), text: "text-amber-300", dot: "bg-amber-400" };
   if (s.reason === "not-scheduled")
     return { label: t("builders.status.notScheduled", { network: setup.network }), text: "text-gray-400", dot: null };
   const cluster = client.clusterId ? setup.clusters?.find((c) => c.id === client.clusterId) : null;

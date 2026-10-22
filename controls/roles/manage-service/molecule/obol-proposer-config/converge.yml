@@ -47,3 +47,17 @@
             state: started
             configuration:
               id: 5c4b3a29-1807-4f6e-9d5c-4b3a2918f7e0
+    # lighthouse (remote Charon)
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: false
+            state: started
+            configuration:
+              id: 8f7e6d5c-4b3a-4291-8807-f6e5d4c3b2a0
