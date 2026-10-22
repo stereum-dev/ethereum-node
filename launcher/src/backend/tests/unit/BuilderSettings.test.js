@@ -347,3 +347,157 @@ test("a cluster's validator client waits until Charon 2.0 wrote its proposer con
   expect(entry.clients.find((c) => c.id === "dvt").support.reason).toBe("dvt-pending");
   expect(entry.clusters[0]).toMatchObject({ support: { apply: true }, hasProposerConfig: false });
 });
+
+test("a validator client behind Charon on another server signs with a pasted copy of Charon's proposer config", async () => {
+  const { bs, serviceManager, services, subtasks, multisetup } = setup({ running: ["lodestar", "remote-vc", "url-vc"] });
+  multisetup()[SETUP].services.push("ext", "remote-vc", "url-vc", "ext2", "plain-vc");
+  const vcVolume = (dir) => [{ servicePath: "/opt/app/validator", destinationPath: `/opt/stereum/${dir}/validator` }];
+  services.push(
+    {
+      id: "ext",
+      service: "ExternalConsensusService",
+      env: { link: "http://10.0.0.5:3600/" },
+      volumes: [{ servicePath: "", destinationPath: "/opt/stereum/ext-ext/link.txt" }],
+      dependencies: { mevboost: [], consensusClients: [] },
+    },
+    // behind an external beacon node
+    service("remote-vc", "LighthouseValidatorService", "v8.3.0", ["lighthouse", "vc"], {
+      volumes: vcVolume("lighthouse-remote"),
+      dependencies: { consensusClients: [{ id: "ext" }], executionClients: [], mevboost: [], otherServices: [] },
+    }),
+    // with Charon's URL in its command, as set up by hand
+    service("url-vc", "LodestarValidatorService", "v1.50.0", ["validator", "--beaconNodes=http://10.0.0.5:3600", "--distributed"], {
+      volumes: vcVolume("lodestar-url"),
+      dependencies: { consensusClients: [], executionClients: [], mevboost: [], otherServices: [] },
+    }),
+    // another external beacon node, which is no Charon
+    { id: "ext2", service: "ExternalConsensusService", env: { link: "http://10.0.0.6:5052" }, volumes: [], dependencies: {} },
+    service("plain-vc", "TekuValidatorService", "26.10.1", ["--network=hoodi"], {
+      dependencies: { consensusClients: [{ id: "ext2" }], executionClients: [], mevboost: [], otherServices: [] },
+    })
+  );
+  const copies = ["/opt/stereum/lighthouse-remote/charon-proposer-config.json", "/opt/stereum/lodestar-url/charon-proposer-config.json"];
+  const files = {};
+  const times = { mtime: 1000, started: 900 };
+  const asked = [];
+  serviceManager.nodeConnection.sshService.exec.mockImplementation((cmd) => {
+    const unescape = (text) => text.replace(/\\(["$`\\])/g, "$1");
+    if (cmd.startsWith("curl -s -m 3")) {
+      asked.push(cmd);
+      return Promise.resolve({
+        rc: 0,
+        stdout: cmd.includes("10.0.0.5")
+          ? JSON.stringify({ data: { version: "obolnetwork/charon/v2.0.0-rc2-1a2b3c4/amd64-linux" } })
+          : JSON.stringify({ data: { version: "Teku/v26.10.1/linux-x86_64" } }),
+        stderr: "",
+      });
+    }
+    if (cmd.startsWith("stat -c %Y"))
+      return Promise.resolve({ rc: 0, stdout: `${times.mtime}\ntrue ${new Date(times.started * 1000).toISOString()}\n`, stderr: "" });
+    const read = cmd.match(/^cat "([^"]+)"/);
+    if (read) return Promise.resolve({ rc: 0, stdout: files[read[1]] ?? "", stderr: "" });
+    const write = cmd.match(/echo "((?:[^"\\]|\\.)*)" > "([^"]+)"$/);
+    if (write) {
+      files[write[2]] = unescape(write[1]);
+      times.mtime = 2000;
+    }
+    return Promise.resolve({ rc: 0, stdout: "", stderr: "" });
+  });
+
+  // found by Charon's version answer, one cluster for both, asked once per URL; waiting for a copy
+  let [entry] = await bs.getBuilderSettings();
+  expect(asked.filter((c) => c.includes("10.0.0.5"))).toHaveLength(1);
+  const remote = entry.clusters.find((c) => c.remote);
+  expect(remote).toMatchObject({
+    id: "charon@http://10.0.0.5:3600",
+    version: "v2.0.0-rc2",
+    support: { apply: true },
+    vcs: ["remote-vc", "url-vc"],
+  });
+  for (const id of ["remote-vc", "url-vc"])
+    expect(entry.clients.find((c) => c.id === id)).toMatchObject({ clusterId: remote.id, support: { reason: "remote-pending" } });
+  expect(entry.clients.find((c) => c.id === "plain-vc").clusterId).toBeNull();
+
+  const copy = {
+    version: 1,
+    builder_api: true,
+    proposer_config: {},
+    default_config: {
+      fee_recipient: "0x1111111111111111111111111111111111111111",
+      gas_limit: "200000000",
+      builder: {
+        min_bid: "0",
+        builder_boost_factor: "100",
+        max_execution_payment: "0",
+        builders: [{ url: "https://hoodi.titanrelay.xyz" }],
+      },
+    },
+  };
+  // a broken copy is refused before anything is written
+  const refused = await bs.setBuilderSettings({
+    setupId: SETUP,
+    builders: { ...builders, proposerConfigs: { [remote.id]: { version: 1 } } },
+  });
+  expect(refused.code).toBe(1);
+  expect(Object.keys(files)).toHaveLength(0);
+
+  const result = await bs.setBuilderSettings({ setupId: SETUP, builders: { ...builders, proposerConfigs: { [remote.id]: copy } } });
+  expect(result.code).toBe(0);
+  for (const path of copies) expect(JSON.parse(files[path])).toEqual(copy);
+  // its clients restart to render the copy, the setup file keeps no copy
+  expect(serviceManager.manageServiceState).toHaveBeenCalledWith("remote-vc", "restarted");
+  expect(serviceManager.manageServiceState).toHaveBeenCalledWith("url-vc", "restarted");
+  expect(subtasks.map((s) => s.name)).toEqual(expect.arrayContaining(["Charon copy: stored", "Lighthouse: restarted"]));
+  expect(subtasks.every((s) => s.name.length <= 28)).toBe(true);
+
+  times.started = 3000;
+  [entry] = await bs.getBuilderSettings();
+  expect(entry.clusters.find((c) => c.remote)).toMatchObject({
+    hasProposerConfig: true,
+    builderApi: true,
+    link: "http://10.0.0.5:3600",
+    current: { relays: [{ url: "https://hoodi.titanrelay.xyz" }] },
+  });
+  expect(entry.clients.find((c) => c.id === "url-vc")).toMatchObject({ support: { apply: true }, inSync: true });
+});
+
+test("a Charon without a validator client on its server shows as a client, to set the builders for the ones elsewhere", async () => {
+  const { bs, serviceManager, services, subtasks, multisetup } = setup({ running: ["charon"] });
+  multisetup()[SETUP].services = ["charon"];
+  const charon = services.find((s) => s.id === "charon");
+  charon.imageVersion = "v2.0.0-rc2";
+  const configPath = "/opt/stereum/charon-charon/.charon/vc-config/proposer-config.json";
+  const files = {
+    [configPath]: JSON.stringify({
+      version: 1,
+      proposer_config: {},
+      default_config: { fee_recipient: "0x1111111111111111111111111111111111111111", gas_limit: "200000000" },
+    }),
+  };
+  serviceManager.nodeConnection.sshService.exec.mockImplementation((cmd) => {
+    const read = cmd.match(/^cat "([^"]+)"/);
+    if (read) return Promise.resolve({ rc: 0, stdout: files[read[1]] ?? "", stderr: "" });
+    const write = cmd.match(/echo "((?:[^"\\]|\\.)*)" > "([^"]+)"$/);
+    if (write) files[write[2]] = write[1].replace(/\\(["$`\\])/g, "$1");
+    return Promise.resolve({ rc: 0, stdout: "", stderr: "" });
+  });
+
+  const [entry] = await bs.getBuilderSettings();
+  expect(entry.clients).toEqual([
+    expect.objectContaining({ id: "charon", service: "CharonService", middleware: true, clusterId: "charon" }),
+  ]);
+  expect(entry.clusters).toEqual([expect.objectContaining({ id: "charon", vcs: [], hasProposerConfig: true })]);
+
+  const cluster = {
+    relays: [{ name: "Titan", url: "https://hoodi.titanrelay.xyz" }],
+    minBid: "0",
+    maxExecutionPayment: "0",
+    boostFactor: null,
+  };
+  const result = await bs.setBuilderSettings({ setupId: SETUP, builders: { clients: { charon: cluster } } });
+  expect(result.code).toBe(0);
+  expect(charon.command).toEqual(["run", "--builder-api", "--builder-urls=https://hoodi.titanrelay.xyz"]);
+  expect(JSON.parse(files[configPath]).default_config.builder.builders).toEqual([{ url: "https://hoodi.titanrelay.xyz" }]);
+  expect(serviceManager.manageServiceState).toHaveBeenCalledWith("charon", "restarted");
+  expect(subtasks.map((s) => s.name)).toEqual(expect.arrayContaining(["Charon: flags", "Charon: proposer config", "Charon: restarted"]));
+});

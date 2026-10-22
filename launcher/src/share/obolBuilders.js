@@ -221,3 +221,75 @@ export function dvtConfiguration(service, config, { builderApi = true, version }
   }
   return { flags, owned: DVT_OWNED[service] ?? [], files, lighthouseFile, keySettings };
 }
+
+// Charon on another server: the validator client's server gets a copy of Charon's proposer config
+
+/** Charon's release from its answer to /eth/v1/node/version, null for any other beacon node */
+export function charonVersionOf(nodeVersion) {
+  // its release, then "-" and the commit
+  const match = /^obolnetwork\/charon\/(v\d+\.\d+\.\d+(?:-(?:rc|alpha|beta|dev)\d*)?)/.exec(String(nodeVersion ?? ""));
+  return match ? match[1] : null;
+}
+
+/** what "Copy for a remote validator client" copies: the proposer config and whether Charon serves the builder API */
+export function remoteProposerConfigCopy(proposerConfig, builderApi) {
+  return JSON.stringify({ ...proposerConfig, builder_api: !!builderApi }, null, 2);
+}
+
+const ADDRESS = /^0x[0-9a-fA-F]{40}$/;
+const GAS = /^\d+$/;
+
+/**
+ * A pasted proposer config, checked for what the validator client signs with it.
+ * @returns {{ config: Object|null, error: string|null }}
+ */
+export function parseRemoteProposerConfig(text) {
+  let config;
+  try {
+    config = JSON.parse(String(text ?? "").trim());
+  } catch {
+    return { config: null, error: "not JSON" };
+  }
+  const d = config?.default_config;
+  if (!d || !ADDRESS.test(d.fee_recipient ?? "") || !GAS.test(String(d.gas_limit ?? "")))
+    return { config: null, error: "needs default_config with fee_recipient and gas_limit" };
+  for (const [pubkey, entry] of Object.entries(config.proposer_config ?? {})) {
+    if (!/^0x[0-9a-fA-F]{96}$/.test(pubkey)) return { config: null, error: `invalid key ${pubkey.slice(0, 12)}…` };
+    if (entry?.fee_recipient !== undefined && !ADDRESS.test(entry.fee_recipient))
+      return { config: null, error: `invalid fee recipient for ${pubkey.slice(0, 12)}…` };
+  }
+  if (d.builder && !Array.isArray(d.builder.builders)) return { config: null, error: "builder section without builders" };
+  return { config, error: null };
+}
+
+/** whether a remote copy makes the validator client use the builder API: as Charon does, or when it has builders */
+export function remoteBuilderApi(config) {
+  return typeof config?.builder_api === "boolean" ? config.builder_api : !!config?.default_config?.builder?.builders?.length;
+}
+
+// the flags validator clients take their beacon node URLs from (Prysm's RPC provider has no scheme)
+const BEACON_FLAGS = {
+  LodestarValidatorService: ["--beaconNodes"],
+  LighthouseValidatorService: ["--beacon-nodes"],
+  TekuValidatorService: ["--beacon-node-api-endpoint", "--beacon-node-api-endpoints"],
+  NimbusValidatorService: ["--beacon-node"],
+  PrysmValidatorService: ["--beacon-rest-api-provider"],
+};
+
+/** the beacon node URLs set in a validator client's command, for one that has no beacon node in Stereum */
+export function beaconUrlsOf(service, command) {
+  const flags = BEACON_FLAGS[service] ?? [];
+  return [
+    ...new Set(
+      (command ?? [])
+        .map((c) => String(c))
+        .filter((c) => flags.some((f) => c.startsWith(`${f}=`)))
+        .flatMap((c) => c.slice(c.indexOf("=") + 1).split(","))
+        .map((u) => u.trim().replace(/\/+$/, ""))
+        .filter((u) => /^https?:\/\/[^\s"'`$\\]+$/.test(u))
+    ),
+  ];
+}
+
+// a validator client's copy of its remote Charon's proposer config, in its own folder
+export const REMOTE_COPY_FILE = "charon-proposer-config.json";

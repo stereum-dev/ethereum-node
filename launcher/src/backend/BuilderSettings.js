@@ -27,6 +27,11 @@ import {
   withBuilderSection,
   settingsFromProposerConfig,
   clusterSettingsProblems,
+  charonVersionOf,
+  parseRemoteProposerConfig,
+  remoteBuilderApi,
+  beaconUrlsOf,
+  REMOTE_COPY_FILE,
 } from "@/share/obolBuilders";
 import { GLOAS_MIN_VERSIONS, compareVersions, gloasForkTime } from "@/share/gloasFork";
 
@@ -60,6 +65,8 @@ function skipReason({ support, version }, network) {
         : `its cluster's middleware has no release for the ${network} fork yet`;
     case "dvt-pending":
       return "Charon has not written its proposer config yet, start Charon 2.0 first";
+    case "remote-pending":
+      return "no copy of the proposer config of its Charon on another server yet";
     default:
       return `no Glamsterdam on ${network} yet`;
   }
@@ -81,15 +88,22 @@ export class BuilderSettings {
   }
 
   // the validator clients of a setup with what decides about their builder settings
-  validatorsOf(setup, services, running) {
+  validatorsOf(setup, services, running, remote = new Map()) {
     const ids = new Set(setup.services ?? []);
     return services
       .filter((s) => ids.has(s.id) && BUILDER_CLIENTS[s.service])
       .map((s) => {
         const connected = (s.dependencies?.consensusClients ?? []).map((c) => services.find((x) => x.id === c.id) ?? c);
-        const middleware = connected.find((c) => isObolDVTService(c.service)) ?? null;
+        // a Charon here, or one on another server that its beacon node URL answers for
+        const remoteUrl = this.remoteUrlsOf(s, services).find((url) => remote.has(url));
+        const middleware =
+          connected.find((c) => isObolDVTService(c.service)) ??
+          (remoteUrl
+            ? { id: `charon@${remoteUrl}`, service: "RemoteCharon", link: remoteUrl, remoteVersion: remote.get(remoteUrl) }
+            : null);
         return {
           service: s,
+          middleware,
           dvt: !!middleware,
           clusterId: middleware?.id ?? null,
           usesMevBoost: connected.some((c) => c.dependencies?.mevboost?.length > 0),
@@ -104,17 +118,69 @@ export class BuilderSettings {
     return dir ? `${dir}/${BUILDER_CLIENTS.LighthouseValidatorService.file}` : null;
   }
 
-  // the Obol middlewares (Charon, Pluto) the setup's validator clients sign through
+  // the Obol middlewares (Charon, Pluto) the setup's validator clients sign through, here or on another server
   clustersOf(validators, services, running) {
     const ids = [...new Set(validators.filter((v) => v.clusterId).map((v) => v.clusterId))];
     return ids
-      .map((id) => services.find((s) => s.id === id))
+      .map((id) => services.find((s) => s.id === id) ?? validators.find((v) => v.clusterId === id).middleware)
       .filter(Boolean)
       .map((service) => ({
         service,
         running: running.has(service.id),
         vcs: validators.filter((v) => v.clusterId === service.id).map((v) => v.service.id),
+        vcServices: validators.filter((v) => v.clusterId === service.id).map((v) => v.service),
+        // the release of a Charon on another server, from its version answer
+        remoteVersion: service.remoteVersion ?? null,
       }));
+  }
+
+  // the setup's Charons without a validator client on this server: their builders are set here for the ones elsewhere
+  standaloneClusters(setup, services, running, clusterList) {
+    const ids = new Set(setup.services ?? []);
+    const known = new Set(clusterList.map((c) => c.service.id));
+    return services
+      .filter((s) => ids.has(s.id) && s.service === "CharonService" && !known.has(s.id))
+      .map((service) => ({ service, running: running.has(service.id), vcs: [], remoteVersion: null }));
+  }
+
+  // the beacon node URLs of a validator client outside Stereum: an external beacon node's, or set in its command
+  remoteUrlsOf(vc, services) {
+    const connected = (vc.dependencies?.consensusClients ?? []).map((c) => services.find((x) => x.id === c.id) ?? c);
+    if (connected.some((c) => c.service && c.service !== "ExternalConsensusService")) return [];
+    const links = connected
+      .filter((c) => c.service === "ExternalConsensusService" && c.env?.link)
+      .map((c) => String(c.env.link).trim().replace(/\/+$/, ""));
+    return links.length ? links : beaconUrlsOf(vc.service, vc.command);
+  }
+
+  /**
+   * The beacon node URLs of validator clients that are Charons on another server, by their answer to
+   * /eth/v1/node/version, asked from the server.
+   * @returns {Map<string, string>} URL to Charon's release
+   */
+  async remoteCharons(services) {
+    const urls = [...new Set(services.filter((s) => BUILDER_CLIENTS[s.service]).flatMap((s) => this.remoteUrlsOf(s, services)))];
+    const found = new Map();
+    await Promise.all(
+      urls.map(async (url) => {
+        const result = await this.nodeConnection.sshService
+          .exec(`curl -s -m 3 ${StringUtils.escapeStringForShell(`${url}/eth/v1/node/version`)} || true`)
+          .catch(() => null);
+        try {
+          const version = charonVersionOf(JSON.parse(result?.stdout ?? "")?.data?.version);
+          if (version) found.set(url, version);
+        } catch {
+          // not a beacon node answer
+        }
+      })
+    );
+    return found;
+  }
+
+  // a validator client's copy of its remote Charon's proposer config, in its folder (manage-service reads it there)
+  remoteCopyPath(vc) {
+    const first = vc.volumes?.[0]?.destinationPath;
+    return first ? `${first.replace(/\/+$/, "").replace(/\/[^/]+$/, "")}/${REMOTE_COPY_FILE}` : null;
   }
 
   // a path inside a container on the host, through the volume that holds it
@@ -139,13 +205,15 @@ export class BuilderSettings {
     if (SSHService.checkExecError(write)) throw new Error(SSHService.extractExecError(write));
   }
 
-  proposerConfigPath(middleware) {
+  // the proposer config a validator client renders: Charon's file, or for a Charon on another server its own copy
+  proposerConfigPath(middleware, vc) {
+    if (middleware.service === "RemoteCharon") return vc ? this.remoteCopyPath(vc) : null;
     return this.hostPath(middleware, `/opt/charon/${PROPOSER_CONFIG_PATH}`);
   }
 
-  async readProposerConfig(middleware) {
+  async readProposerConfig(middleware, vc) {
     try {
-      const raw = await this.readFile(this.proposerConfigPath(middleware));
+      const raw = await this.readFile(this.proposerConfigPath(middleware, vc));
       return raw?.trim() ? JSON.parse(raw) : null;
     } catch {
       return null;
@@ -166,7 +234,8 @@ export class BuilderSettings {
    * An Obol cluster as the dialog shows it. Its builders live in the proposer config Charon writes, which all
    * validator clients of the cluster read; Charon's builder flags have to match that file.
    */
-  async describeCluster({ service, running, vcs }, builders, network) {
+  async describeCluster({ service, running, vcs, vcServices, remoteVersion }, builders, network) {
+    if (remoteVersion) return this.describeRemoteCluster({ service, vcs, vcServices, remoteVersion }, network);
     const support = this.middlewareSupport(service, network);
     const proposerConfig = await this.readProposerConfig(service);
     // what the file holds is the cluster's setting, also when it was changed outside the dialog
@@ -193,13 +262,36 @@ export class BuilderSettings {
     };
   }
 
+  /** A cluster whose Charon runs on another server: its builders come from a copy of Charon's proposer config. */
+  async describeRemoteCluster({ service, vcs, vcServices, remoteVersion }, network) {
+    const support = this.middlewareSupport({ service: "CharonService", imageVersion: remoteVersion }, network);
+    // every validator client of it gets the same copy
+    const proposerConfig = await this.readProposerConfig(service, vcServices[0]);
+    return {
+      id: service.id,
+      service: "CharonService",
+      version: remoteVersion,
+      remote: true,
+      link: service.link,
+      running: false,
+      vcs,
+      support,
+      hasProposerConfig: !!proposerConfig,
+      proposerConfig,
+      builderApi: remoteBuilderApi(proposerConfig),
+      current: proposerConfig ? settingsFromProposerConfig(proposerConfig) : null,
+      flags: [],
+      inSync: null,
+    };
+  }
+
   /**
    * Whether a cluster's validator client runs with Charon's current proposer config: Stereum renders it into
    * its settings on every start (manage-service), so it has it when it started after the file last changed.
    * @returns {boolean|null} null when it doesn't run
    */
   async startedAfterProposerConfig(vc, middleware) {
-    const path = this.proposerConfigPath(middleware);
+    const path = this.proposerConfigPath(middleware, vc);
     if (!path) return null;
     const result = await this.nodeConnection.sshService.exec(
       `stat -c %Y ${StringUtils.escapeStringForShell(path)} 2>/dev/null; docker inspect -f '{{.State.Running}} {{.State.StartedAt}}' stereum-${vc.id} 2>/dev/null`
@@ -240,12 +332,15 @@ export class BuilderSettings {
       this.serviceManager.readServiceConfigurations(),
       this.runningIds(),
     ]);
+    const remote = await this.remoteCharons(services);
     const result = [];
     for (const [setupId, setup] of Object.entries(setups)) {
-      const validators = this.validatorsOf(setup, services, running);
-      if (!validators.length) continue;
+      const validators = this.validatorsOf(setup, services, running, remote);
+      const linked = this.clustersOf(validators, services, running);
+      const standalone = this.standaloneClusters(setup, services, running, linked);
+      if (!validators.length && !standalone.length) continue;
       // one entry per client, also for setups saved with the setup's settings at the top
-      const clusterList = this.clustersOf(validators, services, running);
+      const clusterList = [...linked, ...standalone];
       const builders = {
         route: setup.builders?.route ?? "direct",
         clients: Object.fromEntries(
@@ -262,8 +357,9 @@ export class BuilderSettings {
         clusters.push(described);
         clusterState[c.service.id] = {
           middleware: c.service,
+          remote: !!c.remoteVersion,
           support: described.support,
-          proposerConfig: await this.readProposerConfig(c.service),
+          proposerConfig: described.proposerConfig,
         };
       }
       const mevBoost = services.find((s) => (setup.services ?? []).includes(s.id) && s.service === "FlashbotsMevBoostService");
@@ -277,6 +373,26 @@ export class BuilderSettings {
       const clients = [];
       for (const v of validators) {
         clients.push(await this.describe(v, builders, setup.network, clusterState));
+      }
+      // a Charon without a validator client here is shown as one, to set its builders
+      for (const c of standalone) {
+        const d = clusters.find((x) => x.id === c.service.id);
+        clients.push({
+          id: d.id,
+          service: d.service,
+          version: d.version,
+          running: d.running,
+          usesMevBoost: false,
+          clusterId: d.id,
+          middleware: true,
+          currentBoost: null,
+          notes: [],
+          support: d.support,
+          flags: [],
+          file: null,
+          files: [],
+          inSync: d.inSync,
+        });
       }
       result.push({
         setupId,
@@ -319,7 +435,8 @@ export class BuilderSettings {
           minimum: cluster?.support?.minimum ?? null,
           middleware: cluster?.middleware?.service,
         };
-      else if (support.apply && !cluster.proposerConfig) support = { apply: false, reason: "dvt-pending", minimum: null };
+      else if (support.apply && !cluster.proposerConfig)
+        support = { apply: false, reason: cluster.remote ? "remote-pending" : "dvt-pending", minimum: null };
       if (!support.apply) return { ...base, support, flags: [], file: null, files: [], inSync: null };
       // Stereum renders its settings from Charon's proposer config on every start
       return {
@@ -367,11 +484,22 @@ export class BuilderSettings {
       const setup = setups[setupId];
       if (!setup) return { code: 1, info: "setup not found" };
       const [services, running] = await Promise.all([this.serviceManager.readServiceConfigurations(), this.runningIds()]);
-      const validators = this.validatorsOf(setup, services, running);
-      const clusterList = this.clustersOf(validators, services, running);
-      problems = [...new Set(clusterList.flatMap((c) => clusterSettingsProblems(builders?.clients?.[c.service.id] ?? {})))];
+      const remote = await this.remoteCharons(services);
+      const validators = this.validatorsOf(setup, services, running, remote);
+      const linked = this.clustersOf(validators, services, running);
+      const clusterList = [...linked, ...this.standaloneClusters(setup, services, running, linked)];
+      // a remote Charon's builders come with the pasted copy, its flags are set on its own server
+      problems = [
+        ...new Set(
+          clusterList.filter((c) => !c.remoteVersion).flatMap((c) => clusterSettingsProblems(builders?.clients?.[c.service.id] ?? {}))
+        ),
+      ];
+      for (const [id, config] of Object.entries(builders?.proposerConfigs ?? {})) {
+        const { error } = parseRemoteProposerConfig(JSON.stringify(config));
+        if (error) problems.push(`proposer config for ${id}: ${error}`);
+      }
       if (problems.length) return { code: 1, info: problems.join(", ") };
-      tm?.otherTasksHandler(ref, `Set builders (${validators.length})`);
+      tm?.otherTasksHandler(ref, `Set builders (${validators.length || clusterList.length})`);
 
       const cleaned = cleanBuilderSettings(builders);
       // a client that was removed from the setup takes its settings with it
@@ -383,7 +511,9 @@ export class BuilderSettings {
       // the clusters first: their validator clients render their settings from the middleware's proposer config
       const clusterState = {};
       for (const c of clusterList) {
-        clusterState[c.service.id] = await this.applyCluster(c, setup, restart, subtask, results);
+        clusterState[c.service.id] = c.remoteVersion
+          ? await this.applyRemoteCluster(c, setup, builders?.proposerConfigs?.[c.service.id], subtask, results)
+          : await this.applyCluster(c, setup, restart, subtask, results);
       }
 
       for (const v of validators) {
@@ -454,6 +584,64 @@ export class BuilderSettings {
       return { code: 1, info: err?.message ?? String(err) };
     } finally {
       tm?.otherTasksHandler(ref);
+    }
+  }
+
+  /**
+   * Stores a pasted copy of a remote Charon's proposer config in the folder of each of its validator clients,
+   * where they render it from on every start. Without a new copy the stored ones stay.
+   * @returns {{ middleware, remote, support, proposerConfig }} for the cluster's validator clients
+   */
+  async applyRemoteCluster({ service, vcServices, remoteVersion }, setup, pasted, subtask, results) {
+    const name = "Charon copy";
+    const support = this.middlewareSupport({ service: "CharonService", imageVersion: remoteVersion }, setup.network);
+    if (!support.apply) {
+      subtask(
+        `${name}: update`,
+        true,
+        `${service.link} runs ${remoteVersion}, needs ${support.minimum ?? "a release"} for the ${setup.network} fork`
+      );
+      results.push({ id: service.id, cluster: true, applied: false, reason: "update" });
+      return { middleware: service, remote: true, support, proposerConfig: null };
+    }
+    try {
+      let proposerConfig = await this.readProposerConfig(service, vcServices[0]);
+      if (pasted) {
+        const written = [];
+        for (const vc of vcServices) {
+          const current = await this.readProposerConfig(service, vc);
+          if (JSON.stringify(current) === JSON.stringify(pasted)) continue;
+          await this.writeFile(this.remoteCopyPath(vc), JSON.stringify(pasted));
+          written.push(this.remoteCopyPath(vc));
+        }
+        proposerConfig = pasted;
+        const builders = (pasted.default_config.builder?.builders ?? []).map((b) => b.url);
+        const keys = Object.keys(pasted.proposer_config ?? {}).length;
+        subtask(
+          `${name}: ${written.length ? "stored" : "unchanged"}`,
+          true,
+          [
+            `Charon ${remoteVersion} at ${service.link}`,
+            ...written,
+            `builders: ${builders.join(", ") || "none"}`,
+            `fee recipient: ${pasted.default_config.fee_recipient}, ${keys} keys with their own`,
+            `gas limit: ${pasted.default_config.gas_limit}`,
+          ].join("\n")
+        );
+      } else {
+        subtask(
+          `${name}: ${proposerConfig ? "unchanged" : "none"}`,
+          true,
+          proposerConfig ? "keeps the stored copy" : `paste the proposer config of Charon at ${service.link}`
+        );
+      }
+      results.push({ id: service.id, cluster: true, applied: !!proposerConfig, changed: !!pasted });
+      return { middleware: service, remote: true, support, proposerConfig };
+    } catch (err) {
+      log.error(`Storing the proposer config of ${service.id} failed:`, err);
+      subtask(`${name}: failed`, false, err?.message ?? String(err));
+      results.push({ id: service.id, cluster: true, applied: false, reason: "failed", error: err?.message ?? String(err) });
+      return { middleware: service, remote: true, support: { apply: false, reason: "failed" }, proposerConfig: null };
     }
   }
 

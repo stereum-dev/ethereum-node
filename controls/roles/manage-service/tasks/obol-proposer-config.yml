@@ -2,6 +2,7 @@
 # A validator client of an Obol cluster takes its proposer settings (fee recipients, gas limits, builders)
 # from the proposer-config.json Charon writes, as every node of the cluster has to sign identical ones.
 # Rendered on every start, so changes to that file apply on the next start of the validator client.
+# With Charon on another server the file is a copy the launcher stores in the validator client's folder.
 - name: Read the configs of the validator client's beacon nodes
   ansible.builtin.slurp:
     src: "/etc/stereum/services/{{ item.id }}.yaml"
@@ -10,33 +11,39 @@
   failed_when: false
   become: true
 
-- name: Find the cluster's Charon
+# set for every validator client, so nothing carries over from one started before
+- name: Find the cluster's Charon, here or a copy of its proposer config from another server
   ansible.builtin.set_fact:
-    obol_charon: >-
+    obol_charon: "{{ obol_local }}"
+    obol_proposer_config_path: >-
+      {{ ((obol_local.volumes | select('search', ':/opt/charon$') | first | split(':') | first) ~ '/.charon/vc-config/proposer-config.json')
+         if obol_local is mapping else
+         (((obol_volumes | first | split(':') | first | regex_replace('/+$', '') | dirname) ~ '/charon-proposer-config.json')
+          if obol_volumes | length > 0 else '') }}
+  vars:
+    obol_local: >-
       {{ obol_beacon_configs.results | selectattr('content', 'defined') | map(attribute='content') | map('b64decode') | map('from_yaml')
          | selectattr('service', 'equalto', 'CharonService') | first | default(None) }}
+    obol_volumes: "{{ stereum_service_configuration.volumes | default([]) }}"
 
 - name: Render the proposer settings from Charon's proposer config
-  when: obol_charon is mapping
+  when: obol_proposer_config_path | length > 0
   block:
-    - name: Build the proposer config's path
-      ansible.builtin.set_fact:
-        obol_proposer_config_path: >-
-          {{ (obol_charon.volumes | select('search', ':/opt/charon$') | first | split(':') | first) ~ '/.charon/vc-config/proposer-config.json' }}
-
     - name: Check for Charon's proposer config
       ansible.builtin.stat:
         path: "{{ obol_proposer_config_path }}"
       register: obol_proposer_config
       become: true
 
+    # a remote Charon's flags aren't known here: the copy says whether it serves the builder API
     - name: Render the validator client's proposer settings
       obol_vc_config:
         service: "{{ stereum_service_configuration.service }}"
+        image: "{{ stereum_service_configuration.image | default('') }}"
         command: "{{ stereum_service_configuration.command | default([]) }}"
         volumes: "{{ stereum_service_configuration.volumes | default([]) }}"
         proposer_config_path: "{{ obol_proposer_config_path }}"
-        builder_api: "{{ '--builder-api' in (obol_charon.command | default([])) }}"
+        builder_api: "{{ ('--builder-api' in (obol_charon.command | default([]))) if obol_charon is mapping else omit }}"
       register: obol_render
       when: obol_proposer_config.stat.exists
       become: true

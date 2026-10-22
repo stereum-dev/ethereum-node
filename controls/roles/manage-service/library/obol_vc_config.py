@@ -5,7 +5,7 @@ Every validator client of an Obol cluster has to sign identical proposer and bui
 so they all take them from the file Charon writes. This does what the start scripts of Obol's
 charon-distributed-validator-node do, before Stereum starts the validator client.
 
-An Ansible module (WANT_JSON): takes {service, command, volumes, proposer_config_path, builder_api}
+An Ansible module (WANT_JSON): takes {service, image, command, volumes, proposer_config_path, builder_api (optional)}
 from the JSON file Ansible passes, or from stdin, and prints {changed, command, written}.
 """
 import json
@@ -142,7 +142,17 @@ def lighthouse_builders(builder, existing):
     return "\n".join(lines) + "\n"
 
 
-def builder_flags(prefix, builder, first_only=False):
+def nimbus_limits(image):
+    """Whether a Nimbus image knows the minimum bid and max payment flags (26.10.1 on); an unknown tag doesn't."""
+    match = re.search(r":(?:multiarch-)?v?(\d+)\.(\d+)\.(\d+)(-[0-9A-Za-z.]+)?$", str(image or ""))
+    if not match:
+        return False
+    version = tuple(int(x) for x in match.groups()[:3])
+    # a pre-release of 26.10.1 comes before it
+    return version > (26, 10, 1) or (version == (26, 10, 1) and not match.group(4))
+
+
+def builder_flags(prefix, builder, first_only=False, limits=True):
     """Teku's and Nimbus' builder flags, in the order Stereum's other builder settings use; Nimbus takes the first builder."""
     if not builder or not builder.get("builders"):
         return []
@@ -150,6 +160,9 @@ def builder_flags(prefix, builder, first_only=False):
     min_bid = ["--%smin-bid=%s" % (prefix, builder["min_bid"])] if builder.get("min_bid", "0") != "0" else []
     max_payment = "--%smax-execution-payment=%s" % (prefix, builder.get("max_execution_payment", "0"))
     if first_only:
+        if not limits:
+            # older Nimbus doesn't know the minimum bid and max payment flags
+            return ["--payload-builder-url=%s" % builder["builders"][0]["url"], boost]
         # Nimbus counts no promised payment above its max, so it is always set
         return ["--payload-builder-url=%s" % builder["builders"][0]["url"], boost] + min_bid + [max_payment]
     flags = ["--%surls=%s" % (prefix, ",".join(b["url"] for b in builder["builders"]))] + min_bid
@@ -158,7 +171,7 @@ def builder_flags(prefix, builder, first_only=False):
     return flags + [boost]
 
 
-def render(service, config, builder_api, volumes, written):
+def render(service, config, builder_api, volumes, written, image=""):
     """The flags a client gets; files are written on the way."""
     d = config["default_config"]
     entries = config.get("proposer_config") or {}
@@ -224,7 +237,7 @@ def render(service, config, builder_api, volumes, written):
         flags.append("--Xobol-dvt-integration-enabled=true")
 
     elif service == "NimbusValidatorService":
-        flags += builder_flags("builder-", builder, first_only=True)
+        flags += builder_flags("builder-", builder, first_only=True, limits=nimbus_limits(image))
         flags += ["--suggested-fee-recipient=%s" % d["fee_recipient"], "--suggested-gas-limit=%s" % d["gas_limit"], "--distributed"]
         # per-key settings live next to each key
         for pubkey in entries:
@@ -262,11 +275,14 @@ def main():
     with open(data["proposer_config_path"]) as f:
         config = json.load(f)
     written = []
-    builder_api = data.get("builder_api", True)
+    builder_api = data.get("builder_api")
     # older Ansible templates booleans into strings
     if isinstance(builder_api, str):
-        builder_api = builder_api.strip().lower() in ("true", "yes", "1")
-    flags = render(service, config, builder_api, data.get("volumes") or [], written)
+        builder_api = builder_api.strip().lower() in ("true", "yes", "1") if builder_api.strip() else None
+    if builder_api is None:
+        # a copy of a remote Charon's file says whether Charon serves the builder API, else its builders do
+        builder_api = config["builder_api"] if isinstance(config.get("builder_api"), bool) else bool((config["default_config"].get("builder") or {}).get("builders"))
+    flags = render(service, config, builder_api, data.get("volumes") or [], written, data.get("image") or "")
     owned = [re.compile(p) for p in OWNED.get(service, [])]
     kept = [c for c in command if not any(p.search(str(c)) for p in owned)]
     # Nimbus needs --payload-builder for its builder URL

@@ -1137,7 +1137,8 @@
       "dvtRestart": "Restart to load Charon's current proposer config",
       "charonFlags": "{middleware}'s builder flags differ from its proposer config: save to match them",
       "notScheduled": "No Glamsterdam on {network} yet",
-      "outOfSync": "Saved settings not on it yet: save again"
+      "outOfSync": "Saved settings not on it yet: save again",
+      "remotePending": "Paste the proposer config of Charon's server"
     },
     "note": {
       "single-relay": "Nimbus takes one relay",
@@ -1214,7 +1215,29 @@
     "useForAll": "Use for all clients",
     "firstForTitle": "{client} takes only the first of the chosen relays",
     "firstForRelay": "Relay {client} signs for",
-    "firstForNote": "It takes only the first of Charon's relays: every operator running {client} has to pick the same one."
+    "firstForNote": "It takes only the first of Charon's relays: every operator running {client} has to pick the same one.",
+    "clusterRemote": "Obol cluster with Charon {version} on another server ({host}). Its validator client signs with a copy of Charon's proposer config.",
+    "remote": {
+      "copy": "Copy for a remote validator client",
+      "copied": "Copied",
+      "failed": "Copy failed",
+      "saveFirst": "Save first: the copy holds what is saved",
+      "current": "Charon's proposer config",
+      "notSaved": "New copy, not saved yet",
+      "noBuilders": "No builders: blocks are built locally",
+      "feeRecipient": "Fee recipient",
+      "ownKeys": "and {n} key with its own | and {n} keys with their own",
+      "gasLimit": "Gas limit",
+      "builderApi": "Builder API",
+      "on": "on",
+      "off": "off",
+      "paste": "Paste Charon's proposer config",
+      "replace": "Replace with a new copy",
+      "placeholder": "On Charon's server: Builders > Copy for a remote validator client, then paste it here",
+      "hint": "Copy it again whenever the builders change on Charon's server.",
+      "use": "Use",
+      "invalid": "Not a proposer config: {problem}"
+    }
   },
   "validatorsPage": {
     "clients": "Validator clients",

@@ -11,6 +11,11 @@ import {
   settingsFromProposerConfig,
   clusterSettingsProblems,
   dvtConfiguration,
+  charonVersionOf,
+  parseRemoteProposerConfig,
+  remoteProposerConfigCopy,
+  remoteBuilderApi,
+  beaconUrlsOf,
 } from "@/share/obolBuilders";
 
 const KEY = "0xb87f614580c8c94e9163afbc888815950c8430cc270cd541b8154a35728885a85563516d2d47fc63f562ac5f68a4ea8f";
@@ -148,7 +153,14 @@ describe("the start-time rendering on the server matches the dialog's preview", 
     if (service === "NimbusValidatorService") fs.mkdirSync(`${root}/opt/app/validators/${KEY}`, { recursive: true });
     const configPath = path.join(root, "proposer-config.json");
     fs.writeFileSync(configPath, JSON.stringify(config));
-    const input = JSON.stringify({ service, command: ["start"], volumes, proposer_config_path: configPath, builder_api: true });
+    const input = JSON.stringify({
+      service,
+      image: "client:multiarch-v26.10.1",
+      command: ["start"],
+      volumes,
+      proposer_config_path: configPath,
+      builder_api: true,
+    });
     const out = JSON.parse(execFileSync("python3", [script], { input }).toString());
 
     const preview = dvtConfiguration(service, config, { builderApi: true, version: "multiarch-v26.10.1" });
@@ -215,5 +227,86 @@ test("on start Lighthouse's definitions get the per-key settings in place, witho
   expect(definitions.match(/gas_limit/g)).toHaveLength(1);
   // Lighthouse's own per-key builder settings stay in its builder file
   expect(fs.readFileSync(`${validators}/builder_definitions.yml`, "utf8")).toContain('validator_configs:\n  "0xabc":\n    builders: []');
+  fs.rmSync(root, { recursive: true, force: true });
+});
+
+test("a remote Charon is told by its version answer, and a pasted copy is checked for what the validator client signs", () => {
+  expect(charonVersionOf("obolnetwork/charon/v2.0.0-rc2-1a2b3c4/amd64-linux")).toBe("v2.0.0-rc2");
+  expect(charonVersionOf("obolnetwork/charon/v1.11.1-abc/arm64-linux")).toBe("v1.11.1");
+  expect(charonVersionOf("Lighthouse/v8.3.0-abc/x86_64-linux")).toBeNull();
+
+  const copy = remoteProposerConfigCopy(withBuilderSection(charonConfig, cluster), false);
+  const { config, error } = parseRemoteProposerConfig(copy);
+  expect(error).toBeNull();
+  expect(config.builder_api).toBe(false);
+  expect(remoteBuilderApi(config)).toBe(false);
+  // a copy from elsewhere, without the flag: the builder API is on when it has builders
+  expect(remoteBuilderApi(withBuilderSection(charonConfig, cluster))).toBe(true);
+  expect(remoteBuilderApi(charonConfig)).toBe(false);
+
+  expect(parseRemoteProposerConfig("{").error).toBe("not JSON");
+  expect(parseRemoteProposerConfig(JSON.stringify({ default_config: { fee_recipient: "0x12" } })).error).toMatch(/fee_recipient/);
+  expect(
+    parseRemoteProposerConfig(JSON.stringify({ ...charonConfig, proposer_config: { "0xabc": { fee_recipient: "0x1" } } })).error
+  ).toMatch(/invalid key/);
+});
+
+test("rendered from a remote copy, the builder API comes from the copy", () => {
+  const script = path.resolve(__dirname, "../../../../../controls/roles/manage-service/library/obol_vc_config.py");
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "obol-"));
+  fs.mkdirSync(`${root}/opt/app/data/db`, { recursive: true });
+  const configPath = path.join(root, "proposer-config.json");
+  const run = (config) => {
+    fs.writeFileSync(configPath, JSON.stringify(config));
+    const input = {
+      service: "PrysmValidatorService",
+      command: [],
+      volumes: [`${root}/opt/app/data/db:/opt/app/data/db`],
+      proposer_config_path: configPath,
+    };
+    execFileSync("python3", [script], { input: JSON.stringify(input) });
+    return JSON.parse(fs.readFileSync(`${root}/opt/app/data/db/proposer-settings.json`, "utf8")).default_config.builder.enabled;
+  };
+  expect(run({ ...withBuilderSection(charonConfig, cluster), builder_api: false })).toBe(false);
+  expect(run(withBuilderSection(charonConfig, cluster))).toBe(true);
+  expect(run(charonConfig)).toBe(false);
+  fs.rmSync(root, { recursive: true, force: true });
+});
+
+test("the beacon node URLs of a validator client set up by hand come from its command", () => {
+  expect(beaconUrlsOf("LodestarValidatorService", ["validator", "--beaconNodes=http://10.12.7.1:3600/,http://b:3600"])).toEqual([
+    "http://10.12.7.1:3600",
+    "http://b:3600",
+  ]);
+  expect(beaconUrlsOf("NimbusValidatorService", ["--beacon-node=http://a:3600", "--beacon-node=http://b:3600"])).toEqual([
+    "http://a:3600",
+    "http://b:3600",
+  ]);
+  expect(beaconUrlsOf("TekuValidatorService", ["--beacon-node-api-endpoints=https://a:3600"])).toEqual(["https://a:3600"]);
+  // Prysm's RPC provider has no scheme, its REST one does
+  expect(beaconUrlsOf("PrysmValidatorService", ["--beacon-rpc-provider=a:4000", "--beacon-rest-api-provider=http://a:3600"])).toEqual([
+    "http://a:3600",
+  ]);
+  expect(beaconUrlsOf("LighthouseValidatorService", ["--beacon-nodes=http://a:3600;rm -rf /"])).toEqual([]);
+});
+
+test("an older Nimbus behind Charon gets no minimum bid or max payment flags, which it doesn't know", () => {
+  const script = path.resolve(__dirname, "../../../../../controls/roles/manage-service/library/obol_vc_config.py");
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "obol-"));
+  const configPath = path.join(root, "proposer-config.json");
+  fs.writeFileSync(configPath, JSON.stringify(withBuilderSection(charonConfig, cluster)));
+  const render = (image) =>
+    JSON.parse(
+      execFileSync("python3", [script], {
+        input: JSON.stringify({ service: "NimbusValidatorService", image, command: [], volumes: [], proposer_config_path: configPath }),
+      }).toString()
+    ).command;
+  const old = render("statusim/nimbus-validator-client:multiarch-v26.9.0");
+  expect(old).toContain("--payload-builder-url=https://hoodi.titanrelay.xyz");
+  expect(old.some((f) => /^--builder-(min-bid|max-execution-payment)=/.test(f))).toBe(false);
+  // the same as the dialog's preview for that version
+  const preview = dvtConfiguration("NimbusValidatorService", withBuilderSection(charonConfig, cluster), { version: "multiarch-v26.9.0" });
+  expect(old).toEqual(["--payload-builder", ...preview.flags]);
+  expect(render("statusim/nimbus-validator-client:multiarch-v26.10.1")).toContain("--builder-min-bid=10000000");
   fs.rmSync(root, { recursive: true, force: true });
 });

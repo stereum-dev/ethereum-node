@@ -24,7 +24,7 @@
       </div>
       <!-- where the settings come from, until the first save or after a takeover, so the lists keep their room -->
       <div
-        v-if="!setup.saved || missing.length"
+        v-if="(!setup.saved || missing.length) && !cluster?.remote"
         class="rounded-lg border border-[#4b8585] bg-[#224141] px-3 py-1.5 text-2xs flex flex-col gap-0.5"
       >
         <span v-if="!setup.saved">{{ sourceText }}</span>
@@ -48,12 +48,34 @@
         <span class="grow" :class="clientStatus(client, setup).text">{{ clientStatus(client, setup).label }}</span>
         <ActionButton v-if="ownTargets.length" :label="t('builders.useForAll')" @click="useForAll" />
       </div>
-      <p v-if="cluster" class="text-2xs text-[#7fb3b3]">
-        {{ t("builders.cluster", { middleware: shortName(cluster.service) }) }}
-      </p>
+      <div v-if="cluster" class="flex items-center gap-2">
+        <p class="grow text-2xs text-[#7fb3b3]">
+          {{
+            cluster.remote
+              ? t("builders.clusterRemote", { host: remoteHost, version: cluster.version })
+              : t("builders.cluster", { middleware: shortName(cluster.service) })
+          }}
+        </p>
+        <!-- for validator clients of this Charon on other servers; the copy holds what is saved -->
+        <ActionButton
+          v-if="!cluster.remote && cluster.proposerConfig"
+          :label="copied ? t(`builders.remote.${copied}`) : t('builders.remote.copy')"
+          :disabled="unapplied"
+          :title="unapplied ? t('builders.remote.saveFirst') : ''"
+          @click="copyForRemote"
+        />
+      </div>
       <p v-for="note in notes" :key="note" class="text-2xs text-amber-300">{{ t(`builders.note.${note}`) }}</p>
 
-      <div class="flex border-b border-[#4b8585]">
+      <!-- Charon on another server: its builders come with a copy of its proposer config, so there is nothing to edit here -->
+      <BuilderRemoteCluster
+        v-if="cluster?.remote"
+        v-model="pasted"
+        :cluster="cluster"
+        :network="setup.network"
+        :first-for="client.service === 'NimbusValidatorService' ? shortName(client.service) : ''"
+      />
+      <div v-else class="flex border-b border-[#4b8585]">
         <button
           v-for="tab in tabs"
           :key="tab.id"
@@ -68,6 +90,7 @@
       <!-- takes the space left: the relay list or the tab's content scrolls, not the dialog -->
       <!-- the relay list shrinks to the space left, down to one row (the dialog scrolls only below that); other tabs scroll themselves -->
       <div
+        v-if="!cluster?.remote"
         class="flex-1 flex flex-col"
         :class="activeTab !== 'relays' ? 'min-h-0' : client.service === 'NimbusValidatorService' ? 'min-h-[10.5rem]' : 'min-h-[7.5rem]'"
       >
@@ -157,11 +180,19 @@ import BuilderRelays from "./BuilderRelays.vue";
 import BuilderBids from "./BuilderBids.vue";
 import BuilderCalculator from "./BuilderCalculator.vue";
 import BuilderExpert from "./BuilderExpert.vue";
+import BuilderRemoteCluster from "./BuilderRemoteCluster.vue";
 import { clientStatus, shortName } from "./clientInfo";
 import { useBuilders } from "@/store/builders";
 import { useSetups } from "@/store/setups";
 import { builderConfiguration, builderUrl, validateBuilderSettings } from "@/share/builders";
-import { charonBuilderFlags, clusterSettingsProblems, dvtConfiguration, withBuilderSection } from "@/share/obolBuilders";
+import {
+  charonBuilderFlags,
+  clusterSettingsProblems,
+  dvtConfiguration,
+  remoteProposerConfigCopy,
+  withBuilderSection,
+} from "@/share/obolBuilders";
+import { relayHost } from "./relayHost";
 import i18n from "@/includes/i18n";
 
 const emit = defineEmits(["close"]);
@@ -235,6 +266,25 @@ const useForAll = () => {
   for (const c of ownTargets.value) draft.value.clients[c.id] = JSON.parse(settings);
 };
 
+// a remote Charon's pasted proposer config, stored on save next to its external beacon node
+const pasted = computed({
+  get: () => (cluster.value ? (draft.value.proposerConfigs?.[cluster.value.id] ?? null) : null),
+  set: (config) => (draft.value.proposerConfigs = { ...(draft.value.proposerConfigs ?? {}), [cluster.value.id]: config }),
+});
+const remoteHost = computed(() => relayHost(cluster.value?.link ?? ""));
+// "copied" or "failed" for a moment after copying
+const copied = ref("");
+const copyForRemote = async () => {
+  try {
+    await navigator.clipboard.writeText(remoteProposerConfigCopy(cluster.value.proposerConfig, cluster.value.builderApi));
+    copied.value = "copied";
+  } catch (err) {
+    console.error("Copying the proposer config failed:", err);
+    copied.value = "failed";
+  }
+  setTimeout(() => (copied.value = ""), 2000);
+};
+
 const configuration = computed(() => builderConfiguration(client.value.service, editing.value, client.value.version));
 // in a cluster Charon takes every relay and Nimbus the first of them, picked by its place in the list
 const notes = computed(() => {
@@ -245,7 +295,7 @@ const notes = computed(() => {
 const preview = computed(() => {
   if (cluster.value) {
     const lines = [`${shortName(cluster.value.service)}`, ...charonBuilderFlags(editing.value)];
-    if (cluster.value.proposerConfig) {
+    if (cluster.value.proposerConfig && !client.value.middleware) {
       const rendered = dvtConfiguration(client.value.service, withBuilderSection(cluster.value.proposerConfig, editing.value), {
         builderApi: cluster.value.builderApi,
         version: client.value.version,
@@ -270,7 +320,8 @@ const tabs = computed(() => [
 
 const problems = computed(() => {
   if (!draft.value) return [];
-  const clusterIds = new Set((setup.value?.clusters ?? []).map((c) => c.id));
+  // a remote Charon's builders aren't set here
+  const clusterIds = new Set((setup.value?.clusters ?? []).filter((c) => !c.remote).map((c) => c.id));
   return [
     ...new Set(
       Object.entries(draft.value.clients).flatMap(([id, s]) => [
@@ -290,12 +341,18 @@ const restarting = computed(() => {
   const changedClusters = (setup.value.clusters ?? []).filter(
     (c) =>
       c.support.apply &&
-      (c.inSync === false || JSON.stringify(charonBuilderFlags(draft.value.clients[c.id] ?? {})) !== JSON.stringify(c.flags))
+      (c.remote
+        ? !!draft.value.proposerConfigs?.[c.id]
+        : c.inSync === false || JSON.stringify(charonBuilderFlags(draft.value.clients[c.id] ?? {})) !== JSON.stringify(c.flags))
   );
   const clusterIds = new Set(changedClusters.map((c) => c.id));
+  // a Charon shown as a client is in the clusters already
+  // a client waiting for a copy of its remote Charon's proposer config takes it with this save
+  const waiting = (c) => c.support.reason === "remote-pending" && clusterIds.has(c.clusterId);
   const clients = setup.value.clients.filter(
     (c) =>
-      c.support.apply &&
+      !c.middleware &&
+      (c.support.apply || waiting(c)) &&
       c.running &&
       (c.inSync === false || (c.clusterId ? clusterIds.has(c.clusterId) : gets(c, draft.value.clients[c.id]) !== gets(c, saved[c.id])))
   );

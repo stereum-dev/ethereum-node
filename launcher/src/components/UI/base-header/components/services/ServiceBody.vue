@@ -18,12 +18,16 @@ const headerStore = useNodeHeader();
 const setupsStore = useSetups();
 const buildersStore = useBuilders();
 
-// only inside a setup whose network has Glamsterdam scheduled and that runs a builder-capable validator client
+// only inside a setup whose network has Glamsterdam scheduled and that runs a builder-capable validator client or a Charon
 const showBuilders = computed(() => {
   // the opened setup is a copy from when it was opened, its services may have loaded only since
   const selected = setupsStore.selectedSetup;
   const setup = setupsStore.allSetups.find((s) => s.setupId === selected?.setupId) ?? selected;
-  return !!setup?.setupId && gloasForkTime(setup.network) !== null && (setup.services ?? []).some((s) => BUILDER_CLIENTS[s.service]);
+  return (
+    !!setup?.setupId &&
+    gloasForkTime(setup.network) !== null &&
+    (setup.services ?? []).some((s) => BUILDER_CLIENTS[s.service] || s.service === "CharonService")
+  );
 });
 let buildersTimer = null;
 watch(
