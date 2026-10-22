@@ -6,8 +6,8 @@
         <span class="text-2xs text-gray-400">{{ t("builders.readyOn", { network }) }}</span>
       </div>
       <!-- only the list scrolls, so the notes and the custom field stay in view -->
-      <!-- at least three rows; when the dialog is too short for that, the dialog scrolls instead -->
-      <div class="flex-1 min-h-[6.5rem] flex flex-col gap-1 overflow-y-auto rounded-lg bg-[#151618] p-1">
+      <!-- takes the space the dialog has left, at least one row -->
+      <div class="flex-1 min-h-[2.25rem] flex flex-col gap-1 overflow-y-auto rounded-lg bg-[#151618] p-1">
         <label
           v-for="relay in listed"
           :key="relay.name"
@@ -24,6 +24,12 @@
           <span class="w-2 h-2 rounded-full shrink-0" :class="dotOf(relay)" />
           <span class="font-semibold">{{ relay.name }}</span>
           <span v-if="relay.inMevBoost" class="px-2 rounded-full border border-[#4b8585] text-2xs text-[#7fb3b3]">MEV-Boost</span>
+          <span
+            v-if="firstFor && relay.entry && settings.relays[0]?.url === relay.entry.url && settings.relays.length > 1"
+            class="px-2 rounded-full border border-amber-500/70 text-2xs text-amber-300"
+            :title="t('builders.firstForTitle', { client: firstFor })"
+            >{{ firstFor }}</span
+          >
           <span class="grow truncate text-right text-2xs" :class="textOf(relay)" :title="probeTitle(relay.url)">
             {{ labelOf(relay) }}
           </span>
@@ -37,9 +43,6 @@
         </div>
       </div>
       <p v-if="!settings.relays.length" class="text-2xs text-[#7fb3b3]">{{ t("builders.noRelaysHint") }}</p>
-      <p v-else-if="capsTrusted && ethToGwei(settings.maxExecutionPayment) === '0'" class="text-2xs leading-tight text-amber-400">
-        {{ t("builders.trustedZeroNote") }}
-      </p>
       <div class="flex items-center gap-2">
         <input
           v-model="customUrl"
@@ -52,12 +55,24 @@
       </div>
     </div>
 
-    <div v-if="nimbus && settings.relays.length > 1" class="flex flex-col gap-1">
-      <span class="text-2xs font-semibold uppercase text-[#7fb3b3]">{{ t("builders.nimbusRelay") }}</span>
-      <select v-model="settings.nimbusRelay" class="h-8 rounded-full bg-[#0D0D12] border border-[#4b8585] px-3 text-xs outline-hidden">
-        <option value="">{{ host(settings.relays[0].url) }}</option>
-        <option v-for="relay in settings.relays.slice(1)" :key="relay.url" :value="relay.url">{{ host(relay.url) }}</option>
-      </select>
+    <!-- in a cluster the client signs only for the first of Charon's relays, so the choice is that relay's place in the list -->
+    <div v-if="firstFor && settings.relays.length > 1" class="flex flex-col gap-1">
+      <div class="flex items-center gap-3">
+        <span class="shrink-0 text-2xs font-semibold uppercase text-[#7fb3b3]">{{
+          t("builders.firstForRelay", { client: firstFor })
+        }}</span>
+        <RelayDropdown class="grow" :model-value="settings.relays[0].url" :options="relayOptions" @update:model-value="putFirst" />
+      </div>
+      <span class="text-2xs text-[#7fb3b3]">{{ t("builders.firstForNote", { client: firstFor }) }}</span>
+    </div>
+    <div v-if="nimbus && settings.relays.length > 1" class="flex items-center gap-3">
+      <span class="shrink-0 text-2xs font-semibold uppercase text-[#7fb3b3]">{{ t("builders.nimbusRelay") }}</span>
+      <RelayDropdown
+        class="grow"
+        :model-value="settings.nimbusRelay || settings.relays[0].url"
+        :options="relayOptions"
+        @update:model-value="(url) => (settings.nimbusRelay = url === settings.relays[0].url ? '' : url)"
+      />
     </div>
   </div>
 </template>
@@ -65,9 +80,10 @@
 <script setup>
 import { computed, ref, watch } from "vue";
 import ActionButton from "@/components/UI/validators-page/components/ActionButton.vue";
+import RelayDropdown from "./RelayDropdown.vue";
 import { useNodeManage } from "@/store/nodeManage";
 import { epbsRelay, useBuilders } from "@/store/builders";
-import { builderUrl, ethToGwei } from "@/share/builders";
+import { builderUrl } from "@/share/builders";
 import { relayHost } from "./relayHost";
 import i18n from "@/includes/i18n";
 
@@ -78,9 +94,9 @@ const props = defineProps({
   mevBoostRelays: { type: Array, default: () => [] },
   // a Nimbus client uses these settings and takes one relay
   nimbus: { type: Boolean, default: false },
-  // the client caps promised payments by the max trusted payment, so 0 ignores them
-  capsTrusted: { type: Boolean, default: true },
   disabled: { type: Boolean, default: false },
+  // the client that takes the first chosen relay only (Nimbus in a cluster), marked on that relay
+  firstFor: { type: String, default: "" },
 });
 
 const t = i18n.global.t;
@@ -104,6 +120,19 @@ const listed = computed(() => {
 const listedUrls = computed(() => new Set(listed.value.filter((r) => r.entry).map((r) => r.entry.url)));
 const custom = computed(() => settings.value.relays.filter((r) => !listedUrls.value.has(r.url)));
 const isChosen = (entry) => !!entry && settings.value.relays.some((r) => r.url === entry.url);
+// the chosen relays for the single-relay pickers, by their list name
+const relayOptions = computed(() =>
+  settings.value.relays.map((r) => ({
+    value: r.url,
+    name: listed.value.find((l) => l.entry?.url === r.url)?.name ?? t("builders.custom"),
+    host: host(r.url),
+  }))
+);
+// moves a chosen relay to the front, where Charon's builder flags list it first
+const putFirst = (url) => {
+  const relay = settings.value.relays.find((r) => r.url === url);
+  if (relay) settings.value.relays = [relay, ...settings.value.relays.filter((r) => r !== relay)];
+};
 const toggle = (entry) => {
   if (!entry) return;
   settings.value.relays = isChosen(entry)

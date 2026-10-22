@@ -48,7 +48,7 @@
         <span class="grow" :class="clientStatus(client, setup).text">{{ clientStatus(client, setup).label }}</span>
         <ActionButton v-if="ownTargets.length" :label="t('builders.useForAll')" @click="useForAll" />
       </div>
-      <p v-if="cluster" class="rounded-lg border border-[#4b8585] bg-[#224141] px-3 py-1.5 text-2xs text-[#7fb3b3]">
+      <p v-if="cluster" class="text-2xs text-[#7fb3b3]">
         {{ t("builders.cluster", { middleware: shortName(cluster.service) }) }}
       </p>
       <p v-for="note in notes" :key="note" class="text-2xs text-amber-300">{{ t(`builders.note.${note}`) }}</p>
@@ -66,14 +66,18 @@
       </div>
 
       <!-- takes the space left: the relay list or the tab's content scrolls, not the dialog -->
-      <div class="flex-1 min-h-0 flex flex-col">
+      <!-- the relay list shrinks to the space left, down to one row (the dialog scrolls only below that); other tabs scroll themselves -->
+      <div
+        class="flex-1 flex flex-col"
+        :class="activeTab !== 'relays' ? 'min-h-0' : client.service === 'NimbusValidatorService' ? 'min-h-[10.5rem]' : 'min-h-[7.5rem]'"
+      >
         <BuilderRelays
           v-if="activeTab === 'relays'"
           v-model="editing"
           :network="setup.network"
           :mev-boost-relays="setup.mevBoostRelays"
-          :nimbus="client.service === 'NimbusValidatorService'"
-          :caps-trusted="capsTrustedPayments(client.service, client.version)"
+          :nimbus="client.service === 'NimbusValidatorService' && !cluster"
+          :first-for="client.service === 'NimbusValidatorService' && cluster ? shortName(client.service) : ''"
         />
         <BuilderBids v-else-if="activeTab === 'bids'" v-model="editing" :cluster="!!cluster" class="flex-1 min-h-0 overflow-y-auto pr-1" />
         <BuilderCalculator
@@ -93,11 +97,11 @@
           </div>
         </div>
       </div>
-
-      <p v-if="problems.length" class="text-xs text-red-400">{{ problems.join(", ") }}</p>
     </template>
 
     <template #footer>
+      <!-- in the footer, so the reason Save is disabled is always in view -->
+      <p v-if="problems.length" class="mr-auto text-xs text-red-400">{{ problems.join(", ") }}</p>
       <ActionButton :label="t('builders.cancel')" @click="requestClose" />
       <ActionButton :label="t('builders.save')" primary :disabled="!canSave" @click="requestSave" />
     </template>
@@ -156,7 +160,7 @@ import BuilderExpert from "./BuilderExpert.vue";
 import { clientStatus, shortName } from "./clientInfo";
 import { useBuilders } from "@/store/builders";
 import { useSetups } from "@/store/setups";
-import { builderConfiguration, builderUrl, capsTrustedPayments, validateBuilderSettings } from "@/share/builders";
+import { builderConfiguration, builderUrl, validateBuilderSettings } from "@/share/builders";
 import { charonBuilderFlags, clusterSettingsProblems, dvtConfiguration, withBuilderSection } from "@/share/obolBuilders";
 import i18n from "@/includes/i18n";
 
@@ -210,6 +214,7 @@ watch(
 const fromMevBoost = () => startWith(true);
 
 const sourceText = computed(() => {
+  if (cluster.value?.current?.relays?.length) return t("builders.source.cluster", { middleware: shortName(cluster.value.service) });
   if (setup.value.mevBoost) return t("builders.source.mevBoost");
   return t("builders.source.local");
 });
@@ -231,7 +236,12 @@ const useForAll = () => {
 };
 
 const configuration = computed(() => builderConfiguration(client.value.service, editing.value, client.value.version));
-const notes = computed(() => (cluster.value ? configuration.value.notes.filter((n) => n !== "auth-ignored") : configuration.value.notes));
+// in a cluster Charon takes every relay and Nimbus the first of them, picked by its place in the list
+const notes = computed(() => {
+  if (!cluster.value) return configuration.value.notes;
+  const notes = configuration.value.notes.filter((n) => n !== "auth-ignored" && n !== "single-relay");
+  return notes;
+});
 const preview = computed(() => {
   if (cluster.value) {
     const lines = [`${shortName(cluster.value.service)}`, ...charonBuilderFlags(editing.value)];

@@ -93,14 +93,15 @@ export const useBuilders = defineStore("builders", {
      * @returns {{ builders: { route, clients }, missing: Array<string> }} missing: MEV-Boost relays without ePBS on this network yet
      */
     draftFor(setup, fromSetup = !setup.saved) {
-      // a cluster's builders are what Charon's proposer config holds, also when changed outside the dialog
-      const fromFile = (builders) => {
+      // a cluster's builders are what Charon's proposer config holds, also when changed outside the dialog;
+      // before the first save a file without builders keeps the takeover as a start
+      const fromFile = (builders, takeover) => {
         for (const c of setup.clusters ?? [])
-          if (c.current)
+          if (c.current && !(takeover && !c.current.relays?.length))
             builders.clients[c.id] = { ...JSON.parse(JSON.stringify(DEFAULT_BUILDER_SETTINGS)), ...JSON.parse(JSON.stringify(c.current)) };
         return builders;
       };
-      if (!fromSetup) return { builders: fromFile(JSON.parse(JSON.stringify(setup.builders))), missing: [] };
+      if (!fromSetup) return { builders: fromFile(JSON.parse(JSON.stringify(setup.builders)), false), missing: [] };
       const list = useNodeManage().relaysList;
       const relays = [];
       const missing = [];
@@ -119,7 +120,7 @@ export const useBuilders = defineStore("builders", {
       const clients = Object.fromEntries(setup.clients.map((c) => [c.id, fromMevBoost(c.currentBoost ?? null)]));
       // a cluster without a proposer config yet starts like the setup's MEV-Boost (with Charon's own boost)
       for (const c of setup.clusters ?? []) clients[c.id] = fromMevBoost(null);
-      return { builders: fromFile({ route: "direct", clients }), missing };
+      return { builders: fromFile({ route: "direct", clients }, true), missing };
     },
   },
 });

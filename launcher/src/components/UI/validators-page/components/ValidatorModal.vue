@@ -39,6 +39,8 @@ const emit = defineEmits(["close"]);
 // capture, so Escape closes the modal and not the drawer underneath
 const onKeydown = (event) => {
   if (event.key !== "Escape") return;
+  // an open popup inside (e.g. a dropdown) closes first
+  if (document.querySelector("[data-escape-layer]")) return;
   event.stopImmediatePropagation();
   emit("close");
 };

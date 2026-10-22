@@ -345,6 +345,11 @@ test("an ePBS builder rejects the empty bid request, others don't know the route
   expect([200, 204, 400, 401, 415, 422].map(epbsProbeResult)).toEqual(Array(6).fill("ready"));
   expect([404, 405].map(epbsProbeResult)).toEqual(["no", "no"]);
   expect([0, 403, 500, 502, "x"].map(epbsProbeResult)).toEqual(Array(5).fill("unreachable"));
+  // a builder that answers a route nobody has the same way says nothing about the bid route
+  expect(epbsProbeResult(400, { status: 404, same: false })).toBe("ready");
+  expect(epbsProbeResult(400, { status: 400, same: false })).toBe("ready");
+  expect(epbsProbeResult(400, { status: 400, same: true })).toBe("no");
+  expect(epbsProbeResult(400, { status: 0, same: false })).toBe("ready");
 });
 
 test("Lighthouse's builder file is compared by what it means, with its defaults filled in", () => {
