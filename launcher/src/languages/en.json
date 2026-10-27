@@ -1141,7 +1141,7 @@
       "remotePending": "Paste the proposer config of Charon's server"
     },
     "note": {
-      "single-relay": "Nimbus takes one relay",
+      "single-relay": "Nimbus before 26.10.2 takes one relay",
       "auth-ignored": "This client ignores auth data and always uses the host name",
       "no-limits": "Nimbus before 26.10.1 has no minimum bid and counts every promised payment"
     },
@@ -1215,7 +1215,7 @@
     "useForAll": "Use for all clients",
     "firstForTitle": "{client} takes only the first of the chosen relays",
     "firstForRelay": "Relay {client} signs for",
-    "firstForNote": "It takes only the first of Charon's relays: every operator running {client} has to pick the same one.",
+    "firstForNote": "Before 26.10.2 it takes only the first of Charon's relays: every operator running {client} has to pick the same one.",
     "clusterRemote": "Obol cluster with Charon {version} on another server ({host}). Its validator client signs with a copy of Charon's proposer config.",
     "remote": {
       "copy": "Copy for a remote validator client",

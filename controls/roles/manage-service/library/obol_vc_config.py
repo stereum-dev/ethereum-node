@@ -142,29 +142,40 @@ def lighthouse_builders(builder, existing):
     return "\n".join(lines) + "\n"
 
 
-def nimbus_limits(image):
-    """Whether a Nimbus image knows the minimum bid and max payment flags (26.10.1 on); an unknown tag doesn't."""
+def nimbus_from(image, release):
+    """Whether a Nimbus image is the release or newer; an unknown tag isn't, a pre-release comes before its release."""
     match = re.search(r":(?:multiarch-)?v?(\d+)\.(\d+)\.(\d+)(-[0-9A-Za-z.]+)?$", str(image or ""))
     if not match:
         return False
     version = tuple(int(x) for x in match.groups()[:3])
-    # a pre-release of 26.10.1 comes before it
-    return version > (26, 10, 1) or (version == (26, 10, 1) and not match.group(4))
+    return version > release or (version == release and not match.group(4))
 
 
-def builder_flags(prefix, builder, first_only=False, limits=True):
-    """Teku's and Nimbus' builder flags, in the order Stereum's other builder settings use; Nimbus takes the first builder."""
+def nimbus_limits(image):
+    """Whether a Nimbus image knows the minimum bid and max payment flags (26.10.1 on)."""
+    return nimbus_from(image, (26, 10, 1))
+
+
+def nimbus_multi_relay(image):
+    """Whether a Nimbus image takes several builders, one --payload-builder-url each (26.10.2 on)."""
+    return nimbus_from(image, (26, 10, 2))
+
+
+def builder_flags(prefix, builder, first_only=False, limits=True, multi=False):
+    """Teku's and Nimbus' builder flags, in the order Stereum's other builder settings use; Nimbus before 26.10.2 takes the first builder."""
     if not builder or not builder.get("builders"):
         return []
     boost = "--%sboost-factor=%s" % (prefix, builder.get("builder_boost_factor", "100"))
     min_bid = ["--%smin-bid=%s" % (prefix, builder["min_bid"])] if builder.get("min_bid", "0") != "0" else []
     max_payment = "--%smax-execution-payment=%s" % (prefix, builder.get("max_execution_payment", "0"))
     if first_only:
+        used = builder["builders"] if multi else builder["builders"][:1]
+        urls = ["--payload-builder-url=%s" % b["url"] for b in used]
         if not limits:
             # older Nimbus doesn't know the minimum bid and max payment flags
-            return ["--payload-builder-url=%s" % builder["builders"][0]["url"], boost]
+            return urls + [boost]
         # Nimbus counts no promised payment above its max, so it is always set
-        return ["--payload-builder-url=%s" % builder["builders"][0]["url"], boost] + min_bid + [max_payment]
+        return urls + [boost] + min_bid + [max_payment]
     flags = ["--%surls=%s" % (prefix, ",".join(b["url"] for b in builder["builders"]))] + min_bid
     if builder.get("max_execution_payment", "0") != "0":
         flags.append(max_payment)
@@ -237,7 +248,7 @@ def render(service, config, builder_api, volumes, written, image=""):
         flags.append("--Xobol-dvt-integration-enabled=true")
 
     elif service == "NimbusValidatorService":
-        flags += builder_flags("builder-", builder, first_only=True, limits=nimbus_limits(image))
+        flags += builder_flags("builder-", builder, first_only=True, limits=nimbus_limits(image), multi=nimbus_multi_relay(image))
         flags += ["--suggested-fee-recipient=%s" % d["fee_recipient"], "--suggested-gas-limit=%s" % d["gas_limit"], "--distributed"]
         # per-key settings live next to each key
         for pubkey in entries:

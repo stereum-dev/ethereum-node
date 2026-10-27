@@ -27,7 +27,6 @@ export const BUILDER_CLIENTS = {
   TekuValidatorService: { owned: [/^--Xbuilder-(urls|min-bid|boost-factor|max-execution-payment)=/] },
   NimbusValidatorService: {
     owned: [/^--payload-builder-url=/, /^--builder-(boost-factor|min-bid|max-execution-payment)=/],
-    singleRelay: true,
   },
   LighthouseValidatorService: { owned: [], file: "validators/builder_definitions.yml" },
 };
@@ -35,6 +34,14 @@ export const BUILDER_CLIENTS = {
 // the first Nimbus release with a minimum bid and a max trusted payment; older ones count every promised payment
 export const NIMBUS_BID_LIMITS = "26.10.1";
 const nimbusLimits = (version) => [0, 1].includes(compareVersions(version, NIMBUS_BID_LIMITS));
+
+// the first Nimbus release that takes several builders, one --payload-builder-url each
+export const NIMBUS_MULTI_RELAY = "26.10.2";
+
+/** whether a client takes only one relay: Nimbus before 26.10.2 (an unknown tag counts as before) */
+export function takesOneRelay(service, version) {
+  return service === "NimbusValidatorService" && ![0, 1].includes(compareVersions(version, NIMBUS_MULTI_RELAY));
+}
 
 /** whether a client caps promised payments by the max trusted payment (older Nimbus counts them all) */
 export function capsTrustedPayments(service, version) {
@@ -198,16 +205,19 @@ export function builderConfiguration(service, settings, version) {
       if (relays.some((r) => r.authData)) notes.push("auth-ignored");
       break;
     case "NimbusValidatorService": {
+      // from 26.10.2 on it asks every relay, before that it takes one (the picked one, else the first)
+      const single = takesOneRelay(service, version);
       const picked = relays.find((r) => r.url === builderUrl(settings.nimbusRelay)) ?? relays[0];
-      if (picked) flags.push(`--payload-builder-url=${picked.url}`);
+      const used = single ? (picked ? [picked] : []) : relays;
+      for (const relay of used) flags.push(`--payload-builder-url=${relay.url}`);
       if (boost !== null) flags.push(`--builder-boost-factor=${boost}`);
       if (nimbusLimits(version)) {
         if (minBid !== "0") flags.push(`--builder-min-bid=${minBid}`);
         // its default is no limit, so 0 has to be set
-        if (picked) flags.push(`--builder-max-execution-payment=${maxPayment}`);
+        if (used.length) flags.push(`--builder-max-execution-payment=${maxPayment}`);
       } else if (minBid !== "0" || maxPayment !== "0") notes.push("no-limits");
-      if (relays.length > 1) notes.push("single-relay");
-      if (picked?.authData) notes.push("auth-ignored");
+      if (single && relays.length > 1) notes.push("single-relay");
+      if (used.some((r) => r.authData)) notes.push("auth-ignored");
       break;
     }
     case "LighthouseValidatorService":

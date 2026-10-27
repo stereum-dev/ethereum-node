@@ -73,7 +73,7 @@
         v-model="pasted"
         :cluster="cluster"
         :network="setup.network"
-        :first-for="client.service === 'NimbusValidatorService' ? shortName(client.service) : ''"
+        :first-for="oneRelay ? shortName(client.service) : ''"
       />
       <div v-else class="flex border-b border-[#4b8585]">
         <button
@@ -92,15 +92,15 @@
       <div
         v-if="!cluster?.remote"
         class="flex-1 flex flex-col"
-        :class="activeTab !== 'relays' ? 'min-h-0' : client.service === 'NimbusValidatorService' ? 'min-h-[10.5rem]' : 'min-h-[7.5rem]'"
+        :class="activeTab !== 'relays' ? 'min-h-0' : oneRelay ? 'min-h-[10.5rem]' : 'min-h-[7.5rem]'"
       >
         <BuilderRelays
           v-if="activeTab === 'relays'"
           v-model="editing"
           :network="setup.network"
           :mev-boost-relays="setup.mevBoostRelays"
-          :nimbus="client.service === 'NimbusValidatorService' && !cluster"
-          :first-for="client.service === 'NimbusValidatorService' && cluster ? shortName(client.service) : ''"
+          :nimbus="oneRelay && !cluster"
+          :first-for="oneRelay && cluster ? shortName(client.service) : ''"
         />
         <BuilderBids v-else-if="activeTab === 'bids'" v-model="editing" :cluster="!!cluster" class="flex-1 min-h-0 overflow-y-auto pr-1" />
         <BuilderCalculator
@@ -184,7 +184,7 @@ import BuilderRemoteCluster from "./BuilderRemoteCluster.vue";
 import { clientStatus, shortName } from "./clientInfo";
 import { useBuilders } from "@/store/builders";
 import { useSetups } from "@/store/setups";
-import { builderConfiguration, builderUrl, validateBuilderSettings } from "@/share/builders";
+import { builderConfiguration, builderUrl, takesOneRelay, validateBuilderSettings } from "@/share/builders";
 import {
   charonBuilderFlags,
   clusterSettingsProblems,
@@ -266,6 +266,9 @@ const useForAll = () => {
   for (const c of ownTargets.value) draft.value.clients[c.id] = JSON.parse(settings);
 };
 
+// Nimbus before 26.10.2 takes one relay: picked in the dialog, or in a cluster the first of Charon's
+const oneRelay = computed(() => takesOneRelay(client.value.service, client.value.version));
+
 // a remote Charon's pasted proposer config, stored on save next to its external beacon node
 const pasted = computed({
   get: () => (cluster.value ? (draft.value.proposerConfigs?.[cluster.value.id] ?? null) : null),
@@ -286,7 +289,7 @@ const copyForRemote = async () => {
 };
 
 const configuration = computed(() => builderConfiguration(client.value.service, editing.value, client.value.version));
-// in a cluster Charon takes every relay and Nimbus the first of them, picked by its place in the list
+// in a cluster Charon takes every relay, and Nimbus before 26.10.2 the first of them, picked by its place in the list
 const notes = computed(() => {
   if (!cluster.value) return configuration.value.notes;
   const notes = configuration.value.notes.filter((n) => n !== "auth-ignored" && n !== "single-relay");
