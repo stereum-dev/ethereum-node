@@ -310,3 +310,33 @@ test("an older Nimbus behind Charon gets no minimum bid or max payment flags, wh
   expect(render("statusim/nimbus-validator-client:multiarch-v26.10.1")).toContain("--builder-min-bid=10000000");
   fs.rmSync(root, { recursive: true, force: true });
 });
+
+test("Nimbus from 26.10.2 behind Charon gets all of Charon's builders, the same as the dialog's preview", () => {
+  const script = path.resolve(__dirname, "../../../../../controls/roles/manage-service/library/obol_vc_config.py");
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "obol-"));
+  const configPath = path.join(root, "proposer-config.json");
+  const config = withBuilderSection(charonConfig, cluster);
+  fs.writeFileSync(configPath, JSON.stringify(config));
+  const render = (version) =>
+    JSON.parse(
+      execFileSync("python3", [script], {
+        input: JSON.stringify({
+          service: "NimbusValidatorService",
+          image: `statusim/nimbus-validator-client:${version}`,
+          command: [],
+          volumes: [],
+          proposer_config_path: configPath,
+        }),
+      }).toString()
+    ).command;
+  for (const version of ["multiarch-v26.10.2", "multiarch-v26.10.1"]) {
+    const preview = dvtConfiguration("NimbusValidatorService", config, { version });
+    expect(render(version)).toEqual(["--payload-builder", ...preview.flags]);
+  }
+  expect(render("multiarch-v26.10.2").filter((f) => f.startsWith("--payload-builder-url="))).toEqual([
+    "--payload-builder-url=https://hoodi.titanrelay.xyz",
+    "--payload-builder-url=https://relay-hoodi.ultrasound.money",
+  ]);
+  expect(render("multiarch-v26.10.1").filter((f) => f.startsWith("--payload-builder-url="))).toHaveLength(1);
+  fs.rmSync(root, { recursive: true, force: true });
+});

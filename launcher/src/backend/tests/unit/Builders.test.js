@@ -16,6 +16,7 @@ import {
   capsTrustedPayments,
   epbsProbeResult,
   currentBoost,
+  takesOneRelay,
 } from "@/share/builders";
 import { gloasForkTime, GLOAS_FORKS } from "@/share/gloasFork";
 
@@ -370,4 +371,39 @@ test("only Nimbus before 26.10.1 counts every promised payment", () => {
   expect(capsTrustedPayments("LodestarValidatorService", "v1.50.0")).toBe(true);
   expect(capsTrustedPayments("NimbusValidatorService", "multiarch-v26.10.1")).toBe(true);
   expect(capsTrustedPayments("NimbusValidatorService", "multiarch-v26.10.0")).toBe(false);
+});
+
+test("Nimbus from 26.10.2 asks every relay, one --payload-builder-url each, older ones the picked relay", () => {
+  const s = settings({ relays: [TITAN, OTHER], nimbusRelay: OTHER.url });
+  expect(builderConfiguration("NimbusValidatorService", s, "multiarch-v26.10.2")).toMatchObject({
+    flags: [
+      "--payload-builder-url=https://hoodi.titanrelay.xyz",
+      "--payload-builder-url=https://relay.example",
+      "--builder-max-execution-payment=0",
+    ],
+    // it signs the hostname, so the other relay's auth data is ignored
+    notes: ["auth-ignored"],
+  });
+  expect(builderConfiguration("NimbusValidatorService", s, "multiarch-v26.10.1")).toMatchObject({
+    flags: ["--payload-builder-url=https://relay.example", "--builder-max-execution-payment=0"],
+    notes: ["single-relay", "auth-ignored"],
+  });
+  expect([
+    takesOneRelay("NimbusValidatorService", "multiarch-v26.10.1"),
+    takesOneRelay("NimbusValidatorService", "multiarch-v26.10.2"),
+  ]).toEqual([true, false]);
+  // an unknown tag counts as one relay, the other clients never
+  expect(takesOneRelay("NimbusValidatorService", "latest")).toBe(true);
+  expect(takesOneRelay("LighthouseValidatorService", "v8.3.2")).toBe(false);
+  // all of them are replaced on the next save
+  const command = applyBuilderFlags(
+    "NimbusValidatorService",
+    ["--network=hoodi"],
+    builderConfiguration("NimbusValidatorService", s, "multiarch-v26.10.2").flags
+  );
+  expect(applyBuilderFlags("NimbusValidatorService", command, ["--payload-builder-url=https://hoodi.titanrelay.xyz"])).toEqual([
+    "--network=hoodi",
+    "--payload-builder",
+    "--payload-builder-url=https://hoodi.titanrelay.xyz",
+  ]);
 });
