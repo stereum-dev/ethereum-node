@@ -5,6 +5,15 @@ const HOODI_FORK = 1793036568; // 2026-10-26 17:42:48 UTC, epoch 132352
 
 const service = (service, network, imageVersion, name = service) => ({ service, name, config: { network, imageVersion } });
 
+// Hoodi's fork was postponed without a new date; the tests check it as it was scheduled
+const HOODI_EPOCH = GLOAS_FORKS.hoodi.epoch;
+beforeEach(() => (GLOAS_FORKS.hoodi.epoch = 132352));
+afterEach(() => (GLOAS_FORKS.hoodi.epoch = HOODI_EPOCH));
+
+test("hoodi's postponed fork is not scheduled", () => {
+  expect(HOODI_EPOCH).toBeNull();
+});
+
 test("the fork time follows from genesis and epoch", () => {
   expect(gloasForkTime("sepolia")).toBe(SEPOLIA_FORK);
   expect(gloasForkTime("hoodi")).toBe(HOODI_FORK);

@@ -5,11 +5,13 @@ const SECONDS_PER_EPOCH = 32 * 12;
 // epoch null = not scheduled yet
 export const GLOAS_FORKS = {
   mainnet: { genesisTime: 1606824023, epoch: null },
-  hoodi: { genesisTime: 1742213400, epoch: 132352 },
+  // was epoch 132352 (26 Oct 2026), postponed on 22 Oct 2026 without a new date
+  hoodi: { genesisTime: 1742213400, epoch: null },
   sepolia: { genesisTime: 1655733600, epoch: 353024 },
 };
 
-// Minimum release per network that carries its fork epoch; null = no compatible release yet, unlisted = not checked
+// Minimum release per network that carries its fork epoch; null = no compatible release yet, unlisted = not checked.
+// Only used while the network's fork is scheduled: Hoodi's are from the postponed date and change with the new one.
 export const GLOAS_MIN_VERSIONS = {
   sepolia: {
     GethService: "1.17.7",

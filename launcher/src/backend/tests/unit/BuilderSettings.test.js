@@ -1,6 +1,9 @@
 import YAML from "yaml";
 import { BuilderSettings } from "../../BuilderSettings";
-import { gloasForkTime, GLOAS_MIN_VERSIONS } from "@/share/gloasFork";
+import { gloasForkTime, GLOAS_FORKS, GLOAS_MIN_VERSIONS } from "@/share/gloasFork";
+
+// as Hoodi's fork was scheduled before it was postponed (each test file has its own modules)
+GLOAS_FORKS.hoodi.epoch = 132352;
 
 const SETUP = "setup-1";
 const service = (id, name, version, command, extra = {}) => ({

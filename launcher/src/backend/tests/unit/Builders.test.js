@@ -17,7 +17,10 @@ import {
   epbsProbeResult,
   currentBoost,
 } from "@/share/builders";
-import { gloasForkTime } from "@/share/gloasFork";
+import { gloasForkTime, GLOAS_FORKS } from "@/share/gloasFork";
+
+// as Hoodi's fork was scheduled before it was postponed (each test file has its own modules)
+GLOAS_FORKS.hoodi.epoch = 132352;
 
 const TITAN = {
   name: "Titan",
