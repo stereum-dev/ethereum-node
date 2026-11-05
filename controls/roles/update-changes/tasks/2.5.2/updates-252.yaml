@@ -10,8 +10,5 @@
   loop_control:
     loop_var: config_file
 
-- name: Include Oracle Allowlist Changes
-  include_tasks: oracle_allowlist_changes.yaml
-  loop: "{{ service_config_files.files }}"
-  loop_control:
-    loop_var: config_file
+# The oracle allowlist refresh moved to 2.6.1; only one allowlist script may be
+# active, otherwise they overwrite each other every run
