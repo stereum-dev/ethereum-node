@@ -1,0 +1,13 @@
+---
+- name: Find service configs
+  find:
+    paths: "/etc/stereum/services"
+  register: service_config_files
+
+# Only the newest version includes an oracle allowlist script; on the next change move
+# it to the new version and drop this include. Only molecule/261 asserts the list.
+- name: Include Oracle Allowlist Changes
+  include_tasks: oracle_allowlist_changes.yaml
+  loop: "{{ service_config_files.files }}"
+  loop_control:
+    loop_var: config_file
