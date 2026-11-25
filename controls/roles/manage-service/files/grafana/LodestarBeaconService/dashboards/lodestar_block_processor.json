@@ -1787,7 +1787,7 @@
                 "uid": "${DS_PROMETHEUS}"
               },
               "exemplar": false,
-              "expr": "delta(lodestar_bls_thread_pool_latency_to_worker_sum[6m])/delta(lodestar_bls_thread_pool_latency_to_worker_count[6m])",
+              "expr": "delta({__name__=~\"lodestar_bls_thread_pool_latency_to_worker(_seconds)?_sum\"}[6m])/delta({__name__=~\"lodestar_bls_thread_pool_latency_to_worker(_seconds)?_count\"}[6m])",
               "interval": "",
               "legendFormat": "to worker",
               "refId": "to worker"
@@ -1798,7 +1798,7 @@
                 "uid": "${DS_PROMETHEUS}"
               },
               "exemplar": false,
-              "expr": "delta(lodestar_bls_thread_pool_latency_from_worker_sum[6m])/delta(lodestar_bls_thread_pool_latency_from_worker_count[6m])",
+              "expr": "delta({__name__=~\"lodestar_bls_thread_pool_latency_from_worker(_seconds)?_sum\"}[6m])/delta({__name__=~\"lodestar_bls_thread_pool_latency_from_worker(_seconds)?_count\"}[6m])",
               "hide": false,
               "interval": "",
               "legendFormat": "from worker",
