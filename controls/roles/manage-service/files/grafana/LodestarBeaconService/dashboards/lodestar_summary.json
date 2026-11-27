@@ -158,7 +158,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "(time() - lodestar_genesis_time) / 12"
+              "options": "(time() - {__name__=~\"lodestar_genesis_time(_seconds)?\"}) / 12"
             },
             "properties": [
               {
@@ -302,7 +302,7 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": false,
-          "expr": "(time() - lodestar_genesis_time) / 12",
+          "expr": "(time() - {__name__=~\"lodestar_genesis_time(_seconds)?\"}) / 12",
           "hide": false,
           "instant": false,
           "interval": "",
@@ -2482,7 +2482,7 @@
           "pluginVersion": "7.4.5",
           "targets": [
             {
-              "expr": "(time() - lodestar_genesis_time) / 12 - lodestar_clock_slot",
+              "expr": "(time() - {__name__=~\"lodestar_genesis_time(_seconds)?\"}) / 12 - lodestar_clock_slot",
               "hide": false,
               "interval": "",
               "legendFormat": "clock drift",
