@@ -1076,6 +1076,7 @@ export class Monitoring {
       NethermindService: 8545,
       ErigonService: 8545,
       EthrexService: 8545,
+      XoneService: 8545,
     };
 
     // Extract additional params
@@ -1231,6 +1232,7 @@ export class Monitoring {
         // Note: Erigon labels are taken from their official Grafana Dashboard, however those are not available thru Prometheus!
         ErigonService: ["chain_head_header", "chain_head_block"], // TODO - query for job="erigon"
         EthrexService: ["block_number", "head_height"], // NOT OK - query for job="ethrex"
+        XoneService: ["chain_head_header", "chain_head_block"], // OK with --metrics.compat=geth - query for job="xone"
       },
     };
 
@@ -1248,6 +1250,7 @@ export class Monitoring {
       NethermindService: "nethermind",
       ErigonService: "erigon",
       EthrexService: "ethrex",
+      XoneService: "xone",
     };
 
     // Execution clients that should be queried by RPC for chain head block
@@ -1258,6 +1261,7 @@ export class Monitoring {
       "NethermindService",
       "ErigonService",
       "EthrexService",
+      "XoneService",
     ];
 
     // Merge all labels for Prometheus query
@@ -1442,6 +1446,7 @@ export class Monitoring {
         NethermindService: ["nethermind_sync_peers"],
         ErigonService: ["p2p_peers"],
         EthrexService: ["ethrex_p2p_peer_count"],
+        XoneService: ["p2p_peers"],
       },
     };
 
@@ -1459,6 +1464,7 @@ export class Monitoring {
       NethermindService: "nethermind",
       ErigonService: "erigon",
       EthrexService: "ethrex",
+      XoneService: "xone",
     };
 
     // Merge all labels for Prometheus query
@@ -1609,6 +1615,10 @@ export class Monitoring {
           // https://docs.ethrex.xyz/CLI.html
           optnam = "--p2p.target-peers";
           defval = 100;
+        } else if (clt.service == "XoneService") {
+          // --maxpeers (set to 50 by Stereum)
+          optnam = "--maxpeers";
+          defval = 50;
         } else {
           return;
         }

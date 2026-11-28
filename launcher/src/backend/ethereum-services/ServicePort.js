@@ -10,6 +10,7 @@ export const changeablePorts = {
   RethService: 8545,
   NethermindService: 8545,
   EthrexService: 8545,
+  XoneService: 8545,
   LighthouseBeaconService: 5052,
   LighthouseValidatorService: 5062,
   LodestarBeaconService: 9596,

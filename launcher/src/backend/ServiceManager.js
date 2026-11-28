@@ -43,6 +43,7 @@ import { OpNodeBeaconService } from "./ethereum-services/OpNodeBeaconService";
 import { L2GethService } from "./ethereum-services/L2GethService";
 import { SSVNOMService } from "./ethereum-services/SSVNOMService";
 import { EthrexService } from "./ethereum-services/EthrexService";
+import { XoneService } from "./ethereum-services/XoneService";
 import { PostgresService, DATABASE_SERVICES } from "./ethereum-services/PostgresService";
 import { DatabaseServices } from "./DatabaseServices";
 import { BuilderSettings } from "./BuilderSettings";
@@ -105,6 +106,7 @@ const SERVICE_CLASSES = {
   GrandineBeaconService,
   SSVNOMService,
   EthrexService,
+  XoneService,
   SlashingDBService: PostgresService,
   CachingDBService: PostgresService,
 };
@@ -1234,6 +1236,16 @@ export class ServiceManager {
           new ServicePort("127.0.0.1", 8546, 8546, servicePortProtocol.tcp),
         ];
         service = EthrexService.buildByUserInput(args.network, ports, args.installDir + "/ethrex");
+        return service;
+
+      case "XoneService":
+        ports = [
+          new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
+          new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
+          new ServicePort("127.0.0.1", args.port ? args.port : 8545, 8545, servicePortProtocol.tcp),
+          new ServicePort("127.0.0.1", 8546, 8546, servicePortProtocol.tcp),
+        ];
+        service = XoneService.buildByUserInput(args.network, ports, args.installDir + "/xone");
         return service;
 
       case "LighthouseBeaconService":

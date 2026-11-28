@@ -24,6 +24,7 @@ const EXPECTED = {
   // added, plain address
   NethermindService: ["--Network.ExternalIp", ""],
   EthrexService: ["--nat.extip", ""],
+  XoneService: ["--nat", "extip:"],
   OpNodeBeaconService: ["--p2p.advertise.ip", ""],
   PlutoService: ["--p2p-external-ip", ""],
 };
