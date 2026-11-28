@@ -480,4 +480,20 @@ scrape_configs:
 {% endif %}
         ]
 
+# xone
+  - job_name: xone
+    metrics_path: /metrics
+    static_configs:
+      - targets: [
+{% set targets = [] %}
+{%- for service_config in service_configs.results %}
+  {%- if (service_config.content | b64decode | from_yaml).service == "XoneService" %}
+    {%- set _ = targets.append("stereum-" ~ (service_config.content | b64decode | from_yaml).id ~ ":6060") %}
+  {%- endif %}
+{% endfor %}
+{% if targets %}
+          "{{ targets | join('",\n          "') }}"
+{% endif %}
+        ]
+
 # EOF
