@@ -1,7 +1,7 @@
 import { NodeService } from "./NodeService";
 import { ServiceVolume } from "./ServiceVolume";
 
-// xOneRS (https://xone.sh) - experimental execution client, BUSL-1.1 licensed.
+// xOneRS (https://xone.sh) - experimental execution client, GPL-3.0-or-later licensed.
 // Ethereum networks are selected with --chain (mainnet, sepolia or hoodi).
 export class XoneService extends NodeService {
   static buildByUserInput(network, ports, dir) {
